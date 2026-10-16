@@ -1,3 +1,4 @@
+import { useId } from "react";
 import type { Ornamentation } from "@/themes/types";
 
 /**
@@ -8,7 +9,15 @@ import type { Ornamentation } from "@/themes/types";
 
 /** Full-bleed repeating pattern standing in for a photographic backdrop. */
 export function PatternBackdrop({ kind }: { kind: Ornamentation }) {
+  /*
+   * Ids must be unique per instance. Duplicate SVG ids resolve to whichever
+   * was defined first in the document, so a shared id made every card in the
+   * gallery paint itself with the first theme's colours.
+   */
+  const uid = useId().replace(/:/g, "");
   if (kind === "none") return null;
+  const tileId = `tile-${uid}`;
+  const vignetteId = `vig-${uid}`;
   return (
     <svg
       className="pattern-backdrop"
@@ -17,25 +26,20 @@ export function PatternBackdrop({ kind }: { kind: Ornamentation }) {
     >
       <defs>
         <pattern
-          id={`pat-${kind}`}
+          id={tileId}
           width="120"
           height="120"
           patternUnits="userSpaceOnUse"
         >
           <PatternTile kind={kind} />
         </pattern>
-        <radialGradient id="pat-vignette" cx="50%" cy="42%" r="78%">
+        <radialGradient id={vignetteId} cx="50%" cy="42%" r="78%">
           <stop offset="0%" stopColor="var(--pattern-core)" />
           <stop offset="100%" stopColor="var(--pattern-edge)" />
         </radialGradient>
       </defs>
-      <rect width="100%" height="100%" fill="url(#pat-vignette)" />
-      <rect
-        width="100%"
-        height="100%"
-        fill={`url(#pat-${kind})`}
-        opacity="0.5"
-      />
+      <rect width="100%" height="100%" fill={`url(#${vignetteId})`} />
+      <rect width="100%" height="100%" fill={`url(#${tileId})`} opacity="0.5" />
     </svg>
   );
 }

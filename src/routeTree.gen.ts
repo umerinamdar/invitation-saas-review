@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TemplatesRouteImport } from './routes/templates'
 import { Route as PreviewThemeIdRouteImport } from './routes/preview.$themeId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TemplatesRoute = TemplatesRouteImport.update({
+  id: '/templates',
+  path: '/templates',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PreviewThemeIdRoute = PreviewThemeIdRouteImport.update({
@@ -25,27 +31,31 @@ const PreviewThemeIdRoute = PreviewThemeIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/templates': typeof TemplatesRoute
   '/preview/$themeId': typeof PreviewThemeIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/templates': typeof TemplatesRoute
   '/preview/$themeId': typeof PreviewThemeIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/templates': typeof TemplatesRoute
   '/preview/$themeId': typeof PreviewThemeIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/preview/$themeId'
+  fullPaths: '/' | '/templates' | '/preview/$themeId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/preview/$themeId'
-  id: '__root__' | '/' | '/preview/$themeId'
+  to: '/' | '/templates' | '/preview/$themeId'
+  id: '__root__' | '/' | '/templates' | '/preview/$themeId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  TemplatesRoute: typeof TemplatesRoute
   PreviewThemeIdRoute: typeof PreviewThemeIdRoute
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/templates': {
+      id: '/templates'
+      path: '/templates'
+      fullPath: '/templates'
+      preLoaderRoute: typeof TemplatesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/preview/$themeId': {
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  TemplatesRoute: TemplatesRoute,
   PreviewThemeIdRoute: PreviewThemeIdRoute,
 }
 export const routeTree = rootRouteImport
