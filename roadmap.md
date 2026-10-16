@@ -1,0 +1,26 @@
+# Invitation roadmap
+- [x] Add a premium seal-click sound, replace the music with the latest uploaded song, and verify the smooth entrance.
+- [x] Match the childhood boy to the newly supplied photo (boy on the left).
+- [x] Replace the days-only relationship counter with accurate years, months and days and verify it.
+- [x] Polish the closing counter for mobile and add total elapsed days, hours and minutes (date-start calculation, meeting hour not supplied).
+- [x] Refine Umer's illustrated likeness using his original portraits.
+- [x] Add reference-inspired hand-in-hand artwork and Always and Forever ending with infinity and time together since 11 August 2024.
+- [x] Verify new artwork, elapsed-time rules and ending across screen sizes.
+- [x] Restore the original Burj Khalifa hero and verify a softened, consistent powder-blue texture through all remaining sections.
+- [x] Refine envelope and scratch textures, darken text, remove timezone label and visible date reveal button.
+- [x] Replace lower couple photographs with cartoon-style Palm Jumeirah and Museum of the Future artwork.
+- [x] Verify opening, scratch reveal, scrolling and updated artwork.
+- [x] Use the uploaded song as invitation music, starting only after envelope opening.
+- [x] Replace revealed backdrop with Burj Khalifa skyline and sealed backdrop with neutral silk.
+- [x] Make one smooth envelope opening start a short automatic cinematic reveal and music; remove playback controls.
+- [x] Build ordered scrollable invitation with premium date/time scratch, location, timer, falling petals and exact quote: "Two traditions, one faith, united by endless love."
+- [x] Create two distinct couple artworks edited from original portrait references with a leaner, defined face.
+- [x] Verify complete opening, scratching, scrolling, music and narrow-screen layout.
+- [x] Refine narrow-screen sizing and touch targets; add playback loading, retry and silent fallback states.
+- [x] Hide all invitation content until opening; remove extra monograms and decorative copy; enlarge opening/play controls.
+- [x] Synchronize cinematic playback, motion and music; verify play, pause, replay and completion.
+- [x] Verify the simplified envelope experience on phone and desktop.
+- [x] Create palace and likeness-inspired couple artwork.
+- [x] Build sealed-envelope opening and invitation.
+- [x] Add countdown, canvas scratch reveal, music/custom audio, cinematic fullscreen playback.
+- [x] Verify opening, scratch reveal, playback, audio and mobile layout.
