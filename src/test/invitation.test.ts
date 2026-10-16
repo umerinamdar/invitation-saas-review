@@ -12,8 +12,7 @@ import { umerMaimoona } from "@/invites/umer-maimoona";
 
 const EVENT_TIME = umerMaimoona.event.startIso;
 const TOGETHER_SINCE = umerMaimoona.story!.togetherSinceIso!;
-const { musicFadeMs, maxVolume, envelopeOpenMs, introSeconds } =
-  dubaiSilk.motion;
+const { musicFadeMs, maxVolume, openMs, introSeconds } = dubaiSilk.motion;
 const fade = (ms: number) => musicFadeVolume(ms, musicFadeMs, maxVolume);
 
 describe("Engagement details", () => {
@@ -72,9 +71,9 @@ describe("Engagement details", () => {
     ).toBe(0);
   });
   it("opens the envelope smoothly within the requested 1–1.5 seconds", () => {
-    expect(envelopeOpenMs).toBe(1400);
-    expect(envelopeOpenMs).toBeGreaterThanOrEqual(1000);
-    expect(envelopeOpenMs).toBeLessThanOrEqual(1500);
+    expect(openMs).toBe(1400);
+    expect(openMs).toBeGreaterThanOrEqual(1000);
+    expect(openMs).toBeLessThanOrEqual(1500);
   });
   it("uses an introduction shorter than the previous 24 seconds", () => {
     expect(introSeconds).toBe(6);

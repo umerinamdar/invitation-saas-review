@@ -101,68 +101,119 @@ export const dubaiSilk: Theme = {
 
 **To add a template you provide:** 4-6 images, 1 music track, ~10 hex values, 1 font pair. That's it. No React.
 
+### Scope: wedding only
+
+Wedding, engagement, reception, roka, nikah, mehendi, sangeet, haldi. No
+birthdays, baby showers or festive occasions — Zareqia's 14 designs are all
+wedding too, so this matches the market.
+
+### Variety comes from reveal mechanics, not backdrops
+
+Zareqia's own template descriptions give away how they get 14 designs:
+
+> "luxury **door** opening" · "**book-style** opening" · "velvet **curtain**
+> reveal" · "**card** reveal" · "cinematic opening"
+
+They have roughly five opening mechanics and re-skin them. You currently have
+one — the envelope — so every theme you add will feel like the same invite in
+a different colour.
+
+**Mechanics multiply.** Five mechanics × four aesthetics = twenty templates
+that genuinely feel different, from four sets of artwork instead of twenty.
+
+| Mechanic | How it opens | Status |
+|---|---|---|
+| `envelope` | Flap folds back, wax seal breaks | ✅ built |
+| `doors` | Two carved panels swing inward | to build |
+| `curtain` | Velvet drapes part from the centre | to build |
+| `book` | Cover rotates open like a card | to build |
+| `box` | Lid lifts and floats away | to build |
+
+A mechanic is engine work — written once, usable by every theme. The
+post-open page (names, scratch date, countdown, story) is unchanged, so each
+new mechanic is roughly 60-100 lines plus an entry in the theme type.
+
+This is also the honest reason reverse-engineering their site was never the
+shortcut it looked like: the part worth having is the *mechanics*, which are
+behaviour you can write originally in an afternoon, and the part you'd be
+copying is the *artwork*, which is both the infringing bit and the bit a
+generator produces in minutes.
+
 ### Theme catalog — grounded in competitor research
 
 Derived from surveying 18 competitors (Zareqia, Invifest, InviteMaker, Samaro,
 Krikey, SeeMyMarriage, Wedinvite, WishNWed and others). Ranked by proven
 demand, with deliberate bets on gaps nobody is filling.
 
-**Core Hindu (5)**
+Twenty wedding templates from eight artwork sets and five mechanics.
+★ marks an aesthetic competitors underserve.
 
-| # | Theme | Palette / motif |
+**Set A — Dubai Silk** · powder blue, gold, pearl drapes *(artwork built)*
+
+| # | Theme | Mechanic |
 |---|---|---|
-| 1 | Kesari Mandap | Marigold + saffron, mandap arch |
-| 2 | Mughal Zamarrud | Emerald + gold jali |
-| 3 | Midnight Mayura | Navy + peacock, feather particles |
-| 4 | Haveli Bandhej | Marwari — bandhani, leheriya, jharokha ★gap |
-| 5 | Alpona | Bengali — red/white, shakha-pola, topor ★gap |
+| 1 | **Dubai Silk** ✅ | envelope |
+| 2 | Pearl Pavilion | curtain |
+| 3 | Azure Vows | doors |
 
-**South Indian (3)**
+**Set B — Kesari Mandap** · marigold, saffron, mandap arch
 
-| # | Theme | Palette / motif |
+| # | Theme | Mechanic |
 |---|---|---|
-| 6 | Kanjeevaram | Maroon silk, gold zari, gopuram |
-| 7 | Nalangu | Tamil — turmeric yellow, mango-leaf toran |
-| 8 | Malabar Gold | Kerala — ivory kasavu, nilavilakku lamps |
+| 4 | Kesari Mandap | doors |
+| 5 | Haldi Bloom | box |
+| 6 | Marigold Vows | envelope |
 
-**Muslim / Nikah (3)**
+**Set C — Mughal Zamarrud** · emerald, gold jali, arches ★ nikah
 
-| # | Theme | Palette / motif |
+| # | Theme | Mechanic |
 |---|---|---|
-| 9 | Qubool Hai | Deep emerald, thuluth calligraphy, crescent |
-| 10 | Mehfil Rose | Hyderabadi pearl, dusty rose, chandelier |
-| 11 | Sage Nikah | Minimalist sage + off-white ★gap |
+| 7 | Mughal Zamarrud | doors |
+| 8 | Qubool Hai | book |
+| 9 | Emerald Mehfil | curtain |
 
-**Sikh / Christian (2)**
+**Set D — Kanjeevaram** · maroon silk, gold zari, gopuram ★ South Indian
 
-| # | Theme | Palette / motif |
+| # | Theme | Mechanic |
 |---|---|---|
-| 12 | Phulkari Anand | Saffron/ivory, phulkari embroidery, Ik Onkar ★gap |
-| 13 | Chapel Ivory | Stained-glass light, cathedral arch, bells |
+| 10 | Kanjeevaram | curtain |
+| 11 | Nalangu | envelope |
+| 12 | Temple Gold | doors |
 
-**Modern / Destination (3)**
+**Set E — Haveli Bandhej** · bandhani, leheriya, jharokha ★ Marwari
 
-| # | Theme | Palette / motif |
+| # | Theme | Mechanic |
 |---|---|---|
-| 14 | **Dubai Silk** ✅ | Powder blue + gold — built, flagship |
-| 15 | Monochrome Vow | Ivory + charcoal, editorial type |
-| 16 | Palm & Sand | Goa/beach — warm sand + teal |
+| 13 | Haveli Bandhej | doors |
+| 14 | Jaipur Blue | book |
 
-**Non-wedding — year-round traffic (4)** ★★ biggest gap
+**Set F — Alpona** · red and white, shakha-pola, topor ★ Bengali
 
-| # | Theme | Occasions |
+| # | Theme | Mechanic |
 |---|---|---|
-| 17 | Griha Pravesh | Housewarming — brass kalash, rangoli, diya reveal |
-| 18 | Nanha | Baby shower, annaprashan, mundan — pastel, cradle |
-| 19 | Deepavali Noor | Diwali/Eid — lamp-lighting reveal, palette swap |
-| 20 | Janmadin | Birthday, anniversary, jubilees — confetti burst |
+| 15 | Alpona | curtain |
+| 16 | Shubho Bibaho | envelope |
 
-**Why 17-20 matter most:** InviteMaker and SeeMyMarriage own these occasions
-in *video* form, but **no interactive-microsite competitor offers a single
-one**. They are the only themes that earn outside the Nov–Feb wedding window,
-and they are the cheapest to differentiate on.
+**Set G — Phulkari Anand** · saffron, ivory, phulkari ★ Sikh
 
-**Tiering:** 1-13 Classic, 14-16 plus anything with a heavy 3D reveal as Royal.
+| # | Theme | Mechanic |
+|---|---|---|
+| 17 | Phulkari Anand | doors |
+| 18 | Anand Karaj | book |
+
+**Set H — Monochrome Vow** · ivory, charcoal, editorial type
+
+| # | Theme | Mechanic |
+|---|---|---|
+| 19 | Monochrome Vow | book |
+| 20 | Sage Nikah ★ | curtain |
+
+**Launch five:** Dubai Silk (built), Kesari Mandap, Mughal Zamarrud,
+Kanjeevaram, Monochrome Vow. That covers Hindu, Muslim, South Indian and
+modern — the four buyers most likely to find you — and needs four artwork
+sets plus two new mechanics.
+
+**Tiering:** envelope and book → Classic. doors, curtain and box → Royal.
 
 ---
 

@@ -46,7 +46,8 @@ export const dubaiSilk: Theme = {
   },
 
   motion: {
-    envelopeOpenMs: 1400,
+    reveal: "envelope",
+    openMs: 1400,
     introSeconds: 6,
     musicFadeMs: 8000,
     maxVolume: 0.6,

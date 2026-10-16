@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScratchInvitation } from "@/components/scratch-invitation";
 import { CinematicInvite } from "@/components/cinematic-invite";
+import { RevealStage } from "@/components/reveals";
 import {
   musicFadeVolume,
   remainingTime,
@@ -65,7 +66,7 @@ export function Invitation({
 
   const { sealedBackdrop, revealedBackdrop, sealDisc, defaultMusic } =
     theme.assets;
-  const { envelopeOpenMs, introSeconds, musicFadeMs, maxVolume, petals } =
+  const { reveal, openMs, introSeconds, musicFadeMs, maxVolume, petals } =
     theme.motion;
   const { event, story } = invite;
   const musicUrl = invite.music?.url ?? defaultMusic;
@@ -194,7 +195,7 @@ export function Invitation({
       setOpen(true);
       setOpening(false);
       musicDelay.current = setTimeout(startMusic, 1000);
-    }, envelopeOpenMs);
+    }, openMs);
   }
 
   function toggleMusic() {
@@ -236,39 +237,16 @@ export function Invitation({
             height={1024}
             fetchPriority="high"
           />
-          <div className={`envelope ${opening ? "is-opening" : ""}`}>
-            <div className="envelope-paper" />
-            <div className="envelope-flap" />
-            <div className="envelope-bottom" />
-            <span className="envelope-line left-line" />
-            <span className="envelope-line right-line" />
-            <Button
-              variant="ghost"
-              className="seal-button"
-              onClick={openEnvelope}
-              disabled={opening}
-              aria-label={`Break the wax seal and open the invitation from ${names}`}
-            >
-              {invite.sealImage ? (
-                <img src={invite.sealImage} width={816} height={816} alt="" />
-              ) : (
-                <span className="wax-seal">
-                  {sealDisc && (
-                    <img src={sealDisc} width={816} height={816} alt="" />
-                  )}
-                  <span className="wax-monogram">{initials}</span>
-                </span>
-              )}
-            </Button>
-            <Button
-              variant="ghost"
-              className="envelope-label"
-              onClick={openEnvelope}
-              disabled={opening}
-            >
-              {event.typeLabel} <ArrowUpRight />
-            </Button>
-          </div>
+          <RevealStage
+            reveal={reveal}
+            initials={initials}
+            {...(invite.sealImage ? { sealImage: invite.sealImage } : {})}
+            {...(sealDisc ? { sealDisc } : {})}
+            label={event.typeLabel}
+            hosts={names}
+            opening={opening}
+            onOpen={openEnvelope}
+          />
         </section>
       ) : (
         <div className="opened-invitation">

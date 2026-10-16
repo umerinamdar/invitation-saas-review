@@ -1,7 +1,8 @@
 import type { Theme } from "./types";
 import { dubaiSilk } from "./dubai-silk";
+import { azureVows } from "./azure-vows";
 
-export const themes: Theme[] = [dubaiSilk];
+export const themes: Theme[] = [dubaiSilk, azureVows];
 
 export const themesById = new Map(themes.map((theme) => [theme.id, theme]));
 

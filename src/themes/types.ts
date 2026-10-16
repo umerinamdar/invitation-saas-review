@@ -15,6 +15,13 @@ export type Tier = "classic" | "royal";
 export type PetalStyle = "white-blossom" | "marigold" | "rose" | "none";
 
 /**
+ * How the invitation opens. Each mechanic is written once in the engine and
+ * reused by every theme, so the catalog grows faster than the artwork does:
+ * one artwork set carries three templates by varying this alone.
+ */
+export type Reveal = "envelope" | "doors" | "curtain" | "book" | "box";
+
+/**
  * Every colour is a plain CSS colour string, so hex, oklch and rgb all work.
  * Each one maps to a custom property the stylesheet already consumes.
  */
@@ -56,7 +63,9 @@ export type ThemeAssets = {
 };
 
 export type Motion = {
-  envelopeOpenMs: number;
+  reveal: Reveal;
+  /** How long the opening animation runs before the invitation appears. */
+  openMs: number;
   introSeconds: number;
   musicFadeMs: number;
   maxVolume: number;
