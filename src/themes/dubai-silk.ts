@@ -39,7 +39,8 @@ export const dubaiSilk: Theme = {
   assets: {
     sealedBackdrop: "/themes/dubai-silk/silk.jpg",
     revealedBackdrop: "/themes/dubai-silk/skyline.jpg",
-    waxSeal: "/themes/dubai-silk/seal.png",
+    // TODO: supply a blank powder-blue wax disc with a gold rim and no
+    // lettering. Until then the seal is drawn from the palette in CSS.
     paperTexture: "/themes/dubai-silk/paper.jpg",
     defaultMusic: "/themes/dubai-silk/track.mp3",
   },

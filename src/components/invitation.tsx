@@ -19,7 +19,12 @@ import {
   togetherElapsed,
 } from "@/lib/invitation";
 import { paletteVariables, type Theme } from "@/themes/types";
-import { galleryImage, hostNames, type Invite } from "@/invites/types";
+import {
+  galleryImage,
+  hostNames,
+  monogram,
+  type Invite,
+} from "@/invites/types";
 
 const SEAL_CLICK = "/audio/seal-click.wav";
 
@@ -58,13 +63,14 @@ export function Invitation({
   const opened = useRef(false);
   const completeIntro = useCallback(() => setIntroDone(true), []);
 
-  const { sealedBackdrop, revealedBackdrop, waxSeal, defaultMusic } =
+  const { sealedBackdrop, revealedBackdrop, sealDisc, defaultMusic } =
     theme.assets;
   const { envelopeOpenMs, introSeconds, musicFadeMs, maxVolume, petals } =
     theme.motion;
   const { event, story } = invite;
   const musicUrl = invite.music?.url ?? defaultMusic;
   const names = hostNames(invite);
+  const initials = monogram(invite);
   const ring = galleryImage(invite, "ring");
   const childhood = galleryImage(invite, "childhood");
   const forever = galleryImage(invite, "forever");
@@ -243,7 +249,16 @@ export function Invitation({
               disabled={opening}
               aria-label={`Break the wax seal and open the invitation from ${names}`}
             >
-              <img src={waxSeal} width={816} height={816} alt="" />
+              {invite.sealImage ? (
+                <img src={invite.sealImage} width={816} height={816} alt="" />
+              ) : (
+                <span className="wax-seal">
+                  {sealDisc && (
+                    <img src={sealDisc} width={816} height={816} alt="" />
+                  )}
+                  <span className="wax-monogram">{initials}</span>
+                </span>
+              )}
             </Button>
             <Button
               variant="ghost"

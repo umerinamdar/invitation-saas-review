@@ -1,12 +1,19 @@
 import type { Invite } from "./types";
 
-/** The original invitation, now expressed as data. Doubles as the Dubai Silk demo. */
+/**
+ * Umer and Maimoona's own invitation — personal content, not a template.
+ * The artwork, the quote and the monogrammed seal belong to them, so this
+ * never appears in the public gallery. See `demo-wedding.ts` for the
+ * neutral invite the Dubai Silk listing previews.
+ */
 export const umerMaimoona: Invite = {
   slug: "umer-maimoona-2026",
   themeId: "dubai-silk",
   occasion: "engagement",
 
   hosts: { mode: "couple", person1: "Umer", person2: "Maimoona" },
+
+  sealImage: "/demo/umer-maimoona/seal.png",
 
   event: {
     typeLabel: "Engagement Ceremony",

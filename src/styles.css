@@ -185,6 +185,11 @@ button,a { -webkit-tap-highlight-color: transparent; }
 .left-line { left:0; transform:rotate(33deg); }.right-line { right:0; transform-origin:right; transform:rotate(-33deg); }
 .seal-button { position:absolute; width:24%; height:auto; aspect-ratio:1; left:38%; top:33%; z-index:6; padding:0; border-radius:50%; transition:transform .7s,opacity .7s; }
 .seal-button img { width:100%; height:100%; object-fit:contain; }.seal-button:hover { background:transparent; transform:scale(1.06); }
+/* The monogram is printed per host, so one disc serves every invite on a theme. */
+.wax-seal { position:relative; display:grid; place-items:center; width:100%; height:100%; }
+.wax-seal img { position:absolute; inset:0; }
+.wax-seal:not(:has(img)) { border-radius:50%; background:radial-gradient(circle at 34% 30%,color-mix(in oklch,var(--paper-light) 85%,transparent),var(--powder) 58%,color-mix(in oklch,var(--paper-dark) 92%,transparent)); box-shadow:inset 0 0 0 3px color-mix(in oklch,var(--gold) 55%,transparent), inset 0 -4px 12px color-mix(in oklch,var(--foreground) 18%,transparent), 0 5px 14px -6px color-mix(in oklch,var(--foreground) 35%,transparent); }
+.wax-monogram { position:relative; z-index:1; font:500 clamp(18px,3.1vw,34px)/1 var(--font-serif); letter-spacing:.04em; color:var(--gold); text-shadow:0 1px 1px color-mix(in oklch,var(--ink-light) 70%,transparent); }
 .envelope-label { position:absolute; left:0; right:0; bottom:6%; margin:auto; width:max-content; max-width:calc(100% - 12px); height:54px; padding:6px 15px; z-index:5; color:var(--foreground); font:600 28px var(--font-serif); text-shadow:0 1px 0 var(--ink-light); }
 .envelope-label svg { width:19px; }
 .is-opening .seal-button { transform:scale(1.15) rotate(-10deg); opacity:0; }.is-opening .envelope-flap { transform:rotateX(175deg); z-index:1; }.is-opening .envelope-paper { transform:translateY(-65px); }.is-opening .envelope-line { opacity:0; }.is-opening .envelope-label { opacity:0; transition:opacity .5s; }

@@ -45,7 +45,12 @@ export type Typography = {
 export type ThemeAssets = {
   sealedBackdrop: string; // behind the closed envelope
   revealedBackdrop: string; // hero behind the names
-  waxSeal: string;
+  /**
+   * A BLANK wax disc — no lettering. The engine prints each host's own
+   * initials over it, so one disc serves every customer using this theme.
+   * Omit it and the seal is drawn in CSS from the palette instead.
+   */
+  sealDisc?: string;
   paperTexture: string; // envelope + scratch card grain
   defaultMusic: string;
 };
