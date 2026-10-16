@@ -26,7 +26,14 @@ export type Reveal = "envelope" | "doors" | "curtain" | "book" | "box";
  * a template ships without any artwork at all.
  */
 export type Ornamentation =
-  "none" | "jali" | "deco" | "geometric" | "botanical";
+  | "none"
+  | "jali"
+  | "deco"
+  | "geometric"
+  | "botanical"
+  | "mandala"
+  | "paisley"
+  | "temple";
 
 /**
  * Every colour is a plain CSS colour string, so hex, oklch and rgb all work.

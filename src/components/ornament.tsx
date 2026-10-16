@@ -100,6 +100,47 @@ function PatternTile({ kind }: { kind: Ornamentation }) {
           <ellipse cx="60" cy="60" rx="4" ry="7" />
         </g>
       );
+    case "mandala":
+      // Concentric lotus petals radiating from a centre — rangoli geometry.
+      return (
+        <g fill="none" stroke={stroke} strokeWidth="0.85" opacity="0.45">
+          {Array.from({ length: 12 }, (_, i) => (
+            <ellipse
+              key={i}
+              cx="60"
+              cy="34"
+              rx="5.5"
+              ry="19"
+              transform={`rotate(${i * 30} 60 60)`}
+            />
+          ))}
+          <circle cx="60" cy="60" r="9" />
+          <circle cx="60" cy="60" r="3.4" fill={stroke} stroke="none" />
+        </g>
+      );
+    case "paisley":
+      // The boteh teardrop of bandhani and phulkari work.
+      return (
+        <g fill="none" stroke={stroke} strokeWidth="0.85" opacity="0.45">
+          <path d="M44 86 C26 72 30 44 50 36 C70 28 86 42 80 58 C76 70 60 72 56 62 C53 54 62 48 68 53" />
+          <path d="M104 26 C95 19 97 5 107 1" strokeWidth="0.7" />
+          <circle cx="40" cy="30" r="2.2" fill={stroke} stroke="none" />
+          <circle cx="96" cy="94" r="2.2" fill={stroke} stroke="none" />
+          <circle cx="18" cy="108" r="1.6" fill={stroke} stroke="none" />
+        </g>
+      );
+    case "temple":
+      // Stepped gopuram tiers with a pointed finial.
+      return (
+        <g fill="none" stroke={stroke} strokeWidth="0.85" opacity="0.42">
+          <path d="M30 118 L30 96 L46 96 L46 76 L54 76 L54 58 L60 46 L66 58 L66 76 L74 76 L74 96 L90 96 L90 118" />
+          <path d="M60 46 L60 30" strokeWidth="1.2" />
+          <circle cx="60" cy="25" r="3.4" />
+          <path d="M0 118 L120 118" strokeWidth="1.1" />
+          <path d="M6 108 L14 96 L22 108Z" />
+          <path d="M98 108 L106 96 L114 108Z" />
+        </g>
+      );
     default:
       return null;
   }
@@ -200,6 +241,47 @@ function FrameCorner({ kind }: { kind: Ornamentation }) {
             transform="rotate(-45 40 22)"
           />
           <circle cx="8" cy="54" r="2.6" fill="var(--gold)" stroke="none" />
+        </>
+      );
+    case "mandala":
+      return (
+        <>
+          <path d="M0 60 A60 60 0 0 1 60 0" />
+          <path d="M0 40 A40 40 0 0 1 40 0" strokeWidth="0.7" />
+          {[0, 30, 60].map((angle) => (
+            <ellipse
+              key={angle}
+              cx="0"
+              cy="0"
+              rx="4"
+              ry="15"
+              transform={`rotate(${angle + 45}) translate(0 20)`}
+              strokeWidth="0.7"
+            />
+          ))}
+        </>
+      );
+    case "paisley":
+      return (
+        <>
+          <path d="M0 62 C34 62 62 34 62 0" />
+          <path d="M14 46 C14 30 30 14 46 14" strokeWidth="0.7" />
+          <path
+            d="M26 34 C20 28 22 18 30 16 C38 14 43 21 39 27 C36 31 29 31 28 27"
+            strokeWidth="0.8"
+          />
+          <circle cx="6" cy="56" r="2.4" fill="var(--gold)" stroke="none" />
+        </>
+      );
+    case "temple":
+      return (
+        <>
+          <path d="M0 58 L0 34 L18 34 L18 16 L34 16 L34 0 L58 0" />
+          <path
+            d="M9 58 L9 43 L27 43 L27 25 L43 25 L43 9 L58 9"
+            strokeWidth="0.7"
+          />
+          <circle cx="12" cy="12" r="2.8" fill="var(--gold)" stroke="none" />
         </>
       );
     default:

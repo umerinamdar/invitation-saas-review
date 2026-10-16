@@ -152,13 +152,38 @@ export function BookReveal(props: RevealProps) {
   );
 }
 
+/**
+ * A keepsake box whose lid lifts and floats away, carrying the seal with it.
+ * The lightest-feeling mechanic, and the only one that moves upward.
+ */
+export function BoxReveal(props: RevealProps) {
+  const { opening, onOpen, hosts } = props;
+  return (
+    <div className={`box ${opening ? "is-opening" : ""}`}>
+      <span className="box-base" />
+      <div className="box-lid">
+        <span className="box-rim" />
+        <Button
+          variant="ghost"
+          className="seal-button box-seal"
+          onClick={onOpen}
+          disabled={opening}
+          aria-label={`Lift the lid on the invitation from ${hosts}`}
+        >
+          <WaxSeal {...props} />
+        </Button>
+      </div>
+      <OpenLabel {...props} className="box-label" />
+    </div>
+  );
+}
+
 const reveals: Record<Reveal, (props: RevealProps) => React.JSX.Element> = {
   envelope: EnvelopeReveal,
   doors: DoorsReveal,
   curtain: CurtainReveal,
   book: BookReveal,
-  // Not built yet — falls back to the envelope until it is.
-  box: EnvelopeReveal,
+  box: BoxReveal,
 };
 
 export function RevealStage({

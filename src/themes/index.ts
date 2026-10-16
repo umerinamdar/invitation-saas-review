@@ -5,14 +5,27 @@ import { mughalZamarrud } from "./mughal-zamarrud";
 import { qubooHai } from "./qubool-hai";
 import { monochromeVow } from "./monochrome-vow";
 import { sageNikah } from "./sage-nikah";
+import { kesariMandap } from "./kesari-mandap";
+import { midnightMayura } from "./midnight-mayura";
+import { kanjeevaram } from "./kanjeevaram";
+import { haveliBandhej } from "./haveli-bandhej";
+import { alpona } from "./alpona";
+import { phulkariAnand } from "./phulkari-anand";
 
+/** Catalog order is gallery order, so lead with the strongest designs. */
 export const themes: Theme[] = [
   dubaiSilk,
-  azureVows,
   mughalZamarrud,
+  kesariMandap,
+  midnightMayura,
+  kanjeevaram,
   qubooHai,
+  phulkariAnand,
+  alpona,
+  haveliBandhej,
   monochromeVow,
   sageNikah,
+  azureVows,
 ];
 
 export const themesById = new Map(themes.map((theme) => [theme.id, theme]));

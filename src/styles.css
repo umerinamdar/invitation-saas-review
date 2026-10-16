@@ -688,6 +688,19 @@ a {
   }
 }
 
+/* Box: a keepsake lid that lifts and floats away. */
+.box { width:min(470px,100%); aspect-ratio:1.22; position:relative; perspective:1500px; }
+.box-base { position:absolute; left:0; right:0; bottom:0; height:70%; background:var(--paper-texture) center/400px var(--paper-light); border:1px solid var(--paper-dark); box-shadow:var(--shadow-paper); }
+.box-lid { position:absolute; left:0; right:0; top:0; height:52%; background:var(--paper-texture) center/400px var(--paper); border:1px solid var(--paper-dark); box-shadow:var(--shadow-envelope); transition:transform 1.5s cubic-bezier(.33,0,.2,1),opacity 1.5s; z-index:4; }
+.box-rim { position:absolute; left:10px; right:10px; bottom:9px; height:1px; background:var(--gold-light); }
+.box-lid::after { content:''; position:absolute; inset:14px 14px 20px; border:1px solid color-mix(in oklch,var(--gold-light) 65%,transparent); }
+.box.is-opening .box-lid { transform:translateY(-58%) rotateX(26deg); opacity:0; }
+.box-seal { position:absolute; left:50%; top:50%; width:25%; aspect-ratio:1; translate:-50% -50%; z-index:6; padding:0; border-radius:50%; }
+.box-label { position:absolute; left:0; right:0; bottom:9%; margin:auto; width:max-content; max-width:calc(100% - 12px); height:54px; padding:6px 15px; z-index:5; color:var(--foreground); font:600 26px var(--font-serif); text-shadow:0 1px 0 var(--ink-light); }
+.box-label svg { width:18px; }
+.box.is-opening .box-label { opacity:0; transition:opacity .45s; }
+@media (max-width:640px) { .box { aspect-ratio:1.05; } .box-label { font-size:23px; height:50px; } }
+
 /* Drawn decoration, used by templates that ship without photography. */
 .pattern-backdrop {
   position: absolute;
