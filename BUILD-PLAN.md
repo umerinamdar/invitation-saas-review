@@ -378,7 +378,7 @@ Storage bucket `invite-media`, path convention `{user_id}/{invite_id}/{filename}
 
 | Phase | Work | Outcome |
 |---|---|---|
-| **1** | Extract engine from hardcoded values; build `Theme` + `Invite` types; render from config | Your invite still works, now data-driven |
+| ~~**1**~~ ✅ | ~~Extract engine from hardcoded values; build `Theme` + `Invite` types; render from config~~ | **Done** — commit `d0d955f` |
 | **2** | Build themes #2 and #3 | Proves the theme system; you learn the real per-theme cost |
 | **3** | Supabase: auth, schema, RLS, storage | Accounts work |
 | **4** | Editor with live preview; `/i/$slug` published route | Someone can make an invite |
