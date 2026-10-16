@@ -100,12 +100,64 @@ export function DoorsReveal(props: RevealProps) {
   );
 }
 
+/**
+ * Velvet drapes part from the centre, weighted so they sweep rather than
+ * slide — the heaviest-feeling of the mechanics.
+ */
+export function CurtainReveal(props: RevealProps) {
+  const { opening, onOpen, hosts } = props;
+  return (
+    <div className={`curtain ${opening ? "is-opening" : ""}`}>
+      <div className="drape drape-left" />
+      <div className="drape drape-right" />
+      <span className="curtain-rod" />
+      <Button
+        variant="ghost"
+        className="seal-button curtain-seal"
+        onClick={onOpen}
+        disabled={opening}
+        aria-label={`Draw the curtains on the invitation from ${hosts}`}
+      >
+        <WaxSeal {...props} />
+      </Button>
+      <OpenLabel {...props} className="curtain-label" />
+    </div>
+  );
+}
+
+/**
+ * A folded card whose cover swings open on its spine, the seal riding the
+ * cover as it turns.
+ */
+export function BookReveal(props: RevealProps) {
+  const { opening, onOpen, hosts } = props;
+  return (
+    <div className={`book ${opening ? "is-opening" : ""}`}>
+      <span className="book-page" />
+      <div className="book-cover">
+        <span className="book-plate" />
+        <Button
+          variant="ghost"
+          className="seal-button book-seal"
+          onClick={onOpen}
+          disabled={opening}
+          aria-label={`Open the invitation from ${hosts}`}
+        >
+          <WaxSeal {...props} />
+        </Button>
+        <OpenLabel {...props} className="book-label" />
+      </div>
+      <span className="book-spine" />
+    </div>
+  );
+}
+
 const reveals: Record<Reveal, (props: RevealProps) => React.JSX.Element> = {
   envelope: EnvelopeReveal,
   doors: DoorsReveal,
-  // Not built yet — these fall back to the envelope until they are.
-  curtain: EnvelopeReveal,
-  book: EnvelopeReveal,
+  curtain: CurtainReveal,
+  book: BookReveal,
+  // Not built yet — falls back to the envelope until it is.
   box: EnvelopeReveal,
 };
 

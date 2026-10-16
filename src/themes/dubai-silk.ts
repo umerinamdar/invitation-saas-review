@@ -36,6 +36,8 @@ export const dubaiSilk: Theme = {
       "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@400;500;600&display=swap",
   },
 
+  ornamentation: "none", // uses photography instead
+
   assets: {
     sealedBackdrop: "/themes/dubai-silk/silk.jpg",
     revealedBackdrop: "/themes/dubai-silk/skyline.jpg",

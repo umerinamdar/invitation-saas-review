@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { ScratchInvitation } from "@/components/scratch-invitation";
 import { CinematicInvite } from "@/components/cinematic-invite";
 import { RevealStage } from "@/components/reveals";
+import { OrnateFrame, PatternBackdrop } from "@/components/ornament";
 import {
   musicFadeVolume,
   remainingTime,
@@ -66,6 +67,7 @@ export function Invitation({
 
   const { sealedBackdrop, revealedBackdrop, sealDisc, defaultMusic } =
     theme.assets;
+  const { ornamentation } = theme;
   const { reveal, openMs, introSeconds, musicFadeMs, maxVolume, petals } =
     theme.motion;
   const { event, story } = invite;
@@ -229,14 +231,19 @@ export function Invitation({
       />
       {!open ? (
         <section className={`sealed-stage ${opening ? "opening-stage" : ""}`}>
-          <img
-            src={sealedBackdrop}
-            className="sealed-backdrop"
-            alt=""
-            width={1536}
-            height={1024}
-            fetchPriority="high"
-          />
+          {sealedBackdrop ? (
+            <img
+              src={sealedBackdrop}
+              className="sealed-backdrop"
+              alt=""
+              width={1536}
+              height={1024}
+              fetchPriority="high"
+            />
+          ) : (
+            <PatternBackdrop kind={ornamentation} />
+          )}
+          <OrnateFrame kind={ornamentation} />
           <RevealStage
             reveal={reveal}
             initials={initials}
@@ -251,15 +258,22 @@ export function Invitation({
       ) : (
         <div className="opened-invitation">
           <section className="skyline-invitation">
-            <img
-              src={revealedBackdrop}
-              className="skyline-backdrop"
-              width={1536}
-              height={1024}
-              alt=""
-              fetchPriority="high"
-            />
-            <div className="skyline-veil" />
+            {revealedBackdrop ? (
+              <>
+                <img
+                  src={revealedBackdrop}
+                  className="skyline-backdrop"
+                  width={1536}
+                  height={1024}
+                  alt=""
+                  fetchPriority="high"
+                />
+                <div className="skyline-veil" />
+              </>
+            ) : (
+              <PatternBackdrop kind={ornamentation} />
+            )}
+            <OrnateFrame kind={ornamentation} />
             <CinematicInvite
               running={artState === "ready" && !introDone}
               seconds={introSeconds}

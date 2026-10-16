@@ -124,7 +124,8 @@ export function ScratchInvitation({ theme, event, onReveal }: Props) {
         draw();
       }
     };
-    texture.src = paperTexture;
+    // A theme without a grain paints the foil as a flat gradient instead.
+    if (paperTexture) texture.src = paperTexture;
     document.fonts.ready.then(() => {
       if (!disposed && !scratched.current) {
         oldWidth = 0;

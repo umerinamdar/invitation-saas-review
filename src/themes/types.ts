@@ -1,14 +1,13 @@
+/** Wedding-related only — the catalog deliberately covers nothing else. */
 export type Occasion =
   | "wedding"
   | "engagement"
   | "reception"
-  | "birthday"
-  | "anniversary"
-  | "housewarming"
-  | "baby-shower"
-  | "party"
-  | "opening"
-  | "festive";
+  | "roka"
+  | "nikah"
+  | "mehendi"
+  | "sangeet"
+  | "haldi";
 
 export type Tier = "classic" | "royal";
 
@@ -20,6 +19,14 @@ export type PetalStyle = "white-blossom" | "marigold" | "rose" | "none";
  * one artwork set carries three templates by varying this alone.
  */
 export type Reveal = "envelope" | "doors" | "curtain" | "book" | "box";
+
+/**
+ * Drawn decoration used instead of photography. A theme naming one of these
+ * gets its backdrop and border frame rendered from the palette, which is how
+ * a template ships without any artwork at all.
+ */
+export type Ornamentation =
+  "none" | "jali" | "deco" | "geometric" | "botanical";
 
 /**
  * Every colour is a plain CSS colour string, so hex, oklch and rgb all work.
@@ -50,15 +57,17 @@ export type Typography = {
 };
 
 export type ThemeAssets = {
-  sealedBackdrop: string; // behind the closed envelope
-  revealedBackdrop: string; // hero behind the names
+  /** Omit both backdrops to let `ornamentation` draw them instead. */
+  sealedBackdrop?: string; // behind the closed envelope
+  revealedBackdrop?: string; // hero behind the names
   /**
    * A BLANK wax disc — no lettering. The engine prints each host's own
    * initials over it, so one disc serves every customer using this theme.
    * Omit it and the seal is drawn in CSS from the palette instead.
    */
   sealDisc?: string;
-  paperTexture: string; // envelope + scratch card grain
+  /** Omit on dark themes: a light grain would wash the surfaces out. */
+  paperTexture?: string; // envelope + scratch card grain
   defaultMusic: string;
 };
 
@@ -81,6 +90,7 @@ export type Theme = {
   thumbnail: string;
   palette: Palette;
   typography: Typography;
+  ornamentation: Ornamentation;
   assets: ThemeAssets;
   motion: Motion;
   /** Wording baked into the design rather than supplied by the host. */
@@ -109,7 +119,10 @@ export function paletteVariables(theme: Theme): Record<string, string> {
     "--foreground": p.foreground,
     "--muted-foreground": p.muted,
     "--border": p.border,
-    "--paper-texture": `url('${a.paperTexture}')`,
+    "--paper-texture": a.paperTexture ? `url('${a.paperTexture}')` : "none",
+    // Vignette stops for a drawn backdrop: lighter at the centre, darker out.
+    "--pattern-core": p.surface,
+    "--pattern-edge": p.background,
     "--font-serif": `'${t.serif}', Georgia, serif`,
     "--font-sans": `'${t.sans}', sans-serif`,
   };
