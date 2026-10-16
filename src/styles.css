@@ -145,30 +145,32 @@
   }
 }
 
+/*
+ * Invite theme contract.
+ *
+ * The palette, textures and fonts below are INJECTED AT RUNTIME by the invite
+ * engine from the active theme (see src/themes/types.ts → paletteVariables).
+ * The values here are only app-shell fallbacks for pages outside an invite.
+ * To add a template, write a theme file — never edit this stylesheet.
+ */
 :root {
-  --gold: oklch(0.57 0.068 81);
-  --gold-light: oklch(0.78 0.056 81);
-  --powder: oklch(0.88 0.027 239);
-  --paper: oklch(0.91 0.022 234);
-  --paper-light: oklch(0.95 0.015 239);
-  --paper-dark: oklch(0.84 0.03 239);
-  --ink-light: oklch(0.98 0.006 80);
-  --cinema-ink: oklch(0.25 0.025 240);
-  --scratch: oklch(0.87 0.028 237);
-  --scratch-ink: oklch(0.29 0.043 244);
-  --paper-texture: url('/src/assets/powder-paper-texture.jpg');
-  --silk-texture: url('/src/assets/sealed-silk.jpg');
-  --invitation-surface: oklch(0.947 0.017 239);
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Montserrat', sans-serif;
+
+  /* Derived from the injected palette — these follow any theme automatically. */
   --invitation-texture-veil: color-mix(in oklch,var(--invitation-surface) 88%,transparent);
-  --shadow-envelope: 0 38px 65px -16px oklch(0.25 0.03 245 / 0.28), 0 12px 24px -10px oklch(0.25 0.03 245 / 0.2), inset 0 0 0 3px oklch(0.98 0.006 240 / 0.65);
+  --shadow-envelope:
+    0 38px 65px -16px color-mix(in oklch,var(--foreground) 28%,transparent),
+    0 12px 24px -10px color-mix(in oklch,var(--foreground) 20%,transparent),
+    inset 0 0 0 3px color-mix(in oklch,var(--ink-light) 65%,transparent);
   --shadow-paper: inset 0 1px 2px var(--ink-light), inset 0 -2px 5px color-mix(in oklch,var(--foreground) 12%,transparent);
   --shadow-foil: 0 12px 30px -14px color-mix(in oklch,var(--foreground) 30%,transparent), inset 0 0 0 1px var(--ink-light);
-  --shadow-dock: 0 4px 25px oklch(0.35 0.045 245 / 0.12);
+  --shadow-dock: 0 4px 25px color-mix(in oklch,var(--foreground) 12%,transparent);
 }
 html { scroll-behavior: smooth; }
 * { letter-spacing: 0; }
 h1,h2,h3,p { margin: 0; }
-h1,h2,h3,.signature { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400; }
+h1,h2,h3,.signature { font-family: var(--font-serif); font-weight: 400; }
 button,a { -webkit-tap-highlight-color: transparent; }
 
 /* One envelope, one continuous invitation. */
@@ -183,7 +185,7 @@ button,a { -webkit-tap-highlight-color: transparent; }
 .left-line { left:0; transform:rotate(33deg); }.right-line { right:0; transform-origin:right; transform:rotate(-33deg); }
 .seal-button { position:absolute; width:24%; height:auto; aspect-ratio:1; left:38%; top:33%; z-index:6; padding:0; border-radius:50%; transition:transform .7s,opacity .7s; }
 .seal-button img { width:100%; height:100%; object-fit:contain; }.seal-button:hover { background:transparent; transform:scale(1.06); }
-.envelope-label { position:absolute; left:0; right:0; bottom:6%; margin:auto; width:max-content; max-width:calc(100% - 12px); height:54px; padding:6px 15px; z-index:5; color:var(--foreground); font:600 28px 'Cormorant Garamond',serif; text-shadow:0 1px 0 var(--ink-light); }
+.envelope-label { position:absolute; left:0; right:0; bottom:6%; margin:auto; width:max-content; max-width:calc(100% - 12px); height:54px; padding:6px 15px; z-index:5; color:var(--foreground); font:600 28px var(--font-serif); text-shadow:0 1px 0 var(--ink-light); }
 .envelope-label svg { width:19px; }
 .is-opening .seal-button { transform:scale(1.15) rotate(-10deg); opacity:0; }.is-opening .envelope-flap { transform:rotateX(175deg); z-index:1; }.is-opening .envelope-paper { transform:translateY(-65px); }.is-opening .envelope-line { opacity:0; }.is-opening .envelope-label { opacity:0; transition:opacity .5s; }
 .opened-invitation { animation:invitation-appear 1s ease both; background-color:var(--invitation-surface); background-image:linear-gradient(var(--invitation-texture-veil),var(--invitation-texture-veil)),var(--paper-texture); background-size:auto,480px 480px; }
@@ -192,7 +194,7 @@ button,a { -webkit-tap-highlight-color: transparent; }
 .skyline-veil { position:absolute; inset:0; z-index:-2; background:linear-gradient(to bottom,color-mix(in oklch,var(--background) 48%,transparent) 0%,color-mix(in oklch,var(--powder) 16%,transparent) 38%,color-mix(in oklch,var(--background) 58%,transparent) 60%,color-mix(in oklch,var(--background) 78%,transparent) 100%); }
 .cinematic-reveal { position:absolute; inset:0; pointer-events:none; }
 .invitation-heading { z-index:1; transition:opacity 1.2s,transform 1.2s; }
-.invitation-heading p { font:500 22px 'Cormorant Garamond',serif; }
+.invitation-heading p { font:500 22px var(--font-serif); }
 .heading-rule { display:block; width:52px; height:1px; background:var(--gold); margin:18px auto 0; }
 .invitation-names { margin:auto 0; padding:70px 0 35px; width:100%; transition:opacity 1.3s,transform 1.3s; }
 .invitation-names h1 { font-size:76px; line-height:1.1; font-weight:500; text-shadow:0 1px 15px var(--paper-light); }
@@ -208,10 +210,18 @@ button,a { -webkit-tap-highlight-color: transparent; }
 .revealed-date h2 { font-size:36px; line-height:1.2; }.revealed-date h3 { font-size:28px; margin-top:16px; }.revealed-date p { font-size:11px; margin-top:8px; color:var(--muted-foreground); }.revealed-date span { font-size:10px; margin-top:6px; color:var(--muted-foreground); }
 .date-revealed .revealed-date { animation:invitation-appear .8s ease both; }
 .invitation-scroll { display:grid; place-items:center; width:44px; height:44px; color:var(--gold); transition:opacity 1s; }
-.venue-section { text-align:center; padding:46px 20px 60px; background:transparent; }.venue-section > svg { margin:0 auto 16px; color:var(--gold); }.venue-section > a { font:500 31px 'Cormorant Garamond',serif; display:inline-flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:8px; text-decoration:underline; text-underline-offset:7px; text-decoration-color:var(--gold-light); }
-.countdown { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); width:min(420px,100%); margin:40px auto 0; }.countdown strong { font:48px 'Cormorant Garamond',serif; font-variant-numeric:tabular-nums; }.countdown span { display:block; font-size:10px; color:var(--muted-foreground); margin-top:5px; }.countdown > div { position:relative; }.countdown > div:not(:last-child)::after { content:':'; position:absolute; right:-2px; top:6px; font:30px 'Cormorant Garamond',serif; color:var(--gold-light); }
+.venue-section { text-align:center; padding:46px 20px 60px; background:transparent; }.venue-section > svg { margin:0 auto 16px; color:var(--gold); }.venue-section > a { font:500 31px var(--font-serif); display:inline-flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:8px; text-decoration:underline; text-underline-offset:7px; text-decoration-color:var(--gold-light); }
+.countdown { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); width:min(420px,100%); margin:40px auto 0; }.countdown strong { font:48px var(--font-serif); font-variant-numeric:tabular-nums; }.countdown span { display:block; font-size:10px; color:var(--muted-foreground); margin-top:5px; }.countdown > div { position:relative; }.countdown > div:not(:last-child)::after { content:':'; position:absolute; right:-2px; top:6px; font:30px var(--font-serif); color:var(--gold-light); }
+.venue-section .venue-name { font:500 31px var(--font-serif); }
+.sub-events { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:30px; max-width:960px; margin:0 auto; padding:10px 24px 60px; text-align:center; }
+.sub-event h3 { font-size:30px; color:var(--foreground); }
+.sub-event p { font-size:13px; color:var(--muted-foreground); margin-top:7px; }
+.sub-event p:first-of-type { margin-top:12px; }
+.sub-event .sub-event-venue { font-style:italic; }
+.sub-event + .sub-event { border-left:1px solid color-mix(in oklch,var(--gold-light) 45%,transparent); }
+@media (max-width:640px) { .sub-events { gap:34px; padding-bottom:45px; } .sub-event + .sub-event { border-left:0; } }
 .ring-section { width:100%; background:transparent; }.ring-section img { display:block; width:100%; max-width:1440px; height:auto; margin:auto; }
-.love-section { padding:55px 20px 65px; text-align:center; }.quote-ornament { font-size:32px; color:var(--gold); }.love-section blockquote { font:italic 34px/1.3 'Cormorant Garamond',serif; margin:18px auto 40px; max-width:620px; }.love-section img { width:min(600px,100%); height:auto; display:block; margin:auto; }
+.love-section { padding:55px 20px 65px; text-align:center; }.quote-ornament { font-size:32px; color:var(--gold); }.love-section blockquote { font:italic 34px/1.3 var(--font-serif); margin:18px auto 40px; max-width:620px; }.love-section img { width:min(600px,100%); height:auto; display:block; margin:auto; }
 .forever-section { padding:0 20px 100px; text-align:center; }
 .forever-rule { display:block; width:64px; height:1px; background:var(--gold-light); margin:0 auto 36px; }
 .forever-section h2 { font-size:48px; line-height:1.15; }
@@ -219,20 +229,23 @@ button,a { -webkit-tap-highlight-color: transparent; }
 .forever-section > img { display:block; width:min(540px,100%); height:auto; margin:auto; }
 .together-milestone { margin:36px auto 0; max-width:460px; }
 .together-milestone p,.together-milestone span { display:block; font-size:11px; color:var(--muted-foreground); }
-.together-milestone time { display:block; font:28px 'Cormorant Garamond',serif; margin-top:10px; }
+.together-milestone time { display:block; font:28px var(--font-serif); margin-top:10px; }
 .together-calendar,.together-elapsed { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); align-items:start; }
 .together-calendar { margin:28px auto 18px; }
 .together-calendar > div + div,.together-elapsed > div + div { border-left:1px solid color-mix(in oklch,var(--gold-light) 55%,transparent); }
-.together-calendar strong { display:block; font:56px/1.15 'Cormorant Garamond',serif; font-variant-numeric:tabular-nums; min-height:65px; color:var(--foreground); }
+.together-calendar strong { display:block; font:56px/1.15 var(--font-serif); font-variant-numeric:tabular-nums; min-height:65px; color:var(--foreground); }
 .together-calendar span,.together-elapsed span { font-size:12px; margin-top:5px; }
-.together-milestone .together-counting { font:italic 24px/1.3 'Cormorant Garamond',serif; color:var(--foreground); }
+.together-milestone .together-counting { font:italic 24px/1.3 var(--font-serif); color:var(--foreground); }
 .together-elapsed { border-top:1px solid color-mix(in oklch,var(--gold-light) 55%,transparent); margin:28px auto 0; padding-top:24px; }
-.together-elapsed strong { display:block; font:32px/1.2 'Cormorant Garamond',serif; font-variant-numeric:tabular-nums; min-height:39px; }
+.together-elapsed strong { display:block; font:32px/1.2 var(--font-serif); font-variant-numeric:tabular-nums; min-height:39px; }
 @media (max-width:640px) { .forever-section { padding:0 18px 90px; }.forever-section h2 { font-size:36px; }.forever-rule { margin-bottom:28px; } }
 .opening-status { position:absolute; inset:0; z-index:4; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding:24px; background:var(--paper-light); }.opening-status p { font-size:14px; }.opening-status button { min-height:48px; }
 .loading-spinner { animation:loading-spin 1s linear infinite; }@keyframes loading-spin { to { transform:rotate(360deg); } }
 .music-dock { position:fixed; bottom:14px; right:14px; display:flex; gap:2px; padding:5px; border:1px solid var(--gold-light); background:color-mix(in oklch,var(--background) 94%,transparent); backdrop-filter:blur(12px); z-index:20; border-radius:4px; box-shadow:var(--shadow-dock); }.music-dock button { width:44px; height:44px; }.music-dock svg { width:16px; }.music-error { position:absolute; bottom:calc(100% + 10px); right:0; width:260px; background:var(--background); border:1px solid var(--border); padding:15px; font-size:12px; }.music-error button { width:auto; font-size:11px; }
 .flower-shower { position:fixed; inset:0; pointer-events:none; z-index:15; overflow:hidden; }.petals i { position:absolute; top:-25px; width:11px; height:18px; background:var(--paper-light); box-shadow:0 1px 2px color-mix(in oklch,var(--foreground) 12%,transparent); border-radius:70% 0 70% 0; opacity:0; animation:petal-fall 9s linear infinite; }.petals i:nth-child(3n) { background:var(--powder); }
+/* Petal variants let a theme change the shower without touching the engine. */
+.petals-marigold i { width:13px; height:13px; border-radius:50%; background:var(--gold); }.petals-marigold i:nth-child(3n) { background:var(--gold-light); }
+.petals-rose i { width:14px; height:11px; border-radius:70% 70% 60% 60%; background:var(--powder); }.petals-rose i:nth-child(3n) { background:var(--paper-light); }
 .petals i:nth-child(1) { left:3%; animation-delay:0.00s; }
 .petals i:nth-child(2) { left:20%; animation-delay:0.43s; }
 .petals i:nth-child(3) { left:37%; animation-delay:0.86s; }

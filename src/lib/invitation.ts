@@ -1,33 +1,88 @@
-export const EVENT_TIME = '2026-11-22T19:00:00+05:30';
-export const VENUE_URL = 'https://maps.app.goo.gl/ZvBLCsdqbGWogDo98';
-export const ENVELOPE_OPEN_MS = 1400;
-export const INTRO_SECONDS = 6;
-export const MUSIC_FADE_MS = 8000;
-export function musicFadeVolume(elapsedMs: number) {
-  const progress = Math.max(0, Math.min(1, elapsedMs / MUSIC_FADE_MS));
-  return 0.6 * progress * progress * (3 - 2 * progress);
+/**
+ * Shared invitation module: pure time and audio maths for the invite engine.
+ *
+ * Every milestone is anchored to the offset written into the host's own ISO
+ * timestamp, never to the guest's clock, so a guest abroad sees the same
+ * countdown the couple does.
+ */
+
+/** Minutes east of UTC encoded in an ISO string's suffix; 0 for `Z`. */
+export function offsetMinutes(iso: string): number {
+  const match = /([+-])(\d{2}):(\d{2})$/.exec(iso);
+  if (!match) return 0;
+  const [, sign, hours, minutes] = match;
+  return (sign === "-" ? -1 : 1) * (Number(hours) * 60 + Number(minutes));
 }
-// A date-only milestone, anchored to the invitation's timezone, not a guessed meeting hour.
-export const TOGETHER_SINCE = '2024-08-11T00:00:00+05:30';
-export function togetherDays(now: number) {
-  return Math.max(0, Math.floor((now - Date.parse(TOGETHER_SINCE)) / 86400000));
+
+/** Smoothstep swell so the entrance never jumps in volume. */
+export function musicFadeVolume(
+  elapsedMs: number,
+  fadeMs: number,
+  maxVolume: number,
+) {
+  const progress = Math.max(0, Math.min(1, elapsedMs / fadeMs));
+  return maxVolume * progress * progress * (3 - 2 * progress);
 }
-export function togetherElapsed(now: number): [number, number, number] {
-  const minutes = Math.max(0, Math.floor((now - Date.parse(TOGETHER_SINCE)) / 60000));
-  return [Math.floor(minutes / 1440), Math.floor(minutes / 60) % 24, minutes % 60];
+
+/** Days, hours, minutes, seconds until the event; zeroes once it has started. */
+export function remainingTime(now: number, eventIso: string) {
+  const seconds = Math.max(0, Math.floor((Date.parse(eventIso) - now) / 1000));
+  return [
+    Math.floor(seconds / 86400),
+    Math.floor(seconds / 3600) % 24,
+    Math.floor(seconds / 60) % 60,
+    seconds % 60,
+  ];
 }
-export function togetherDuration(now: number): [number, number, number] {
-  if (now < Date.parse(TOGETHER_SINCE)) return [0, 0, 0];
-  const local = new Date(now + 330 * 60000);
+
+/** Whole days since the milestone began. */
+export function togetherDays(now: number, sinceIso: string) {
+  return Math.max(0, Math.floor((now - Date.parse(sinceIso)) / 86400000));
+}
+
+/** Total days, hours and minutes elapsed — a running tally, not calendar units. */
+export function togetherElapsed(
+  now: number,
+  sinceIso: string,
+): [number, number, number] {
+  const minutes = Math.max(0, Math.floor((now - Date.parse(sinceIso)) / 60000));
+  return [
+    Math.floor(minutes / 1440),
+    Math.floor(minutes / 60) % 24,
+    minutes % 60,
+  ];
+}
+
+/** Completed calendar years, months and remaining days — no decimal-year approximations. */
+export function togetherDuration(
+  now: number,
+  sinceIso: string,
+): [number, number, number] {
+  const since = Date.parse(sinceIso);
+  if (now < since) return [0, 0, 0];
+
+  const offset = offsetMinutes(sinceIso) * 60000;
+  const local = new Date(now + offset);
+  const start = new Date(since + offset);
+
   const year = local.getUTCFullYear();
   const month = local.getUTCMonth();
   const day = local.getUTCDate();
-  const completeMonths = (year - 2024) * 12 + month - 7 - (day < 11 ? 1 : 0);
-  const anniversary = Date.UTC(2024, 7 + completeMonths, 11);
-  const days = Math.floor((Date.UTC(year, month, day) - anniversary) / 86400000);
+  const startYear = start.getUTCFullYear();
+  const startMonth = start.getUTCMonth();
+  const startDay = start.getUTCDate();
+
+  const completeMonths =
+    (year - startYear) * 12 + (month - startMonth) - (day < startDay ? 1 : 0);
+
+  // A 31st anniversary date would otherwise spill into the next month.
+  const anniversary = Math.min(
+    Date.UTC(startYear, startMonth + completeMonths, startDay),
+    Date.UTC(startYear, startMonth + completeMonths + 1, 0),
+  );
+  const days = Math.floor(
+    (Date.UTC(year, month, day) - anniversary) / 86400000,
+  );
+
   return [Math.floor(completeMonths / 12), completeMonths % 12, days];
-}
-export function remainingTime(now: number) {
-  const seconds = Math.max(0, Math.floor((Date.parse(EVENT_TIME) - now) / 1000));
-  return [Math.floor(seconds / 86400), Math.floor(seconds / 3600) % 24, Math.floor(seconds / 60) % 60, seconds % 60];
 }
