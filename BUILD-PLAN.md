@@ -101,32 +101,68 @@ export const dubaiSilk: Theme = {
 
 **To add a template you provide:** 4-6 images, 1 music track, ~10 hex values, 1 font pair. That's it. No React.
 
-### Theme ideas for 20 templates
+### Theme catalog — grounded in competitor research
 
-| # | Theme | Palette | Occasions |
-|---|---|---|---|
-| 1 | Dubai Silk *(done)* | Powder blue + gold | Wedding, Engagement |
-| 2 | Mughal Heritage | Maroon + antique gold | Wedding, Nikah |
-| 3 | Marigold Mandap | Marigold + emerald | Wedding, Haldi |
-| 4 | Royal Rajput | Deep red + ivory | Wedding |
-| 5 | Palm Beach | Turquoise + sand | Destination, Reception |
-| 6 | Minimal Ivory | Ivory + charcoal | Any — the "modern" option |
-| 7 | Emerald Night | Emerald + gold | Reception, Gala |
-| 8 | Blush Garden | Blush pink + sage | Engagement, Baby shower |
-| 9 | Midnight Gold | Navy + gold | Reception, Anniversary |
-| 10 | Sangeet Lights | Magenta + violet | Sangeet, Party |
-| 11 | Diwali Diya | Saffron + deep red | Diwali, Festive |
-| 12 | Peacock | Teal + gold | Wedding, South Indian |
-| 13 | Temple South | Kanjeevaram red + gold | South Indian wedding |
-| 14 | Lotus Serenity | Soft pink + cream | Engagement |
-| 15 | Desert Rose | Terracotta + dusty rose | Destination |
-| 16 | Black Tie | Black + silver | Corporate, Gala, Opening |
-| 17 | Birthday Confetti | Bright multi | Birthday |
-| 18 | Little One | Pastel mint/lemon | Baby shower, Naming |
-| 19 | New Home | Warm wood + sage | Housewarming |
-| 20 | Monsoon Bloom | Deep green + ivory | Any |
+Derived from surveying 18 competitors (Zareqia, Invifest, InviteMaker, Samaro,
+Krikey, SeeMyMarriage, Wedinvite, WishNWed and others). Ranked by proven
+demand, with deliberate bets on gaps nobody is filling.
 
-Themes 17-19 are non-wedding — those keep you earning **outside** wedding season, which matters for Instagram traffic year-round.
+**Core Hindu (5)**
+
+| # | Theme | Palette / motif |
+|---|---|---|
+| 1 | Kesari Mandap | Marigold + saffron, mandap arch |
+| 2 | Mughal Zamarrud | Emerald + gold jali |
+| 3 | Midnight Mayura | Navy + peacock, feather particles |
+| 4 | Haveli Bandhej | Marwari — bandhani, leheriya, jharokha ★gap |
+| 5 | Alpona | Bengali — red/white, shakha-pola, topor ★gap |
+
+**South Indian (3)**
+
+| # | Theme | Palette / motif |
+|---|---|---|
+| 6 | Kanjeevaram | Maroon silk, gold zari, gopuram |
+| 7 | Nalangu | Tamil — turmeric yellow, mango-leaf toran |
+| 8 | Malabar Gold | Kerala — ivory kasavu, nilavilakku lamps |
+
+**Muslim / Nikah (3)**
+
+| # | Theme | Palette / motif |
+|---|---|---|
+| 9 | Qubool Hai | Deep emerald, thuluth calligraphy, crescent |
+| 10 | Mehfil Rose | Hyderabadi pearl, dusty rose, chandelier |
+| 11 | Sage Nikah | Minimalist sage + off-white ★gap |
+
+**Sikh / Christian (2)**
+
+| # | Theme | Palette / motif |
+|---|---|---|
+| 12 | Phulkari Anand | Saffron/ivory, phulkari embroidery, Ik Onkar ★gap |
+| 13 | Chapel Ivory | Stained-glass light, cathedral arch, bells |
+
+**Modern / Destination (3)**
+
+| # | Theme | Palette / motif |
+|---|---|---|
+| 14 | **Dubai Silk** ✅ | Powder blue + gold — built, flagship |
+| 15 | Monochrome Vow | Ivory + charcoal, editorial type |
+| 16 | Palm & Sand | Goa/beach — warm sand + teal |
+
+**Non-wedding — year-round traffic (4)** ★★ biggest gap
+
+| # | Theme | Occasions |
+|---|---|---|
+| 17 | Griha Pravesh | Housewarming — brass kalash, rangoli, diya reveal |
+| 18 | Nanha | Baby shower, annaprashan, mundan — pastel, cradle |
+| 19 | Deepavali Noor | Diwali/Eid — lamp-lighting reveal, palette swap |
+| 20 | Janmadin | Birthday, anniversary, jubilees — confetti burst |
+
+**Why 17-20 matter most:** InviteMaker and SeeMyMarriage own these occasions
+in *video* form, but **no interactive-microsite competitor offers a single
+one**. They are the only themes that earn outside the Nov–Feb wedding window,
+and they are the cheapest to differentiate on.
+
+**Tiering:** 1-13 Classic, 14-16 plus anything with a heavy 3D reveal as Royal.
 
 ---
 
