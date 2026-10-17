@@ -14,7 +14,7 @@ export function SiteHeader() {
         <a href="/#how">How it works</a>
         <a href="/#pricing">Pricing</a>
       </nav>
-      <Link to="/templates" className="btn btn-solid btn-sm">
+      <Link to="/create" className="btn btn-solid btn-sm">
         Create yours
       </Link>
     </header>

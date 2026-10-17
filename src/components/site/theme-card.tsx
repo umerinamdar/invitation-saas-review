@@ -52,13 +52,22 @@ export function ThemeCard({ theme }: { theme: Theme }) {
         Opens with {OPENS[theme.motion.reveal]}
       </p>
       <p className="theme-card-occasions">{theme.occasions.join(" · ")}</p>
-      <Link
-        to="/preview/$themeId"
-        params={{ themeId: theme.id }}
-        className="btn btn-quiet btn-sm"
-      >
-        View live demo
-      </Link>
+      <div className="theme-card-actions">
+        <Link
+          to="/create"
+          search={{ theme: theme.id }}
+          className="btn btn-solid btn-sm"
+        >
+          Use this design
+        </Link>
+        <Link
+          to="/preview/$themeId"
+          params={{ themeId: theme.id }}
+          className="btn btn-quiet btn-sm"
+        >
+          Live demo
+        </Link>
+      </div>
     </article>
   );
 }

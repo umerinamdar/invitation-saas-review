@@ -10,8 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CreateRouteImport } from './routes/create'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as PublishRouteImport } from './routes/publish'
 import { Route as TemplatesRouteImport } from './routes/templates'
 import { Route as EditorIdRouteImport } from './routes/editor.$id'
 import { Route as ISlugRouteImport } from './routes/i.$slug'
@@ -22,6 +24,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CreateRoute = CreateRouteImport.update({
+  id: '/create',
+  path: '/create',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -30,6 +37,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublishRoute = PublishRouteImport.update({
+  id: '/publish',
+  path: '/publish',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TemplatesRoute = TemplatesRouteImport.update({
@@ -55,8 +67,10 @@ const PreviewThemeIdRoute = PreviewThemeIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/create': typeof CreateRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/publish': typeof PublishRoute
   '/templates': typeof TemplatesRoute
   '/editor/$id': typeof EditorIdRoute
   '/i/$slug': typeof ISlugRoute
@@ -64,8 +78,10 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/create': typeof CreateRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/publish': typeof PublishRoute
   '/templates': typeof TemplatesRoute
   '/editor/$id': typeof EditorIdRoute
   '/i/$slug': typeof ISlugRoute
@@ -74,8 +90,10 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/create': typeof CreateRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/publish': typeof PublishRoute
   '/templates': typeof TemplatesRoute
   '/editor/$id': typeof EditorIdRoute
   '/i/$slug': typeof ISlugRoute
@@ -85,8 +103,10 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/create'
     | '/dashboard'
     | '/login'
+    | '/publish'
     | '/templates'
     | '/editor/$id'
     | '/i/$slug'
@@ -94,8 +114,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/create'
     | '/dashboard'
     | '/login'
+    | '/publish'
     | '/templates'
     | '/editor/$id'
     | '/i/$slug'
@@ -103,8 +125,10 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/create'
     | '/dashboard'
     | '/login'
+    | '/publish'
     | '/templates'
     | '/editor/$id'
     | '/i/$slug'
@@ -113,8 +137,10 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CreateRoute: typeof CreateRoute
   DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
+  PublishRoute: typeof PublishRoute
   TemplatesRoute: typeof TemplatesRoute
   EditorIdRoute: typeof EditorIdRoute
   ISlugRoute: typeof ISlugRoute
@@ -130,6 +156,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/create': {
+      id: '/create'
+      path: '/create'
+      fullPath: '/create'
+      preLoaderRoute: typeof CreateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -142,6 +175,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/publish': {
+      id: '/publish'
+      path: '/publish'
+      fullPath: '/publish'
+      preLoaderRoute: typeof PublishRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/templates': {
@@ -177,8 +217,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CreateRoute: CreateRoute,
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
+  PublishRoute: PublishRoute,
   TemplatesRoute: TemplatesRoute,
   EditorIdRoute: EditorIdRoute,
   ISlugRoute: ISlugRoute,

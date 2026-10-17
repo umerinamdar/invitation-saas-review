@@ -69,15 +69,11 @@ function Landing() {
           day.
         </p>
         <div className="hero-actions">
-          <Link to="/templates" className="btn btn-solid">
-            See the designs <ArrowRight size={17} />
+          <Link to="/create" className="btn btn-solid">
+            Start yours free <ArrowRight size={17} />
           </Link>
-          <Link
-            to="/preview/$themeId"
-            params={{ themeId: "dubai-silk" }}
-            className="btn btn-quiet"
-          >
-            Open a live example
+          <Link to="/templates" className="btn btn-quiet">
+            See all {themes.length} designs
           </Link>
         </div>
         <p className="hero-note">
@@ -131,7 +127,7 @@ function Landing() {
               </li>
             ))}
           </ul>
-          <Link to="/templates" className="btn btn-solid">
+          <Link to="/create" className="btn btn-solid">
             Start free <ArrowRight size={17} />
           </Link>
           <p className="price-note">

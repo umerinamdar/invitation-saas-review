@@ -632,29 +632,153 @@
   position: sticky;
   top: 57px;
 }
-/* A phone-shaped frame: nearly every guest opens this on a handset. */
+/*
+ * Device preview. The invitation is rendered at a true handset width and
+ * scaled down as a whole, so every proportion the design relies on survives.
+ * Laying it out inside a narrow box instead would reflow it into something
+ * the guest will never actually see.
+ */
 .phone {
-  width: min(390px, 100%);
-  height: min(760px, calc(100svh - 150px));
-  overflow: hidden auto;
-  border: 10px solid oklch(0.19 0.008 60);
-  border-radius: 34px;
+  --w: 375px;
+  --h: 740px;
+  --s: 1;
+  position: relative;
+  width: calc(var(--w) * var(--s));
+  height: calc(var(--h) * var(--s));
+  overflow: hidden;
+  border: calc(9px * var(--s)) solid oklch(0.19 0.008 60);
+  border-radius: calc(34px * var(--s));
   box-shadow: 0 28px 60px -26px oklch(0.2 0.02 60 / 0.5);
   background: var(--sheet);
 }
-.phone::-webkit-scrollbar {
+.phone-screen {
+  width: var(--w);
+  height: var(--h);
+  overflow: hidden auto;
+  transform: scale(var(--s));
+  transform-origin: top left;
+  scrollbar-width: none;
+}
+.phone-screen::-webkit-scrollbar {
   width: 0;
 }
+/*
+ * Narrow screens stack, and the preview goes FIRST and stays stuck to the
+ * top. Below the form it is invisible while you type, which makes the editor
+ * feel broken — you change a name and nothing appears to happen.
+ */
 @media (max-width: 900px) {
   .editor-body {
     grid-template-columns: 1fr;
   }
+  .editor-preview {
+    order: -1;
+    position: sticky;
+    top: 57px;
+    z-index: 10;
+    background: var(--sheet-alt);
+    border-bottom: 1px solid var(--line);
+    padding: 14px;
+    gap: 10px;
+  }
+  .phone {
+    --s: 0.44;
+  }
   .editor-form {
     min-height: 0;
     border-right: 0;
-    border-bottom: 1px solid var(--line);
   }
-  .editor-preview {
-    position: static;
-  }
+}
+
+/* Card actions ------------------------------------------------------- */
+.theme-card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+/* Editor extras ------------------------------------------------------ */
+.sub-event-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 0.8fr auto;
+  gap: 6px;
+  align-items: center;
+}
+.sub-event-row input {
+  font: inherit;
+  font-size: 13.5px;
+  color: var(--ink);
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--sheet);
+  min-width: 0;
+}
+.row-remove {
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  color: var(--ink-soft);
+  font-size: 17px;
+  line-height: 1;
+}
+.row-remove:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+/* Publish ------------------------------------------------------------ */
+.publish {
+  max-width: 460px;
+}
+.publish-summary {
+  margin: 30px 0 0;
+  text-align: left;
+  border-top: 1px solid var(--line);
+}
+.publish-summary > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.publish-summary dt {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+.publish-summary dd {
+  margin: 0;
+  font-size: 14.5px;
+  text-align: right;
+}
+.publish-gets {
+  list-style: none;
+  padding: 0;
+  margin: 26px 0 0;
+  text-align: left;
+}
+.publish-gets li {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+.publish-gets svg {
+  color: var(--brand);
+  flex-shrink: 0;
+}
+.publish .price {
+  margin-top: 26px;
+}
+.publish .btn {
+  margin-top: 20px;
+  width: 100%;
+}
+.publish .btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
