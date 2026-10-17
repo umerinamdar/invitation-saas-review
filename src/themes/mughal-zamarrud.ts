@@ -1,62 +1,71 @@
 import type { Theme } from "./types";
 
 /**
- * Deep emerald with a gold jali lattice and carved doors. Ships with no
- * photography: the backdrop and frame are drawn from the palette.
+ * Deep emerald and antique gold, opening on carved doors into a marble
+ * water garden at dusk.
+ *
+ * Artwork and palette generated in Lovable from the brief in
+ * LOVABLE-BRIEF.md — the first template with real painted backdrops rather
+ * than drawn ornament, which is why `ornamentation` is "none": the scenes
+ * carry their own arches and framing.
  */
 export const mughalZamarrud: Theme = {
   id: "mughal-zamarrud",
   name: "Mughal Zamarrud",
-  tier: "classic",
+  tier: "royal",
   occasions: ["wedding", "nikah", "reception"],
-  thumbnail: "/themes/thumbs/mughal-zamarrud.svg",
+  thumbnail: "/themes/mughal-zamarrud/hero.jpg",
 
   palette: {
-    accent: "oklch(0.76 0.115 88)", // antique gold
-    accentSoft: "oklch(0.86 0.085 90)",
-    tint: "oklch(0.42 0.072 165)",
-    paper: "oklch(0.3 0.055 166)",
-    paperLight: "oklch(0.38 0.062 167)",
-    paperDark: "oklch(0.23 0.043 166)",
-    highlight: "oklch(0.88 0.06 92)",
-    surface: "oklch(0.28 0.052 166)",
-    scratchFoil: "oklch(0.34 0.058 166)",
-    scratchInk: "oklch(0.88 0.062 92)",
-    background: "oklch(0.17 0.032 165)",
-    foreground: "oklch(0.93 0.035 92)",
-    muted: "oklch(0.73 0.05 94)",
-    border: "oklch(0.45 0.07 120)",
+    accent: "#c9a24a",
+    accentSoft: "#e3c987",
+    tint: "#1f5c47",
+    paper: "#f3ead7",
+    paperLight: "#fbf6ea",
+    paperDark: "#d9c7a0",
+    highlight: "#f6e3a8",
+    surface: "#0e3b2e",
+    scratchFoil: "#b8923e",
+    scratchInk: "#0a2a21",
+    background: "#07261d",
+    foreground: "#f3ead7",
+    muted: "#a9b8a8",
+    border: "#8a7a45",
   },
 
   typography: {
     serif: "Cormorant Garamond",
-    sans: "Montserrat",
+    sans: "Jost",
     fontsHref:
-      "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Montserrat:wght@300;400;600&display=swap",
+      "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap",
   },
 
-  ornamentation: "jali",
+  ornamentation: "none",
 
   assets: {
+    sealedBackdrop: "/themes/mughal-zamarrud/sealed.jpg",
+    revealedBackdrop: "/themes/mughal-zamarrud/hero.jpg",
+    sealDisc: "/themes/mughal-zamarrud/seal.png",
+    paperTexture: "/themes/mughal-zamarrud/paper.jpg",
     defaultMusic: "/themes/dubai-silk/track.mp3",
   },
 
   motion: {
-    reveal: "doors",
-    openMs: 1600,
+    reveal: "envelope",
+    openMs: 1500,
     introSeconds: 6,
     musicFadeMs: 8000,
     maxVolume: 0.6,
     scratchThreshold: 0.38,
-    petals: "none",
+    petals: "marigold",
   },
 
-  kicker: "3D CARVED DOORS",
+  kicker: "WAX SEAL ENVELOPE",
   tagline:
-    "Deep emerald and antique gold Mughal invitation whose carved doors swing inward over a gold jali lattice, with a live muhurat countdown.",
+    "Deep emerald and antique gold Mughal invitation that unseals onto a marble water garden at dusk, lit by lanterns and floating diyas.",
   features: [
-    "3D Carved Door Opening",
-    "Gold Jali Lattice",
+    "Wax Seal Envelope",
+    "Marble Water Garden Hero",
     "Scratch-to-Reveal Date",
     "Live Countdown",
   ],
