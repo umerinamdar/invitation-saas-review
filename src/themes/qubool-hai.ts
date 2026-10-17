@@ -29,10 +29,10 @@ export const qubooHai: Theme = {
   },
 
   typography: {
-    serif: "Marcellus",
+    serif: "Cormorant Garamond",
     sans: "Jost",
     fontsHref:
-      "https://fonts.googleapis.com/css2?family=Marcellus&family=Jost:wght@300;400;500&display=swap",
+      "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap",
   },
 
   ornamentation: "geometric",
