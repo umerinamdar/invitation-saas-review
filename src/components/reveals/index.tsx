@@ -158,12 +158,26 @@ export function CurtainReveal(props: RevealProps) {
  * cover as it turns.
  */
 export function BookReveal(props: RevealProps) {
-  const { opening, onOpen, hosts } = props;
+  const { opening, onOpen, hosts, backdrop } = props;
+  const painted = Boolean(backdrop);
   return (
-    <div className={`book ${opening ? "is-opening" : ""}`}>
+    <div
+      className={`book ${opening ? "is-opening" : ""} ${painted ? "is-painted" : ""}`}
+    >
       <span className="book-page" />
-      <div className="book-cover">
-        <span className="book-plate" />
+      <div
+        className="book-cover"
+        style={
+          backdrop
+            ? ({
+                backgroundImage: `url('${backdrop}')`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              } as React.CSSProperties)
+            : undefined
+        }
+      >
+        {!painted && <span className="book-plate" />}
         <Button
           variant="ghost"
           className="seal-button book-seal"
@@ -185,12 +199,26 @@ export function BookReveal(props: RevealProps) {
  * The lightest-feeling mechanic, and the only one that moves upward.
  */
 export function BoxReveal(props: RevealProps) {
-  const { opening, onOpen, hosts } = props;
+  const { opening, onOpen, hosts, backdrop } = props;
+  const painted = Boolean(backdrop);
   return (
-    <div className={`box ${opening ? "is-opening" : ""}`}>
-      <span className="box-base" />
-      <div className="box-lid">
-        <span className="box-rim" />
+    <div
+      className={`box ${opening ? "is-opening" : ""} ${painted ? "is-painted" : ""}`}
+    >
+      {!painted && <span className="box-base" />}
+      <div
+        className="box-lid"
+        style={
+          backdrop
+            ? ({
+                backgroundImage: `url('${backdrop}')`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              } as React.CSSProperties)
+            : undefined
+        }
+      >
+        {!painted && <span className="box-rim" />}
         <Button
           variant="ghost"
           className="seal-button box-seal"

@@ -104,7 +104,7 @@ export function Invitation({
   const { ornamentation } = theme;
   // doors and curtains animate the painting itself, so the stage must not
   // also lay it down flat behind them.
-  const paintedOpening = (r: string) => r === "doors" || r === "curtain";
+  const paintedOpening = (r: string) => r !== "envelope";
   const { reveal, openMs, introSeconds, musicFadeMs, maxVolume, petals } =
     theme.motion;
   const { event, story } = invite;

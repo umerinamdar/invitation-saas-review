@@ -1875,3 +1875,110 @@ a {
 .curtain.is-painted .curtain-rod {
   display: none;
 }
+
+/* Painted book and box: the artwork itself is the cover or the lid. */
+.book.is-painted {
+  width: min(560px, 100%);
+  aspect-ratio: 3 / 2;
+}
+.book.is-painted .book-cover {
+  border: 0;
+  box-shadow: 0 30px 60px -30px
+    color-mix(in oklch, var(--foreground) 55%, transparent);
+}
+.book.is-painted .book-page {
+  background: color-mix(in oklch, var(--background) 92%, transparent);
+  border: 0;
+  box-shadow: none;
+}
+.box.is-painted {
+  width: min(680px, 100%);
+  aspect-ratio: 3 / 2;
+}
+.box.is-painted .box-lid {
+  inset: 0;
+  height: 100%;
+  border: 0;
+  box-shadow: 0 30px 60px -30px
+    color-mix(in oklch, var(--foreground) 55%, transparent);
+}
+.box.is-painted .box-lid::after {
+  content: none;
+}
+/* A lid lifts and floats rather than tilting, so the scene stays readable. */
+.box.is-painted.is-opening .box-lid {
+  transform: translateY(-16%) scale(1.06);
+  opacity: 0;
+}
+.box.is-painted .box-seal {
+  top: 50%;
+}
+
+/* Section ornament: a gold rule with a diamond at its centre, between
+ * blocks. A plain hairline read as a CMS divider rather than engraving. */
+.opened-invitation > section + section::after {
+  left: 18%;
+  right: 18%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklch, var(--gold) 65%, transparent) 22%,
+    color-mix(in oklch, var(--gold) 65%, transparent) 78%,
+    transparent
+  );
+}
+.opened-invitation > section + section::before {
+  box-shadow: none;
+}
+
+/*
+ * The revealed date. Once the foil clears, this is the single most-read
+ * thing on the page, and it was plain text on a plain ground — the weakest
+ * moment in an otherwise painted invitation. It now sits on a framed card
+ * with gold rules above and below the date.
+ */
+.date-reveal {
+  position: relative;
+}
+.date-revealed .revealed-date {
+  padding: 26px 22px;
+  background:
+    linear-gradient(
+      color-mix(in oklch, var(--paper-light) 90%, transparent),
+      color-mix(in oklch, var(--paper) 88%, transparent)
+    ),
+    var(--paper-texture);
+  background-size:
+    auto,
+    360px 360px;
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--gold) 55%, transparent),
+    0 0 0 5px color-mix(in oklch, var(--paper-light) 45%, transparent),
+    0 0 0 6px color-mix(in oklch, var(--gold-light) 40%, transparent),
+    0 18px 38px -20px color-mix(in oklch, var(--foreground) 50%, transparent);
+}
+.date-revealed .revealed-date h2 {
+  color: var(--scratch-ink);
+  letter-spacing: 0.01em;
+}
+.date-revealed .revealed-date h3 {
+  color: var(--scratch-ink);
+}
+.date-revealed .revealed-date p,
+.date-revealed .revealed-date span {
+  color: color-mix(in oklch, var(--scratch-ink) 72%, transparent);
+}
+/* Hairlines bracketing the date, drawn from the card's own corners. */
+.date-revealed .revealed-date::before,
+.date-revealed .revealed-date::after {
+  content: "";
+  width: 58px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.date-revealed .revealed-date::before {
+  margin-bottom: 14px;
+}
+.date-revealed .revealed-date::after {
+  margin-top: 14px;
+}
