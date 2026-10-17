@@ -85,12 +85,27 @@
   letter-spacing: 0.04em;
 }
 .site-header nav a {
+  position: relative;
   color: inherit;
   opacity: 0.72;
   transition: 0.18s;
 }
+.site-header nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: -4px;
+  height: 1px;
+  background: var(--gold);
+  transition: right 0.25s cubic-bezier(0.2, 0, 0.2, 1);
+}
 .site-header nav a:hover {
   opacity: 1;
+  color: var(--gold);
+}
+.site-header nav a:hover::after {
+  right: 0;
 }
 .site-header.is-overlay .btn-solid {
   background: var(--paper-white);
@@ -131,7 +146,9 @@
   color: var(--ink);
 }
 .btn-quiet:hover {
-  border-color: var(--ink);
+  border-color: var(--gold);
+  color: var(--gold);
+  background: color-mix(in oklch, var(--gold) 6%, transparent);
 }
 .btn-ghost {
   border: 1px solid color-mix(in oklch, var(--paper-white) 55%, transparent);
@@ -293,8 +310,20 @@
   transition: 0.3s cubic-bezier(0.2, 0, 0.2, 1);
 }
 .theme-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 30px 56px -30px oklch(0.2 0.02 62 / 0.4);
+  transform: translateY(-6px);
+  border-color: color-mix(in oklch, var(--gold) 45%, var(--line-soft));
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--gold) 25%, transparent),
+    0 36px 64px -30px oklch(0.2 0.02 62 / 0.45);
+}
+.theme-card:hover .theme-phone {
+  transform: translateY(-2px) scale(1.015);
+  box-shadow:
+    0 0 0 1px color-mix(in oklch, var(--gold) 50%, transparent),
+    0 24px 44px -20px oklch(0.2 0.02 62 / 0.6);
+}
+.theme-phone {
+  transition: transform 0.35s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.35s;
 }
 /* The phone sits on a wash of the template's own palette. */
 .theme-card-top {
@@ -500,6 +529,7 @@
 .price-side h2 {
   font-size: clamp(52px, 8vw, 86px);
   margin-top: 16px;
+  color: var(--gold);
 }
 .price-side h2 span {
   font-family: "Jost", sans-serif;
@@ -1015,24 +1045,28 @@
  * same rules serve the hero row, the cards and the editor preview.
  */
 .device {
-  --bezel: 7px;
-  --radius: 30px;
+  --bezel: 8px;
+  --radius: 46px;
   position: relative;
   padding: var(--bezel);
   border-radius: var(--radius);
+  /* Natural titanium: a warm brushed-metal gradient with a bright catch
+   * along the top-left edge, matching a real flagship phone rather than a
+   * flat grey rounded rectangle. */
   background: linear-gradient(
-    145deg,
-    oklch(0.52 0.006 70) 0%,
-    oklch(0.26 0.004 70) 16%,
-    oklch(0.2 0.004 70) 42%,
-    oklch(0.3 0.005 70) 72%,
-    oklch(0.58 0.006 70) 100%
+    155deg,
+    oklch(0.72 0.012 75) 0%,
+    oklch(0.42 0.008 70) 10%,
+    oklch(0.22 0.005 65) 28%,
+    oklch(0.17 0.004 65) 55%,
+    oklch(0.32 0.007 70) 80%,
+    oklch(0.68 0.012 75) 100%
   );
   box-shadow:
-    0 1px 0 oklch(0.78 0.006 80 / 0.5) inset,
-    0 -1px 0 oklch(0.1 0.004 70 / 0.8) inset,
-    0 26px 50px -24px oklch(0.2 0.02 62 / 0.55),
-    0 6px 16px -8px oklch(0.2 0.02 62 / 0.4);
+    0 1.5px 0 oklch(0.85 0.01 80 / 0.6) inset,
+    0 -1.5px 0 oklch(0.08 0.004 70 / 0.9) inset,
+    0 32px 60px -26px oklch(0.2 0.02 62 / 0.55),
+    0 8px 20px -10px oklch(0.2 0.02 62 / 0.45);
 }
 /* The gutter between rail and glass. */
 .device::before {
