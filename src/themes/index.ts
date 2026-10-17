@@ -11,12 +11,14 @@ import { kanjeevaram } from "./kanjeevaram";
 import { haveliBandhej } from "./haveli-bandhej";
 import { alpona } from "./alpona";
 import { phulkariAnand } from "./phulkari-anand";
+import { sarayuGhat } from "./sarayu-ghat";
 
 /** Catalog order is gallery order, so lead with the strongest designs. */
 export const themes: Theme[] = [
   dubaiSilk,
   mughalZamarrud,
   kesariMandap,
+  sarayuGhat,
   midnightMayura,
   kanjeevaram,
   qubooHai,
