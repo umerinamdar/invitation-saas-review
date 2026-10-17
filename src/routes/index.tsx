@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { paletteVariables } from "@/themes/types";
 import { BRAND, SiteFooter, SiteHeader } from "@/components/site/chrome";
 import { ThemeCard, ThemePhone } from "@/components/site/theme-card";
+import { Reveal } from "@/components/site/reveal";
 import { themes } from "@/themes";
 
 const TITLE = `${BRAND} — Digital wedding invitations you can share on WhatsApp`;
@@ -61,7 +62,7 @@ function Landing() {
       <SiteHeader />
 
       <section className="hero">
-        <div className="hero-inner">
+        <Reveal className="hero-inner">
           <span className="hero-badge">
             Wedding invitations, made in minutes
           </span>
@@ -84,38 +85,40 @@ function Landing() {
           <p className="hero-note">
             No card needed · Free to design · ₹599 once to share
           </p>
-        </div>
+        </Reveal>
 
         {/*
           A row of real invitations in handsets. The product is phone-shaped
           and the designs are the pitch, so the hero shows several at once
           rather than one decorative photograph.
         */}
-        <div className="hero-phones" aria-hidden="true">
+        <Reveal className="hero-phones" delay={180} aria-hidden="true">
           {themes.slice(0, 6).map((theme) => (
             <span
               key={theme.id}
-              className="hero-phone"
+              className="device hero-phone"
               style={paletteVariables(theme) as React.CSSProperties}
             >
               <ThemePhone theme={theme} />
             </span>
           ))}
-        </div>
+        </Reveal>
       </section>
 
       <section className="designs" id="designs">
-        <header className="section-head">
+        <Reveal as="header" className="section-head">
           <p className="eyebrow">The designs</p>
           <h2>Twelve ways to open a door</h2>
           <p className="section-sub">
             Every one is a living page, not a picture of one. Tap any design to
             open the real thing.
           </p>
-        </header>
+        </Reveal>
         <div className="theme-grid">
-          {themes.slice(0, 6).map((theme) => (
-            <ThemeCard key={theme.id} theme={theme} />
+          {themes.slice(0, 6).map((theme, i) => (
+            <Reveal key={theme.id} delay={(i % 3) * 90}>
+              <ThemeCard theme={theme} />
+            </Reveal>
           ))}
         </div>
         <Link to="/templates" className="btn btn-quiet">
@@ -126,19 +129,19 @@ function Landing() {
       <section className="how" id="how">
         <ol className="steps">
           {STEPS.map((step, i) => (
-            <li key={step.title}>
+            <Reveal as="li" key={step.title} delay={i * 110}>
               <span className="step-number">
                 {String(i + 1).padStart(2, "0")}
               </span>
               <h3>{step.title}</h3>
               <p>{step.body}</p>
-            </li>
+            </Reveal>
           ))}
         </ol>
       </section>
 
       <section className="pricing" id="pricing">
-        <div className="price-panel">
+        <Reveal className="price-panel">
           <div className="price-side">
             <p className="eyebrow">One price</p>
             <h2>
@@ -157,7 +160,7 @@ function Landing() {
               <li key={item}>{item}</li>
             ))}
           </ul>
-        </div>
+        </Reveal>
       </section>
 
       <SiteFooter />

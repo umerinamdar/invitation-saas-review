@@ -206,16 +206,11 @@
   padding-bottom: 4px;
 }
 .hero-phone {
-  position: relative;
+  --bezel: 5px;
+  --radius: 24px;
   flex: 0 0 auto;
   width: clamp(120px, 15vw, 186px);
-  aspect-ratio: 9 / 17;
-  border: 5px solid oklch(0.2 0.01 62);
-  border-radius: 20px;
-  overflow: hidden;
-  background: var(--background);
-  color: var(--foreground);
-  box-shadow: 0 22px 44px -22px oklch(0.2 0.02 62 / 0.45);
+  aspect-ratio: 9 / 17.5;
 }
 /* The outer phones sit lower so the row reads as a fan, not a wall. */
 .hero-phone:nth-child(1),
@@ -284,7 +279,7 @@
 /* Template cards ----------------------------------------------------- */
 .theme-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
   gap: clamp(22px, 2.6vw, 34px);
   text-align: left;
 }
@@ -321,15 +316,15 @@
   letter-spacing: 0.18em;
 }
 .theme-phone {
-  display: block;
+  --bezel: 6px;
+  --radius: 27px;
   width: min(176px, 60%);
   aspect-ratio: 9 / 17.5;
-  border: 6px solid oklch(0.2 0.01 62);
-  border-radius: 22px;
-  overflow: hidden;
-  box-shadow: 0 18px 36px -18px oklch(0.2 0.02 62 / 0.5);
 }
 .theme-phone-screen {
+  /* Sized in container units so one rule serves every frame size — fixed
+   * pixels collapse the layout in the small hero phones. */
+  container-type: size;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -362,10 +357,11 @@
 }
 .theme-card-names {
   font-family: var(--font-serif);
-  font-size: 21px;
+  font-size: 13cqw;
+  line-height: 1.12;
   font-weight: 300;
   text-align: center;
-  padding: 0 14px;
+  padding: 0 7cqw;
   z-index: 1;
 }
 .theme-card-names em {
@@ -374,16 +370,16 @@
   padding: 0 4px;
 }
 .theme-card-rule {
-  width: 26px;
+  width: 15cqw;
   height: 1px;
   background: var(--gold);
-  margin: 10px 0 8px;
+  margin: 5cqw 0 4cqw;
   z-index: 1;
 }
 .theme-card-date {
   font-family: var(--font-sans);
-  font-size: 7.5px;
-  letter-spacing: 0.26em;
+  font-size: 4cqw;
+  letter-spacing: 0.24em;
   color: var(--muted-foreground);
   z-index: 1;
 }
@@ -461,7 +457,7 @@
 }
 .steps {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
   gap: clamp(36px, 5vw, 72px);
   max-width: 1080px;
   margin: 0 auto;
@@ -868,22 +864,22 @@
   --w: 375px;
   --h: 740px;
   --s: 1;
-  position: relative;
-  width: calc(var(--w) * var(--s));
-  height: calc(var(--h) * var(--s));
-  overflow: hidden;
-  border: calc(10px * var(--s)) solid oklch(0.2 0.01 62);
-  border-radius: calc(38px * var(--s));
-  box-shadow: 0 34px 70px -30px oklch(0.2 0.02 62 / 0.55);
-  background: var(--sheet);
+  --bezel: calc(11px * var(--s));
+  --radius: calc(44px * var(--s));
+  width: calc(var(--w) * var(--s) + var(--bezel) * 2);
+  height: calc(var(--h) * var(--s) + var(--bezel) * 2);
 }
-.phone-screen {
+/* Outranks `.device > *`, which would otherwise stretch this to the frame
+ * and then scale it again. */
+.phone > .phone-screen {
   width: var(--w);
   height: var(--h);
   overflow: hidden auto;
   transform: scale(var(--s));
   transform-origin: top left;
   scrollbar-width: none;
+  /* The frame sizes itself from --w/--h, so the screen must not shrink. */
+  flex: none;
 }
 .phone-screen::-webkit-scrollbar {
   width: 0;
@@ -988,4 +984,181 @@
   margin-top: 14px;
   font-size: 12.5px;
   color: var(--ink-faint);
+}
+
+/* Scroll reveals ----------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.85s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.85s cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-shown {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Device frame ------------------------------------------------------- */
+/*
+ * A handset, not a rounded rectangle: a brushed titanium rail with a bright
+ * edge where light catches it, a dark screen gutter inside that, and a
+ * Dynamic Island cut into the top. --bezel scales the whole thing, so the
+ * same rules serve the hero row, the cards and the editor preview.
+ */
+.device {
+  --bezel: 7px;
+  --radius: 30px;
+  position: relative;
+  padding: var(--bezel);
+  border-radius: var(--radius);
+  background: linear-gradient(
+    145deg,
+    oklch(0.52 0.006 70) 0%,
+    oklch(0.26 0.004 70) 16%,
+    oklch(0.2 0.004 70) 42%,
+    oklch(0.3 0.005 70) 72%,
+    oklch(0.58 0.006 70) 100%
+  );
+  box-shadow:
+    0 1px 0 oklch(0.78 0.006 80 / 0.5) inset,
+    0 -1px 0 oklch(0.1 0.004 70 / 0.8) inset,
+    0 26px 50px -24px oklch(0.2 0.02 62 / 0.55),
+    0 6px 16px -8px oklch(0.2 0.02 62 / 0.4);
+}
+/* The gutter between rail and glass. */
+.device::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--bezel) - 2px);
+  border-radius: calc(var(--radius) - var(--bezel) + 2px);
+  background: oklch(0.08 0.002 70);
+  z-index: 0;
+}
+/* Dynamic Island. */
+.device::after {
+  content: "";
+  position: absolute;
+  top: calc(var(--bezel) + 5px);
+  left: 50%;
+  translate: -50% 0;
+  width: 30%;
+  max-width: 78px;
+  height: calc(var(--bezel) + 2px);
+  border-radius: 999px;
+  background: oklch(0.06 0.002 70);
+  box-shadow: 0 0 0 1px oklch(0.02 0 0 / 0.6);
+  z-index: 3;
+}
+/* Frames the screen without dictating how it lays itself out — setting
+ * display here would override each screen's own flex centring. */
+.device > * {
+  position: relative;
+  z-index: 1;
+  border-radius: calc(var(--radius) - var(--bezel));
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+/* Music picker ------------------------------------------------------- */
+.music-picker {
+  display: grid;
+  gap: 8px;
+}
+.track {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--sheet);
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  text-align: left;
+  transition: 0.16s;
+}
+.track:hover {
+  border-color: var(--gold-soft);
+}
+.track.is-active {
+  border-color: var(--gold);
+  background: color-mix(in oklch, var(--gold) 8%, var(--sheet));
+  color: var(--ink);
+}
+.track .track-title {
+  flex: 1;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+  min-width: 0;
+}
+.track-tag {
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.track-play {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+}
+.track-play:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.track-group {
+  display: grid;
+  gap: 6px;
+  margin-top: 6px;
+}
+.track-group-name {
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.track-upload {
+  margin-top: 6px;
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+}
+.track-upload .btn {
+  cursor: pointer;
+}
+.track-upload-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.track-upload-name button {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  color: var(--ink-faint);
+  flex: none;
 }

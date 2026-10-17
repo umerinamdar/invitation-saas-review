@@ -44,7 +44,7 @@ export function ThemeCard({ theme }: { theme: Theme }) {
         <Link
           to="/preview/$themeId"
           params={{ themeId: theme.id }}
-          className="theme-phone"
+          className="device theme-phone"
           aria-label={`Preview ${theme.name}`}
         >
           <ThemePhone theme={theme} />

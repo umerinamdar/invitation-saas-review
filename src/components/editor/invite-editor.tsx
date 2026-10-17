@@ -1,6 +1,7 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { Invitation } from "@/components/invitation";
 import { getTheme, themes } from "@/themes";
+import { MusicPicker } from "./music-picker";
 import type { InviteConfig } from "@/lib/invites-api";
 
 type Props = {
@@ -191,6 +192,19 @@ export function InviteEditor({
           </fieldset>
 
           <fieldset>
+            <legend>Music</legend>
+            <MusicPicker
+              value={config.music?.url}
+              onChange={(url) => {
+                // Spreading an absent key would keep the previous track.
+                const { music: _drop, ...rest } = config;
+                onChange(url ? { ...rest, music: { url } } : rest);
+              }}
+              themeTrackName={`${theme.name} theme music`}
+            />
+          </fieldset>
+
+          <fieldset>
             <legend>Your story</legend>
             <label>
               A line for your guests
@@ -217,7 +231,7 @@ export function InviteEditor({
         </form>
 
         <div className="editor-preview">
-          <div className="phone">
+          <div className="device phone">
             {/* Rendered at true handset width, then scaled — see site.css. */}
             <div className="phone-screen">
               <Invitation key={previewKey} theme={theme} invite={preview} />
