@@ -37,9 +37,7 @@ export const qubooHai: Theme = {
 
   ornamentation: "geometric",
 
-  assets: {
-    defaultMusic: "/themes/dubai-silk/track.mp3",
-  },
+  assets: {},
 
   motion: {
     reveal: "book",

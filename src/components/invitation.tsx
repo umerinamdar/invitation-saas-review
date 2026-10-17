@@ -23,12 +23,43 @@ import {
 import { paletteVariables, type Theme } from "@/themes/types";
 import {
   galleryImage,
+  hasFamily,
   hostNames,
   monogram,
+  type Family,
   type Invite,
 } from "@/invites/types";
 
 const SEAL_CLICK = "/audio/seal-click.wav";
+
+/** Parents and grandparents under a host's name, as Indian invitations do. */
+function FamilyLines({
+  name,
+  family,
+}: {
+  name: string | undefined;
+  family: Family | undefined;
+}) {
+  if (!name || !hasFamily(family)) return null;
+  return (
+    <div className="family-block">
+      <p className="family-name">{name}</p>
+      {family?.credentials && (
+        <p className="family-credentials">{family.credentials}</p>
+      )}
+      {family?.parents && (
+        <p>
+          {family.relation ?? "Child of"} {family.parents}
+        </p>
+      )}
+      {family?.grandparents && (
+        <p className="family-grandparents">
+          Grandchild of {family.grandparents}
+        </p>
+      )}
+    </div>
+  );
+}
 
 /**
  * The invite engine. Everything it draws comes from `theme` (how it looks)
@@ -72,6 +103,7 @@ export function Invitation({
     theme.motion;
   const { event, story } = invite;
   const musicUrl = invite.music?.url ?? defaultMusic;
+  const hasMusic = Boolean(musicUrl);
   const names = hostNames(invite);
   const initials = monogram(invite);
   const ring = galleryImage(invite, "ring");
@@ -219,16 +251,18 @@ export function Invitation({
         preload="auto"
         aria-hidden="true"
       />
-      <audio
-        ref={audio}
-        src={musicUrl}
-        loop
-        preload="auto"
-        onError={() => {
-          setMusic(false);
-          if (opened.current) setAudioError("Music couldn’t load.");
-        }}
-      />
+      {hasMusic && (
+        <audio
+          ref={audio}
+          src={musicUrl}
+          loop
+          preload="auto"
+          onError={() => {
+            setMusic(false);
+            if (opened.current) setAudioError("Music couldn’t load.");
+          }}
+        />
+      )}
       {!open ? (
         <section className={`sealed-stage ${opening ? "opening-stage" : ""}`}>
           {sealedBackdrop ? (
@@ -279,10 +313,21 @@ export function Invitation({
               seconds={introSeconds}
               onComplete={completeIntro}
             />
+            {invite.blessing?.text && (
+              <div className="invitation-blessing">
+                <p>{invite.blessing.text}</p>
+                {invite.blessing.attribution && (
+                  <cite>{invite.blessing.attribution}</cite>
+                )}
+              </div>
+            )}
             <div className="invitation-heading">
               <p>{event.typeLabel}</p>
               <span className="heading-rule" />
             </div>
+            {invite.welcome && (
+              <p className="invitation-welcome">{invite.welcome}</p>
+            )}
             <div className="invitation-names">
               <h1>
                 {invite.hosts.person1}
@@ -293,6 +338,19 @@ export function Invitation({
                   </>
                 )}
               </h1>
+              {(hasFamily(invite.hosts.family1) ||
+                hasFamily(invite.hosts.family2)) && (
+                <div className="invitation-families">
+                  <FamilyLines
+                    name={invite.hosts.person1}
+                    family={invite.hosts.family1}
+                  />
+                  <FamilyLines
+                    name={invite.hosts.person2}
+                    family={invite.hosts.family2}
+                  />
+                </div>
+              )}
             </div>
             <div className="invitation-date">
               <ScratchInvitation
@@ -342,6 +400,15 @@ export function Invitation({
             ) : (
               <span className="venue-name">{event.venueName}</span>
             )}
+            {event.venueAddress && (
+              <p className="venue-address">{event.venueAddress}</p>
+            )}
+            {event.muhuratText && (
+              <p className="venue-muhurat">{event.muhuratText}</p>
+            )}
+            {event.dressCode && (
+              <p className="venue-dress">Dress code · {event.dressCode}</p>
+            )}
             <div
               className="countdown"
               aria-label={`Countdown to ${event.typeLabel.toLowerCase()}`}
@@ -361,14 +428,46 @@ export function Invitation({
             <section className="sub-events">
               {invite.subEvents.map((sub) => (
                 <div key={sub.label} className="sub-event">
+                  <span className="sub-event-rule" aria-hidden="true" />
                   <h3>{sub.label}</h3>
                   <p>{sub.dateText}</p>
                   <p>{sub.timeText}</p>
-                  {sub.venueName && (
-                    <p className="sub-event-venue">{sub.venueName}</p>
+                  {sub.venueName &&
+                    (sub.venueMapsUrl ? (
+                      <a
+                        className="sub-event-venue"
+                        href={sub.venueMapsUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {sub.venueName} <ArrowUpRight size={13} />
+                      </a>
+                    ) : (
+                      <p className="sub-event-venue">{sub.venueName}</p>
+                    ))}
+                  {sub.dressCode && (
+                    <p className="sub-event-dress">{sub.dressCode}</p>
                   )}
+                  {sub.note && <p className="sub-event-note">{sub.note}</p>}
                 </div>
               ))}
+            </section>
+          )}
+
+          {invite.familyMembers && invite.familyMembers.length > 0 && (
+            <section className="family-section">
+              <span className="section-ornament" aria-hidden="true">
+                {theme.ornament}
+              </span>
+              <h2>With love from</h2>
+              <ul>
+                {invite.familyMembers.map((member) => (
+                  <li key={`${member.name}-${member.role}`}>
+                    <strong>{member.name}</strong>
+                    <span>{member.role}</span>
+                  </li>
+                ))}
+              </ul>
             </section>
           )}
 
@@ -469,6 +568,74 @@ export function Invitation({
             </section>
           )}
 
+          {(invite.logistics?.transport ||
+            invite.logistics?.accommodation ||
+            invite.logistics?.note) && (
+            <section className="logistics-section">
+              <span className="section-ornament" aria-hidden="true">
+                {theme.ornament}
+              </span>
+              <h2>Getting there</h2>
+              <div className="logistics-grid">
+                {invite.logistics.transport && (
+                  <div>
+                    <h3>Travel</h3>
+                    <p>{invite.logistics.transport}</p>
+                  </div>
+                )}
+                {invite.logistics.accommodation && (
+                  <div>
+                    <h3>Where to stay</h3>
+                    <p>{invite.logistics.accommodation}</p>
+                  </div>
+                )}
+                {invite.logistics.note && (
+                  <div>
+                    <h3>Good to know</h3>
+                    <p>{invite.logistics.note}</p>
+                  </div>
+                )}
+              </div>
+            </section>
+          )}
+
+          {invite.rsvp?.enabled && (
+            <section className="rsvp-section">
+              <span className="section-ornament" aria-hidden="true">
+                {theme.ornament}
+              </span>
+              <h2>Kindly reply</h2>
+              {invite.rsvp.byDateText && (
+                <p className="rsvp-by">by {invite.rsvp.byDateText}</p>
+              )}
+              <div className="rsvp-actions">
+                {invite.rsvp.whatsapp && (
+                  <a
+                    href={`https://wa.me/${invite.rsvp.whatsapp.replace(/[^0-9]/g, "")}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    WhatsApp <ArrowUpRight size={15} />
+                  </a>
+                )}
+                {invite.rsvp.phone && (
+                  <a href={`tel:${invite.rsvp.phone}`}>{invite.rsvp.phone}</a>
+                )}
+                {invite.rsvp.email && (
+                  <a href={`mailto:${invite.rsvp.email}`}>
+                    {invite.rsvp.email}
+                  </a>
+                )}
+              </div>
+            </section>
+          )}
+
+          {invite.hashtag && (
+            <section className="hashtag-section">
+              <p>{invite.hashtag}</p>
+            </section>
+          )}
+
           {flowers && petals !== "none" && (
             <div
               className={`flower-shower petals petals-${petals}`}
@@ -480,17 +647,19 @@ export function Invitation({
             </div>
           )}
           <div className="music-dock">
-            <Button
-              size="icon"
-              variant="ghost"
-              onClick={toggleMusic}
-              aria-label={
-                music ? "Pause background music" : "Play background music"
-              }
-              title={music ? "Pause music" : "Play music"}
-            >
-              {music ? <Volume2 /> : <VolumeX />}
-            </Button>
+            {hasMusic && (
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={toggleMusic}
+                aria-label={
+                  music ? "Pause background music" : "Play background music"
+                }
+                title={music ? "Pause music" : "Play music"}
+              >
+                {music ? <Volume2 /> : <VolumeX />}
+              </Button>
+            )}
             <Button
               size="icon"
               variant="ghost"

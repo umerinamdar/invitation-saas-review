@@ -15,6 +15,11 @@ export const azureVows: Theme = {
   name: "Azure Vows",
   occasions: ["wedding", "reception"],
 
+  // Shares Dubai Silk's artwork but not its music: that track is personal.
+  assets: (({ defaultMusic: _personal, ...shared }) => shared)(
+    dubaiSilk.assets,
+  ),
+
   palette: {
     ...dubaiSilk.palette,
     accent: "oklch(0.62 0.075 236)", // silver-blue rather than gold

@@ -75,7 +75,12 @@ export type ThemeAssets = {
   sealDisc?: string;
   /** Omit on dark themes: a light grain would wash the surfaces out. */
   paperTexture?: string; // envelope + scratch card grain
-  defaultMusic: string;
+  /**
+   * Optional. A theme ships silent until it has a track with commercial
+   * rights of its own — one host's personal song cannot be resold inside
+   * every customer's invitation.
+   */
+  defaultMusic?: string;
 };
 
 export type Motion = {

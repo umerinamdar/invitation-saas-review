@@ -47,7 +47,6 @@ export const mughalZamarrud: Theme = {
     revealedBackdrop: "/themes/mughal-zamarrud/hero.jpg",
     sealDisc: "/themes/mughal-zamarrud/seal.png",
     paperTexture: "/themes/mughal-zamarrud/paper.jpg",
-    defaultMusic: "/themes/dubai-silk/track.mp3",
   },
 
   motion: {

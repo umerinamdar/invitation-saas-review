@@ -36,7 +36,8 @@ export const haveliBandhej: Theme = {
   },
 
   ornamentation: "paisley",
-  assets: { defaultMusic: "/themes/dubai-silk/track.mp3" },
+  // Silent until it has a track of its own with commercial rights.
+  assets: {},
 
   motion: {
     reveal: "book",

@@ -38,9 +38,7 @@ export const sageNikah: Theme = {
 
   ornamentation: "botanical",
 
-  assets: {
-    defaultMusic: "/themes/dubai-silk/track.mp3",
-  },
+  assets: {},
 
   motion: {
     reveal: "envelope",

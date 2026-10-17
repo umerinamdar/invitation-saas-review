@@ -38,9 +38,7 @@ export const monochromeVow: Theme = {
 
   ornamentation: "deco",
 
-  assets: {
-    defaultMusic: "/themes/dubai-silk/track.mp3",
-  },
+  assets: {},
 
   motion: {
     reveal: "curtain",
