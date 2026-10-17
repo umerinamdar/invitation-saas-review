@@ -51,6 +51,16 @@ export const mughalZamarrud: Theme = {
     petals: "none",
   },
 
+  kicker: "3D CARVED DOORS",
+  tagline:
+    "Deep emerald and antique gold Mughal invitation whose carved doors swing inward over a gold jali lattice, with a live muhurat countdown.",
+  features: [
+    "3D Carved Door Opening",
+    "Gold Jali Lattice",
+    "Scratch-to-Reveal Date",
+    "Live Countdown",
+  ],
+
   copy: {
     scratchTitle: "The appointed day",
     scratchHint: "Scratch to reveal",

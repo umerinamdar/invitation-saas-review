@@ -57,6 +57,16 @@ export const dubaiSilk: Theme = {
     petals: "white-blossom",
   },
 
+  kicker: "WAX SEAL ENVELOPE",
+  tagline:
+    "Powder-blue silk and gold Dubai skyline invitation that opens through a wax-sealed envelope, with a cinematic arch reveal and a scratch-to-reveal muhurat.",
+  features: [
+    "Wax Seal Envelope",
+    "Cinematic Skyline Reveal",
+    "Scratch-to-Reveal Date",
+    "Falling Petals",
+  ],
+
   copy: {
     scratchTitle: "A date to remember",
     scratchHint: "Scratch to reveal",

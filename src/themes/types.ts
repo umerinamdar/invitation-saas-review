@@ -100,6 +100,17 @@ export type Theme = {
   ornamentation: Ornamentation;
   assets: ThemeAssets;
   motion: Motion;
+  /** A short kicker above the name in the gallery, e.g. "NIKAH INVITATION". */
+  kicker: string;
+  /** One sentence describing the template, as a shopper would read it. */
+  tagline: string;
+  /**
+   * Four things this template does that another does not. Competitors lead
+   * with these because a list of named features is what makes one design
+   * feel worth paying for next to eleven others.
+   */
+  features: [string, string, string, string];
+
   /** Wording baked into the design rather than supplied by the host. */
   copy: {
     scratchTitle: string;

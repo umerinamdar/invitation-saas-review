@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
+import { paletteVariables } from "@/themes/types";
 import { BRAND, SiteFooter, SiteHeader } from "@/components/site/chrome";
-import { ThemeCard } from "@/components/site/theme-card";
+import { ThemeCard, ThemePhone } from "@/components/site/theme-card";
 import { themes } from "@/themes";
 
 const TITLE = `${BRAND} — Digital wedding invitations you can share on WhatsApp`;
@@ -57,37 +58,49 @@ function Landing() {
   const hero = themes[0]!;
   return (
     <div className="site">
-      <SiteHeader overlay />
+      <SiteHeader />
 
       <section className="hero">
-        <img
-          className="hero-art"
-          src={hero.assets.revealedBackdrop}
-          alt=""
-          fetchPriority="high"
-        />
-        <span className="hero-scrim" />
         <div className="hero-inner">
-          <p className="eyebrow">Digital wedding invitations</p>
+          <span className="hero-badge">
+            Wedding invitations, made in minutes
+          </span>
           <h1>
-            An invitation your guests
-            <em>open</em>
+            An invitation your guests <em>open</em>
           </h1>
           <p className="lede">
-            Not a card. Not a video. A link that unseals on their phone, with
-            music, your photographs and a countdown to the day.
+            Shaadi, engagement, mehendi, sangeet and reception — one link for
+            all of it. Twelve designs that unseal on their phone with music, a
+            scratch-to-reveal date and a live countdown.
           </p>
           <div className="hero-actions">
             <Link to="/create" className="btn btn-solid">
-              Start yours free <ArrowRight size={17} />
+              Create free invitation <ArrowRight size={17} />
             </Link>
-            <Link to="/templates" className="btn btn-ghost">
-              See all {themes.length} designs
+            <Link to="/templates" className="btn btn-quiet">
+              Explore {themes.length} designs
             </Link>
           </div>
           <p className="hero-note">
-            Free to design · ₹599 once to share · No subscription
+            No card needed · Free to design · ₹599 once to share
           </p>
+        </div>
+
+        {/*
+          A row of real invitations in handsets. The product is phone-shaped
+          and the designs are the pitch, so the hero shows several at once
+          rather than one decorative photograph.
+        */}
+        <div className="hero-phones" aria-hidden="true">
+          {themes.slice(0, 6).map((theme) => (
+            <span
+              key={theme.id}
+              className="hero-phone"
+              style={paletteVariables(theme) as React.CSSProperties}
+            >
+              <ThemePhone theme={theme} />
+            </span>
+          ))}
         </div>
       </section>
 

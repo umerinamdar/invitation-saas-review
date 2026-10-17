@@ -51,6 +51,16 @@ export const qubooHai: Theme = {
     petals: "none",
   },
 
+  kicker: "FOLDED CARD",
+  tagline:
+    "Midnight navy and gold nikah invitation that turns open like a folded card, on a fine geometric grid.",
+  features: [
+    "Folded Card Opening",
+    "Geometric Grid Work",
+    "Scratch-to-Reveal Date",
+    "Nikah Ceremony Cards",
+  ],
+
   copy: {
     scratchTitle: "Save the date",
     scratchHint: "Scratch to reveal",

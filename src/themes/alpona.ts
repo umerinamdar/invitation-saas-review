@@ -48,6 +48,16 @@ export const alpona: Theme = {
     petals: "rose",
   },
 
+  kicker: "BENGALI WEDDING",
+  tagline:
+    "Red and white Bengali invitation with alpona floor-art mandalas, opening from a wax-sealed envelope.",
+  features: [
+    "Wax Seal Envelope",
+    "Alpona Mandala Work",
+    "Shubho Bibaho Reveal",
+    "Rose Petal Shower",
+  ],
+
   copy: { scratchTitle: "Shubho bibaho", scratchHint: "Scratch to reveal" },
   ornament: "✹",
 };

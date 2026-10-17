@@ -45,6 +45,16 @@ export const kanjeevaram: Theme = {
     petals: "marigold",
   },
 
+  kicker: "TEMPLE GOPURAM",
+  tagline:
+    "Maroon Kanjeevaram silk and gold zari invitation framed by a temple gopuram, opening through carved doors.",
+  features: [
+    "Carved Door Opening",
+    "Temple Gopuram Frame",
+    "Gold Zari Borders",
+    "Marigold Shower",
+  ],
+
   copy: {
     scratchTitle: "The auspicious day",
     scratchHint: "Scratch to reveal",

@@ -52,6 +52,16 @@ export const monochromeVow: Theme = {
     petals: "none",
   },
 
+  kicker: "MODERN MINIMAL",
+  tagline:
+    "Ivory and graphite invitation with art-deco fans, parting on drapes — for couples who find gold too much.",
+  features: [
+    "Velvet Curtain Reveal",
+    "Art-Deco Fan Work",
+    "Editorial Typography",
+    "Scratch-to-Reveal Date",
+  ],
+
   copy: {
     scratchTitle: "The date",
     scratchHint: "Scratch to reveal",

@@ -29,6 +29,16 @@ export const azureVows: Theme = {
     petals: "rose",
   },
 
+  kicker: "SILVER & SKY",
+  tagline:
+    "Silver-blue Dubai invitation whose carved doors open onto the skyline arch, with a cooler, quieter palette.",
+  features: [
+    "3D Carved Door Opening",
+    "Skyline Arch Hero",
+    "Scratch-to-Reveal Date",
+    "Rose Petal Shower",
+  ],
+
   copy: {
     scratchTitle: "The day we begin",
     scratchHint: "Scratch to reveal",

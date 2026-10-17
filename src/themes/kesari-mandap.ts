@@ -45,6 +45,16 @@ export const kesariMandap: Theme = {
     petals: "marigold",
   },
 
+  kicker: "KEEPSAKE BOX",
+  tagline:
+    "Marigold and saffron mandap invitation that opens as a keepsake box lid lifting away, over rangoli mandala work.",
+  features: [
+    "Lifting Box Lid",
+    "Rangoli Mandala Work",
+    "Marigold Petal Shower",
+    "Festivities Timeline",
+  ],
+
   copy: { scratchTitle: "The muhurat", scratchHint: "Scratch to reveal" },
   ornament: "✸",
 };

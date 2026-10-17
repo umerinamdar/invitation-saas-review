@@ -45,6 +45,16 @@ export const midnightMayura: Theme = {
     petals: "none",
   },
 
+  kicker: "VELVET CURTAINS",
+  tagline:
+    "Peacock navy and gold invitation that parts on velvet curtains, with paisley detailing and a slow cinematic entrance.",
+  features: [
+    "Velvet Curtain Reveal",
+    "Paisley Detailing",
+    "Cinematic Entrance",
+    "Live Countdown",
+  ],
+
   copy: { scratchTitle: "The evening", scratchHint: "Scratch to reveal" },
   ornament: "❂",
 };

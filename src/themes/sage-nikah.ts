@@ -52,6 +52,16 @@ export const sageNikah: Theme = {
     petals: "rose",
   },
 
+  kicker: "MINIMAL NIKAH",
+  tagline:
+    "Sage and warm cream nikah invitation with trailing botanicals and a wax-sealed envelope — quiet where every other nikah design is maroon and gold.",
+  features: [
+    "Wax Seal Envelope",
+    "Trailing Botanicals",
+    "Nikah Ceremony Cards",
+    "Rose Petal Shower",
+  ],
+
   copy: {
     scratchTitle: "Our day",
     scratchHint: "Scratch to reveal",

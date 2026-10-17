@@ -48,6 +48,16 @@ export const haveliBandhej: Theme = {
     petals: "marigold",
   },
 
+  kicker: "MARWARI HAVELI",
+  tagline:
+    "Terracotta and rose Marwari invitation with bandhani paisley, turning open like a folded card from a haveli jharokha.",
+  features: [
+    "Folded Card Opening",
+    "Bandhani Paisley Work",
+    "Jharokha Framing",
+    "Marigold Shower",
+  ],
+
   copy: { scratchTitle: "Save our date", scratchHint: "Scratch to reveal" },
   ornament: "❁",
 };

@@ -48,6 +48,16 @@ export const phulkariAnand: Theme = {
     petals: "marigold",
   },
 
+  kicker: "ANAND KARAJ",
+  tagline:
+    "Saffron and ivory Sikh invitation with phulkari thread work, opening through carved doors onto the Anand Karaj programme.",
+  features: [
+    "Carved Door Opening",
+    "Phulkari Thread Work",
+    "Anand Karaj Programme",
+    "Marigold Shower",
+  ],
+
   copy: {
     scratchTitle: "The day of our Anand Karaj",
     scratchHint: "Scratch to reveal",
