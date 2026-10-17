@@ -1162,3 +1162,17 @@
   color: var(--ink-faint);
   flex: none;
 }
+
+.family-fields {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--line-soft);
+  border-radius: 10px;
+  background: var(--sheet-warm);
+}
+.family-fields-who {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 19px;
+  color: var(--ink);
+}

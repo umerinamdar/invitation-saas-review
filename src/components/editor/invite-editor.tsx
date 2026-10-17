@@ -38,6 +38,17 @@ export function InviteEditor({
     onChange({ ...config, event: { ...config.event, ...next } });
   const patchHosts = (next: Partial<InviteConfig["hosts"]>) =>
     onChange({ ...config, hosts: { ...config.hosts, ...next } });
+  const patchFamily = (
+    which: "family1" | "family2",
+    next: Record<string, string>,
+  ) =>
+    onChange({
+      ...config,
+      hosts: {
+        ...config.hosts,
+        [which]: { ...config.hosts[which], ...next },
+      },
+    });
 
   return (
     <div className="editor">
@@ -81,6 +92,53 @@ export function InviteEditor({
                 placeholder="Anaya"
               />
             </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Families</legend>
+            <p className="editor-note">
+              Indian invitations name the parents; leave blank to omit.
+            </p>
+            {(
+              [
+                ["family1", config.hosts.person1 || "First side"],
+                ["family2", config.hosts.person2 || "Second side"],
+              ] as const
+            ).map(([key, who]) => (
+              <div key={key} className="family-fields">
+                <p className="family-fields-who">{who}</p>
+                <label>
+                  Parents
+                  <input
+                    value={config.hosts[key]?.parents ?? ""}
+                    onChange={(e) =>
+                      patchFamily(key, { parents: e.target.value })
+                    }
+                    placeholder="Mr. &amp; Mrs. Rajeev Mehra"
+                  />
+                </label>
+                <label>
+                  Grandparents
+                  <input
+                    value={config.hosts[key]?.grandparents ?? ""}
+                    onChange={(e) =>
+                      patchFamily(key, { grandparents: e.target.value })
+                    }
+                    placeholder="Late Shri Mohanlal Mehra"
+                  />
+                </label>
+                <label>
+                  Qualifications
+                  <input
+                    value={config.hosts[key]?.credentials ?? ""}
+                    onChange={(e) =>
+                      patchFamily(key, { credentials: e.target.value })
+                    }
+                    placeholder="MBBS, MD"
+                  />
+                </label>
+              </div>
+            ))}
           </fieldset>
 
           <fieldset>
@@ -189,6 +247,50 @@ export function InviteEditor({
             >
               Add a function
             </button>
+          </fieldset>
+
+          <fieldset>
+            <legend>Replies</legend>
+            <label>
+              WhatsApp number
+              <input
+                value={config.rsvp?.whatsapp ?? ""}
+                onChange={(e) =>
+                  patch({
+                    rsvp: {
+                      ...config.rsvp,
+                      enabled: true,
+                      whatsapp: e.target.value,
+                    },
+                  })
+                }
+                placeholder="+91 98200 00000"
+              />
+            </label>
+            <label>
+              Reply by
+              <input
+                value={config.rsvp?.byDateText ?? ""}
+                onChange={(e) =>
+                  patch({
+                    rsvp: {
+                      ...config.rsvp,
+                      enabled: true,
+                      byDateText: e.target.value,
+                    },
+                  })
+                }
+                placeholder="20 January 2027"
+              />
+            </label>
+            <label>
+              Your hashtag
+              <input
+                value={config.hashtag ?? ""}
+                onChange={(e) => patch({ hashtag: e.target.value })}
+                placeholder="#AaravFoundHisAnaya"
+              />
+            </label>
           </fieldset>
 
           <fieldset>
