@@ -357,26 +357,33 @@ a {
 .wax-monogram {
   position: relative;
   z-index: 1;
-  /* Engraved, not typed: wide tracking, a gold gradient across the strokes
-   * and a cut shadow above with a lit edge below. */
-  font: 400 clamp(17px, 2.9vw, 31px) / 1 var(--font-serif);
-  letter-spacing: 0.16em;
-  text-indent: 0.16em;
+  /*
+   * Struck in gold, not typed in ink. The reference monogram reads as
+   * raised metal: a bright gradient down the strokes, a dark cut above
+   * where the press bit into the wax, and a lit edge below. Sized to fill
+   * the clear middle of the wreath rather than float in it.
+   */
+  font: 500 clamp(28px, 5.6vw, 58px) / 1 var(--font-serif);
+  letter-spacing: 0.04em;
+  text-indent: 0.04em;
+  /* The clear middle of a pressed wreath sits a little above the disc's
+   * geometric centre, so the letters are nudged up to match. */
+  transform: translateY(-4%);
   background: linear-gradient(
-    160deg,
-    var(--gold-light) 0%,
-    var(--gold) 34%,
-    var(--ink-light) 50%,
-    var(--gold) 66%,
-    var(--gold-light) 100%
+    168deg,
+    #f6e4ad 0%,
+    #d4af5f 26%,
+    #fff6d8 46%,
+    #c99a3e 60%,
+    #e8cf8d 82%,
+    #b8862e 100%
   );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(
-      0 1px 0 color-mix(in oklch, var(--foreground) 45%, transparent)
-    )
-    drop-shadow(0 -1px 0 color-mix(in oklch, var(--ink-light) 30%, transparent));
+  filter: drop-shadow(0 -1px 0 rgb(0 0 0 / 0.55))
+    drop-shadow(0 1px 0 rgb(255 245 214 / 0.55))
+    drop-shadow(0 2px 3px rgb(0 0 0 / 0.35));
 }
 .envelope-label {
   position: absolute;
@@ -1981,4 +1988,40 @@ a {
 }
 .date-revealed .revealed-date::after {
   margin-top: 14px;
+}
+
+/*
+ * The open prompt. Over painted artwork it has no reliable ground — it was
+ * landing on pale stone in one theme and dark velvet in the next — so it
+ * now carries its own plate, the way the reference sites do.
+ */
+.envelope-label,
+.doors-label,
+.curtain-label,
+.book-label,
+.box-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  height: auto;
+  padding: 11px 22px;
+  font-size: clamp(14px, 1.7vw, 18px);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  color: var(--highlight);
+  text-shadow: none;
+  background: color-mix(in oklch, var(--scratch-ink) 68%, transparent);
+  border: 1px solid color-mix(in oklch, var(--gold) 55%, transparent);
+  border-radius: 2px;
+  backdrop-filter: blur(3px);
+}
+.envelope-label:hover,
+.doors-label:hover,
+.curtain-label:hover,
+.book-label:hover,
+.box-label:hover {
+  background: color-mix(in oklch, var(--scratch-ink) 82%, transparent);
+  border-color: var(--gold);
 }

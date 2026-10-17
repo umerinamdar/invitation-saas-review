@@ -12,15 +12,23 @@ import { haveliBandhej } from "./haveli-bandhej";
 import { alpona } from "./alpona";
 import { phulkariAnand } from "./phulkari-anand";
 import { sarayuGhat } from "./sarayu-ghat";
+import { noorHaram } from "./noor-haram";
+import { cathedralLight } from "./cathedral-light";
+import { mayuraMahal } from "./mayura-mahal";
 
 /** Catalog order is gallery order, so lead with the strongest designs. */
 export const themes: Theme[] = [
+  // Painted artwork first — the drawn ones below are placeholders until
+  // they are regenerated the same way.
   dubaiSilk,
   mughalZamarrud,
   kesariMandap,
-  sarayuGhat,
-  midnightMayura,
   kanjeevaram,
+  sarayuGhat,
+  noorHaram,
+  cathedralLight,
+  mayuraMahal,
+  midnightMayura,
   qubooHai,
   phulkariAnand,
   alpona,
