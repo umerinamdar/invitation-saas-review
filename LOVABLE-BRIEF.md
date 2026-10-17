@@ -87,7 +87,10 @@ Finish matters far more than feature count.
 
 ### The experience, in order
 
-**1. A sealed opening.**
+**1. A sealed opening.** *(The mechanic is named in the AESTHETIC block —
+build that one, and compose the backdrop around it. A scene painted for an
+envelope cannot then be opened with doors; the doors cover the painting.)*
+
 The entire screen is one richly painted scene containing a single closed
 object — carved palace doors, a wax-sealed envelope, drawn velvet curtains,
 a keepsake box. A small "Tap to open" plate sits on the object. The couple's
@@ -131,6 +134,24 @@ normally again. Keyboard-accessible too (Enter or Space reveals it).
 **Scene:** a Mughal palace gateway at dusk — carved marble jali screens, an
 emerald-inlaid arch, lit brass lanterns, a still reflecting pool
 **Feeling:** opulent, candlelit, hushed
+**Opening:** a wax-sealed envelope resting in a carved marble niche
+
+### The five openings
+
+Every template uses one. Vary them across the catalogue — competitors do,
+and it is most of what makes one template feel different from the next.
+
+| Opening | What the guest sees and taps |
+|---|---|
+| **Envelope** | A wax-sealed envelope. The flap folds back. |
+| **Carved doors** | Two tall carved doors, seal where they meet. They swing inward. |
+| **Velvet drapes** | Heavy curtains drawn across a stage, seal at the join. They sweep apart. |
+| **Folded card** | A folded invitation card, seal on the cover. It turns open on its spine. |
+| **Keepsake box** | An ornate box with the seal on its lid. The lid lifts and floats away. |
+
+**Compose the sealed backdrop for the chosen one.** Doors need a doorway or
+archway to sit in. Drapes need a stage or proscenium. An envelope needs a
+niche, table or ledge to rest on.
 
 ### The artwork — this is the actual job
 
@@ -154,6 +175,29 @@ gradients, or a geometric pattern standing in for a scene.
 | `hero-backdrop.jpg` | 1536 × 1024 | The scene revealed behind the couple's names. Architecture, florals, depth, atmosphere. **The middle must be open and quiet** — the names and the date card are drawn on top of it. |
 | `wax-seal.png` | 816 × 816 | A wax seal, transparent background, viewed straight down, thin metallic rim, soft sheen on the wax. **The centre must be completely blank.** |
 | `paper-texture.jpg` | 800 × 800 | Subtle, tileable paper or fabric grain in the palette. |
+
+#### The wax seal, in detail
+
+This one matters more than its size suggests — it is the first thing a
+guest taps.
+
+It must read as **real wax**: thick, dimensional, with soft irregular
+scalloped edges where it spread when pressed, a glossy sheen catching the
+light, and subtle depth variation across the surface. Not a flat coloured
+circle.
+
+Inside the wax, press a **raised gold ornament** in the theme's style — a
+laurel wreath, a floral ring, a jali border, a beaded circle. Rendered as
+embossed metal with its own highlights and shadow.
+
+**Leave the middle clear.** The ornament is a ring or frame around an empty
+centre, roughly 40% of the width, where the couple's initials are printed
+in live text by our engine.
+
+So: **ornament yes, letters no.** A gold wreath is wanted. The letters "AA"
+or any other initials, monogram or emblem inside it are not.
+
+Transparent background, viewed straight down, 816×816.
 
 #### Rules for every image
 
@@ -312,7 +356,11 @@ We do not need Lovable's code. We have the engine.
 
 ### The wax seal must be blank
 
-**No letters. No initials. No monogram. No emblem.**
+**No letters. No initials. No monogram.**
+
+A decorative gold ring — wreath, floral border, jali frame — is wanted, and
+makes the seal look expensive. What must not appear is **lettering** in the
+clear middle.
 
 Our engine prints each couple's own initials onto the seal. A seal with
 letters baked into the image means every customer receives somebody else's
