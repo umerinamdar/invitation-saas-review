@@ -32,7 +32,7 @@ export const Route = createFileRoute("/")({
 const STEPS = [
   {
     title: "Choose",
-    body: "Twelve designs, each with its own opening — an envelope to unseal, doors to part, a card to turn.",
+    body: `${themes.length} designs, each with its own opening — an envelope to unseal, doors to part, a card to turn.`,
   },
   {
     title: "Make it yours",
@@ -71,7 +71,7 @@ function Landing() {
           </h1>
           <p className="lede">
             Shaadi, engagement, mehendi, sangeet and reception — one link for
-            all of it. Twelve designs that unseal on their phone with music, a
+            all of it. {themes.length} designs that unseal on their phone with music, a
             scratch-to-reveal date and a live countdown.
           </p>
           <div className="hero-actions">
@@ -108,7 +108,7 @@ function Landing() {
       <section className="designs" id="designs">
         <Reveal as="header" className="section-head">
           <p className="eyebrow">The designs</p>
-          <h2>Twelve ways to open a door</h2>
+          <h2>{themes.length} ways to open a door</h2>
           <p className="section-sub">
             Every one is a living page, not a picture of one. Tap any design to
             open the real thing.

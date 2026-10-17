@@ -43,7 +43,7 @@ export const midnightMayura: Theme = {
     musicFadeMs: 8000,
     maxVolume: 0.6,
     scratchThreshold: 0.38,
-    petals: "none",
+    petals: "white-blossom",
   },
 
   kicker: "VELVET CURTAINS",

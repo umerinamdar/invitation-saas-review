@@ -47,7 +47,7 @@ export const monochromeVow: Theme = {
     musicFadeMs: 8000,
     maxVolume: 0.55,
     scratchThreshold: 0.38,
-    petals: "none",
+    petals: "white-blossom",
   },
 
   kicker: "MODERN MINIMAL",
