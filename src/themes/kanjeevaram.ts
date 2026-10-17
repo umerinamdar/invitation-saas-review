@@ -1,64 +1,74 @@
 import type { Theme } from "./types";
 
-/** Maroon silk and gold zari beneath a temple gopuram, opening on carved doors. */
+/**
+ * Maroon Kanjeevaram silk and gold zari, parting on heavy drapes into a
+ * temple courtyard at dawn. Artwork and palette generated in Lovable from
+ * LOVABLE-BRIEF.md; the backdrop was composed around the curtains.
+ */
 export const kanjeevaram: Theme = {
   id: "kanjeevaram",
   name: "Kanjeevaram",
-  tier: "classic",
+  tier: "royal",
   occasions: ["wedding", "reception", "engagement"],
-  thumbnail: "/themes/thumbs/kanjeevaram.svg",
+  thumbnail: "/themes/kanjeevaram/hero.jpg",
 
   palette: {
-    accent: "oklch(0.76 0.135 84)",
-    accentSoft: "oklch(0.86 0.1 86)",
-    tint: "oklch(0.48 0.14 20)",
-    paper: "oklch(0.35 0.12 18)",
-    paperLight: "oklch(0.43 0.13 20)",
-    paperDark: "oklch(0.27 0.1 17)",
-    highlight: "oklch(0.91 0.07 82)",
-    surface: "oklch(0.32 0.115 18)",
-    scratchFoil: "oklch(0.39 0.125 19)",
-    scratchInk: "oklch(0.93 0.07 84)",
-    background: "oklch(0.21 0.08 16)",
-    foreground: "oklch(0.95 0.05 84)",
-    muted: "oklch(0.77 0.07 86)",
-    border: "oklch(0.5 0.12 25)",
+    accent: "#c9a24a",
+    accentSoft: "#e6cf8f",
+    tint: "#7a1424",
+    paper: "#f4ead6",
+    paperLight: "#fbf5e8",
+    paperDark: "#e3d2ad",
+    highlight: "#f7e3a1",
+    surface: "#4a0c16",
+    scratchFoil: "#b8913b",
+    scratchInk: "#3a0911",
+    background: "#2a060c",
+    foreground: "#f8eedb",
+    muted: "#c8b39a",
+    border: "#8a6a2e",
   },
 
   typography: {
-    serif: "Marcellus",
-    sans: "Montserrat",
+    serif: "Cormorant Garamond",
+    sans: "Jost",
     fontsHref:
-      "https://fonts.googleapis.com/css2?family=Marcellus&family=Montserrat:wght@300;400;600&display=swap",
+      "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap",
   },
 
-  ornamentation: "temple",
-  // Silent until it has a track of its own with commercial rights.
-  assets: {},
+  ornamentation: "none",
+
+  assets: {
+    sealedBackdrop: "/themes/kanjeevaram/sealed.jpg",
+    revealedBackdrop: "/themes/kanjeevaram/hero.jpg",
+    sealDisc: "/themes/kanjeevaram/seal.png",
+    paperTexture: "/themes/kanjeevaram/paper.jpg",
+  },
 
   motion: {
-    reveal: "doors",
-    openMs: 1600,
+    reveal: "curtain",
+    openMs: 1700,
     introSeconds: 6,
     musicFadeMs: 8000,
     maxVolume: 0.6,
     scratchThreshold: 0.38,
-    petals: "marigold",
+    petals: "rose",
   },
 
-  kicker: "TEMPLE GOPURAM",
+  kicker: "SILK DRAPES",
   tagline:
-    "Maroon Kanjeevaram silk and gold zari invitation framed by a temple gopuram, opening through carved doors.",
+    "Maroon Kanjeevaram silk and gold zari invitation whose heavy drapes sweep apart onto a temple courtyard at dawn, lit by rows of brass lamps.",
   features: [
-    "Carved Door Opening",
-    "Temple Gopuram Frame",
-    "Gold Zari Borders",
-    "Marigold Shower",
+    "Silk Drape Reveal",
+    "Temple Courtyard at Dawn",
+    "Scratch-to-Reveal Muhurat",
+    "Rose Petal Shower",
   ],
 
   copy: {
     scratchTitle: "The auspicious day",
     scratchHint: "Scratch to reveal",
   },
+
   ornament: "✺",
 };

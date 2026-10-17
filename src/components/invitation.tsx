@@ -102,6 +102,9 @@ export function Invitation({
   const { sealedBackdrop, revealedBackdrop, sealDisc, defaultMusic } =
     theme.assets;
   const { ornamentation } = theme;
+  // doors and curtains animate the painting itself, so the stage must not
+  // also lay it down flat behind them.
+  const paintedOpening = (r: string) => r === "doors" || r === "curtain";
   const { reveal, openMs, introSeconds, musicFadeMs, maxVolume, petals } =
     theme.motion;
   const { event, story } = invite;
@@ -268,7 +271,7 @@ export function Invitation({
       )}
       {!open ? (
         <section className={`sealed-stage ${opening ? "opening-stage" : ""}`}>
-          {sealedBackdrop ? (
+          {sealedBackdrop && !paintedOpening(reveal) ? (
             <img
               src={sealedBackdrop}
               className="sealed-backdrop"
@@ -277,9 +280,9 @@ export function Invitation({
               height={1024}
               fetchPriority="high"
             />
-          ) : (
+          ) : !sealedBackdrop ? (
             <PatternBackdrop kind={ornamentation} />
-          )}
+          ) : null}
           <OrnateFrame kind={ornamentation} />
           <RevealStage
             reveal={reveal}
@@ -288,6 +291,9 @@ export function Invitation({
             {...(sealDisc ? { sealDisc } : {})}
             label={event.typeLabel}
             hosts={names}
+            {...(sealedBackdrop && paintedOpening(reveal)
+              ? { backdrop: sealedBackdrop }
+              : {})}
             opening={opening}
             onOpen={openEnvelope}
           />

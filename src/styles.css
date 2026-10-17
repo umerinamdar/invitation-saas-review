@@ -1843,3 +1843,35 @@ a {
     display: none;
   }
 }
+
+/*
+ * Painted openings. When a theme's sealed backdrop already depicts the
+ * doors or drapes, the two halves of that painting are what move — drawing
+ * CSS panels over it would cover the artwork.
+ */
+.doors.is-painted,
+.curtain.is-painted {
+  width: min(960px, 100%);
+  aspect-ratio: 3 / 2;
+}
+.doors.is-painted .door-panel,
+.curtain.is-painted {
+  box-shadow: none;
+}
+.doors.is-painted .door-panel {
+  background-color: transparent;
+  border: 0;
+}
+.doors.is-painted .door-panel::after {
+  content: none;
+}
+.curtain.is-painted .drape {
+  width: 50%;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background-repeat: no-repeat;
+}
+.curtain.is-painted .curtain-rod {
+  display: none;
+}

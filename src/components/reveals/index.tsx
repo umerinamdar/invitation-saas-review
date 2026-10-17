@@ -11,6 +11,12 @@ export type RevealProps = {
   sealDisc?: string;
   label: string;
   hosts: string;
+  /**
+   * The sealed scene. When a theme supplies one, the painting itself is what
+   * opens — two halves of it swing or sweep apart — rather than CSS panels
+   * drawn on top of it, which would cover the doors someone painted.
+   */
+  backdrop?: string;
   opening: boolean;
   onOpen: () => void;
 };
@@ -77,14 +83,25 @@ export function EnvelopeReveal(props: RevealProps) {
  * between them. Same gesture and timing contract as the envelope.
  */
 export function DoorsReveal(props: RevealProps) {
-  const { opening, onOpen, hosts } = props;
+  const { opening, onOpen, hosts, backdrop } = props;
+  const painted = Boolean(backdrop);
+  const half = (side: "left" | "right") =>
+    backdrop
+      ? ({
+          backgroundImage: `url('${backdrop}')`,
+          backgroundSize: "200% 100%",
+          backgroundPosition: side === "left" ? "left center" : "right center",
+        } as React.CSSProperties)
+      : undefined;
   return (
-    <div className={`doors ${opening ? "is-opening" : ""}`}>
+    <div
+      className={`doors ${opening ? "is-opening" : ""} ${painted ? "is-painted" : ""}`}
+    >
       <div className="door door-left">
-        <span className="door-panel" />
+        <span className="door-panel" style={half("left")} />
       </div>
       <div className="door door-right">
-        <span className="door-panel" />
+        <span className="door-panel" style={half("right")} />
       </div>
       <Button
         variant="ghost"
@@ -105,11 +122,22 @@ export function DoorsReveal(props: RevealProps) {
  * slide — the heaviest-feeling of the mechanics.
  */
 export function CurtainReveal(props: RevealProps) {
-  const { opening, onOpen, hosts } = props;
+  const { opening, onOpen, hosts, backdrop } = props;
+  const painted = Boolean(backdrop);
+  const half = (side: "left" | "right") =>
+    backdrop
+      ? ({
+          backgroundImage: `url('${backdrop}')`,
+          backgroundSize: "200% 100%",
+          backgroundPosition: side === "left" ? "left center" : "right center",
+        } as React.CSSProperties)
+      : undefined;
   return (
-    <div className={`curtain ${opening ? "is-opening" : ""}`}>
-      <div className="drape drape-left" />
-      <div className="drape drape-right" />
+    <div
+      className={`curtain ${opening ? "is-opening" : ""} ${painted ? "is-painted" : ""}`}
+    >
+      <div className="drape drape-left" style={half("left")} />
+      <div className="drape drape-right" style={half("right")} />
       <span className="curtain-rod" />
       <Button
         variant="ghost"

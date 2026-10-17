@@ -1,61 +1,75 @@
 import type { Theme } from "./types";
 
-/** Marigold and deep saffron under a rangoli mandala, opening as a keepsake box. */
+/**
+ * Marigold and saffron, opening through carved wooden doors into a mandap
+ * at golden hour. Artwork and palette generated in Lovable from
+ * LOVABLE-BRIEF.md; the backdrop was composed around the doors, so the
+ * mechanic and the painting match.
+ */
 export const kesariMandap: Theme = {
   id: "kesari-mandap",
   name: "Kesari Mandap",
-  tier: "classic",
-  occasions: ["wedding", "haldi", "mehendi"],
-  thumbnail: "/themes/thumbs/kesari-mandap.svg",
+  tier: "royal",
+  occasions: ["wedding", "haldi", "mehendi", "reception"],
+  thumbnail: "/themes/kesari-mandap/hero.jpg",
 
   palette: {
-    accent: "oklch(0.72 0.155 62)",
-    accentSoft: "oklch(0.84 0.12 68)",
-    tint: "oklch(0.62 0.15 48)",
-    paper: "oklch(0.42 0.13 36)",
-    paperLight: "oklch(0.5 0.14 40)",
-    paperDark: "oklch(0.33 0.11 33)",
-    highlight: "oklch(0.92 0.08 78)",
-    surface: "oklch(0.38 0.12 35)",
-    scratchFoil: "oklch(0.46 0.13 38)",
-    scratchInk: "oklch(0.94 0.07 80)",
-    background: "oklch(0.26 0.085 32)",
-    foreground: "oklch(0.95 0.055 80)",
-    muted: "oklch(0.78 0.08 72)",
-    border: "oklch(0.52 0.12 45)",
+    accent: "#9e1b1b",
+    accentSoft: "#c8553d",
+    tint: "#f29f1c",
+    paper: "#f6e7c8",
+    paperLight: "#fdf5e4",
+    paperDark: "#e3c690",
+    highlight: "#d4a43a",
+    surface: "#fff9ee",
+    scratchFoil: "#c9962e",
+    scratchInk: "#5a1010",
+    background: "#3a0d0a",
+    foreground: "#3b1a10",
+    muted: "#7d5a3c",
+    border: "#d9b36a",
   },
 
   typography: {
-    serif: "Marcellus",
+    serif: "Cormorant Garamond",
     sans: "Jost",
     fontsHref:
-      "https://fonts.googleapis.com/css2?family=Marcellus&family=Jost:wght@300;400;500&display=swap",
+      "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap",
   },
 
-  ornamentation: "mandala",
-  // Silent until it has a track of its own with commercial rights.
-  assets: {},
+  ornamentation: "none",
+
+  assets: {
+    sealedBackdrop: "/themes/kesari-mandap/sealed.jpg",
+    revealedBackdrop: "/themes/kesari-mandap/hero.jpg",
+    sealDisc: "/themes/kesari-mandap/seal.png",
+    paperTexture: "/themes/kesari-mandap/paper.jpg",
+  },
 
   motion: {
-    reveal: "box",
-    openMs: 1500,
-    introSeconds: 5,
+    reveal: "doors",
+    openMs: 1600,
+    introSeconds: 6,
     musicFadeMs: 8000,
     maxVolume: 0.6,
     scratchThreshold: 0.38,
     petals: "marigold",
   },
 
-  kicker: "KEEPSAKE BOX",
+  kicker: "CARVED DOORS",
   tagline:
-    "Marigold and saffron mandap invitation that opens as a keepsake box lid lifting away, over rangoli mandala work.",
+    "Marigold and saffron invitation whose carved wooden doors swing open onto a mandap at golden hour, strung with garlands and lit by brass lamps.",
   features: [
-    "Lifting Box Lid",
-    "Rangoli Mandala Work",
+    "Carved Door Opening",
+    "Golden Hour Mandap",
+    "Scratch-to-Reveal Muhurat",
     "Marigold Petal Shower",
-    "Festivities Timeline",
   ],
 
-  copy: { scratchTitle: "The muhurat", scratchHint: "Scratch to reveal" },
+  copy: {
+    scratchTitle: "The muhurat",
+    scratchHint: "Scratch to reveal",
+  },
+
   ornament: "✸",
 };
