@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { ScratchInvitation } from "@/components/scratch-invitation";
 import { CinematicInvite } from "@/components/cinematic-invite";
 import { RevealStage } from "@/components/reveals";
+import { ConfettiBurst } from "@/components/confetti-burst";
 import { OrnateFrame, PatternBackdrop } from "@/components/ornament";
 import {
   musicFadeVolume,
@@ -87,6 +88,8 @@ export function Invitation({
   const [music, setMusic] = useState(false);
   const [audioError, setAudioError] = useState("");
   const [flowers, setFlowers] = useState(false);
+  // Poppers fire first; the petals start as they settle.
+  const [popped, setPopped] = useState(false);
   const audio = useRef<HTMLAudioElement>(null);
   const sealAudio = useRef<HTMLAudioElement>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -352,11 +355,14 @@ export function Invitation({
                 </div>
               )}
             </div>
+            {popped && !flowers && (
+              <ConfettiBurst onSettled={() => setFlowers(true)} />
+            )}
             <div className="invitation-date">
               <ScratchInvitation
                 theme={theme}
                 event={event}
-                onReveal={() => setFlowers(true)}
+                onReveal={() => setPopped(true)}
               />
             </div>
             <a

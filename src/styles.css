@@ -1763,3 +1763,83 @@ a {
     font-size: 17px;
   }
 }
+
+/* Party poppers ------------------------------------------------------ */
+/*
+ * Fired either side of the scratch card the moment the date is revealed,
+ * handing over to the petal shower as the foil settles.
+ */
+.popper-burst {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+}
+.popper {
+  position: absolute;
+  bottom: 12%;
+  width: 0;
+  height: 0;
+}
+.popper-left {
+  left: 14%;
+  --lean: 28deg;
+}
+.popper-right {
+  right: 14%;
+  --lean: -28deg;
+}
+.popper-bit {
+  position: absolute;
+  width: 7px;
+  height: 11px;
+  border-radius: 1px;
+  opacity: 0;
+  background: var(--gold);
+  transform-origin: center;
+  animation: popper-fly 1.5s cubic-bezier(0.16, 0.75, 0.3, 1) forwards;
+  animation-delay: var(--delay);
+}
+.popper-bit.bit-1 {
+  background: var(--gold-light);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.popper-bit.bit-2 {
+  background: var(--paper-light);
+  height: 9px;
+}
+.popper-bit.bit-3 {
+  background: var(--powder);
+  width: 5px;
+  height: 12px;
+}
+
+@keyframes popper-fly {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(0) scale(0.6);
+  }
+  12% {
+    opacity: 1;
+  }
+  /* Up and out along the popper's lean, then gravity takes it down. */
+  55% {
+    opacity: 1;
+    transform: rotate(calc(var(--lean) + var(--angle)))
+      translateY(calc(var(--distance) * -1)) rotate(var(--spin)) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(calc(var(--lean) + var(--angle)))
+      translateY(calc(var(--distance) * -0.45)) translateX(14px)
+      rotate(var(--spin)) scale(0.9);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .popper-burst {
+    display: none;
+  }
+}
