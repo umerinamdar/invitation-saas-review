@@ -43,6 +43,27 @@ For reference on what is *not* good enough: our current attempts are flat
 CSS patterns — a gold lattice on dark green, a geometric grid on navy. Next
 to a painted palace they look like placeholders, because they are.
 
+### Reference sites — the production standard
+
+These are the established players in this market. Look at them to calibrate
+**how finished a paid template in this category looks** — the density of the
+artwork, the warmth of the light, the weight of the motion.
+
+| Site | Worth looking at |
+|---|---|
+| **invitima.com** | The strongest. Painted palace scenes, 3D gate openings, "Maharaja's Dream" and "Royal Jaipur" in particular |
+| **zareqia.com** | Cinematic openings, ornate gold frames, dark jewel palettes |
+| **invitestory.in** | 35 designs, cleaner and more modern; good for the restrained end |
+
+**Match their level of craft. Do not reproduce their designs.** Their
+artwork is their property, and a traced palace gate is both a legal problem
+and a commercial dead end — we would be selling a worse copy of a product
+that already exists. The aesthetics in Part 3 are deliberately our own set,
+several of them covering ground none of these three serve well.
+
+If you cannot browse these, the written descriptions in this brief carry
+everything needed; they were written from these sites.
+
 ### The one template that already works
 
 The same person previously had Lovable build a **Dubai Silk** invitation and
