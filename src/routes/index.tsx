@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { BRAND, SiteFooter, SiteHeader } from "@/components/site/chrome";
 import { ThemeCard } from "@/components/site/theme-card";
 import { themes } from "@/themes";
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/")({
     links: [
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap",
       },
     ],
   }),
@@ -29,65 +29,79 @@ export const Route = createFileRoute("/")({
 
 const STEPS = [
   {
-    title: "Pick a design",
-    body: "Six wedding designs, each with its own opening — an envelope to unseal, doors to part, a card to turn.",
+    title: "Choose",
+    body: "Twelve designs, each with its own opening — an envelope to unseal, doors to part, a card to turn.",
   },
   {
-    title: "Add your details",
-    body: "Names, dates, venue, your functions, your photographs. Preview it free as often as you like.",
+    title: "Make it yours",
+    body: "Your names, your dates, your functions, your photographs. Watch it change as you type.",
   },
   {
-    title: "Share the link",
-    body: "Pay once and your invitation goes live at its own address. Send it on WhatsApp — guests just tap.",
+    title: "Share",
+    body: "One link. Guests tap it and your invitation opens on their phone, music and all.",
   },
 ];
 
 const INCLUDED = [
-  "Your own shareable link",
-  "Animated opening and background music",
+  "Your own link to share",
+  "Animated opening and music",
   "Scratch-to-reveal date",
-  "Live countdown to the day",
-  "Mehendi, sangeet and reception timings",
-  "Venue with map directions",
+  "Live countdown",
+  "Mehendi, sangeet and reception",
+  "Venue with directions",
   "Your photographs",
-  "Edit anytime before the wedding",
+  "Edit until the wedding day",
 ];
 
 function Landing() {
+  const hero = themes[0]!;
   return (
     <div className="site">
-      <SiteHeader />
+      <SiteHeader overlay />
 
       <section className="hero">
-        <p className="eyebrow">Wedding invitations</p>
-        <h1>
-          An invitation your guests <em>open</em>, not just read.
-        </h1>
-        <p className="lede">
-          Choose a design, add your names and dates, and share a link. It opens
-          on their phone with music, an animated reveal and a countdown to your
-          day.
-        </p>
-        <div className="hero-actions">
-          <Link to="/create" className="btn btn-solid">
-            Start yours free <ArrowRight size={17} />
-          </Link>
-          <Link to="/templates" className="btn btn-quiet">
-            See all {themes.length} designs
-          </Link>
+        <img
+          className="hero-art"
+          src={hero.assets.revealedBackdrop}
+          alt=""
+          fetchPriority="high"
+        />
+        <span className="hero-scrim" />
+        <div className="hero-inner">
+          <p className="eyebrow">Digital wedding invitations</p>
+          <h1>
+            An invitation your guests
+            <em>open</em>
+          </h1>
+          <p className="lede">
+            Not a card. Not a video. A link that unseals on their phone, with
+            music, your photographs and a countdown to the day.
+          </p>
+          <div className="hero-actions">
+            <Link to="/create" className="btn btn-solid">
+              Start yours free <ArrowRight size={17} />
+            </Link>
+            <Link to="/templates" className="btn btn-ghost">
+              See all {themes.length} designs
+            </Link>
+          </div>
+          <p className="hero-note">
+            Free to design · ₹599 once to share · No subscription
+          </p>
         </div>
-        <p className="hero-note">
-          One payment · No subscription · Free until you publish
-        </p>
       </section>
 
       <section className="designs" id="designs">
         <header className="section-head">
-          <h2>The designs</h2>
-          <p>Every one is a live page, not a video file.</p>
+          <p className="eyebrow">The designs</p>
+          <h2>Twelve ways to open a door</h2>
+          <p className="section-sub">
+            Every one is a living page, not a picture of one. Tap any design to
+            open the real thing.
+          </p>
         </header>
         <div className="theme-grid">
-          {themes.slice(0, 3).map((theme) => (
+          {themes.slice(0, 6).map((theme) => (
             <ThemeCard key={theme.id} theme={theme} />
           ))}
         </div>
@@ -97,13 +111,12 @@ function Landing() {
       </section>
 
       <section className="how" id="how">
-        <header className="section-head">
-          <h2>How it works</h2>
-        </header>
         <ol className="steps">
           {STEPS.map((step, i) => (
             <li key={step.title}>
-              <span className="step-number">{i + 1}</span>
+              <span className="step-number">
+                {String(i + 1).padStart(2, "0")}
+              </span>
               <h3>{step.title}</h3>
               <p>{step.body}</p>
             </li>
@@ -112,27 +125,25 @@ function Landing() {
       </section>
 
       <section className="pricing" id="pricing">
-        <header className="section-head">
-          <h2>One price</h2>
-          <p>Build the whole thing free. Pay only when you want to share it.</p>
-        </header>
-        <div className="price-card">
-          <p className="price">
-            ₹599 <span>once</span>
-          </p>
-          <ul>
+        <div className="price-panel">
+          <div className="price-side">
+            <p className="eyebrow">One price</p>
+            <h2>
+              ₹599 <span>once</span>
+            </h2>
+            <p className="section-sub">
+              Design the whole thing free. Pay only when you're ready to send
+              it. No subscription, no per-guest charge.
+            </p>
+            <Link to="/create" className="btn btn-solid">
+              Start yours free <ArrowRight size={17} />
+            </Link>
+          </div>
+          <ul className="price-list">
             {INCLUDED.map((item) => (
-              <li key={item}>
-                <Check size={15} /> {item}
-              </li>
+              <li key={item}>{item}</li>
             ))}
           </ul>
-          <Link to="/create" className="btn btn-solid">
-            Start free <ArrowRight size={17} />
-          </Link>
-          <p className="price-note">
-            No charge until you publish. Preview as long as you like.
-          </p>
         </div>
       </section>
 

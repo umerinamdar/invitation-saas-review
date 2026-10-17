@@ -3,9 +3,10 @@ import { Link } from "@tanstack/react-router";
 /** Placeholder until the business has a name. */
 export const BRAND = "Aarzoo";
 
-export function SiteHeader() {
+/** `overlay` lets the header sit on top of a full-bleed hero. */
+export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
   return (
-    <header className="site-header">
+    <header className={`site-header ${overlay ? "is-overlay" : ""}`}>
       <Link to="/" className="brand">
         {BRAND}
       </Link>
@@ -24,7 +25,7 @@ export function SiteHeader() {
 export function SiteFooter() {
   return (
     <footer className="site-footer">
-      <div>
+      <div className="footer-brand">
         <p className="brand">{BRAND}</p>
         <p className="footer-note">
           Digital invitations. No physical products are shipped.
