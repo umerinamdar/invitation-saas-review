@@ -48,8 +48,6 @@ with generated artwork the same way.
 - **Music.** Every template except Dubai Silk is silent. Your track is a
   commercial recording and cannot ship inside a product. Send the 10
   English and 10 Hindi files and they go in `src/lib/music.ts`.
-- **A brand name.** "Aarzoo" is a placeholder in
-  `src/components/site/chrome.tsx`.
 - **Payment.** Razorpay, once you have an Indian entity.
 - **The database.** `supabase/migrations/0001_init.sql` still needs running
   in the Supabase SQL editor before accounts, saving or publishing work.

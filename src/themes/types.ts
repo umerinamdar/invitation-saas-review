@@ -11,6 +11,15 @@ export type Occasion =
 
 export type Tier = "classic" | "royal";
 
+/** Optional cultural/religious category, used by the templates gallery filter. */
+export type Religion = "hindu" | "muslim" | "sikh" | "christian";
+
+/**
+ * Design tradition, used by the templates gallery filter. "traditional" covers
+ * the cultural patterns above; "modern" is the restrained, editorial end.
+ */
+export type Tradition = "traditional" | "modern";
+
 export type PetalStyle = "white-blossom" | "marigold" | "rose" | "none";
 
 /**
@@ -68,11 +77,14 @@ export type ThemeAssets = {
   sealedBackdrop?: string; // behind the closed envelope
   revealedBackdrop?: string; // hero behind the names
   /**
-   * A BLANK wax disc — no lettering. The engine prints each host's own
-   * initials over it, so one disc serves every customer using this theme.
-   * Omit it and the seal is drawn in CSS from the palette instead.
+   * A tall (1080×3600) image, purpose-built to repeat seamlessly top-to-
+   * bottom, that continues the hero's own motif and colour story behind
+   * every section after it. Omit it and the engine falls back to a
+   * heavily-softened crop of `revealedBackdrop` instead — a reasonable
+   * stand-in, but not designed to tile, so it reads a little more like an
+   * ambient wash than a continuation of the actual scene.
    */
-  sealDisc?: string;
+  sectionBackdrop?: string;
   /** Omit on dark themes: a light grain would wash the surfaces out. */
   paperTexture?: string; // envelope + scratch card grain
   /**
@@ -98,6 +110,10 @@ export type Theme = {
   id: string;
   name: string;
   tier: Tier;
+  /** Omit for a design with no specific cultural tradition attached. */
+  religion?: Religion;
+  /** Traditional uses cultural motifs; modern is editorial, restrained. */
+  tradition: Tradition;
   occasions: Occasion[];
   thumbnail: string;
   palette: Palette;
@@ -105,6 +121,16 @@ export type Theme = {
   ornamentation: Ornamentation;
   assets: ThemeAssets;
   motion: Motion;
+  /** Multiplies the names heading's size (both lines). Omit for 1. */
+  namesScale?: number;
+  /** Overrides the names heading colour. Omit to use the theme's own foreground. */
+  namesColor?: string;
+  /** Multiplies the parent/family credit lines' size. Omit for 1. */
+  familyScale?: number;
+  /** Overrides the parent/family credit lines' colour (and the scrim stays
+   * dark regardless, so this only needs to contrast with a dark chip —
+   * see .family-block in styles.css). Omit to use the theme's paper-light. */
+  familyColor?: string;
   /** A short kicker above the name in the gallery, e.g. "NIKAH INVITATION". */
   kicker: string;
   /** One sentence describing the template, as a shopper would read it. */
@@ -143,10 +169,34 @@ export function paletteVariables(theme: Theme): Record<string, string> {
     "--muted-foreground": p.muted,
     "--border": p.border,
     "--paper-texture": a.paperTexture ? `url('${a.paperTexture}')` : "none",
+    "--revealed-backdrop": a.revealedBackdrop
+      ? `url('${a.revealedBackdrop}')`
+      : "none",
+    // A dedicated, seamlessly-tiling backdrop behind the post-hero
+    // sections, when the theme has one. Falling back to a "cover" crop of
+    // the small hero photo instead (the previous behaviour here) produced
+    // an ugly, muddy zoomed-in smear with no recognisable motif and much
+    // worse text contrast than either a real section backdrop OR no image
+    // at all — so themes without their own dedicated asset yet get the
+    // plain flat surface colour, same as before this feature existed,
+    // until they have one.
+    "--section-backdrop": a.sectionBackdrop
+      ? `url('${a.sectionBackdrop}')`
+      : "none",
+    "--section-bg-size": "100% auto",
+    "--section-bg-repeat": a.sectionBackdrop ? "repeat-y" : "no-repeat",
     // Vignette stops for a drawn backdrop: lighter at the centre, darker out.
     "--pattern-core": p.surface,
     "--pattern-edge": p.background,
     "--font-serif": `'${t.serif}', Georgia, serif`,
     "--font-sans": `'${t.sans}', sans-serif`,
+    ...(theme.namesScale !== undefined
+      ? { "--names-scale": String(theme.namesScale) }
+      : {}),
+    ...(theme.namesColor ? { "--names-color": theme.namesColor } : {}),
+    ...(theme.familyScale !== undefined
+      ? { "--family-scale": String(theme.familyScale) }
+      : {}),
+    ...(theme.familyColor ? { "--family-color": theme.familyColor } : {}),
   };
 }

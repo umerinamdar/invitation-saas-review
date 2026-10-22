@@ -1,7 +1,24 @@
 import "./lib/error-capture";
 
+import { applyCacheHeaders } from "./lib/cache-headers";
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
+import { serverEnvStatus } from "./lib/env";
+import { applySecurityHeaders } from "./lib/security-headers";
+
+// Startup configuration check (Round 2, §7.1): ONE loud line naming any
+// missing required server env vars — names only, never values — instead
+// of each endpoint discovering the problem as a late per-request 500.
+// Deliberately not a throw: on Workers a boot throw takes every route
+// down on cold start, including pages that never need the missing
+// variable; the affected endpoints already fail closed per request
+// (see src/lib/env.ts).
+const envStatus = serverEnvStatus();
+if (!envStatus.ok) {
+  console.error(
+    `[startup] Missing required server environment variables: ${envStatus.missing.join(", ")}. Dependent features will fail until these are set.`,
+  );
+}
 
 type ServerEntry = {
   fetch: (
@@ -60,13 +77,21 @@ export default {
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      return applyCacheHeaders(
+        applySecurityHeaders(await normalizeCatastrophicSsrResponse(response)),
+        request,
+      );
     } catch (error) {
       console.error(error);
-      return new Response(renderErrorPage(), {
-        status: 500,
-        headers: { "content-type": "text/html; charset=utf-8" },
-      });
+      return applyCacheHeaders(
+        applySecurityHeaders(
+          new Response(renderErrorPage(), {
+            status: 500,
+            headers: { "content-type": "text/html; charset=utf-8" },
+          }),
+        ),
+        request,
+      );
     }
   },
 };

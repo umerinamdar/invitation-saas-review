@@ -1,14 +1,6 @@
-import { ArrowUpRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import type { Reveal } from "@/themes/types";
 
 export type RevealProps = {
-  /** Lettering pressed into the seal, e.g. "UM". */
-  initials: string;
-  /** A finished seal belonging to one host; overrides the monogram. */
-  sealImage?: string;
-  /** A blank wax disc from the theme; the monogram prints over it. */
-  sealDisc?: string;
   label: string;
   hosts: string;
   /**
@@ -21,66 +13,50 @@ export type RevealProps = {
   onOpen: () => void;
 };
 
-/** The wax seal: a host's own finished seal, or their initials on a disc. */
-export function WaxSeal({
-  initials,
-  sealImage,
-  sealDisc,
-}: Pick<RevealProps, "initials" | "sealImage" | "sealDisc">) {
-  if (sealImage) return <img src={sealImage} width={816} height={816} alt="" />;
-  return (
-    <span className="wax-seal">
-      {sealDisc && <img src={sealDisc} width={816} height={816} alt="" />}
-      <span className="wax-monogram">{initials}</span>
-    </span>
-  );
-}
-
-/** The call to action every mechanic carries, wherever it sits. */
-export function OpenLabel({
-  label,
-  opening,
-  onOpen,
-  className = "envelope-label",
-}: Pick<RevealProps, "label" | "opening" | "onOpen"> & { className?: string }) {
-  return (
-    <Button
-      variant="ghost"
-      className={className}
-      onClick={onOpen}
-      disabled={opening}
-    >
-      {label} <ArrowUpRight />
-    </Button>
-  );
+/**
+ * The whole sealed stage is the trigger — no seal, no separate visible
+ * button or label pill sitting on top of the artwork. Keyboard-activatable
+ * (Enter/Space) the same way the scratch-reveal card elsewhere in this app
+ * is, so dropping the visible control doesn't drop accessibility with it.
+ */
+function openTriggerProps(hosts: string, opening: boolean, onOpen: () => void) {
+  return {
+    role: "button" as const,
+    tabIndex: 0,
+    "aria-label": `Open the invitation from ${hosts}`,
+    "aria-disabled": opening,
+    onClick: () => {
+      if (!opening) onOpen();
+    },
+    onKeyDown: (e: React.KeyboardEvent) => {
+      if (opening) return;
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        onOpen();
+      }
+    },
+  };
 }
 
 export function EnvelopeReveal(props: RevealProps) {
   const { opening, onOpen, hosts } = props;
   return (
-    <div className={`envelope ${opening ? "is-opening" : ""}`}>
+    <div
+      className={`envelope ${opening ? "is-opening" : ""}`}
+      {...openTriggerProps(hosts, opening, onOpen)}
+    >
       <div className="envelope-paper" />
       <div className="envelope-flap" />
       <div className="envelope-bottom" />
       <span className="envelope-line left-line" />
       <span className="envelope-line right-line" />
-      <Button
-        variant="ghost"
-        className="seal-button"
-        onClick={onOpen}
-        disabled={opening}
-        aria-label={`Break the wax seal and open the invitation from ${hosts}`}
-      >
-        <WaxSeal {...props} />
-      </Button>
-      <OpenLabel {...props} />
     </div>
   );
 }
 
 /**
- * Two carved panels swing inward on a shared hinge, the seal splitting
- * between them. Same gesture and timing contract as the envelope.
+ * Two carved panels swing inward on a shared hinge. Same gesture and
+ * timing contract as the envelope.
  */
 export function DoorsReveal(props: RevealProps) {
   const { opening, onOpen, hosts, backdrop } = props;
@@ -96,6 +72,7 @@ export function DoorsReveal(props: RevealProps) {
   return (
     <div
       className={`doors ${opening ? "is-opening" : ""} ${painted ? "is-painted" : ""}`}
+      {...openTriggerProps(hosts, opening, onOpen)}
     >
       <div className="door door-left">
         <span className="door-panel" style={half("left")} />
@@ -103,16 +80,6 @@ export function DoorsReveal(props: RevealProps) {
       <div className="door door-right">
         <span className="door-panel" style={half("right")} />
       </div>
-      <Button
-        variant="ghost"
-        className="seal-button doors-seal"
-        onClick={onOpen}
-        disabled={opening}
-        aria-label={`Open the doors to the invitation from ${hosts}`}
-      >
-        <WaxSeal {...props} />
-      </Button>
-      <OpenLabel {...props} className="doors-label" />
     </div>
   );
 }
@@ -135,27 +102,17 @@ export function CurtainReveal(props: RevealProps) {
   return (
     <div
       className={`curtain ${opening ? "is-opening" : ""} ${painted ? "is-painted" : ""}`}
+      {...openTriggerProps(hosts, opening, onOpen)}
     >
       <div className="drape drape-left" style={half("left")} />
       <div className="drape drape-right" style={half("right")} />
       <span className="curtain-rod" />
-      <Button
-        variant="ghost"
-        className="seal-button curtain-seal"
-        onClick={onOpen}
-        disabled={opening}
-        aria-label={`Draw the curtains on the invitation from ${hosts}`}
-      >
-        <WaxSeal {...props} />
-      </Button>
-      <OpenLabel {...props} className="curtain-label" />
     </div>
   );
 }
 
 /**
- * A folded card whose cover swings open on its spine, the seal riding the
- * cover as it turns.
+ * A folded card whose cover swings open on its spine.
  */
 export function BookReveal(props: RevealProps) {
   const { opening, onOpen, hosts, backdrop } = props;
@@ -163,6 +120,7 @@ export function BookReveal(props: RevealProps) {
   return (
     <div
       className={`book ${opening ? "is-opening" : ""} ${painted ? "is-painted" : ""}`}
+      {...openTriggerProps(hosts, opening, onOpen)}
     >
       <span className="book-page" />
       <div
@@ -178,16 +136,6 @@ export function BookReveal(props: RevealProps) {
         }
       >
         {!painted && <span className="book-plate" />}
-        <Button
-          variant="ghost"
-          className="seal-button book-seal"
-          onClick={onOpen}
-          disabled={opening}
-          aria-label={`Open the invitation from ${hosts}`}
-        >
-          <WaxSeal {...props} />
-        </Button>
-        <OpenLabel {...props} className="book-label" />
       </div>
       <span className="book-spine" />
     </div>
@@ -195,8 +143,8 @@ export function BookReveal(props: RevealProps) {
 }
 
 /**
- * A keepsake box whose lid lifts and floats away, carrying the seal with it.
- * The lightest-feeling mechanic, and the only one that moves upward.
+ * A keepsake box whose lid lifts and floats away. The lightest-feeling
+ * mechanic, and the only one that moves upward.
  */
 export function BoxReveal(props: RevealProps) {
   const { opening, onOpen, hosts, backdrop } = props;
@@ -204,6 +152,7 @@ export function BoxReveal(props: RevealProps) {
   return (
     <div
       className={`box ${opening ? "is-opening" : ""} ${painted ? "is-painted" : ""}`}
+      {...openTriggerProps(hosts, opening, onOpen)}
     >
       {!painted && <span className="box-base" />}
       <div
@@ -219,17 +168,7 @@ export function BoxReveal(props: RevealProps) {
         }
       >
         {!painted && <span className="box-rim" />}
-        <Button
-          variant="ghost"
-          className="seal-button box-seal"
-          onClick={onOpen}
-          disabled={opening}
-          aria-label={`Lift the lid on the invitation from ${hosts}`}
-        >
-          <WaxSeal {...props} />
-        </Button>
       </div>
-      <OpenLabel {...props} className="box-label" />
     </div>
   );
 }

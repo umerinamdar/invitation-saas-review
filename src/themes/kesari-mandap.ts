@@ -1,15 +1,18 @@
 import type { Theme } from "./types";
 
 /**
- * Marigold and saffron, opening through carved wooden doors into a mandap
- * at golden hour. Artwork and palette generated in Lovable from
- * LOVABLE-BRIEF.md; the backdrop was composed around the doors, so the
- * mechanic and the painting match.
+ * Marigold and saffron, turning open like a folded card into a mandap at
+ * golden hour. Artwork and palette generated in Lovable from
+ * LOVABLE-BRIEF.md. Reveal mechanic moved from "doors" to "book" so the
+ * catalog's five opening mechanics spread evenly across all 15 templates
+ * instead of repeating — the painted backdrop lifts as one piece either way.
  */
 export const kesariMandap: Theme = {
   id: "kesari-mandap",
   name: "Kesari Mandap",
   tier: "royal",
+  religion: "hindu",
+  tradition: "traditional", // Marigold India
   occasions: ["wedding", "haldi", "mehendi", "reception"],
   thumbnail: "/themes/kesari-mandap/hero.jpg",
 
@@ -42,12 +45,15 @@ export const kesariMandap: Theme = {
   assets: {
     sealedBackdrop: "/themes/kesari-mandap/sealed.jpg",
     revealedBackdrop: "/themes/kesari-mandap/hero.jpg",
-    sealDisc: "/themes/kesari-mandap/seal.png",
+    // A tall, seamlessly-tiling continuation of the hero scene — the
+    // marigold mandap archway dissolving into a soft saffron gradient —
+    // that runs behind every section after the hero instead of a flat colour.
+    sectionBackdrop: "/themes/kesari-mandap/section-bg.jpg",
     paperTexture: "/themes/kesari-mandap/paper.jpg",
   },
 
   motion: {
-    reveal: "doors",
+    reveal: "book",
     openMs: 1600,
     introSeconds: 6,
     musicFadeMs: 8000,
@@ -56,11 +62,11 @@ export const kesariMandap: Theme = {
     petals: "marigold",
   },
 
-  kicker: "CARVED DOORS",
+  kicker: "FOLDED CARD",
   tagline:
-    "Marigold and saffron invitation whose carved wooden doors swing open onto a mandap at golden hour, strung with garlands and lit by brass lamps.",
+    "Marigold and saffron invitation that turns open like a folded card onto a mandap at golden hour, strung with garlands and lit by brass lamps.",
   features: [
-    "Carved Door Opening",
+    "Folded Card Opening",
     "Golden Hour Mandap",
     "Scratch-to-Reveal Muhurat",
     "Marigold Petal Shower",

@@ -8,8 +8,10 @@ export const phulkariAnand: Theme = {
   id: "phulkari-anand",
   name: "Phulkari Anand",
   tier: "classic",
+  religion: "sikh",
+  tradition: "traditional",
   occasions: ["wedding", "roka", "engagement"],
-  thumbnail: "/themes/thumbs/phulkari-anand.svg",
+  thumbnail: "/themes/phulkari-anand/hero.jpg",
 
   palette: {
     accent: "oklch(0.68 0.16 58)",
@@ -35,9 +37,17 @@ export const phulkariAnand: Theme = {
       "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Inter:wght@300;400;500&display=swap",
   },
 
-  ornamentation: "paisley",
-  // Silent until it has a track of its own with commercial rights.
-  assets: {},
+  ornamentation: "none",
+
+  assets: {
+    sealedBackdrop: "/themes/phulkari-anand/sealed.jpg",
+    revealedBackdrop: "/themes/phulkari-anand/hero.jpg",
+    // A tall, seamlessly-tiling continuation of the hero scene — the
+    // phulkari-patterned doors dissolving into a soft saffron-and-ivory
+    // gradient — runs behind every section after the hero instead of a flat colour.
+    sectionBackdrop: "/themes/phulkari-anand/section-bg.jpg",
+    paperTexture: "/themes/phulkari-anand/paper.jpg",
+  },
 
   motion: {
     reveal: "doors",

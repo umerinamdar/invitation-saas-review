@@ -1,14 +1,17 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
+# EasyInviteMaker — public pages and published invitations are
+# crawlable (link unfurlers included, so shared /i/ links preview
+# properly). Account, editor, checkout and order routes are not:
+# they are also marked noindex in the app itself. The sitemap is
+# served dynamically at /sitemap.xml so its URLs always match the
+# domain the site is deployed on.
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /create
+Disallow: /dashboard
+Disallow: /editor/
+Disallow: /login
+Disallow: /order-failed
+Disallow: /order-success
+Disallow: /preview/
+Disallow: /publish

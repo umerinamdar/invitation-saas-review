@@ -118,12 +118,6 @@ export type Invite = {
 
   music?: { url: string };
 
-  /**
-   * A finished seal image belonging to this host alone, lettering included.
-   * Only for one-off invites — a template's seal comes from its theme.
-   */
-  sealImage?: string;
-
   meta: {
     title: string;
     description: string;
@@ -137,15 +131,6 @@ export function hostNames(invite: Invite) {
 
 export function galleryImage(invite: Invite, slot: GallerySlot) {
   return invite.gallery.find((image) => image.slot === slot);
-}
-
-/** Initials pressed into the wax, e.g. Umer & Maimoona → "UM". */
-export function monogram(invite: Invite) {
-  const { person1, person2 } = invite.hosts;
-  return [person1, person2]
-    .filter(Boolean)
-    .map((name) => name!.trim().charAt(0).toUpperCase())
-    .join("");
 }
 
 /** True when a family block has anything worth printing. */

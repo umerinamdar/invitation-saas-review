@@ -13,6 +13,12 @@ export function CinematicInvite({
   const element = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!running) return;
+    // Guests sensitive to motion get the content immediately instead of
+    // sitting through the staged skyline/names/invitation reveal.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      onComplete();
+      return;
+    }
     let frame = 0;
     let elapsed = 0;
     let previous = performance.now();

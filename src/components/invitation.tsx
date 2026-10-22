@@ -5,6 +5,7 @@ import {
   Infinity as InfinityIcon,
   LoaderCircle,
   MapPin,
+  Printer,
   RotateCcw,
   Volume2,
   VolumeX,
@@ -16,24 +17,39 @@ import { RevealStage } from "@/components/reveals";
 import { ConfettiBurst } from "@/components/confetti-burst";
 import { OrnateFrame, PatternBackdrop } from "@/components/ornament";
 import {
+  eventDayRelation,
+  hasValidEventDate,
+  hasValidTogetherDate,
   musicFadeVolume,
   remainingTime,
+  safeExternalUrl,
   togetherDuration,
   togetherElapsed,
+  venueMapsHref,
 } from "@/lib/invitation";
 import { paletteVariables, type Theme } from "@/themes/types";
+import { resolveWithMediaUrlMap, type MediaUrlMap } from "@/lib/media-url";
+import { supabase } from "@/lib/supabase";
 import {
   galleryImage,
   hasFamily,
   hostNames,
-  monogram,
   type Family,
   type Invite,
 } from "@/invites/types";
 
 const SEAL_CLICK = "/audio/seal-click.wav";
 
-/** Parents and grandparents under a host's name, as Indian invitations do. */
+/** "1 Day", "3 Days" — the milestone counters read "1 Days" without this. */
+function pluralLabel(value: number | undefined, label: string) {
+  return value === 1 ? label.slice(0, -1) : label;
+}
+
+/**
+ * Parents and grandparents under the couple's names, as Indian invitations
+ * do — the name itself isn't repeated here since it's already the big
+ * heading directly above; this block only adds the lineage under it.
+ */
 function FamilyLines({
   name,
   family,
@@ -44,7 +60,6 @@ function FamilyLines({
   if (!name || !hasFamily(family)) return null;
   return (
     <div className="family-block">
-      <p className="family-name">{name}</p>
       {family?.credentials && (
         <p className="family-credentials">{family.credentials}</p>
       )}
@@ -69,9 +84,17 @@ function FamilyLines({
 export function Invitation({
   theme,
   invite,
+  mediaUrlMap,
 }: {
   theme: Theme;
   invite: Invite;
+  /**
+   * Gap-B: server-minted signed URLs for a published invite's own
+   * media (see lib/media-url.ts). Only the public /i/<slug> route
+   * supplies one; editor and preview renders omit it and resolve
+   * media exactly as before.
+   */
+  mediaUrlMap?: MediaUrlMap;
 }) {
   const [open, setOpen] = useState(false);
   const [opening, setOpening] = useState(false);
@@ -79,6 +102,7 @@ export function Invitation({
   const [artState, setArtState] = useState<"loading" | "ready" | "error">(
     "loading",
   );
+  const [slowLoad, setSlowLoad] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const [time, setTime] = useState<number[] | null>(null);
   const [duration, setDuration] = useState<[number, number, number] | null>(
@@ -90,6 +114,10 @@ export function Invitation({
   const [flowers, setFlowers] = useState(false);
   // Poppers fire first; the petals start as they settle.
   const [popped, setPopped] = useState(false);
+  // The music/restart dock is icon-only; a touch device has no hover to
+  // reveal what each icon does, so show the labels once on open and fade
+  // them rather than relying on a `title` tooltip that never fires on touch.
+  const [showDockHint, setShowDockHint] = useState(true);
   const audio = useRef<HTMLAudioElement>(null);
   const sealAudio = useRef<HTMLAudioElement>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -99,32 +127,67 @@ export function Invitation({
   const opened = useRef(false);
   const completeIntro = useCallback(() => setIntroDone(true), []);
 
-  const { sealedBackdrop, revealedBackdrop, sealDisc, defaultMusic } =
-    theme.assets;
+  useEffect(() => {
+    if (!open) return;
+    const id = setTimeout(() => setShowDockHint(false), 4000);
+    return () => clearTimeout(id);
+  }, [open]);
+
+  const { sealedBackdrop, revealedBackdrop, defaultMusic } = theme.assets;
   const { ornamentation } = theme;
-  // doors and curtains animate the painting itself, so the stage must not
-  // also lay it down flat behind them.
+  // Doors, curtains, books and boxes animate the painting itself rather
+  // than CSS panels drawn over it, so the mechanic itself fills the stage
+  // edge to edge; a separate full-bleed copy behind it would show the same
+  // photo at a different crop and seam visibly at the mechanic's edges.
   const paintedOpening = (r: string) => r !== "envelope";
   const { reveal, openMs, introSeconds, musicFadeMs, maxVolume, petals } =
     theme.motion;
   const { event, story } = invite;
-  const musicUrl = invite.music?.url ?? defaultMusic;
+  // No date (or an unparseable one) means no scratch-to-reveal and no
+  // countdown: there is nothing to reveal or count to, and the
+  // countdown maths would render "NaN". Editor drafts start undated.
+  const eventDateValid = hasValidEventDate(event.startIso);
+  // Once the event day itself has passed, a wall of zeroes under the
+  // venue is a countdown to nothing — the block hides and the date
+  // above stays on display. On the day itself it keeps counting to the
+  // ceremony time. (Recomputed each render; the one-second clock below
+  // keeps it current across midnight.)
+  const eventDay = eventDayRelation(Date.now(), event.startIso);
+  const musicUrl = resolveWithMediaUrlMap(
+    invite.music?.url ?? defaultMusic,
+    mediaUrlMap,
+    supabase,
+  );
   const hasMusic = Boolean(musicUrl);
   const names = hostNames(invite);
-  const initials = monogram(invite);
   const ring = galleryImage(invite, "ring");
   const childhood = galleryImage(invite, "childhood");
   const forever = galleryImage(invite, "forever");
+  const ringUrl = ring
+    ? resolveWithMediaUrlMap(ring.url, mediaUrlMap, supabase)
+    : undefined;
+  const childhoodUrl = childhood
+    ? resolveWithMediaUrlMap(childhood.url, mediaUrlMap, supabase)
+    : undefined;
+  const foreverUrl = forever
+    ? resolveWithMediaUrlMap(forever.url, mediaUrlMap, supabase)
+    : undefined;
   const sinceIso = story?.togetherSinceIso;
 
   useEffect(() => {
     let cancelled = false;
+    setSlowLoad(false);
     const sources = [
       sealedBackdrop,
       revealedBackdrop,
-      ring?.url,
-      childhood?.url,
+      ringUrl,
+      childhoodUrl,
     ].filter(Boolean) as string[];
+    // Most guests are on fast connections; this is just a cue that the
+    // wait is still "loading", not "stuck", before the 12s hard deadline.
+    const slowNotice = setTimeout(() => {
+      if (!cancelled) setSlowLoad(true);
+    }, 5000);
     const deadline = setTimeout(() => {
       if (!cancelled) setArtState("error");
     }, 12000);
@@ -141,27 +204,30 @@ export function Invitation({
     )
       .then(() => {
         if (!cancelled) {
+          clearTimeout(slowNotice);
           clearTimeout(deadline);
           setArtState("ready");
         }
       })
       .catch(() => {
         if (!cancelled) {
+          clearTimeout(slowNotice);
           clearTimeout(deadline);
           setArtState("error");
         }
       });
     return () => {
       cancelled = true;
+      clearTimeout(slowNotice);
       clearTimeout(deadline);
     };
-  }, [attempt, sealedBackdrop, revealedBackdrop, ring?.url, childhood?.url]);
+  }, [attempt, sealedBackdrop, revealedBackdrop, ringUrl, childhoodUrl]);
 
   useEffect(() => {
     const update = () => {
       const now = Date.now();
       setTime(remainingTime(now, event.startIso));
-      if (sinceIso) {
+      if (hasValidTogetherDate(sinceIso, now)) {
         setDuration(togetherDuration(now, sinceIso));
         setElapsed(togetherElapsed(now, sinceIso));
       }
@@ -270,7 +336,11 @@ export function Invitation({
         />
       )}
       {!open ? (
-        <section className={`sealed-stage ${opening ? "opening-stage" : ""}`}>
+        <section
+          className={`sealed-stage ${opening ? "opening-stage" : ""} ${
+            sealedBackdrop && paintedOpening(reveal) ? "painted-stage" : ""
+          }`}
+        >
           {sealedBackdrop && !paintedOpening(reveal) ? (
             <img
               src={sealedBackdrop}
@@ -286,9 +356,6 @@ export function Invitation({
           <OrnateFrame kind={ornamentation} />
           <RevealStage
             reveal={reveal}
-            initials={initials}
-            {...(invite.sealImage ? { sealImage: invite.sealImage } : {})}
-            {...(sealDisc ? { sealDisc } : {})}
             label={event.typeLabel}
             hosts={names}
             {...(sealedBackdrop && paintedOpening(reveal)
@@ -364,13 +431,15 @@ export function Invitation({
             {popped && !flowers && (
               <ConfettiBurst onSettled={() => setFlowers(true)} />
             )}
-            <div className="invitation-date">
-              <ScratchInvitation
-                theme={theme}
-                event={event}
-                onReveal={() => setPopped(true)}
-              />
-            </div>
+            {eventDateValid && (
+              <div className="invitation-date">
+                <ScratchInvitation
+                  theme={theme}
+                  event={event}
+                  onReveal={() => setPopped(true)}
+                />
+              </div>
+            )}
             <a
               className="invitation-scroll"
               href="#venue"
@@ -383,7 +452,11 @@ export function Invitation({
                 {artState === "loading" ? (
                   <>
                     <LoaderCircle className="loading-spinner" />
-                    <p>Preparing your invitation…</p>
+                    <p>
+                      {slowLoad
+                        ? "Still loading — this can take longer on a slow connection…"
+                        : "Preparing your invitation…"}
+                    </p>
                   </>
                 ) : (
                   <>
@@ -405,12 +478,19 @@ export function Invitation({
 
           <section className="venue-section" id="venue">
             <MapPin size={22} strokeWidth={1.3} />
-            {event.venueMapsUrl ? (
-              <a href={event.venueMapsUrl} target="_blank" rel="noreferrer">
+            {event.venueName ? (
+              <a
+                href={
+                  safeExternalUrl(event.venueMapsUrl) ??
+                  venueMapsHref(event.venueName, event.venueAddress)
+                }
+                target="_blank"
+                rel="noreferrer"
+              >
                 {event.venueName} <ArrowUpRight size={20} />
               </a>
             ) : (
-              <span className="venue-name">{event.venueName}</span>
+              <span className="venue-name">Venue to be announced</span>
             )}
             {event.venueAddress && (
               <p className="venue-address">{event.venueAddress}</p>
@@ -421,48 +501,53 @@ export function Invitation({
             {event.dressCode && (
               <p className="venue-dress">Dress code · {event.dressCode}</p>
             )}
-            <div
-              className="countdown"
-              aria-label={`Countdown to ${event.typeLabel.toLowerCase()}`}
-            >
-              {["Days", "Hours", "Minutes", "Seconds"].map((label, i) => (
-                <div key={label}>
-                  <strong>
-                    {time ? String(time[i]).padStart(2, "0") : "—"}
-                  </strong>
-                  <span>{label}</span>
-                </div>
-              ))}
-            </div>
+            {eventDateValid && eventDay !== "past" && (
+              <div
+                className="countdown"
+                aria-label={`Countdown to ${event.typeLabel.toLowerCase()}`}
+              >
+                {["Days", "Hours", "Minutes", "Seconds"].map((label, i) => (
+                  <div key={label}>
+                    <strong>
+                      {time ? String(time[i]).padStart(2, "0") : "—"}
+                    </strong>
+                    <span>{label}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </section>
 
           {invite.subEvents && invite.subEvents.length > 0 && (
             <section className="sub-events">
-              {invite.subEvents.map((sub) => (
-                <div key={sub.label} className="sub-event">
-                  <span className="sub-event-rule" aria-hidden="true" />
-                  <h3>{sub.label}</h3>
-                  <p>{sub.dateText}</p>
-                  <p>{sub.timeText}</p>
-                  {sub.venueName &&
-                    (sub.venueMapsUrl ? (
-                      <a
-                        className="sub-event-venue"
-                        href={sub.venueMapsUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        {sub.venueName} <ArrowUpRight size={13} />
-                      </a>
-                    ) : (
-                      <p className="sub-event-venue">{sub.venueName}</p>
-                    ))}
-                  {sub.dressCode && (
-                    <p className="sub-event-dress">{sub.dressCode}</p>
-                  )}
-                  {sub.note && <p className="sub-event-note">{sub.note}</p>}
-                </div>
-              ))}
+              {invite.subEvents.map((sub) => {
+                const subVenueUrl = safeExternalUrl(sub.venueMapsUrl);
+                return (
+                  <div key={sub.label} className="sub-event">
+                    <span className="sub-event-rule" aria-hidden="true" />
+                    <h3>{sub.label}</h3>
+                    <p>{sub.dateText}</p>
+                    <p>{sub.timeText}</p>
+                    {sub.venueName &&
+                      (subVenueUrl ? (
+                        <a
+                          className="sub-event-venue"
+                          href={subVenueUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {sub.venueName} <ArrowUpRight size={13} />
+                        </a>
+                      ) : (
+                        <p className="sub-event-venue">{sub.venueName}</p>
+                      ))}
+                    {sub.dressCode && (
+                      <p className="sub-event-dress">{sub.dressCode}</p>
+                    )}
+                    {sub.note && <p className="sub-event-note">{sub.note}</p>}
+                  </div>
+                );
+              })}
             </section>
           )}
 
@@ -486,7 +571,7 @@ export function Invitation({
           {ring && (
             <section className="ring-section">
               <img
-                src={ring.url}
+                src={ringUrl}
                 width={ring.width}
                 height={ring.height}
                 alt={ring.alt}
@@ -512,7 +597,7 @@ export function Invitation({
               )}
               {childhood && (
                 <img
-                  src={childhood.url}
+                  src={childhoodUrl}
                   width={childhood.width}
                   height={childhood.height}
                   alt={childhood.alt}
@@ -537,14 +622,14 @@ export function Invitation({
               />
               {forever && (
                 <img
-                  src={forever.url}
+                  src={foreverUrl}
                   width={forever.width}
                   height={forever.height}
                   alt={forever.alt}
                   loading="lazy"
                 />
               )}
-              {sinceIso && (
+              {hasValidTogetherDate(sinceIso) && (
                 <div className="together-milestone">
                   <p>Our story began</p>
                   <time dateTime={sinceIso.slice(0, 10)}>
@@ -557,11 +642,14 @@ export function Invitation({
                     {["Years", "Months", "Days"].map((label, i) => (
                       <div key={label}>
                         <strong>{duration?.[i] ?? "—"}</strong>
-                        <span>{label}</span>
+                        <span>{pluralLabel(duration?.[i], label)}</span>
                       </div>
                     ))}
                   </div>
                   <p className="together-counting">together &amp; counting</p>
+                  <p className="together-elapsed-label">
+                    Every single minute of it
+                  </p>
                   <div
                     className="together-elapsed"
                     aria-label="Total days, hours and minutes together"
@@ -571,7 +659,7 @@ export function Invitation({
                         <strong>
                           {elapsed?.[i]?.toLocaleString("en-GB") ?? "—"}
                         </strong>
-                        <span>{label}</span>
+                        <span>{pluralLabel(elapsed?.[i], label)}</span>
                       </div>
                     ))}
                   </div>
@@ -658,30 +746,47 @@ export function Invitation({
               ))}
             </div>
           )}
-          <div className="music-dock">
+          {/* The dock renders whenever the invitation is open. The
+              music controls inside it exist only when there is a track
+              to control — the couple's own song or the theme's
+              default — but Restart is not a music control: guests of
+              silent themes get it too (Release Fix 11 / C-6 — it used
+              to sit inside the hasMusic gate, so 13 of 14 designs had
+              no way back to the envelope). */}
+          <div className={`music-dock ${showDockHint ? "show-hint" : ""}`}>
             {hasMusic && (
+              <span className="music-dock-item">
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={toggleMusic}
+                  aria-label={
+                    music ? "Pause background music" : "Play background music"
+                  }
+                  title={music ? "Pause music" : "Play music"}
+                >
+                  {music ? <Volume2 /> : <VolumeX />}
+                </Button>
+                <span className="music-dock-hint" aria-hidden="true">
+                  {music ? "Pause music" : "Play music"}
+                </span>
+              </span>
+            )}
+            <span className="music-dock-item">
               <Button
                 size="icon"
                 variant="ghost"
-                onClick={toggleMusic}
-                aria-label={
-                  music ? "Pause background music" : "Play background music"
-                }
-                title={music ? "Pause music" : "Play music"}
+                aria-label="Restart the invitation from the envelope"
+                title="Restart invitation"
+                onClick={() => window.location.reload()}
               >
-                {music ? <Volume2 /> : <VolumeX />}
+                <RotateCcw />
               </Button>
-            )}
-            <Button
-              size="icon"
-              variant="ghost"
-              aria-label="Restart the invitation from the envelope"
-              title="Restart invitation"
-              onClick={() => window.location.reload()}
-            >
-              <RotateCcw />
-            </Button>
-            {audioError && (
+              <span className="music-dock-hint" aria-hidden="true">
+                Restart
+              </span>
+            </span>
+            {hasMusic && audioError && (
               <div className="music-error" role="status">
                 <p>{audioError}</p>
                 <Button
@@ -706,6 +811,16 @@ export function Invitation({
                 </Button>
               </div>
             )}
+          </div>
+          {/* Only reachable once the envelope is open, i.e. when the full
+              invitation is on screen — printing from here captures the
+              invitation itself (print CSS drops the site chrome), and the
+              browser's own dialog offers "Save as PDF". This button is a
+              print action, not a generated-file export. */}
+          <div className="invitation-print">
+            <Button variant="outline" size="sm" onClick={() => window.print()}>
+              <Printer size={15} /> Save / Print
+            </Button>
           </div>
         </div>
       )}

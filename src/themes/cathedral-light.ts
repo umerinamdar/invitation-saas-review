@@ -9,6 +9,8 @@ export const cathedralLight: Theme = {
   id: "cathedral-light",
   name: "Cathedral Light",
   tier: "royal",
+  religion: "christian",
+  tradition: "traditional", // Christian church
   occasions: ["wedding", "engagement", "reception"],
   thumbnail: "/themes/cathedral-light/hero.jpg",
 
@@ -41,7 +43,10 @@ export const cathedralLight: Theme = {
   assets: {
     sealedBackdrop: "/themes/cathedral-light/sealed.jpg",
     revealedBackdrop: "/themes/cathedral-light/hero.jpg",
-    sealDisc: "/themes/cathedral-light/seal.png",
+    // A tall, seamlessly-tiling continuation of the hero scene — the
+    // cathedral doors dissolving into a soft ivory-and-candlelight gradient —
+    // that runs behind every section after the hero instead of a flat colour.
+    sectionBackdrop: "/themes/cathedral-light/section-bg.jpg",
     paperTexture: "/themes/cathedral-light/paper.jpg",
   },
 

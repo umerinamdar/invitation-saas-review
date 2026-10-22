@@ -71,7 +71,7 @@ the palette it prints). I'll fold it into the catalog.
 >   (`+05:30`), never the guest's own clock.
 > - Keep the seal-tap sound and the background music as two separate `<audio>`
 >   elements so one cannot interrupt the other.
-> - Use placeholder names "Aarav & Anaya", 14 February 2027, "The Grand
+> - Use placeholder names "Virat & Anushka", 14 February 2027, "The Grand
 >   Pavilion". These get replaced.
 >
 > ### Finish by telling me

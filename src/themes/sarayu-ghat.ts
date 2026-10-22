@@ -8,6 +8,7 @@ export const sarayuGhat: Theme = {
   id: "sarayu-ghat",
   name: "Sarayu Ghat",
   tier: "royal",
+  tradition: "traditional", // Indian riverside
   occasions: ["wedding", "engagement", "haldi", "reception"],
   thumbnail: "/themes/sarayu-ghat/hero.jpg",
 
@@ -40,7 +41,10 @@ export const sarayuGhat: Theme = {
   assets: {
     sealedBackdrop: "/themes/sarayu-ghat/sealed.jpg",
     revealedBackdrop: "/themes/sarayu-ghat/hero.jpg",
-    sealDisc: "/themes/sarayu-ghat/seal.png",
+    // A tall, seamlessly-tiling continuation of the hero scene — the
+    // riverside ghat dissolving into a soft saffron-and-gold gradient —
+    // that runs behind every section after the hero instead of a flat colour.
+    sectionBackdrop: "/themes/sarayu-ghat/section-bg.jpg",
     paperTexture: "/themes/sarayu-ghat/paper.jpg",
   },
 

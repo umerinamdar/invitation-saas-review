@@ -1,41 +1,45 @@
 import type { Theme } from "./types";
 import { dubaiSilk } from "./dubai-silk";
-import { azureVows } from "./azure-vows";
 import { mughalZamarrud } from "./mughal-zamarrud";
-import { qubooHai } from "./qubool-hai";
 import { monochromeVow } from "./monochrome-vow";
-import { sageNikah } from "./sage-nikah";
 import { kesariMandap } from "./kesari-mandap";
-import { midnightMayura } from "./midnight-mayura";
 import { kanjeevaram } from "./kanjeevaram";
-import { haveliBandhej } from "./haveli-bandhej";
-import { alpona } from "./alpona";
 import { phulkariAnand } from "./phulkari-anand";
 import { sarayuGhat } from "./sarayu-ghat";
-import { noorHaram } from "./noor-haram";
 import { cathedralLight } from "./cathedral-light";
 import { mayuraMahal } from "./mayura-mahal";
+import { ramMandir } from "./ram-mandir";
+import { madina } from "./madina";
+import { makkah } from "./makkah";
+import { goldenTemple } from "./golden-temple";
+import { vesperChapel } from "./vesper-chapel";
 
-/** Catalog order is gallery order, so lead with the strongest designs. */
+/**
+ * Catalog order is gallery order. Dubai Silk leads as the flagship, then
+ * each cultural category groups together (Hindu, Muslim, Sikh, Christian —
+ * a landmark design first in each, then the existing design), then the
+ * uncategorised designs. Capped at 15 total.
+ */
 export const themes: Theme[] = [
-  // Painted artwork first — the drawn ones below are placeholders until
-  // they are regenerated the same way.
   dubaiSilk,
-  mughalZamarrud,
+  // Hindu
+  ramMandir,
   kesariMandap,
   kanjeevaram,
-  sarayuGhat,
-  noorHaram,
-  cathedralLight,
-  mayuraMahal,
-  midnightMayura,
-  qubooHai,
+  // Muslim
+  madina,
+  makkah,
+  // Sikh
+  goldenTemple,
   phulkariAnand,
-  alpona,
-  haveliBandhej,
+  // Christian
+  vesperChapel,
+  cathedralLight,
+  // Uncategorised
+  mughalZamarrud,
+  sarayuGhat,
+  mayuraMahal,
   monochromeVow,
-  sageNikah,
-  azureVows,
 ];
 
 export const themesById = new Map(themes.map((theme) => [theme.id, theme]));

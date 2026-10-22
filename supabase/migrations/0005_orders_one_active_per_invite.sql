@@ -1,0 +1,94 @@
+-- =====================================================================
+-- NOT APPLIED — DO NOT RUN BLINDLY.
+-- This migration is delivered as a file for owner review. The owner
+-- applies it manually in Supabase → SQL Editor → New query → Run,
+-- AFTER the pre-flight report below returns no unresolved rows and
+-- the cleanup rules under it are approved (owner decision D1).
+-- Prepared 2026-10-22 (Round 3.7 / Q-16, Option D).
+-- =====================================================================
+--
+-- Why: POST /api/orders used to insert a brand-new 'created' order
+-- on every call, and each order opens an independent YouPI checkout
+-- keyed by that order's id — two orders for one invite are two
+-- payable checkouts, and a customer completing both is charged
+-- twice. (Settlement was always capped at one publication; the
+-- duplicate CHARGE was not prevented.) Round 3.7's API change makes
+-- the handler reuse the invite's existing active order and resolve
+-- insert conflicts from it; this index is the database backstop
+-- that makes "at most one active order per invite" hold for every
+-- writer, including racing requests whose lookups both missed.
+--
+-- The invariant: at most ONE order per invite in status 'created'
+-- or 'paid' ("active"). 'failed' and 'refunded' do NOT participate:
+-- a failed payment must never block a retry (a fresh order inserts
+-- freely; the old failed order's late settlement is still accepted
+-- by the webhook's transitions — subject to the late-settlement
+-- caveat in the cleanup rules below), and a refunded order must not
+-- block either — repurchase is gated by the invite's own state.
+-- Orders with invite_id NULL (invite deleted; the FK sets it NULL)
+-- are outside the invariant, as the predicate states.
+--
+-- ---------------------------------------------------------------------
+-- PRE-FLIGHT — run this report FIRST and resolve every row it
+-- returns BEFORE creating the index (index creation will fail while
+-- duplicates exist):
+--
+--   select invite_id,
+--          count(*) as active_orders,
+--          count(*) filter (where status = 'paid') as paid_orders
+--   from orders
+--   where invite_id is not null
+--     and status in ('created', 'paid')
+--   group by invite_id
+--   having count(*) > 1
+--   order by paid_orders desc, active_orders desc;
+--
+-- Cleanup rules (owner-approved per case; NEVER delete order rows):
+--   * surplus 'created' rows (no paid row for the invite): retire
+--     all but the NEWEST by setting status = 'failed'. 'failed' is
+--     the only non-participating status and means "checkout never
+--     completed". Retiring is safe for the INVITE (the kept order
+--     owns the active slot and fulfils normally) — but a retired
+--     order's own genuinely late settlement does NOT always
+--     fulfil: the webhook's transitions accept 'failed', yet once
+--     THIS index is live, the settle RPC's mark-paid UPDATE itself
+--     violates the index (23505) whenever another active order
+--     exists for the invite, and the RPC transaction aborts. The
+--     application translates that 23505 into a recorded
+--     'duplicate_active_order' conflict: the delivery is answered
+--     and recorded (no retry loop), nothing is published, and the
+--     owner resolves it per OPS-RUNBOOK.md §2.1 (normally: refund
+--     the late-settled payment at the gateway). Detection:
+--     RECONCILIATION.sql Q7. (Corrected in the Round-3.7
+--     adversarial review: this header originally claimed a late
+--     settlement of a retired order "still fulfils", full stop.
+--     It fulfils only when no other active order exists for the
+--     invite.)
+--   * paid + created pairs: retire the 'created' row the same way.
+--   * paid + paid pairs: STOP. That is a real double-charge
+--     incident, not data hygiene: run RECONCILIATION.sql Q6b,
+--     refund the duplicate at the gateway first (runbook §2.1),
+--     and only then retire what remains.
+-- Re-run the report after cleanup: it must return ZERO rows before
+-- the CREATE INDEX below is run.
+-- ---------------------------------------------------------------------
+--
+-- Mechanics: a plain CREATE INDEX takes a brief write lock on
+-- orders (the table is small at this scale). CREATE INDEX
+-- CONCURRENTLY avoids that lock but cannot run inside a
+-- transaction block; the SQL Editor runs pasted statements one by
+-- one, so the owner may substitute CONCURRENTLY if the table has
+-- grown — the index definition is identical either way.
+
+create unique index if not exists orders_one_active_per_invite
+  on public.orders (invite_id)
+  where invite_id is not null
+    and status in ('created', 'paid');
+
+-- =====================================================================
+-- ROLLBACK — commented out; NOT part of this migration. The index
+-- changes no data; dropping it restores the exact prior behaviour
+-- (the Round-3.7 API reuse logic keeps working without it — only
+-- the database-level race backstop is lost):
+-- =====================================================================
+-- drop index if exists public.orders_one_active_per_invite;

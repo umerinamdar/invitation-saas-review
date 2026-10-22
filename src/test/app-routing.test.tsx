@@ -1,6 +1,13 @@
 import { QueryClient } from "@tanstack/react-query";
 import { createRouter, rootRouteId } from "@tanstack/react-router";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+// The route tree now includes the /api server routes (R-1 wiring fix),
+// whose modules import the service-role Supabase client — it throws at
+// module load when server env vars are absent. Route matching never
+// invokes the handlers, so stub the client out entirely, the same way
+// orders-auth.test.ts and webhook-fulfilment.test.ts already do.
+vi.mock("@/lib/supabase-server", () => ({ supabaseServer: {} }));
 
 import { routeTree } from "@/routeTree.gen";
 

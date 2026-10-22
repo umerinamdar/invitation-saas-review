@@ -13,6 +13,7 @@ export const mughalZamarrud: Theme = {
   id: "mughal-zamarrud",
   name: "Mughal Zamarrud",
   tier: "royal",
+  tradition: "traditional", // Heritage Mughal
   occasions: ["wedding", "nikah", "reception"],
   thumbnail: "/themes/mughal-zamarrud/hero.jpg",
 
@@ -45,7 +46,7 @@ export const mughalZamarrud: Theme = {
   assets: {
     sealedBackdrop: "/themes/mughal-zamarrud/sealed.jpg",
     revealedBackdrop: "/themes/mughal-zamarrud/hero.jpg",
-    sealDisc: "/themes/mughal-zamarrud/seal.png",
+    sectionBackdrop: "/themes/mughal-zamarrud/section-bg.jpg",
     paperTexture: "/themes/mughal-zamarrud/paper.jpg",
   },
 

@@ -1,11 +1,12 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { Invitation } from "@/components/invitation";
+import { ThemeTuner } from "@/components/dev/theme-tuner";
 import { themesById } from "@/themes";
-import { demoWedding } from "@/invites/demo-wedding";
+import { getDemoInvite } from "@/invites/demo-wedding";
 
 /**
- * Previews any theme against the same demo invite — the link behind each
- * card in the template gallery.
+ * Previews a theme against that theme's own demo invite — the link behind
+ * each card in the template gallery.
  */
 export const Route = createFileRoute("/preview/$themeId")({
   loader: ({ params }) => {
@@ -28,6 +29,9 @@ export const Route = createFileRoute("/preview/$themeId")({
 function Preview() {
   const { theme } = Route.useLoaderData();
   return (
-    <Invitation theme={theme} invite={{ ...demoWedding, themeId: theme.id }} />
+    <>
+      <Invitation theme={theme} invite={getDemoInvite(theme.id)} />
+      <ThemeTuner />
+    </>
   );
 }

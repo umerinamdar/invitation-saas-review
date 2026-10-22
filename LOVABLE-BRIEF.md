@@ -216,7 +216,7 @@ Transparent background, viewed straight down, 816×816.
 - Anchor the countdown and every date to an **explicit `+05:30` offset**,
   never the guest's own clock. A guest in Dubai or London must see the
   couple's time.
-- Placeholder content: **"Aarav & Anaya"**, **14 February 2027**, **"The
+- Placeholder content: **"Virat & Anushka"**, **14 February 2027**, **"The
   Grand Pavilion"**.
 - Respect `prefers-reduced-motion`.
 

@@ -12,4 +12,10 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // Dev-only: lets the dev server respond behind a tunnel host (e.g. a
+  // trycloudflare.com URL used to preview on a phone), which Vite otherwise
+  // rejects since its hostname isn't localhost or this machine's LAN IP.
+  vite: {
+    server: { allowedHosts: true },
+  },
 });

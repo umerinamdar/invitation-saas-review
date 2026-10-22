@@ -13,8 +13,6 @@ export const umerMaimoona: Invite = {
 
   hosts: { mode: "couple", person1: "Umer", person2: "Maimoona" },
 
-  sealImage: "/demo/umer-maimoona/seal.png",
-
   event: {
     typeLabel: "Engagement Ceremony",
     startIso: "2026-11-22T19:00:00+05:30",

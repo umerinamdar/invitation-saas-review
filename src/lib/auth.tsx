@@ -4,9 +4,11 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
+import { clearLocalDraftData, draftClearsOnUserChange } from "./local-draft";
 import { supabase } from "./supabase";
 
 type AuthState = {
@@ -20,15 +22,28 @@ const AuthContext = createContext<AuthState>({ session: null, loading: true });
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  // Impl round 2 (C-1): remember whose session this browser last
+  // held so a sign-out or a different account taking over clears the
+  // previous account's local draft (see local-draft.ts).
+  const previousUserId = useRef<string | null>(null);
 
   useEffect(() => {
     let active = true;
+    const trackUser = (next: Session | null) => {
+      const nextUserId = next?.user?.id ?? null;
+      if (draftClearsOnUserChange(previousUserId.current, nextUserId)) {
+        clearLocalDraftData();
+      }
+      previousUserId.current = nextUserId;
+    };
     supabase.auth.getSession().then(({ data }) => {
       if (!active) return;
+      trackUser(data.session);
       setSession(data.session);
       setLoading(false);
     });
     const { data: sub } = supabase.auth.onAuthStateChange((_event, next) => {
+      trackUser(next);
       setSession(next);
       setLoading(false);
     });

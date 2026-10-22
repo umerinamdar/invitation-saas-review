@@ -38,3 +38,20 @@ export function trackById(id: string) {
 export function tracksByLanguage(language: Track["language"]) {
   return LIBRARY.filter((track) => track.language === language);
 }
+
+/**
+ * Release Fix 9 (C-3): the label for the music picker's default
+ * option. Only a theme that actually ships a track (today: Dubai
+ * Silk) may call it "theme music" — the other designs are silent
+ * until the customer picks the library track or uploads their own,
+ * and the option must say so. The option's VALUE is unaffected: it
+ * still selects the theme default (undefined) either way.
+ */
+export function themeDefaultLabel(
+  themeName: string,
+  hasThemeMusic: boolean,
+): string {
+  return hasThemeMusic
+    ? `${themeName} theme music`
+    : "No theme music — silent unless you pick or upload a track";
+}

@@ -9,6 +9,7 @@ export const dubaiSilk: Theme = {
   id: "dubai-silk",
   name: "Dubai Silk",
   tier: "royal",
+  tradition: "traditional",
   occasions: ["wedding", "engagement", "reception"],
   thumbnail: "/themes/dubai-silk/skyline.jpg",
 
@@ -41,8 +42,13 @@ export const dubaiSilk: Theme = {
   assets: {
     sealedBackdrop: "/themes/dubai-silk/silk.jpg",
     revealedBackdrop: "/themes/dubai-silk/skyline.jpg",
-    // TODO: supply a blank powder-blue wax disc with a gold rim and no
-    // lettering. Until then the seal is drawn from the palette in CSS.
+    // A blank powder-blue wax disc with a laurel wreath and a gold rim,
+    // empty in the middle — the couple's monogram still prints over it
+    // dynamically, same as the CSS-drawn seal this replaces.
+    // A tall, seamlessly-tiling continuation of the skyline scene — the
+    // Burj Khalifa dissolving into a soft gold-and-blue gradient — that
+    // runs behind every section after the hero instead of a flat colour.
+    sectionBackdrop: "/themes/dubai-silk/section-bg.jpg",
     paperTexture: "/themes/dubai-silk/paper.jpg",
     defaultMusic: "/themes/dubai-silk/track.mp3",
   },

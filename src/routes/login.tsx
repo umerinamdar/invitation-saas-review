@@ -17,6 +17,18 @@ export const Route = createFileRoute("/login")({
 
 type Mode = "signin" | "signup";
 
+// Impl round 2 (Agent A, A-2): the submit path rendered the RAW
+// provider error (cause.message) — the forgot-password path in this
+// same file was sanitised in the release round, this one never was.
+// Raw strings leak provider internals and, for signup, can reveal
+// whether an address already has an account. Outcomes are stated in
+// plain language per mode; the cause is never rendered.
+function submitErrorMessage(mode: Mode): string {
+  return mode === "signup"
+    ? "We couldn't create your account just now. If you already have an account, try signing in instead — otherwise please try again in a moment."
+    : "We couldn't sign you in. Check your email and password for typos and try again — or use “Forgot password?” below.";
+}
+
 function Login() {
   const navigate = useNavigate();
   const { session, loading } = useAuth();
@@ -30,6 +42,43 @@ function Login() {
   useEffect(() => {
     if (!loading && session) void navigate({ to: "/dashboard" });
   }, [loading, session, navigate]);
+
+  // Release Fix 2 (D2): password reset previously did not exist at
+  // all — a forgotten password locked the account (and its paid
+  // invitations) forever. Outcomes are stated in plain language: the
+  // raw provider error never reaches the page on this surface (D6),
+  // and the confirmation never reveals whether the address has an
+  // account. OWNER CONFIG: /reset-password must be allow-listed in
+  // the live Supabase Auth redirect URLs — see reset-password.tsx.
+  async function forgotPassword() {
+    setError("");
+    setNotice("");
+    if (!email.trim()) {
+      setNotice(
+        "Enter your email above first — then we'll send the reset link to it.",
+      );
+      return;
+    }
+    setBusy(true);
+    try {
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(
+        email,
+        {
+          redirectTo: `${window.location.origin}/reset-password`,
+        },
+      );
+      if (resetError) throw resetError;
+      setNotice(
+        "If an account exists for that email, we've sent a link to reset your password.",
+      );
+    } catch {
+      setError(
+        "We couldn't send the reset email just now. Please try again in a moment.",
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
 
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -54,10 +103,8 @@ function Login() {
         if (error) throw error;
       }
       await navigate({ to: "/dashboard" });
-    } catch (cause) {
-      setError(
-        cause instanceof Error ? cause.message : "Something went wrong.",
-      );
+    } catch {
+      setError(submitErrorMessage(mode));
     } finally {
       setBusy(false);
     }
@@ -66,7 +113,7 @@ function Login() {
   return (
     <div className="site">
       <SiteHeader />
-      <section className="auth">
+      <main className="auth">
         <h1>{mode === "signin" ? "Sign in" : "Create your account"}</h1>
         <p className="auth-sub">
           {mode === "signin"
@@ -116,6 +163,17 @@ function Login() {
             {busy && <LoaderCircle size={16} className="loading-spinner" />}
             {mode === "signin" ? "Sign in" : "Create account"}
           </button>
+
+          {mode === "signin" && (
+            <button
+              type="button"
+              className="forgot-link"
+              disabled={busy}
+              onClick={() => void forgotPassword()}
+            >
+              Forgot password?
+            </button>
+          )}
         </form>
 
         <p className="auth-swap">
@@ -134,7 +192,7 @@ function Login() {
         <p className="auth-back">
           <Link to="/templates">Browse the designs first</Link>
         </p>
-      </section>
+      </main>
       <SiteFooter />
     </div>
   );

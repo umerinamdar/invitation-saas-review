@@ -221,6 +221,25 @@ a {
   overflow: hidden;
   padding: 90px 18px;
 }
+/*
+ * Doors, curtains, books and boxes with real painted artwork ARE the
+ * backdrop: the scene is composed to fill the phone screen, so the
+ * mechanic fills the stage edge to edge instead of floating as a framed
+ * card — a separate full-bleed copy behind it would show the same photo at
+ * a different crop and seam visibly at the card's edges.
+ */
+.sealed-stage.painted-stage {
+  padding: 0;
+}
+.painted-stage .doors,
+.painted-stage .curtain,
+.painted-stage .book,
+.painted-stage .box {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  aspect-ratio: auto;
+}
 .sealed-backdrop {
   position: absolute;
   inset: 0;
@@ -238,6 +257,19 @@ a {
   border-radius: 4px;
   box-shadow: var(--shadow-envelope);
   perspective: 1200px;
+  container-type: inline-size;
+  /* The whole scene is the click/keyboard trigger now (no seal, no
+   * separate open-label button) — see openTriggerProps in reveals/
+   * index.tsx. */
+  cursor: pointer;
+}
+.envelope:focus-visible,
+.doors:focus-visible,
+.curtain:focus-visible,
+.book:focus-visible,
+.box:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
 }
 .envelope::after {
   content: "";
@@ -306,107 +338,6 @@ a {
   transform-origin: right;
   transform: rotate(-33deg);
 }
-.seal-button {
-  position: absolute;
-  width: 24%;
-  height: auto;
-  aspect-ratio: 1;
-  left: 38%;
-  top: 33%;
-  z-index: 6;
-  padding: 0;
-  border-radius: 50%;
-  transition:
-    transform 0.7s,
-    opacity 0.7s;
-}
-.seal-button img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-.seal-button:hover {
-  background: transparent;
-  transform: scale(1.06);
-}
-/* The monogram is printed per host, so one disc serves every invite on a theme. */
-.wax-seal {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 100%;
-  height: 100%;
-}
-.wax-seal img {
-  position: absolute;
-  inset: 0;
-}
-.wax-seal:not(:has(img)) {
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 34% 30%,
-    color-mix(in oklch, var(--paper-light) 85%, transparent),
-    var(--powder) 58%,
-    color-mix(in oklch, var(--paper-dark) 92%, transparent)
-  );
-  box-shadow:
-    inset 0 0 0 3px color-mix(in oklch, var(--gold) 55%, transparent),
-    inset 0 -4px 12px color-mix(in oklch, var(--foreground) 18%, transparent),
-    0 5px 14px -6px color-mix(in oklch, var(--foreground) 35%, transparent);
-}
-.wax-monogram {
-  position: relative;
-  z-index: 1;
-  /*
-   * Struck in gold, not typed in ink. The reference monogram reads as
-   * raised metal: a bright gradient down the strokes, a dark cut above
-   * where the press bit into the wax, and a lit edge below. Sized to fill
-   * the clear middle of the wreath rather than float in it.
-   */
-  font: 500 clamp(28px, 5.6vw, 58px) / 1 var(--font-serif);
-  letter-spacing: 0.04em;
-  text-indent: 0.04em;
-  /* The clear middle of a pressed wreath sits a little above the disc's
-   * geometric centre, so the letters are nudged up to match. */
-  transform: translateY(-4%);
-  background: linear-gradient(
-    168deg,
-    #f6e4ad 0%,
-    #d4af5f 26%,
-    #fff6d8 46%,
-    #c99a3e 60%,
-    #e8cf8d 82%,
-    #b8862e 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 -1px 0 rgb(0 0 0 / 0.55))
-    drop-shadow(0 1px 0 rgb(255 245 214 / 0.55))
-    drop-shadow(0 2px 3px rgb(0 0 0 / 0.35));
-}
-.envelope-label {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 6%;
-  margin: auto;
-  width: max-content;
-  max-width: calc(100% - 12px);
-  height: 54px;
-  padding: 6px 15px;
-  z-index: 5;
-  color: var(--foreground);
-  font: 600 28px var(--font-serif);
-  text-shadow: 0 1px 0 var(--ink-light);
-}
-.envelope-label svg {
-  width: 19px;
-}
-.is-opening .seal-button {
-  transform: scale(1.15) rotate(-10deg);
-  opacity: 0;
-}
 .is-opening .envelope-flap {
   transform: rotateX(175deg);
   z-index: 1;
@@ -417,10 +348,6 @@ a {
 .is-opening .envelope-line {
   opacity: 0;
 }
-.is-opening .envelope-label {
-  opacity: 0;
-  transition: opacity 0.5s;
-}
 /* Doors: two carved panels swing inward, the seal parting between them. */
 .doors {
   width: min(530px, 100%);
@@ -428,6 +355,8 @@ a {
   position: relative;
   perspective: 1600px;
   display: flex;
+  container-type: inline-size;
+  cursor: pointer;
 }
 .door {
   position: relative;
@@ -469,56 +398,9 @@ a {
 .doors.is-opening .door-right {
   transform: rotateY(105deg);
 }
-.doors-seal {
-  position: absolute;
-  left: 50%;
-  top: 46%;
-  width: 23%;
-  aspect-ratio: 1;
-  translate: -50% -50%;
-  z-index: 6;
-  padding: 0;
-  border-radius: 50%;
-  transition:
-    transform 0.7s,
-    opacity 0.7s;
-}
-.doors.is-opening .doors-seal {
-  transform: scale(1.15);
-  opacity: 0;
-}
-.doors-label {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 7%;
-  margin: auto;
-  width: max-content;
-  max-width: calc(100% - 12px);
-  height: 54px;
-  padding: 6px 15px;
-  z-index: 5;
-  color: var(--foreground);
-  font: 600 28px var(--font-serif);
-  text-shadow: 0 1px 0 var(--ink-light);
-}
-.doors-label svg {
-  width: 19px;
-}
-.doors.is-opening .doors-label {
-  opacity: 0;
-  transition: opacity 0.5s;
-}
 @media (max-width: 640px) {
   .doors {
     aspect-ratio: 1.02;
-  }
-  .doors-label {
-    font-size: 24px;
-    height: 50px;
-  }
-  .doors-seal {
-    width: 28%;
   }
 }
 
@@ -528,6 +410,8 @@ a {
   aspect-ratio: 1.1;
   position: relative;
   overflow: hidden;
+  container-type: inline-size;
+  cursor: pointer;
 }
 .drape {
   position: absolute;
@@ -571,46 +455,7 @@ a {
 .curtain.is-opening .drape-right {
   transform: translateX(102%);
 }
-.curtain-seal {
-  position: absolute;
-  left: 50%;
-  top: 45%;
-  width: 22%;
-  aspect-ratio: 1;
-  translate: -50% -50%;
-  z-index: 6;
-  padding: 0;
-  border-radius: 50%;
-  transition:
-    transform 0.7s,
-    opacity 0.7s;
-}
-.curtain.is-opening .curtain-seal {
-  transform: scale(1.18);
-  opacity: 0;
-}
-.curtain-label {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 8%;
-  margin: auto;
-  width: max-content;
-  max-width: calc(100% - 12px);
-  height: 54px;
-  padding: 6px 15px;
-  z-index: 5;
-  color: var(--foreground);
-  font: 600 28px var(--font-serif);
-  text-shadow: 0 1px 0 var(--ink-light);
-}
-.curtain-label svg {
-  width: 19px;
-}
-.curtain.is-opening .curtain-label {
-  opacity: 0;
-  transition: opacity 0.45s;
-}
+
 
 /* Book: a folded card whose cover turns on its spine. */
 .book {
@@ -618,6 +463,8 @@ a {
   aspect-ratio: 0.82;
   position: relative;
   perspective: 1700px;
+  container-type: inline-size;
+  cursor: pointer;
 }
 .book-page {
   position: absolute;
@@ -658,56 +505,12 @@ a {
 .book.is-opening .book-cover {
   transform: rotateY(-156deg);
 }
-.book-seal {
-  position: absolute;
-  left: 50%;
-  top: 43%;
-  width: 26%;
-  aspect-ratio: 1;
-  translate: -50% -50%;
-  z-index: 6;
-  padding: 0;
-  border-radius: 50%;
-  transition:
-    transform 0.6s,
-    opacity 0.6s;
-}
-.book.is-opening .book-seal {
-  opacity: 0;
-}
-.book-label {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 9%;
-  margin: auto;
-  width: max-content;
-  max-width: calc(100% - 12px);
-  height: 54px;
-  padding: 6px 15px;
-  z-index: 5;
-  color: var(--foreground);
-  font: 600 26px var(--font-serif);
-  text-shadow: 0 1px 0 var(--ink-light);
-}
-.book-label svg {
-  width: 18px;
-}
-.book.is-opening .book-label {
-  opacity: 0;
-  transition: opacity 0.4s;
-}
 @media (max-width: 640px) {
   .curtain {
     aspect-ratio: 0.95;
   }
   .book {
     width: min(330px, 100%);
-  }
-  .curtain-label,
-  .book-label {
-    font-size: 23px;
-    height: 50px;
   }
 }
 
@@ -717,6 +520,8 @@ a {
   aspect-ratio: 1.22;
   position: relative;
   perspective: 1500px;
+  container-type: inline-size;
+  cursor: pointer;
 }
 .box-base {
   position: absolute;
@@ -756,50 +561,21 @@ a {
   inset: 14px 14px 20px;
   border: 1px solid color-mix(in oklch, var(--gold-light) 65%, transparent);
 }
+/* Painted artwork is composed for the whole screen, so the lid covers the
+ * full stage rather than the top slice a CSS-drawn box base would need. */
+.box.is-painted .box-lid {
+  height: 100%;
+}
+.box.is-painted .box-lid::after {
+  display: none;
+}
 .box.is-opening .box-lid {
   transform: translateY(-58%) rotateX(26deg);
   opacity: 0;
 }
-.box-seal {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 25%;
-  aspect-ratio: 1;
-  translate: -50% -50%;
-  z-index: 6;
-  padding: 0;
-  border-radius: 50%;
-}
-.box-label {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 9%;
-  margin: auto;
-  width: max-content;
-  max-width: calc(100% - 12px);
-  height: 54px;
-  padding: 6px 15px;
-  z-index: 5;
-  color: var(--foreground);
-  font: 600 26px var(--font-serif);
-  text-shadow: 0 1px 0 var(--ink-light);
-}
-.box-label svg {
-  width: 18px;
-}
-.box.is-opening .box-label {
-  opacity: 0;
-  transition: opacity 0.45s;
-}
 @media (max-width: 640px) {
   .box {
     aspect-ratio: 1.05;
-  }
-  .box-label {
-    font-size: 23px;
-    height: 50px;
   }
 }
 
@@ -824,28 +600,56 @@ a {
 }
 
 .opened-invitation {
+  /* The section backdrop lives HERE, once, instead of on each section —
+   * one continuous image spanning the real scroll height, so scrolling
+   * through several sections reveals different parts of the same scene
+   * (and, past 3600px of it, repeats seamlessly) instead of every section
+   * independently re-centring the same crop of it, which looked like the
+   * identical image stamped down the page. */
+  position: relative;
   animation: invitation-appear 1s ease both;
   background-color: var(--invitation-surface);
+  /* `--invitation-texture-veil` (a :root fallback built from
+   * var(--invitation-surface)) computes to empty here: --invitation-surface
+   * itself only exists as an inline custom property set deeper in the DOM
+   * by the theme engine, so the :root declaration that references it has
+   * nothing to resolve against and the whole custom property comes back
+   * invalid. A multi-layer `background-image` where ANY layer is invalid
+   * drops the entire property to `none` — which was silently eating the
+   * paper texture and the new section backdrop below along with it. */
   background-image:
-    linear-gradient(
-      var(--invitation-texture-veil),
-      var(--invitation-texture-veil)
-    ),
-    var(--paper-texture);
+    var(--paper-texture),
+    var(--section-backdrop, none);
   background-size:
-    auto,
-    480px 480px;
+    480px 480px,
+    var(--section-bg-size, cover);
+  /* Shifted down past roughly a hero's worth of height: the image's own
+   * top (its sharpest, most recognisable part) is meant to be seen right
+   * as a guest scrolls past the hero, not hidden behind it where this
+   * box's own y=0 actually sits. Repeating vertically (set above) makes
+   * this phase shift free — there's no "before the start" to run out of. */
+  background-position:
+    center,
+    center 640px;
+  background-repeat:
+    repeat,
+    var(--section-bg-repeat, no-repeat);
+  /* Without this, the paper texture — an opaque JPG, no alpha channel —
+   * just paints over the section backdrop completely instead of texturing
+   * it, hiding it as totally as the old flat colour did. */
+  background-blend-mode: soft-light, normal;
 }
 .skyline-invitation {
   position: relative;
   isolation: isolate;
-  min-height: 780px;
-  height: 94svh;
-  max-height: 1080px;
+  /* A hard height + overflow:hidden here clips the scratch card whenever a
+   * couple's content (two family credential blocks, longer names) runs
+   * taller than the box — min-height keeps the immersive full-screen feel
+   * for short content without ever cutting off what's actually long. */
+  min-height: min(94svh, 1080px);
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: hidden;
   text-align: center;
   padding: 46px 20px 34px;
 }
@@ -900,13 +704,14 @@ a {
     transform 1.3s;
 }
 .invitation-names h1 {
-  font-size: 76px;
+  font-size: calc(76px * var(--names-scale, 1));
   line-height: 1.1;
   font-weight: 500;
+  color: var(--names-color, var(--foreground));
   text-shadow: 0 1px 15px var(--paper-light);
 }
 .invitation-names em {
-  font-size: 55px;
+  font-size: calc(55px * var(--names-scale, 1));
   font-weight: 400;
   color: var(--gold);
   padding: 0 12px;
@@ -932,12 +737,13 @@ a {
   pointer-events: none;
 }
 .date-reveal {
-  width: 100%;
-  min-height: 216px;
+  width: min(360px, 100%);
+  margin: 0 auto;
+  min-height: 170px;
 }
 .date-scratch {
   position: relative;
-  height: 190px;
+  height: 150px;
   width: 100%;
 }
 .date-scratch canvas {
@@ -963,12 +769,12 @@ a {
   height: 100%;
 }
 .revealed-date h2 {
-  font-size: 36px;
+  font-size: 27px;
   line-height: 1.2;
 }
 .revealed-date h3 {
-  font-size: 28px;
-  margin-top: 16px;
+  font-size: 20px;
+  margin-top: 10px;
 }
 .revealed-date p {
   font-size: 11px;
@@ -1177,10 +983,17 @@ a {
   font: italic 24px/1.3 var(--font-serif);
   color: var(--foreground);
 }
-.together-elapsed {
-  border-top: 1px solid color-mix(in oklch, var(--gold-light) 55%, transparent);
-  margin: 28px auto 0;
+.together-elapsed-label {
+  margin-top: 28px;
   padding-top: 24px;
+  border-top: 1px solid color-mix(in oklch, var(--gold-light) 55%, transparent);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+.together-elapsed {
+  margin: 14px auto 0;
 }
 .together-elapsed strong {
   display: block;
@@ -1225,26 +1038,67 @@ a {
     transform: rotate(360deg);
   }
 }
+.invitation-print {
+  display: flex;
+  justify-content: center;
+  padding: 28px 16px 40px;
+}
 .music-dock {
   position: fixed;
-  bottom: 14px;
-  right: 14px;
+  bottom: 18px;
+  right: 18px;
   display: flex;
-  gap: 2px;
-  padding: 5px;
-  border: 1px solid var(--gold-light);
-  background: color-mix(in oklch, var(--background) 94%, transparent);
-  backdrop-filter: blur(12px);
+  gap: 4px;
+  /* A single icon (most themes, no music yet) looked like a stray dark
+   * square rather than a toolbar — rounder, more padding and a softer
+   * border read as an intentional small control either way. */
+  padding: 6px;
+  border: 1px solid color-mix(in oklch, var(--gold-light) 70%, transparent);
+  background: color-mix(in oklch, var(--background) 82%, transparent);
+  backdrop-filter: blur(14px) saturate(1.1);
   z-index: 20;
-  border-radius: 4px;
+  border-radius: 999px;
   box-shadow: var(--shadow-dock);
 }
 .music-dock button {
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  color: var(--ink-light);
+}
+.music-dock button:hover {
+  background: color-mix(in oklch, var(--gold) 22%, transparent);
 }
 .music-dock svg {
-  width: 16px;
+  width: 17px;
+}
+.music-dock-item {
+  position: relative;
+}
+.music-dock-hint {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  padding: 4px 8px;
+  border-radius: 3px;
+  background: color-mix(in oklch, var(--foreground) 88%, transparent);
+  color: var(--background);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.music-dock.show-hint .music-dock-hint {
+  opacity: 1;
+  transition: opacity 0.3s 0.2s;
+}
+@media (hover: hover) {
+  .music-dock-item:hover .music-dock-hint {
+    opacity: 1;
+  }
 }
 .music-error {
   position: absolute;
@@ -1276,7 +1130,11 @@ a {
   box-shadow: 0 1px 2px color-mix(in oklch, var(--foreground) 12%, transparent);
   border-radius: 70% 0 70% 0;
   opacity: 0;
-  animation: petal-fall 9s linear infinite;
+  /* Each petal gets its own drift, spin and timing (set per nth-child
+   * below) so eighteen petals read as a natural scatter rather than one
+   * trajectory traced eighteen times at a time offset. */
+  scale: var(--petal-scale, 1);
+  animation: petal-fall var(--petal-dur, 9s) linear infinite;
 }
 .petals i:nth-child(3n) {
   background: var(--powder);
@@ -1303,79 +1161,151 @@ a {
 .petals i:nth-child(1) {
   left: 3%;
   animation-delay: 0s;
+  --petal-drift: -70px;
+  --petal-spin: 220deg;
+  --petal-dur: 8.2s;
+  --petal-scale: 0.85;
 }
 .petals i:nth-child(2) {
   left: 20%;
-  animation-delay: 0.43s;
+  animation-delay: 0.6s;
+  --petal-drift: 55px;
+  --petal-spin: -300deg;
+  --petal-dur: 10.4s;
+  --petal-scale: 1.15;
 }
 .petals i:nth-child(3) {
   left: 37%;
-  animation-delay: 0.86s;
+  animation-delay: 1.3s;
+  --petal-drift: -30px;
+  --petal-spin: 400deg;
+  --petal-dur: 7.6s;
+  --petal-scale: 1;
 }
 .petals i:nth-child(4) {
   left: 54%;
-  animation-delay: 1.29s;
+  animation-delay: 1.9s;
+  --petal-drift: 90px;
+  --petal-spin: -200deg;
+  --petal-dur: 11.2s;
+  --petal-scale: 0.9;
 }
 .petals i:nth-child(5) {
   left: 71%;
-  animation-delay: 1.72s;
+  animation-delay: 2.4s;
+  --petal-drift: -95px;
+  --petal-spin: 260deg;
+  --petal-dur: 9.1s;
+  --petal-scale: 1.1;
 }
 .petals i:nth-child(6) {
   left: 88%;
-  animation-delay: 2.15s;
+  animation-delay: 3.1s;
+  --petal-drift: 35px;
+  --petal-spin: -380deg;
+  --petal-dur: 8.7s;
+  --petal-scale: 0.8;
 }
 .petals i:nth-child(7) {
   left: 7%;
-  animation-delay: 2.58s;
+  animation-delay: 3.7s;
+  --petal-drift: 20px;
+  --petal-spin: 340deg;
+  --petal-dur: 10.9s;
+  --petal-scale: 1.2;
 }
 .petals i:nth-child(8) {
   left: 24%;
-  animation-delay: 3.01s;
+  animation-delay: 0.2s;
+  --petal-drift: -60px;
+  --petal-spin: -240deg;
+  --petal-dur: 7.9s;
+  --petal-scale: 1;
 }
 .petals i:nth-child(9) {
   left: 41%;
-  animation-delay: 3.44s;
+  animation-delay: 4.4s;
+  --petal-drift: 75px;
+  --petal-spin: 420deg;
+  --petal-dur: 9.8s;
+  --petal-scale: 0.95;
 }
 .petals i:nth-child(10) {
   left: 58%;
-  animation-delay: 3.87s;
+  animation-delay: 1.1s;
+  --petal-drift: -45px;
+  --petal-spin: -320deg;
+  --petal-dur: 8.4s;
+  --petal-scale: 1.05;
 }
 .petals i:nth-child(11) {
   left: 75%;
-  animation-delay: 4.3s;
+  animation-delay: 5s;
+  --petal-drift: 100px;
+  --petal-spin: 280deg;
+  --petal-dur: 11.6s;
+  --petal-scale: 0.85;
 }
 .petals i:nth-child(12) {
   left: 92%;
-  animation-delay: 4.73s;
+  animation-delay: 2.7s;
+  --petal-drift: -20px;
+  --petal-spin: -440deg;
+  --petal-dur: 7.3s;
+  --petal-scale: 1.15;
 }
 .petals i:nth-child(13) {
   left: 11%;
-  animation-delay: 5.16s;
+  animation-delay: 3.3s;
+  --petal-drift: 65px;
+  --petal-spin: 360deg;
+  --petal-dur: 10.1s;
+  --petal-scale: 1;
 }
 .petals i:nth-child(14) {
   left: 28%;
-  animation-delay: 5.59s;
+  animation-delay: 0.9s;
+  --petal-drift: -80px;
+  --petal-spin: -260deg;
+  --petal-dur: 9.5s;
+  --petal-scale: 0.9;
 }
 .petals i:nth-child(15) {
   left: 45%;
-  animation-delay: 6.02s;
+  animation-delay: 4.9s;
+  --petal-drift: 40px;
+  --petal-spin: 300deg;
+  --petal-dur: 8s;
+  --petal-scale: 1.1;
 }
 .petals i:nth-child(16) {
   left: 62%;
-  animation-delay: 6.45s;
+  animation-delay: 1.6s;
+  --petal-drift: -55px;
+  --petal-spin: -380deg;
+  --petal-dur: 11s;
+  --petal-scale: 0.95;
 }
 .petals i:nth-child(17) {
   left: 79%;
-  animation-delay: 6.88s;
+  animation-delay: 5.5s;
+  --petal-drift: 85px;
+  --petal-spin: 240deg;
+  --petal-dur: 7.7s;
+  --petal-scale: 1.2;
 }
 .petals i:nth-child(18) {
   left: 96%;
-  animation-delay: 7.31s;
+  animation-delay: 2.2s;
+  --petal-drift: -35px;
+  --petal-spin: -300deg;
+  --petal-dur: 10.6s;
+  --petal-scale: 0.85;
 }
 
 @keyframes petal-fall {
   0% {
-    transform: translate(0, -20px) rotate(0);
+    transform: translate(0, -20px) rotate(0deg);
     opacity: 0;
   }
   10%,
@@ -1383,7 +1313,8 @@ a {
     opacity: 0.85;
   }
   100% {
-    transform: translate(60px, 105vh) rotate(340deg);
+    transform: translate(var(--petal-drift, 60px), 105vh)
+      rotate(var(--petal-spin, 340deg));
     opacity: 0;
   }
 }
@@ -1402,12 +1333,6 @@ a {
   .envelope {
     aspect-ratio: 1.48;
   }
-  .envelope-label {
-    font-size: 24px;
-    height: 50px;
-    bottom: 4%;
-    padding: 6px 8px;
-  }
   .envelope-line {
     width: 61%;
   }
@@ -1417,46 +1342,46 @@ a {
   .right-line {
     transform: rotate(-36deg);
   }
-  .seal-button {
-    width: 29%;
-    left: 35.5%;
-    top: 32%;
-  }
   .skyline-invitation {
-    min-height: 710px;
-    height: 96svh;
-    max-height: 880px;
+    min-height: min(96svh, 880px);
     padding: 32px 18px 20px;
   }
   .invitation-heading p {
     font-size: 22px;
   }
   .invitation-names {
-    padding: 95px 0 28px;
+    padding: 56px 0 18px;
   }
   .invitation-names h1 {
-    font-size: 52px;
+    font-size: calc(38px * var(--names-scale, 1));
+    line-height: 1.15;
   }
   .invitation-names em {
-    display: block;
-    font-size: 32px;
-    line-height: 0.9;
-    padding: 10px 0;
+    font-size: calc(24px * var(--names-scale, 1));
+    padding: 0 6px;
+  }
+  .invitation-families {
+    gap: 14px;
+    margin-top: 16px;
+  }
+  .family-block p {
+    font-size: calc(12px * var(--family-scale, 1));
+    line-height: 1.45;
   }
   .skyline-backdrop {
     object-position: center top;
   }
   .date-scratch {
-    height: 175px;
+    height: 135px;
   }
   .date-reveal {
-    min-height: 195px;
+    min-height: 150px;
   }
   .revealed-date h2 {
-    font-size: 31px;
+    font-size: 24px;
   }
   .revealed-date h3 {
-    font-size: 26px;
+    font-size: 18px;
   }
   .venue-section {
     padding: 30px 18px 45px;
@@ -1478,18 +1403,15 @@ a {
   }
 }
 @media (max-width: 360px) {
-  .envelope-label {
-    font-size: 21px;
-  }
   .skyline-invitation {
     padding-left: 14px;
     padding-right: 14px;
   }
   .invitation-names h1 {
-    font-size: 46px;
+    font-size: calc(33px * var(--names-scale, 1));
   }
   .revealed-date h2 {
-    font-size: 28px;
+    font-size: 22px;
   }
   .venue-section > a {
     font-size: 25px;
@@ -1534,21 +1456,36 @@ a {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  /* The surface colour leads and the grain only tints it. Painting the
-   * texture opaque put a light paper over dark themes and their cream text
-   * disappeared into it. */
-  background-color: var(--invitation-surface);
+  /* No image and no opaque base colour here any more — the actual
+   * backdrop (the theme's own continuous section image, paper grain
+   * included, or just the flat surface colour for ornamentation-drawn
+   * themes) now lives once on `.opened-invitation` itself. This is just a
+   * thin, semi-transparent tint over it for legibility, plus a soft gold
+   * vignette at the top of each section. Critically, nothing in THIS
+   * layer is opaque: the paper texture (a JPG — no alpha channel) used to
+   * sit here too, and however light its blend-mode made it look, an
+   * opaque layer forces the whole element's composited background to
+   * opaque, which blocked the parent's image completely regardless of
+   * how transparent the tint around it was. */
   background-image:
     radial-gradient(
       90% 60% at 50% 0%,
       color-mix(in oklch, var(--gold) 9%, transparent),
       transparent 70%
     ),
-    var(--paper-texture);
+    linear-gradient(
+      color-mix(in oklch, var(--invitation-surface) 20%, transparent),
+      color-mix(in oklch, var(--invitation-surface) 20%, transparent)
+    );
   background-size:
     auto,
-    420px 420px;
-  background-blend-mode: normal, soft-light;
+    auto;
+  background-position:
+    center,
+    center;
+  background-repeat:
+    no-repeat,
+    no-repeat;
 }
 
 /* A hairline between sections, centred and fading at the ends. */
@@ -1606,21 +1543,41 @@ a {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr));
   gap: 26px;
-  margin-top: 26px;
+  margin: 26px auto 0;
   width: min(760px, 100%);
 }
-.family-block p {
-  font: 13.5px/1.6 var(--font-sans);
-  color: var(--muted-foreground);
+/*
+ * Text-shadow alone can't reliably hold contrast against an arbitrary
+ * photo — a golden-hour sky, a dark doorway, a bright marble floor, all in
+ * the same backdrop. A dark edge plus a light glow (the previous approach)
+ * reads fine on a mid-toned patch but washes into a bright one and muddies
+ * into a dark one. A translucent scrim behind the block is not
+ * backdrop-dependent: it sits a fixed amount darker than whatever's behind
+ * it, so legibility holds everywhere the text can land.
+ */
+.family-block {
+  /* Fixed dark, NOT var(--background) — several themes (Cathedral Light,
+   * Dubai Silk, Monochrome Vow, Phulkari Anand) have a light background,
+   * which would make this scrim light too and defeat the point of the
+   * light text below. This is a legibility utility, not a themed panel, so
+   * it stays dark on every theme regardless of the theme's own palette. */
+  background: rgba(20, 14, 8, 0.42);
+  backdrop-filter: blur(5px) saturate(1.1);
+  -webkit-backdrop-filter: blur(5px) saturate(1.1);
+  border-radius: 10px;
+  padding: 8px 14px;
 }
-.family-block .family-name {
-  font: 25px var(--font-serif);
-  color: var(--foreground);
-  margin-bottom: 4px;
+.family-block p {
+  font-family: var(--font-sans);
+  font-size: calc(13.5px * var(--family-scale, 1));
+  line-height: 1.6;
+  color: var(--family-color, var(--paper-light));
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 .family-block .family-credentials {
   font-style: italic;
-  color: var(--gold);
+  color: var(--family-color, var(--tint));
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 .family-block .family-grandparents {
   opacity: 0.85;
@@ -1856,11 +1813,6 @@ a {
  * doors or drapes, the two halves of that painting are what move — drawing
  * CSS panels over it would cover the artwork.
  */
-.doors.is-painted,
-.curtain.is-painted {
-  width: min(960px, 100%);
-  aspect-ratio: 3 / 2;
-}
 .doors.is-painted .door-panel,
 .curtain.is-painted {
   box-shadow: none;
@@ -1884,10 +1836,6 @@ a {
 }
 
 /* Painted book and box: the artwork itself is the cover or the lid. */
-.book.is-painted {
-  width: min(560px, 100%);
-  aspect-ratio: 3 / 2;
-}
 .book.is-painted .book-cover {
   border: 0;
   box-shadow: 0 30px 60px -30px
@@ -1897,10 +1845,6 @@ a {
   background: color-mix(in oklch, var(--background) 92%, transparent);
   border: 0;
   box-shadow: none;
-}
-.box.is-painted {
-  width: min(680px, 100%);
-  aspect-ratio: 3 / 2;
 }
 .box.is-painted .box-lid {
   inset: 0;
@@ -1917,10 +1861,6 @@ a {
   transform: translateY(-16%) scale(1.06);
   opacity: 0;
 }
-.box.is-painted .box-seal {
-  top: 50%;
-}
-
 /* Section ornament: a gold rule with a diamond at its centre, between
  * blocks. A plain hairline read as a CMS divider rather than engraving. */
 .opened-invitation > section + section::after {
@@ -1949,20 +1889,17 @@ a {
 }
 .date-revealed .revealed-date {
   padding: 26px 22px;
-  background:
-    linear-gradient(
-      color-mix(in oklch, var(--paper-light) 90%, transparent),
-      color-mix(in oklch, var(--paper) 88%, transparent)
-    ),
-    var(--paper-texture);
-  background-size:
-    auto,
-    360px 360px;
-  box-shadow:
-    0 0 0 1px color-mix(in oklch, var(--gold) 55%, transparent),
-    0 0 0 5px color-mix(in oklch, var(--paper-light) 45%, transparent),
-    0 0 0 6px color-mix(in oklch, var(--gold-light) 40%, transparent),
-    0 18px 38px -20px color-mix(in oklch, var(--foreground) 50%, transparent);
+  /* An opaque card in any one fixed colour either blends into the photo
+   * behind it (too close a match) or sits on top looking pasted-on (too
+   * different) — there's no single flat colour that works against every
+   * theme's own hero art. Frosted glass sidesteps the whole problem: it's
+   * built from whatever is actually behind it, so it always harmonises
+   * with that specific background, the same way it would over a photo in
+   * any real product UI. */
+  background: color-mix(in oklch, var(--ink-light) 20%, transparent);
+  backdrop-filter: blur(22px) saturate(1.2);
+  -webkit-backdrop-filter: blur(22px) saturate(1.2);
+  box-shadow: 0 16px 32px -20px color-mix(in oklch, var(--foreground) 35%, transparent);
 }
 .date-revealed .revealed-date h2 {
   color: var(--scratch-ink);
@@ -1990,38 +1927,3 @@ a {
   margin-top: 14px;
 }
 
-/*
- * The open prompt. Over painted artwork it has no reliable ground — it was
- * landing on pale stone in one theme and dark velvet in the next — so it
- * now carries its own plate, the way the reference sites do.
- */
-.envelope-label,
-.doors-label,
-.curtain-label,
-.book-label,
-.box-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  height: auto;
-  padding: 11px 22px;
-  font-size: clamp(14px, 1.7vw, 18px);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  font-family: var(--font-sans);
-  font-weight: 400;
-  color: var(--highlight);
-  text-shadow: none;
-  background: color-mix(in oklch, var(--scratch-ink) 68%, transparent);
-  border: 1px solid color-mix(in oklch, var(--gold) 55%, transparent);
-  border-radius: 2px;
-  backdrop-filter: blur(3px);
-}
-.envelope-label:hover,
-.doors-label:hover,
-.curtain-label:hover,
-.book-label:hover,
-.box-label:hover {
-  background: color-mix(in oklch, var(--scratch-ink) 82%, transparent);
-  border-color: var(--gold);
-}

@@ -4,6 +4,8 @@ dist/
 .nitro/
 .tanstack/
 .vinxi/
+.wrangler/
+test-results/
 *.local
 .env
 .env.*

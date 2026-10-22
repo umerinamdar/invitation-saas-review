@@ -10,7 +10,8 @@ export const monochromeVow: Theme = {
   name: "Monochrome Vow",
   tier: "classic",
   occasions: ["wedding", "engagement", "reception", "roka"],
-  thumbnail: "/themes/thumbs/monochrome-vow.svg",
+  tradition: "modern",
+  thumbnail: "/themes/monochrome-vow/hero.jpg",
 
   palette: {
     accent: "oklch(0.44 0.018 60)", // graphite rather than gold
@@ -36,9 +37,17 @@ export const monochromeVow: Theme = {
       "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap",
   },
 
-  ornamentation: "deco",
+  ornamentation: "none",
 
-  assets: {},
+  assets: {
+    sealedBackdrop: "/themes/monochrome-vow/sealed.jpg",
+    revealedBackdrop: "/themes/monochrome-vow/hero.jpg",
+    // A tall, seamlessly-tiling continuation of the hero scene — the
+    // art-deco fan motif dissolving into a soft ivory-and-graphite gradient —
+    // that runs behind every section after the hero instead of a flat colour.
+    sectionBackdrop: "/themes/monochrome-vow/section-bg.jpg",
+    paperTexture: "/themes/monochrome-vow/paper.jpg",
+  },
 
   motion: {
     reveal: "curtain",

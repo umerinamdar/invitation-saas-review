@@ -9,6 +9,8 @@ export const kanjeevaram: Theme = {
   id: "kanjeevaram",
   name: "Kanjeevaram",
   tier: "royal",
+  religion: "hindu",
+  tradition: "traditional", // South Indian saris
   occasions: ["wedding", "reception", "engagement"],
   thumbnail: "/themes/kanjeevaram/hero.jpg",
 
@@ -41,7 +43,10 @@ export const kanjeevaram: Theme = {
   assets: {
     sealedBackdrop: "/themes/kanjeevaram/sealed.jpg",
     revealedBackdrop: "/themes/kanjeevaram/hero.jpg",
-    sealDisc: "/themes/kanjeevaram/seal.png",
+    // A tall, seamlessly-tiling continuation of the hero scene — the
+    // temple courtyard dissolving into a soft maroon-and-gold gradient —
+    // that runs behind every section after the hero instead of a flat colour.
+    sectionBackdrop: "/themes/kanjeevaram/section-bg.jpg",
     paperTexture: "/themes/kanjeevaram/paper.jpg",
   },
 

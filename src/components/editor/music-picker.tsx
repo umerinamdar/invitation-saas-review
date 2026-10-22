@@ -1,29 +1,44 @@
 import { useEffect, useRef, useState } from "react";
-import { Music, Pause, Play, Upload, X } from "lucide-react";
+import { Check, Music, Pause, Play, Upload, X } from "lucide-react";
 import { LANGUAGES, LIBRARY, tracksByLanguage } from "@/lib/music";
+import { supabase } from "@/lib/supabase";
+import {
+  isStoredMediaPath,
+  uploadInviteMedia,
+  validateInviteMediaFile,
+  type MediaUploadScope,
+} from "@/lib/media-upload";
 
 type Props = {
-  /** The chosen track's url, or undefined to use the theme's default. */
+  /** The chosen track's url/path, or undefined to use the theme's default. */
   value: string | undefined;
   onChange: (url: string | undefined) => void;
   themeTrackName: string;
+  /** Authenticated owner + invite/draft scope required by storage policy. */
+  uploadScope?: MediaUploadScope | undefined;
 };
 
-const MAX_BYTES = 10 * 1024 * 1024;
-
 /**
- * Pick a track from the library, or play one of your own.
+ * Pick a track from the library, or use one of your own.
  *
- * An uploaded file stays in this browser as an object URL — nothing is sent
- * anywhere until the invitation is published, so a customer can audition a
- * track without it being stored.
+ * An uploaded file is sent to invite-media and the invitation stores the
+ * returned storage path. A local object URL is used only to preview the
+ * file in this session while the upload completes; it is never saved,
+ * because guests and later sessions cannot open another session's blob.
  */
-export function MusicPicker({ value, onChange, themeTrackName }: Props) {
+export function MusicPicker({
+  value,
+  onChange,
+  themeTrackName,
+  uploadScope,
+}: Props) {
   const [uploadName, setUploadName] = useState("");
   const [error, setError] = useState("");
   const [playing, setPlaying] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
   const audio = useRef<HTMLAudioElement | null>(null);
   const objectUrl = useRef<string | null>(null);
+  const uploadGeneration = useRef(0);
 
   // Revoking on unmount keeps a long editing session from leaking blobs.
   useEffect(
@@ -49,30 +64,72 @@ export function MusicPicker({ value, onChange, themeTrackName }: Props) {
     setPlaying(url);
   }
 
-  function upload(file: File | undefined) {
+  async function upload(file: File | undefined) {
     if (!file) return;
     setError("");
-    if (!file.type.startsWith("audio/")) {
-      setError("That is not an audio file.");
+    try {
+      validateInviteMediaFile(file, "song");
+    } catch (cause) {
+      setError(
+        cause instanceof Error ? cause.message : "That song can't be used.",
+      );
       return;
     }
-    if (file.size > MAX_BYTES) {
-      setError("Please choose a file under 10 MB.");
+    if (!uploadScope) {
+      setError(
+        "Sign in before uploading a song, so it can be saved for your guests.",
+      );
       return;
     }
+
+    const previousName = uploadName;
     if (objectUrl.current) URL.revokeObjectURL(objectUrl.current);
-    const url = URL.createObjectURL(file);
-    objectUrl.current = url;
+    const previewUrl = URL.createObjectURL(file);
+    objectUrl.current = previewUrl;
+    const generation = ++uploadGeneration.current;
     setUploadName(file.name);
-    onChange(url);
+    setUploading(true);
+
+    try {
+      const path = await uploadInviteMedia(supabase, {
+        ...uploadScope,
+        file,
+        kind: "song",
+        fileKey: `custom-${globalThis.crypto?.randomUUID?.() ?? Date.now()}`,
+      });
+      // A default/library click while the file was uploading wins; do not
+      // let the late completion overwrite that newer choice.
+      if (uploadGeneration.current !== generation) return;
+      onChange(path);
+    } catch (cause) {
+      if (uploadGeneration.current !== generation) return;
+      if (objectUrl.current === previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+        objectUrl.current = null;
+      }
+      setUploadName(previousName);
+      setError(
+        cause instanceof Error
+          ? cause.message
+          : "That song could not be uploaded.",
+      );
+    } finally {
+      if (uploadGeneration.current === generation) setUploading(false);
+    }
   }
 
   function clearUpload() {
+    uploadGeneration.current += 1;
+    setUploading(false);
     if (objectUrl.current) URL.revokeObjectURL(objectUrl.current);
     objectUrl.current = null;
     setUploadName("");
     onChange(undefined);
   }
+
+  const hasUploadedSong = Boolean(
+    uploadName || isStoredMediaPath(value) || value?.startsWith("blob:"),
+  );
 
   return (
     <div className="music-picker">
@@ -87,6 +144,9 @@ export function MusicPicker({ value, onChange, themeTrackName }: Props) {
         <Music size={14} />
         <span className="track-title">{themeTrackName}</span>
         <span className="track-tag">Default</span>
+        {!value && (
+          <Check size={14} className="track-selected" aria-hidden="true" />
+        )}
       </button>
 
       {LANGUAGES.map((language) => {
@@ -122,6 +182,13 @@ export function MusicPicker({ value, onChange, themeTrackName }: Props) {
                 >
                   {track.title}
                 </button>
+                {value === track.url && (
+                  <Check
+                    size={14}
+                    className="track-selected"
+                    aria-hidden="true"
+                  />
+                )}
               </div>
             ))}
           </div>
@@ -130,25 +197,38 @@ export function MusicPicker({ value, onChange, themeTrackName }: Props) {
 
       <div className="track-upload">
         <label className="btn btn-quiet btn-sm">
-          <Upload size={14} /> Use my own song
+          <Upload size={14} /> {uploading ? "Uploading…" : "Use my own song"}
           <input
             type="file"
-            accept="audio/*"
+            accept="audio/mpeg,audio/mp4,audio/wav,audio/x-wav,audio/ogg"
             hidden
-            onChange={(e) => upload(e.target.files?.[0])}
+            disabled={uploading}
+            onChange={(e) => {
+              void upload(e.target.files?.[0]);
+              e.target.value = "";
+            }}
           />
         </label>
-        {uploadName && (
+        {hasUploadedSong && (
           <p className="track-upload-name">
-            {uploadName}
-            <button type="button" onClick={clearUpload} aria-label="Remove">
+            {uploadName || "Your uploaded song"}
+            {uploading ? " — uploading…" : ""}
+            <button
+              type="button"
+              onClick={clearUpload}
+              aria-label="Remove uploaded song"
+            >
               <X size={13} />
             </button>
           </p>
         )}
       </div>
 
-      {error && <p className="form-error">{error}</p>}
+      {error && (
+        <p className="form-error" role="alert">
+          {error}
+        </p>
+      )}
       {LIBRARY.length < 2 && (
         <p className="editor-note">
           More tracks are being added. You can upload your own in the meantime.
