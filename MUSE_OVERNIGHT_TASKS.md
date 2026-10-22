@@ -216,6 +216,69 @@ in date/timezone handling (countdown logic), share-link encoding, QR generation.
 is the highest-value, least-scripted task on the list; don't shortcut it just because
 it's open-ended.
 
+### Task 14 — Lock in every historical fix with a dedicated regression test
+The handoff's §B.1–§B.11 lists dozens of real bugs found and fixed across rounds (the
+₹999/₹599 pricing bug, the unauthenticated `/api/orders`, the webhook using the anon
+client, the partial-webhook-failure recovery gap, Gap-B signed URLs, F1–F4 from Round 3,
+T1–T2 from 3.5, the mark-paid-on-zero-rows bug from 3.6, the three Round-3.7
+concurrency/recovery fixes, the 0001 free-publish RLS hole (0006), and more). For each
+one: find the test that pins it today; if it only has indirect coverage, write a direct
+regression test naming the original bug in its description. This is exactly the kind of
+large, mechanical-but-valuable work suited to a big token budget — don't skip entries
+because they look already covered without checking.
+
+### Task 15 — Full WCAG 2.1 AA accessibility audit, every route
+Broader than the reveal-mechanic keyboard check in Task 2: go route by route
+(`/`, `/templates`, `/create`, `/login`, `/reset-password`, `/dashboard`,
+`/editor/$id`, `/publish`, `/order-success`, `/order-failed`, `/i/$slug`,
+`/preview/$themeId`, `/contact`, `/privacy`, `/terms`, `/refund`) for keyboard
+navigability, focus order and visible focus states, color contrast, correct heading
+hierarchy, form labeling, and screen-reader-sensible DOM order. Write up concrete
+findings per route; fix the unambiguous, low-risk ones (missing `aria-label`, bad
+contrast on a static color) directly with a test; flag anything that needs a design
+call.
+
+### Task 16 — Performance and bundle audit
+Per-route/per-chunk bundle size breakdown from the build output; identify the largest
+dependencies and whether any are avoidable or lazy-loadable; check for obvious
+unnecessary re-renders (missing `useMemo`/`useCallback` where props are recreated every
+render, especially in the editor and invitation-renderer components); review image
+sizes in `public/` beyond the seal re-encode already done (any other oversized theme
+assets this session didn't touch).
+
+### Task 17 — CSS breakpoint audit, all 14 themes
+Your environment can't run a real browser (handoff §B.12), so this is a static read,
+not a visual one: go through `src/styles.css` and any theme-specific CSS for every
+media query / breakpoint, across all 14 themes' mechanics, and check for logical gaps
+or overlaps (a width range nothing targets, or two rules fighting at the same
+breakpoint). Flag anything that needs an actual visual check on staging rather than
+guessing from the CSS alone.
+
+### Task 18 — Fresh security review against current code
+Re-run `docs/ops/SECURITY-REVIEW.md` as a checklist against the tree as it stands
+*tonight* (post wax-seal removal, post reconciliation) rather than trusting its old
+conclusions — the removals and the `openTriggerProps` refactor are exactly the kind of
+change that can introduce a new gap the original review never saw. Specifically
+re-verify every user-editable field still has test coverage in
+`src/test/input-safety.test.tsx` (hosts, venue, familyMembers, welcome, sub-events —
+confirm nothing new was added to `Invite`/`InviteConfig` without a matching hostile-
+input test).
+
+### Task 19 — Architecture doc for future contributors
+Nothing in the repo itself (as opposed to the handoff text) currently documents the
+order → payment → webhook → settle → publish flow, the auth flow, or the media
+upload/signing flow as a single reference. Write `docs/ARCHITECTURE.md` with mermaid
+diagrams for these three flows, grounded in the actual current code (cite file paths),
+so a future session doesn't have to reconstruct this from scratch every time.
+
+### Task 20 — Keep going; there's no ceiling here
+If you finish everything above before morning: don't stop and wait. Re-run Task 13's
+fresh-eyes review against parts of `src/` you haven't yet written up, extend test
+coverage for any file you can see has thin coverage, and keep appending to the dated
+report as you go rather than holding everything for one final write-up. The owner
+would rather you kept working on real findings all night than idle once the numbered
+list is done.
+
 ## Format for your report
 
 Commit a dated report to `docs/ops/OVERNIGHT-REPORT-<date>.md` on a branch (not
