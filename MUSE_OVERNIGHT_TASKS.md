@@ -150,6 +150,72 @@ can't — if that's still true, skip this task entirely and say so in the report
 than fighting it), run `npm run test:e2e` and report pass/fail. If it can't run, just
 read the spec for obvious staleness (selectors, copy) against the current tree.
 
+### Task 6 — i18n completeness audit, all 13 locales, every key (not just faq.a6)
+Tonight's reconciliation only touched `faq.a6`. Go through every key in
+`src/i18n/translations.ts` for all 12 non-English locales against the English source:
+missing keys, stale/untranslated leftovers, copy that no longer matches an English
+string that's changed since the locale was last touched, and literal mistranslations
+(language-mixups like the Gujarati/Hindi mixup caught earlier this session — if it
+happened once by a careful agent, check the rest for the same class of error). Also
+grep the actual rendered UI (`src/routes/`, `src/components/`) for hard-coded English
+strings that bypass `src/i18n/` entirely — those are honesty-fix gaps the same way
+F-10 was.
+
+### Task 7 — Theme asset and data integrity sweep, all 14 themes
+For every theme in `src/themes/*.ts`: confirm every asset path it references
+(backdrop images, theme art, any `public/themes/<id>/...` path) actually exists in
+`public/` — find 404s before a guest does. Confirm every theme's declared `reveal`
+mechanic matches what `src/components/reveals/index.tsx` supports. Confirm
+`defaultMusic` is only set where a real track exists (`src/lib/music.ts`'s library).
+Cross-check theme metadata (names, tier labels left over from the old pricing model)
+for anything stale or inconsistent across the 14.
+
+### Task 8 — Error-path and type-safety audit
+A systematic pass, not a sample: every API route (`src/routes/api/`) — does every
+failure path (network error, malformed input, missing session, Supabase error) return
+a sane status and message, or silently swallow/mis-report? Every `any`, unsafe cast, or
+non-null assertion (`as any`, `as unknown as`, `!`) in `src/` — is each one actually
+safe, or papering over a real gap? Favor writing a failing test that proves a gap over
+just flagging it in prose.
+
+### Task 9 — Editor autosave/serialization deep dive
+This subsystem (generation-counter serialization, failure retention, localStorage
+mirror) is the most complex piece of client logic in the app and was heavily reworked
+in Round 3.8. Go beyond the existing `editor-autosave.test.tsx` coverage: race
+conditions between rapid edits, what happens if `localStorage` write/read throws
+(private browsing, quota exceeded), behavior if the mirror and the server row disagree
+on more than just recency. Note F-4 (cross-device last-writer-wins) is a known,
+accepted owner decision — don't "fix" it, just make sure nothing *new* is broken.
+
+### Task 10 — Dead code and unused-export sweep, whole `src/` tree
+Broader than Task 3's seal-removal-focused check: a full unused-export/dead-file pass
+across `src/lib/`, `src/components/`, `src/themes/`, `src/invites/`. Flag anything a
+tool like `ts-prune` (or an equivalent manual check) finds, but verify each one by hand
+before reporting it as truly dead — test-only exports and route-file conventions throw
+off naive tools.
+
+### Task 11 — Lint baseline categorization (report only, do not mass-fix)
+Rule 5 above still holds — don't touch the ~383 baseline lint problems wholesale. But
+*categorizing* them (how many are unused vars vs. `any` vs. react-hooks-deps vs.
+formatting, which files cluster the worst) is useful groundwork for the owner to decide
+what's worth fixing later. Deliver this as a table in the report, not as code changes.
+
+### Task 12 — Root docs reconciliation
+The handoff itself flagged `BUILD-PLAN.md`, `SESSION-SUMMARY.md`, `NEXT-STEPS.md`,
+`HANDOFF-SPEC.md` at the repo root as "partly stale" (wrong theme count, wrong payment
+gateway name, etc. — handoff §B.0). Do a full pass: list every factual claim in those
+files, check it against the current code, and either fix the doc or flag the
+discrepancy in your report. Don't silently delete anything — these are the project's
+own history.
+
+### Task 13 — Fresh-eyes correctness review, no starting hypothesis
+Everything above is scoped by what changed recently. Spend real time just reading
+`src/` cold, the way the handoff's own audit rounds did, looking for genuine logic bugs
+unrelated to any recent change — off-by-ones, wrong comparisons, unhandled edge cases
+in date/timezone handling (countdown logic), share-link encoding, QR generation. This
+is the highest-value, least-scripted task on the list; don't shortcut it just because
+it's open-ended.
+
 ## Format for your report
 
 Commit a dated report to `docs/ops/OVERNIGHT-REPORT-<date>.md` on a branch (not
