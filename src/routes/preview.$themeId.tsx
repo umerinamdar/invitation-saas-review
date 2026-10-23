@@ -1,4 +1,5 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { X } from "lucide-react";
 import { Invitation } from "@/components/invitation";
 import { ThemeTuner } from "@/components/dev/theme-tuner";
 import { themesById } from "@/themes";
@@ -30,6 +31,9 @@ function Preview() {
   const { theme } = Route.useLoaderData();
   return (
     <>
+      <Link to="/templates" className="preview-close" aria-label="Close preview">
+        <X size={18} />
+      </Link>
       <Invitation theme={theme} invite={getDemoInvite(theme.id)} watermark />
       <ThemeTuner />
     </>

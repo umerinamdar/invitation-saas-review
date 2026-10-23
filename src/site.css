@@ -1675,6 +1675,27 @@ a.contact-card {
   position: sticky;
   top: 60px;
 }
+/* The /preview/:themeId route (reached from a template gallery card)
+ * has no site chrome around the invitation itself, so without this
+ * there is no way back except the browser's own back button. */
+.preview-close {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklch, var(--ink) 80%, transparent);
+  background: var(--sheet-warm);
+  color: var(--ink);
+}
+.preview-close:hover {
+  background: var(--ink);
+  color: var(--sheet-warm);
+}
 .editor-preview-note {
   max-width: 340px;
   margin-top: -6px;
