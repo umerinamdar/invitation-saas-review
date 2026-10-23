@@ -55,8 +55,27 @@ export async function POST(request: Request) {
       );
     }
 
-    const body = await request.json();
-    const { userId, inviteId, tier, amountMinor } = body;
+    // API-ORDERS-1 (owner-approved follow-up, 2026-10-23): guard the
+    // body parse. request.json() throws on malformed JSON and returns
+    // null for a "null" body; both used to land in the catch-all below
+    // as a 500. A body that is not a JSON object is a client error —
+    // 400 with the route's machine-code style (orderErrorMessage maps
+    // unknown codes to a generic message, so no raw code can render).
+    let body: unknown;
+    try {
+      body = await request.json();
+    } catch {
+      return json({ error: "invalid_json" }, { status: 400 });
+    }
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+      return json({ error: "invalid_json" }, { status: 400 });
+    }
+    const { userId, inviteId, tier, amountMinor } = body as {
+      userId?: unknown;
+      inviteId?: string;
+      tier?: string;
+      amountMinor?: number;
+    };
 
     if (!inviteId || !tier || amountMinor === undefined) {
       return json({ error: "Missing fields" }, { status: 400 });
