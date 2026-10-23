@@ -26,6 +26,7 @@ function useNavLinks() {
  */
 export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { t } = useLocale();
   const NAV_LINKS = useNavLinks();
   // Release Fix 1 (D1): the header is the only chrome every page
@@ -50,8 +51,19 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
+  // A hair of shadow once the page moves under the sticky header, so it
+  // reads as a surface above the content rather than text floating on it.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className={`site-header ${overlay ? "is-overlay" : ""}`}>
+    <header
+      className={`site-header ${overlay ? "is-overlay" : ""} ${scrolled ? "is-scrolled" : ""}`}
+    >
       <Link to="/" className="brand">
         {BRAND}
       </Link>

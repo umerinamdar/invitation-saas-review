@@ -92,7 +92,7 @@ export function ThemeCard({ theme }: { theme: Theme }) {
 
       <div className="theme-card-body">
         <div className="theme-card-head">
-          <h3>{theme.name}</h3>
+          <h2>{theme.name}</h2>
           <span className="swatches" aria-hidden="true">
             <i style={{ background: theme.palette.background }} />
             <i style={{ background: theme.palette.accent }} />
@@ -100,6 +100,16 @@ export function ThemeCard({ theme }: { theme: Theme }) {
           </span>
         </div>
         <p className="theme-tagline">{theme.tagline}</p>
+
+        {/* The four things this design does that another doesn't —
+            the data has always been in the theme (see themes/types.ts)
+            but was never rendered, so shoppers compared 14 near-
+            identical phones on tagline alone. */}
+        <ul className="feature-pills">
+          {theme.features.map((feature) => (
+            <li key={feature}>{feature}</li>
+          ))}
+        </ul>
 
         <div className="theme-card-actions">
           <Link

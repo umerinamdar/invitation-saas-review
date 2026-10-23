@@ -156,6 +156,13 @@ export function paletteVariables(theme: Theme): Record<string, string> {
   return {
     "--gold": p.accent,
     "--gold-light": p.accentSoft,
+    // The opening's single source of truth: the CSS reveal mechanics in
+    // styles.css read this variable for their transition duration, so
+    // the animation and the JS unmount timer in invitation.tsx
+    // (openMs) can never drift apart again — before this, curtain
+    // themes declared 1700ms against a hard-coded 1.5s CSS motion and
+    // sat static for the last 200ms of every opening.
+    "--open-duration": `${theme.motion.openMs}ms`,
     "--powder": p.tint,
     "--paper": p.paper,
     "--paper-light": p.paperLight,

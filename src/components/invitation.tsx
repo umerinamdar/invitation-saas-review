@@ -5,7 +5,6 @@ import {
   Infinity as InfinityIcon,
   LoaderCircle,
   MapPin,
-  Printer,
   RotateCcw,
   Volume2,
   VolumeX,
@@ -27,6 +26,7 @@ import {
   togetherElapsed,
   venueMapsHref,
 } from "@/lib/invitation";
+import { openingDurationMs } from "@/lib/motion";
 import { paletteVariables, type Theme } from "@/themes/types";
 import { resolveWithMediaUrlMap, type MediaUrlMap } from "@/lib/media-url";
 import { supabase } from "@/lib/supabase";
@@ -296,12 +296,18 @@ export function Invitation({
       // Observe failure now; startMusic retains the original promise and reports it after opening.
       void primedPlayback.current.catch(() => {});
     }
-    timer.current = setTimeout(() => {
-      opened.current = true;
-      setOpen(true);
-      setOpening(false);
-      musicDelay.current = setTimeout(startMusic, 1000);
-    }, openMs);
+    timer.current = setTimeout(
+      () => {
+        opened.current = true;
+        setOpen(true);
+        setOpening(false);
+        musicDelay.current = setTimeout(startMusic, 1000);
+      },
+      // Reduced-motion guests: the CSS collapses the opening to an
+      // instant change for them, so the timer must not keep them
+      // waiting on a sealed cover for the full openMs either.
+      openingDurationMs(openMs),
+    );
   }
 
   function toggleMusic() {
@@ -504,6 +510,7 @@ export function Invitation({
             {eventDateValid && eventDay !== "past" && (
               <div
                 className="countdown"
+                role="timer"
                 aria-label={`Countdown to ${event.typeLabel.toLowerCase()}`}
               >
                 {["Days", "Hours", "Minutes", "Seconds"].map((label, i) => (
@@ -820,16 +827,6 @@ export function Invitation({
                 </Button>
               </div>
             )}
-          </div>
-          {/* Only reachable once the envelope is open, i.e. when the full
-              invitation is on screen — printing from here captures the
-              invitation itself (print CSS drops the site chrome), and the
-              browser's own dialog offers "Save as PDF". This button is a
-              print action, not a generated-file export. */}
-          <div className="invitation-print">
-            <Button variant="outline" size="sm" onClick={() => window.print()}>
-              <Printer size={15} /> Save / Print
-            </Button>
           </div>
         </div>
       )}

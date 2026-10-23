@@ -4,6 +4,52 @@ import type { OrderTier } from "@/lib/orders-api";
 import { supabase } from "@/lib/supabase";
 import { PUBLISH_PRICE_LABEL, PUBLISH_PRICE_PAISE } from "@/config/site";
 
+/**
+ * Audit fix (recommendation 1): the YouPI checkout script used to be
+ * injected site-wide from the root route's head — every page, including
+ * guests' invitations, loaded a payment script it could never use. It
+ * is now loaded lazily by this component, the only place window.Youpi
+ * is consumed, when a signed-in owner actually starts checkout. The
+ * script element carries the same attributes the root injection used
+ * (src from VITE_YOUPI_CHECKOUT_URL, data-youpi-key, data-currency).
+ */
+let youpiScriptLoad: Promise<void> | null = null;
+
+function ensureYoupiScript(): Promise<void> {
+  if (typeof window !== "undefined" && window.Youpi) {
+    return Promise.resolve();
+  }
+  if (!youpiScriptLoad) {
+    youpiScriptLoad = new Promise<void>((resolve, reject) => {
+      const base = import.meta.env["VITE_YOUPI_CHECKOUT_URL"];
+      if (!base) {
+        reject(new Error("YouPI checkout is not configured."));
+        return;
+      }
+      const script = document.createElement("script");
+      script.src = `${base}/youpi.js`;
+      script.async = true;
+      script.setAttribute(
+        "data-youpi-key",
+        import.meta.env["VITE_YOUPI_MERCHANT_PUBLIC_KEY"] || "",
+      );
+      script.setAttribute("data-currency", "INR");
+      script.onload = () => resolve();
+      script.onerror = () => {
+        // Allow a later click to retry the load.
+        youpiScriptLoad = null;
+        reject(
+          new Error(
+            "Couldn't load the payment service. Check your connection and try again.",
+          ),
+        );
+      };
+      document.head.appendChild(script);
+    });
+  }
+  return youpiScriptLoad;
+}
+
 interface YouPiCheckoutProps {
   inviteId: string;
   /**
@@ -55,6 +101,10 @@ export function YouPiCheckout({
         throw new Error("Your session has expired — please sign in again.");
       }
 
+      // Load the gateway script before creating the order, so a script
+      // failure never strands a created order with no way to pay it.
+      await ensureYoupiScript();
+
       // First server-side order creation
       const response = await fetch("/api/orders", {
         method: "POST",
@@ -80,9 +130,12 @@ export function YouPiCheckout({
 
       setOrderId(data.order_id);
 
-      // Check if YouPI script is loaded
+      // Defensive re-check: ensureYoupiScript resolving means the
+      // gateway object should exist; never open a payment without it.
       if (typeof window === "undefined" || !window.Youpi) {
-        throw new Error("YouPI checkout script not loaded. Please refresh the page.");
+        throw new Error(
+          "Couldn't load the payment service. Check your connection and try again.",
+        );
       }
 
       // Open YouPI checkout modal
