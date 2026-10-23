@@ -31,19 +31,19 @@ const SLOTS: {
 }[] = [
   {
     slot: "ring",
-    label: "Ring ceremony",
+    label: "Image 1",
     hint: "Shown after the family names",
     defaultAlt: "Photo from the ring ceremony",
   },
   {
     slot: "childhood",
-    label: "A photo of you two",
+    label: "Image 2",
     hint: "Shown beside your line to guests",
     defaultAlt: "Photo of the couple",
   },
   {
     slot: "forever",
-    label: "Together",
+    label: "Image 3",
     hint: "Shown in the Always and Forever section",
     defaultAlt: "Photo of the couple together",
   },

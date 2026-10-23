@@ -1737,6 +1737,12 @@ a.contact-card {
  */
 .phone-real {
   position: relative;
+  /* At --s:1 the frame is ~414px wide × ~872px tall (1116:2348). On a
+   * short/wide desktop viewport that height alone can exceed the window,
+   * so --s also shrinks to whatever fits the sticky preview's vertical
+   * budget (approximating the 60px sticky offset + breathing room),
+   * never growing past the native size. */
+  --s: min(1, calc((100vh - 140px) / 872px));
   width: calc((var(--w) / 0.905) * var(--s));
   aspect-ratio: 1116 / 2348;
   height: auto;
@@ -1783,11 +1789,18 @@ a.contact-card {
     z-index: 10;
     background: var(--sheet-warm);
     border-bottom: 1px solid var(--line);
-    padding: 16px;
+    padding: 10px 16px;
     gap: 10px;
   }
+  /* The replay button and the long explainer paragraph are what used to
+   * make this sticky bar tall enough to swallow the whole screen before
+   * you could scroll to the form below — just the phone stays sticky. */
+  .editor-preview > .btn,
+  .editor-preview-note {
+    display: none;
+  }
   .phone {
-    --s: 0.44;
+    --s: 0.26;
   }
   .editor-form {
     min-height: 0;

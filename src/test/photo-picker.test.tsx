@@ -146,7 +146,7 @@ describe("PhotoPicker uploads", () => {
     pickFile(container, 1, "childhood.png");
     await waitFor(() => expect(hoisted.calls).toHaveLength(2));
     fireEvent.click(
-      screen.getByRole("button", { name: "Remove Ring ceremony photo" }),
+      screen.getByRole("button", { name: "Remove Image 1 photo" }),
     );
     expect(screen.getByTestId("gallery")).toHaveTextContent("");
 
