@@ -11,7 +11,7 @@
 
 - Keep the invitation experience on the index route with isolated scratch-canvas and cinematic-playback components so interactions stay independent.
 - Keep event instant and venue destination in a shared invitation module with concrete tests; the countdown uses an explicit timezone rather than each guest's local clock.
-- Custom audio is session-only browser playback; do not upload guests' chosen tracks to a service without an explicit persistence request.
+- Custom audio: a signed-in owner's own uploaded track is persisted to storage as part of their invitation (the shipped music-picker behaviour); playback choices made by guests remain session-only browser playback and are never uploaded.
 - Mount invitation details only after envelope opening; use an inline, single-clock cinematic introduction that completes into the scrollable page, not a second modal opening, so the guest follows one uninterrupted experience.
 - Prime browser audio muted on the opening gesture and unmute only after envelope opening; this preserves browser playback permission without audible music before the reveal.
 - Play the seal accent through a separate browser audio element so it cannot restart or interrupt the gesture-primed invitation music.

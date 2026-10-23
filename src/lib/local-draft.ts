@@ -93,12 +93,28 @@ export function clearDraft() {
 /** The media-scope key paired with the draft (create.tsx/publish.tsx). */
 export const DRAFT_MEDIA_KEY = "invite-draft-media-key";
 
-/** Remove BOTH draft keys — the draft and its media-scope key. */
-export function clearLocalDraftData() {
+/**
+ * Remove BOTH draft keys — the draft and its media-scope key. When the
+ * departing user's id is known (the identity-change path in auth.tsx),
+ * also remove that user's editor mirrors (`invite-editor-mirror:<uid>:*`
+ * in editor.$id.tsx): a full copy of each edited invitation's config
+ * otherwise survives sign-out on a shared browser indefinitely. Other
+ * users' mirrors are theirs and stay.
+ */
+export function clearLocalDraftData(departingUserId?: string) {
   clearDraft();
   if (typeof localStorage === "undefined") return;
   try {
     localStorage.removeItem(DRAFT_MEDIA_KEY);
+    if (departingUserId) {
+      const prefix = `invite-editor-mirror:${departingUserId}:`;
+      const keys: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith(prefix)) keys.push(key);
+      }
+      for (const key of keys) localStorage.removeItem(key);
+    }
   } catch {
     /* nothing to do */
   }

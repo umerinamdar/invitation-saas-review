@@ -132,6 +132,8 @@ function Create() {
       draftMediaKey={draftMediaKey}
       toolbar={
         <>
+          {/* Task 15: the editor pages had no h1 at all. */}
+          <h1 className="sr-only">Create your invitation</h1>
           <header className="editor-bar">
             <Link to="/" className="brand">
               {BRAND}

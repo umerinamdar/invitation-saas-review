@@ -35,11 +35,6 @@ export type Family = {
   credentials?: string;
 };
 
-export type Host = {
-  name: string;
-  family?: Family;
-};
-
 /** A named relative with a role in the day. */
 export type FamilyMember = {
   name: string;

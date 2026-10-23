@@ -1340,10 +1340,24 @@ a.contact-card {
   transition: 0.18s;
 }
 .auth-form input:focus,
+.auth-form select:focus,
 .editor-form input:focus,
+.editor-form select:focus,
 .editor-form textarea:focus {
-  outline: none;
+  /* A11Y-8: a border-color shift alone is not a reliable focus
+     indicator — give forms the same 2px gold outline the invitation
+     envelope/scratch surfaces already use, and cover selects too. */
+  outline: 2px solid var(--gold);
+  outline-offset: 1px;
   border-color: var(--gold);
+}
+/* A11Y-9: the pickers' file inputs are visually hidden but focusable
+   (sr-only, never `hidden`); the wrapping label carries the visible
+   focus outline while its input holds keyboard focus. */
+.photo-slot-actions label:focus-within,
+.track-upload label:focus-within {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
 }
 .auth-form .btn {
   margin-top: 8px;
@@ -1399,6 +1413,11 @@ a.contact-card {
 .dash-head h1 {
   font-size: clamp(26px, 3.6vw, 38px);
   margin-top: 14px;
+}
+.dash-email {
+  color: var(--ink-faint);
+  font-size: 0.85rem;
+  margin-top: 8px;
 }
 .dash {
   max-width: 1040px;

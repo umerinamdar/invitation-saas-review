@@ -62,7 +62,7 @@ export const madina: Theme = {
     petals: "white-blossom",
   },
 
-  kicker: "WAX SEAL ENVELOPE",
+  kicker: "MARBLE ENVELOPE",
   tagline:
     "White marble and emerald invitation that unseals onto Al-Masjid an-Nabawi's green dome at dusk, dignified and serene.",
   features: [

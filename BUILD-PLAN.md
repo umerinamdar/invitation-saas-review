@@ -1,5 +1,13 @@
 # Invitation SaaS — Build Plan
 
+> **⚠️ SUPERSEDED — historical document, do not follow its instructions.**
+> Current truth (2026-10-24): payment gateway is **YouPI** (not Razorpay/Stripe),
+> migrations **0001–0006**, flat **₹599** for every design, **14 themes**.
+> Authoritative references: `docs/ops/` (DEPLOYMENT.md, RELEASE-CHECKLIST.md,
+> SECURITY-REVIEW.md) and `MUSE_OVERNIGHT_TASKS.md`. This file is kept as
+> project history only.
+
+
 Turning the Umer & Maimoona invite into a multi-template product.
 
 ---

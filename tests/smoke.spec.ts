@@ -34,11 +34,14 @@ test.describe("primary flow: browse a design, open its invitation", () => {
       .click();
     await expect(page).toHaveURL(/\/preview\/dubai-silk$/);
 
-    const sealButton = page.getByRole("button", {
-      name: /Break the wax seal/,
+    // The reveal trigger is the mechanic's own container now (the wax-
+    // seal button was removed); its aria-label is "Open the invitation
+    // from {hosts}" (src/components/reveals/index.tsx).
+    const openTrigger = page.getByRole("button", {
+      name: /Open the invitation from/,
     });
-    await expect(sealButton).toBeVisible();
-    await sealButton.click();
+    await expect(openTrigger).toBeVisible();
+    await openTrigger.click();
 
     await expect(
       page.getByRole("heading", { level: 1 }).first(),

@@ -31,10 +31,6 @@ export const LIBRARY: Track[] = [
 
 export const LANGUAGES = ["Instrumental", "Hindi", "English"] as const;
 
-export function trackById(id: string) {
-  return LIBRARY.find((track) => track.id === id);
-}
-
 export function tracksByLanguage(language: Track["language"]) {
   return LIBRARY.filter((track) => track.language === language);
 }

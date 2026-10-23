@@ -72,14 +72,14 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
       {!authLoading &&
         (session ? (
           <span className="nav-auth">
-            <Link to="/dashboard">Dashboard</Link>
+            <Link to="/dashboard">{t("nav.dashboard")}</Link>
             <button type="button" onClick={() => void handleSignOut()}>
-              Sign out
+              {t("nav.signOut")}
             </button>
           </span>
         ) : (
           <span className="nav-auth">
-            <Link to="/login">Sign in</Link>
+            <Link to="/login">{t("nav.signIn")}</Link>
           </span>
         ))}
       <Link to="/create" className="btn btn-solid btn-sm nav-cta">
@@ -119,19 +119,19 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
             (session ? (
               <>
                 <Link to="/dashboard" onClick={() => setOpen(false)}>
-                  Dashboard
+                  {t("nav.dashboard")}
                 </Link>
                 <button
                   type="button"
                   className="nav-sheet-action"
                   onClick={() => void handleSignOut()}
                 >
-                  Sign out
+                  {t("nav.signOut")}
                 </button>
               </>
             ) : (
               <Link to="/login" onClick={() => setOpen(false)}>
-                Sign in
+                {t("nav.signIn")}
               </Link>
             ))}
           <Link

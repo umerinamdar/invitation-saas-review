@@ -6,6 +6,7 @@ import { PUBLISH_PRICE_LABEL } from "@/config/site";
 import { InviteEditor } from "@/components/editor/invite-editor";
 import { useAuth } from "@/lib/auth";
 import {
+  blankConfig,
   getInviteById,
   makeSlug,
   saveInvite,
@@ -68,7 +69,15 @@ function readEditorMirror(
     if (!raw) return null;
     const parsed = JSON.parse(raw) as EditorMirror;
     if (!parsed?.config || !parsed?.themeId || !parsed?.savedAt) return null;
-    return parsed;
+    // Task 9: a mirror written by an older build may be missing whole
+    // branches the editor dereferences. Give it the same treatment as
+    // a server row (toInvite merges over blankConfig there): fill the
+    // missing top-level branches from a blank config instead of
+    // trusting the mirrored JSON wholesale.
+    return {
+      ...parsed,
+      config: { ...blankConfig(), ...parsed.config },
+    };
   } catch {
     return null;
   }
@@ -109,6 +118,31 @@ type SaveSnapshot = {
   generation: number;
   state: "pending" | "saving" | "failed" | "saved";
 };
+
+/**
+ * Task 9: save chains live at module scope, keyed by invite — not in a
+ * per-mount ref. Unmounting and remounting the editor (leave to the
+ * dashboard, reopen the same invite) must not mint a fresh chain: a
+ * PATCH still in flight from the first mount would otherwise race the
+ * remounted editor's newer save, reviving the stale-overwrite C-5
+ * killed within one mount. The module outlives both mounts in the
+ * same document, so the chain does too.
+ */
+const saveChainsByInvite = new Map<string, Promise<void>>();
+
+function saveChainFor(inviteId: string): Promise<void> {
+  return saveChainsByInvite.get(inviteId) ?? Promise.resolve();
+}
+
+function recordSaveChain(inviteId: string, task: Promise<unknown>) {
+  saveChainsByInvite.set(
+    inviteId,
+    task.then(
+      () => undefined,
+      () => undefined,
+    ),
+  );
+}
 
 /** The same editor as /create, backed by the database instead of the browser. */
 function Editor() {
@@ -173,7 +207,6 @@ function Editor() {
   // row/save UI on completion), and the latest snapshot is RETAINED
   // until it succeeds — a failed save stays pending so the unmount
   // flush / next edit retries it instead of dropping the edits.
-  const saveChain = useRef<Promise<unknown>>(Promise.resolve());
   const generation = useRef(0);
   const pendingSnapshot = useRef<SaveSnapshot | null>(null);
   const userIdRef = useRef("");
@@ -182,7 +215,7 @@ function Editor() {
   }, [session]);
 
   const executeSave = (snap: SaveSnapshot): Promise<boolean> => {
-    const task = saveChain.current.then(async () => {
+    const task = saveChainFor(snap.inviteId).then(async () => {
       snap.state = "saving";
       if (snap.generation === generation.current) setSave("saving");
       try {
@@ -210,10 +243,7 @@ function Editor() {
         return false;
       }
     });
-    saveChain.current = task.then(
-      () => undefined,
-      () => undefined,
-    );
+    recordSaveChain(snap.inviteId, task);
     return task;
   };
   const executeSaveRef = useRef(executeSave);
@@ -296,27 +326,36 @@ function Editor() {
     // goPublish performs this save itself; the unmount flush must
     // not repeat it when navigation tears the page down.
     pendingSave.current = null;
-    const snap = pendingSnapshot.current;
-    if (snap) {
-      if (snap.state === "saving") {
-        await saveChain.current;
-        // Read through a call so the compiler doesn't narrow the
-        // mutable state field across the await.
-        const landed = (s: SaveSnapshot) => s.state === "saved";
-        if (!landed(snap)) {
-          setSave("error");
-          return;
+    // Task 9: the editor stays interactive while a save is awaited,
+    // so an edit made in that window schedules a NEWER snapshot this
+    // function has not seen yet. Loop until the snapshot current at
+    // click time — and any snapshot that replaces it while waiting —
+    // has landed; only then is the server row the config on screen.
+    while (true) {
+      const snap = pendingSnapshot.current;
+      if (snap) {
+        if (snap.state === "saving") {
+          await saveChainFor(row.id);
+          // Read through a call so the compiler doesn't narrow the
+          // mutable state field across the await.
+          const landed = (s: SaveSnapshot) => s.state === "saved";
+          if (!landed(snap)) {
+            setSave("error");
+            return;
+          }
+        } else {
+          const ok = await executeSave(snap);
+          if (!ok) {
+            setSave("error");
+            return;
+          }
         }
-      } else {
-        const ok = await executeSave(snap);
-        if (!ok) {
-          setSave("error");
-          return;
-        }
+        continue;
       }
-    } else {
-      // No unsaved snapshot: still let any in-flight save land first.
-      await saveChain.current;
+      // No unsaved snapshot: still let any in-flight save land first,
+      // then re-check — an edit during that wait starts the loop again.
+      await saveChainFor(row.id);
+      if (!pendingSnapshot.current) break;
     }
     await navigate({ to: "/publish", search: { invite: row.id } });
   }
@@ -354,7 +393,10 @@ function Editor() {
       onThemeChange={setThemeId}
       inviteId={id}
       toolbar={
-        <header className="editor-bar">
+        <>
+          {/* Task 15: the editor pages had no h1 at all. */}
+          <h1 className="sr-only">Edit your invitation</h1>
+          <header className="editor-bar">
           <Link to="/dashboard" className="brand">
             {BRAND}
           </Link>
@@ -394,7 +436,8 @@ function Editor() {
           <Link to="/dashboard" className="btn btn-quiet btn-sm">
             Done
           </Link>
-        </header>
+          </header>
+        </>
       }
     />
   );

@@ -915,3 +915,111 @@ describe("POST /api/orders — one active order per invite (Round 3.7 / Q-16)", 
     expect(mockState.inserts).toHaveLength(0);
   });
 });
+
+// --------------------------------------------------------------------
+// Historical B.1 (overnight Task 14) — the ₹999 tier-pricing bug.
+// The 2026-10-21 QA found /publish charging ₹999 for 'royal' themes
+// while every page promised ₹599; the owner decided flat ₹599 for
+// every design. The session-auth describe above rejects a wrong
+// amount of 100 generically — this describe pins the EXACT historical
+// amount (99900 paise) on BOTH tiers, plus the flat-price controls, so
+// a tier-derived price can never come back through the API.
+// --------------------------------------------------------------------
+describe("POST /api/orders — historical B.1: ₹999 tier pricing must stay dead", () => {
+  function orderRequest(body: unknown) {
+    return new Request("http://localhost/api/orders", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer valid-access-token",
+      },
+      body: JSON.stringify(body),
+    });
+  }
+
+  function stage(userId: string) {
+    mockState.user = { id: userId };
+    mockState.invite = {
+      user_id: userId,
+      config: completeConfig,
+      status: "draft",
+    };
+    mockState.inserted = null;
+    mockState.inserts = [];
+    mockState.insertError = null;
+    mockState.paidOrder = null;
+    mockState.paidLookupError = null;
+    mockState.orderRows = [];
+    mockState.orderSeq = 0;
+    mockState.staleActiveLookups = 0;
+    mockState.activeLookupError = null;
+  }
+
+  it("rejects the historical royal-tier amount ₹999 (99900) with 400 and inserts nothing", async () => {
+    stage("b1-user-royal-999");
+    const res = await POST(
+      orderRequest({ inviteId: "invite-1", tier: "royal", amountMinor: 99900 }),
+    );
+    expect(res.status).toBe(400);
+    expect(mockState.inserts).toHaveLength(0);
+  });
+
+  it("rejects ₹999 (99900) for a classic-tier invite too — the price is flat, not per-tier", async () => {
+    stage("b1-user-classic-999");
+    const res = await POST(
+      orderRequest({
+        inviteId: "invite-1",
+        tier: "classic",
+        amountMinor: 99900,
+      }),
+    );
+    expect(res.status).toBe(400);
+    expect(mockState.inserts).toHaveLength(0);
+  });
+
+  it("control: ₹599 (59900) is accepted for a royal-tier invite", async () => {
+    stage("b1-user-royal-599");
+    const res = await POST(
+      orderRequest({
+        inviteId: "invite-1",
+        tier: "royal",
+        amountMinor: PUBLISH_PRICE_PAISE,
+      }),
+    );
+    expect(res.status).toBe(201);
+    expect(mockState.inserts).toHaveLength(1);
+    expect(mockState.inserted?.["amount_minor"]).toBe(59900);
+  });
+
+  it("control: ₹599 (59900) is accepted for a classic-tier invite at the SAME price", async () => {
+    stage("b1-user-classic-599");
+    const res = await POST(
+      orderRequest({
+        inviteId: "invite-1",
+        tier: "classic",
+        amountMinor: PUBLISH_PRICE_PAISE,
+      }),
+    );
+    expect(res.status).toBe(201);
+    expect(mockState.inserts).toHaveLength(1);
+    expect(mockState.inserted?.["amount_minor"]).toBe(59900);
+  });
+
+  it("historical B.2: the exact body the checkout component sends (userId + inviteId + tier + amountMinor) is the API contract — 201", async () => {
+    // The priority-fixes round found the checkout UI and /api/orders
+    // disagreed on field names, so every UI order 400'd. The component
+    // now sends { userId, inviteId, tier, amountMinor } (see
+    // youpi-checkout.tsx); this pins that exact shape at the handler.
+    stage("b2-user-contract");
+    const res = await POST(
+      orderRequest({
+        userId: "b2-user-contract",
+        inviteId: "invite-1",
+        tier: "royal",
+        amountMinor: PUBLISH_PRICE_PAISE,
+      }),
+    );
+    expect(res.status).toBe(201);
+    expect(mockState.inserts).toHaveLength(1);
+  });
+});

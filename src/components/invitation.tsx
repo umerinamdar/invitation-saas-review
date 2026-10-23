@@ -520,6 +520,9 @@ export function Invitation({
 
           {invite.subEvents && invite.subEvents.length > 0 && (
             <section className="sub-events">
+              {/* Task 15: the per-event h3s need an h2 parent or the
+                  heading outline skips a level after the title h1. */}
+              <h2 className="sr-only">Celebrations</h2>
               {invite.subEvents.map((sub) => {
                 const subVenueUrl = safeExternalUrl(sub.venueMapsUrl);
                 return (
@@ -719,10 +722,16 @@ export function Invitation({
                   </a>
                 )}
                 {invite.rsvp.phone && (
-                  <a href={`tel:${invite.rsvp.phone}`}>{invite.rsvp.phone}</a>
+                  <a
+                    href={`tel:${invite.rsvp.phone.trim().startsWith("+") ? "+" : ""}${invite.rsvp.phone.replace(/[^0-9]/g, "")}`}
+                  >
+                    {invite.rsvp.phone}
+                  </a>
                 )}
                 {invite.rsvp.email && (
-                  <a href={`mailto:${invite.rsvp.email}`}>
+                  <a
+                    href={`mailto:${invite.rsvp.email.replace(/[\s"'<>]/g, "")}`}
+                  >
                     {invite.rsvp.email}
                   </a>
                 )}

@@ -91,7 +91,9 @@ export function YouPiCheckout({
         amount: (PUBLISH_PRICE_PAISE / 100).toFixed(2), // Convert paise to rupees
         currency: "INR",
         name: "EasyInviteMaker",
-        description: `${tier === "royal" ? "Royal" : "Classic"} tier invitation`,
+        // Flat ₹599 for every design (src/config/site.ts) — the tier is
+        // design metadata only and must not be described as a price tier.
+        description: "Invitation publication",
         handler: function (resp: { status: string; order_id: string; utr: string }) {
           // Client-side callback is UX only—real confirmation comes from webhook
           if (resp.status === "SUCCESS") {

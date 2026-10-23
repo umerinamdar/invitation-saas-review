@@ -216,7 +216,7 @@ export function PhotoPicker({
                   <input
                     type="file"
                     accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
-                    hidden
+                    className="sr-only"
                     // Every slot's input disables while any upload is in
                     // flight (the music picker's single-flag pattern):
                     // two overlapping uploads would race their gallery

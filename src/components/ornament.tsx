@@ -4,7 +4,7 @@ import type { Ornamentation } from "@/themes/types";
 /**
  * Procedural decoration. A theme that names an `ornamentation` gets its
  * backdrop and frame drawn here from the palette, so a template needs no
- * photography at all — which is how the whole Classic tier is built.
+ * photography at all — which is how the drawn, non-photographic templates are built.
  */
 
 /** Full-bleed repeating pattern standing in for a photographic backdrop. */
@@ -146,7 +146,7 @@ function PatternTile({ kind }: { kind: Ornamentation }) {
   }
 }
 
-/** A drawn border frame, the signature of a Classic-tier template. */
+/** A drawn border frame, the signature of the drawn templates. */
 export function OrnateFrame({ kind }: { kind: Ornamentation }) {
   if (kind === "none") return null;
   return (

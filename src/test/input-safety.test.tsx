@@ -214,3 +214,48 @@ describe("malformed invitation payloads", () => {
     expect(fields).toContain("whatsapp");
   });
 });
+
+describe("RSVP contact links under hostile input (Task 18, overnight)", () => {
+  it("tel:/mailto: hrefs built from hostile phone/email values stay well-formed", async () => {
+    const invite = getDemoInvite("dubai-silk");
+    invite.rsvp = {
+      enabled: true,
+      // Quote breakout attempt + spaces in the phone; whitespace and a
+      // quote in the email. WhatsApp already digit-strips its value
+      // (invitation.tsx) — phone/email were interpolated raw.
+      phone: '+91 98200 12345" onclick="alert(9)',
+      email: ' couple @example.com" onclick="alert(10)',
+    };
+
+    const { container } = render(
+      <Invitation theme={getTheme("dubai-silk")} invite={invite} />,
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: /open the invitation from/i }),
+    );
+    await waitFor(
+      () => expect(container.querySelector(".rsvp-actions")).not.toBeNull(),
+      { timeout: 5000 },
+    );
+
+    const anchors = [...container.querySelectorAll(".rsvp-actions a")];
+    const tel = anchors.find((a) =>
+      (a.getAttribute("href") ?? "").startsWith("tel:"),
+    );
+    const mail = anchors.find((a) =>
+      (a.getAttribute("href") ?? "").startsWith("mailto:"),
+    );
+    expect(tel).toBeDefined();
+    expect(mail).toBeDefined();
+    // A tel: href may carry digits and one leading + — nothing else.
+    expect(tel!.getAttribute("href")).toMatch(/^tel:\+?[0-9]+$/);
+    // A mailto: href must not contain whitespace, quotes or brackets
+    // that would break the address (or the attribute) apart.
+    expect(mail!.getAttribute("href")).toMatch(/^mailto:[^\s"'<>]+$/);
+    // And no anchor anywhere fell out of its scheme.
+    for (const a of anchors) {
+      expect(a.getAttribute("href") ?? "").not.toContain('"');
+      expect(a.getAttribute("href") ?? "").not.toContain(" ");
+    }
+  });
+});

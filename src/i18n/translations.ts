@@ -1,14 +1,16 @@
 import type { LocaleCode } from "./locales";
 
 /**
- * Every translatable string in the site chrome and homepage hero, keyed by
- * a dotted path. `en` is the source of truth — every other language must
- * carry the exact same keys, which `getDictionary` falls back to per-key
- * for, so a half-translated language never shows a blank string.
+ * Every translatable string in the site chrome, homepage, editor,
+ * FAQ and comparison copy, keyed by a dotted path (146 keys today).
+ * `en` is the source of truth — every other language must carry the
+ * exact same keys, which `getDictionary` falls back to per-key for, so
+ * a half-translated language never shows a blank string.
  *
- * Scope today: nav, footer, homepage hero. The editor's field labels and
- * the invitation engine's own fixed copy ("Scratch to reveal", "With love
- * from", ...) are a much larger follow-up pass — a couple's own typed
+ * Scope today: nav, footer, homepage sections, the editor's field
+ * labels and preview copy, FAQ and comparison tables. The invitation
+ * engine's own fixed copy ("Scratch to reveal", "With love from", ...)
+ * is a much larger follow-up pass — a couple's own typed
  * names/venue/dates are never translated either way, only the UI around
  * them.
  */
@@ -18,6 +20,9 @@ export type TranslationKey =
   | "nav.pricing"
   | "nav.faq"
   | "nav.createYours"
+  | "nav.signIn"
+  | "nav.dashboard"
+  | "nav.signOut"
   | "nav.openMenu"
   | "nav.closeMenu"
   | "nav.primaryLabel"
@@ -165,6 +170,9 @@ const en: Dictionary = {
   "nav.pricing": "Pricing",
   "nav.faq": "FAQ",
   "nav.createYours": "Create yours",
+  "nav.signIn": "Sign in",
+  "nav.dashboard": "Dashboard",
+  "nav.signOut": "Sign out",
   "nav.openMenu": "Open menu",
   "nav.closeMenu": "Close menu",
   "nav.primaryLabel": "Primary",
@@ -333,6 +341,9 @@ const hi: Dictionary = {
   "nav.pricing": "कीमत",
   "nav.faq": "सामान्य प्रश्न",
   "nav.createYours": "अपना बनाएं",
+  "nav.signIn": "साइन इन",
+  "nav.dashboard": "डैशबोर्ड",
+  "nav.signOut": "साइन आउट",
   "nav.openMenu": "मेनू खोलें",
   "nav.closeMenu": "मेनू बंद करें",
   "nav.primaryLabel": "मुख्य",
@@ -399,7 +410,7 @@ const hi: Dictionary = {
   "editor.togetherSince": "साथ कब से हैं",
   "editor.replayOpening": "शुरुआत फिर से देखें",
   "editor.previewNote":
-    "यह एक लाइव पूर्वावलोकन है — बाईं ओर किया गया हर बदलाव यहां तुरंत दिखता है। कोई फ़ील्ड खाली छोड़ें तो वह आपके निमंत्रण में बिल्कुल नहीं दिखेगी; कभी कोई खाली पंक्ति या प्लेसहोल्डर टेक्स्ट नहीं दिखता।",
+    "यह एक लाइव पूर्वावलोकन है — बाईं ओर किया गया हर बदलाव यहां तुरंत दिखता है। कोई फ़ील्ड खाली छोड़ें तो वह आपके निमंत्रण में बिल्कुल नहीं दिखेगी; कभी कोई खाली पंक्ति या प्लेसहोल्डर टेक्स्ट नहीं दिखता। नमूना तस्वीरें इस पूर्वावलोकन में केवल खाली फ़ोटो स्थानों में दिख सकती हैं — मेहमान वे स्थान खाली देखते हैं, जब तक आप अपनी तस्वीरें नहीं जोड़ते।",
   "collection.eyebrow": "संग्रह",
   "collection.heading": "{count} तरीके",
   "collection.headingEm": "सेव द डेट कहने के",
@@ -457,7 +468,7 @@ const hi: Dictionary = {
   "faq.headingEm": "पहले",
   "faq.q0": "क्या डिज़ाइन करना सच में मुफ़्त है?",
   "faq.a0":
-    "हां। कोई भी डिज़ाइन चुनें, अपने नाम, तारीखें, स्थान, तस्वीरें और संगीत जोड़ें, और पूरी चीज़ अपने फ़ोन पर देखें — सब मुफ़्त। भुगतान तभी करना है जब आप प्रकाशित करना चाहें।",
+    "हां। कोई भी डिज़ाइन चुनें, अपने नाम, तारीखें और स्थान जोड़ें, और पूरी चीज़ अपने फ़ोन पर देखें — सब मुफ़्त। अपनी तस्वीरें या संगीत जोड़ने के लिए बस एक मुफ़्त खाता चाहिए। भुगतान तभी करना है जब आप प्रकाशित करना चाहें।",
   "faq.q1": "₹599 असल में किस चीज़ के लिए है?",
   "faq.a1":
     "एक निमंत्रण, एक बार प्रकाशित, अपने खुद के साझा करने योग्य लिंक के साथ — कोई वॉटरमार्क नहीं, कोई सदस्यता नहीं, प्रति-मेहमान कोई शुल्क नहीं। प्रकाशित करने के बाद भी, शादी तक आप इसे संपादित करते रह सकते हैं।",
@@ -501,6 +512,9 @@ const ar: Dictionary = {
   "nav.pricing": "الأسعار",
   "nav.faq": "الأسئلة الشائعة",
   "nav.createYours": "أنشئ دعوتك",
+  "nav.signIn": "تسجيل الدخول",
+  "nav.dashboard": "لوحة التحكم",
+  "nav.signOut": "تسجيل الخروج",
   "nav.openMenu": "افتح القائمة",
   "nav.closeMenu": "أغلق القائمة",
   "nav.primaryLabel": "التنقل الرئيسي",
@@ -567,7 +581,7 @@ const ar: Dictionary = {
   "editor.togetherSince": "معًا منذ",
   "editor.replayOpening": "إعادة مشاهدة الافتتاح",
   "editor.previewNote":
-    "هذه معاينة حية — كل تغيير على اليسار يظهر هنا فورًا. إذا تركت حقلًا فارغًا، فلن يظهر في دعوتك؛ لا تظهر أبدًا أسطر فارغة أو نص بديل.",
+    "هذه معاينة حية — كل تغيير على اليسار يظهر هنا فورًا. إذا تركت حقلًا فارغًا، فلن يظهر في دعوتك؛ لا تظهر أبدًا أسطر فارغة أو نص بديل. قد تظهر صور نموذجية في خانات الصور الفارغة في هذه المعاينة فقط — يرى الضيوف تلك الخانات فارغة حتى تضيف صورك الخاصة.",
   "collection.eyebrow": "المجموعة",
   "collection.heading": "{count} طريقة لقول",
   "collection.headingEm": "احفظوا التاريخ",
@@ -625,7 +639,7 @@ const ar: Dictionary = {
   "faq.headingEm": "تبدآ",
   "faq.q0": "هل التصميم مجاني حقًا؟",
   "faq.a0":
-    "نعم. اختر أي تصميم، أضف أسماءكما، التواريخ، الأماكن، الصور والموسيقى، وعاين كل شيء على هاتفك — مجانًا بالكامل. تدفع فقط عندما تختار النشر.",
+    "نعم. اختر أي تصميم، أضف أسماءكما والتواريخ والأماكن، وعاين كل شيء على هاتفك — مجانًا بالكامل. إضافة صورك أو موسيقاك الخاصة تحتاج فقط إلى حساب مجاني. تدفع فقط عندما تختار النشر.",
   "faq.q1": "فيم تُستخدم الـ٥٩٩ روبية فعليًا؟",
   "faq.a1":
     "دعوة واحدة، تُنشر مرة واحدة، برابط خاص قابل للمشاركة — بلا علامة مائية، بلا اشتراك، بلا رسوم لكل ضيف. يمكنك الاستمرار في التعديل بعد النشر، حتى يوم الزفاف.",
@@ -669,6 +683,9 @@ const mr: Partial<Dictionary> = {
   "nav.pricing": "किंमत",
   "nav.faq": "सामान्य प्रश्न",
   "nav.createYours": "तुमचे तयार करा",
+  "nav.signIn": "साइन इन करा",
+  "nav.dashboard": "डॅशबोर्ड",
+  "nav.signOut": "साइन आउट करा",
   "nav.openMenu": "मेनू उघडा",
   "nav.closeMenu": "मेनू बंद करा",
   "nav.primaryLabel": "मुख्य",
@@ -735,7 +752,7 @@ const mr: Partial<Dictionary> = {
   "editor.togetherSince": "एकत्र कधीपासून",
   "editor.replayOpening": "सुरुवात पुन्हा पहा",
   "editor.previewNote":
-    "ही थेट पूर्वावलोकन आहे — डावीकडे केलेला प्रत्येक बदल इथे लगेच दिसतो. एखादे फील्ड रिकामे ठेवल्यास ते तुमच्या आमंत्रणातून वगळले जाते; कधीही रिकामी ओळ किंवा प्लेसहोल्डर मजकूर दिसत नाही.",
+    "ही थेट पूर्वावलोकन आहे — डावीकडे केलेला प्रत्येक बदल इथे लगेच दिसतो. एखादे फील्ड रिकामे ठेवल्यास ते तुमच्या आमंत्रणातून वगळले जाते; कधीही रिकामी ओळ किंवा प्लेसहोल्डर मजकूर दिसत नाही. नमुना फोटो या पूर्वावलोकनात फक्त रिकाम्या फोटो जागांमध्ये दिसू शकतात — तुम्ही तुमचे स्वतःचे फोटो जोडेपर्यंत पाहुण्यांना त्या जागा रिकाम्या दिसतात.",
   "collection.eyebrow": "\u0938\u0902\u0917\u094d\u0930\u0939",
   "collection.heading":
     "{count} \u092e\u093e\u0930\u094d\u0917 \u0938\u093e\u0902\u0917\u0923\u094d\u092f\u093e\u091a\u0947",
@@ -818,7 +835,7 @@ const mr: Partial<Dictionary> = {
   "faq.q0":
     "\u0921\u093f\u091d\u093e\u0907\u0928 \u0915\u0930\u0923\u0947 \u0916\u0930\u0902\u091a \u092e\u094b\u092b\u0924 \u0906\u0939\u0947 \u0915\u093e?",
   "faq.a0":
-    "\u0939\u094b\u092f. \u0915\u094b\u0923\u0924\u0947\u0939\u0940 \u0921\u093f\u091d\u093e\u0907\u0928 \u0928\u093f\u0935\u0921\u093e, \u0924\u0941\u092e\u091a\u0940 \u0928\u093e\u0935\u0947, \u0924\u093e\u0930\u0916\u093e, \u0920\u093f\u0915\u093e\u0923\u0947, \u092b\u094b\u091f\u094b \u0935 \u0938\u0902\u0917\u0940\u0924 \u091c\u094b\u0921\u093e \u0906\u0923\u093f \u0938\u0902\u092a\u0942\u0930\u094d\u0923 \u0917\u094b\u0937\u094d\u091f \u0924\u0941\u092e\u091a\u094d\u092f\u093e \u092b\u094b\u0928\u0935\u0930 \u092a\u0942\u0930\u094d\u0935\u093e\u0935\u0932\u094b\u0915\u0928 \u0915\u0930\u093e \u2014 \u0938\u0930\u094d\u0935 \u092e\u094b\u092b\u0924. \u0924\u0941\u092e\u094d\u0939\u0940 \u092b\u0915\u094d\u0924 \u092a\u094d\u0930\u0915\u093e\u0936\u093f\u0924 \u0915\u0930\u0924\u093e\u0928\u093e \u092a\u0948\u0938\u0947 \u0926\u0947\u0924\u093e.",
+    "होय. कोणतेही डिझाइन निवडा, तुमची नावे, तारखा व ठिकाणे जोडा आणि संपूर्ण गोष्ट तुमच्या फोनवर पूर्वावलोकन करा — सर्व मोफत. तुमचे स्वतःचे फोटो किंवा संगीत जोडण्यासाठी फक्त एक मोफत खाते लागते. तुम्ही फक्त प्रकाशित करताना पैसे देता.",
   "faq.q1":
     "\u20b9599 \u0928\u0947\u092e\u0915\u0947 \u0915\u0936\u093e\u0938\u093e\u0920\u0940 \u0906\u0939\u0947\u0924?",
   "faq.a1":
@@ -873,6 +890,9 @@ const gu: Partial<Dictionary> = {
   "nav.pricing": "કિંમત",
   "nav.faq": "વારંવાર પૂછાતા પ્રશ્નો",
   "nav.createYours": "તમારું બનાવો",
+  "nav.signIn": "સાઇન ઇન કરો",
+  "nav.dashboard": "ડેશબોર્ડ",
+  "nav.signOut": "સાઇન આઉટ કરો",
   "nav.openMenu": "મેનુ ખોલો",
   "nav.closeMenu": "મેનુ બંધ કરો",
   "nav.primaryLabel": "મુખ્ય",
@@ -939,7 +959,7 @@ const gu: Partial<Dictionary> = {
   "editor.togetherSince": "ક્યારથી સાથે છો",
   "editor.replayOpening": "શરૂઆત ફરીથી જુઓ",
   "editor.previewNote":
-    "આ લાઇવ પૂર્વાવલોકન છે — ડાબી બાજુનો દરેક ફેરફાર અહીં તરત દેખાય છે. કોઈ ફીલ્ડ ખાલી રાખો તો તે તમારા આમંત્રણમાંથી બાકાત રહે છે; ક્યારેય ખાલી લીટી કે પ્લેસહોલ્ડર ટેક્સ્ટ દેખાતું નથી.",
+    "આ લાઇવ પૂર્વાવલોકન છે — ડાબી બાજુનો દરેક ફેરફાર અહીં તરત દેખાય છે. કોઈ ફીલ્ડ ખાલી રાખો તો તે તમારા આમંત્રણમાંથી બાકાત રહે છે; ક્યારેય ખાલી લીટી કે પ્લેસહોલ્ડર ટેક્સ્ટ દેખાતું નથી. નમૂના ફોટા આ પૂર્વાવલોકનમાં માત્ર ખાલી ફોટો સ્થાનોમાં દેખાઈ શકે છે — તમે તમારા પોતાના ફોટા ઉમેરો ત્યાં સુધી મહેમાનોને તે સ્થાનો ખાલી દેખાય છે.",
   "collection.eyebrow": "\u0ab8\u0a82\u0a97\u0acd\u0ab0\u0ab9",
   "collection.heading":
     "{count} \u0ab0\u0ac0\u0aa4\u0acb \u0a95\u0ab9\u0ac7\u0ab5\u0abe\u0aa8\u0ac0",
@@ -1023,7 +1043,7 @@ const gu: Partial<Dictionary> = {
   "faq.q0":
     "\u0ab6\u0ac1\u0a82 \u0aa1\u0abf\u0a9d\u0abe\u0a87\u0aa8 \u0a95\u0ab0\u0ab5\u0ac1\u0a82 \u0a96\u0ab0\u0ac7\u0a96\u0ab0 \u0aae\u0aab\u0aa4 \u0a9b\u0ac7?",
   "faq.a0":
-    "\u0ab9\u0abe. \u0a95\u0acb\u0a88\u0aaa\u0aa3 \u0aa1\u0abf\u0a9d\u0abe\u0a87\u0aa8 \u0aaa\u0ab8\u0a82\u0aa6 \u0a95\u0ab0\u0acb, \u0aa4\u0aae\u0abe\u0ab0\u0abe \u0aa8\u0abe\u0aae, \u0aa4\u0abe\u0ab0\u0ac0\u0a96\u0acb, \u0ab8\u0acd\u0aa5\u0ab3\u0acb, \u0aab\u0acb\u0a9f\u0abe \u0a85\u0aa8\u0ac7 \u0ab8\u0a82\u0a97\u0ac0\u0aa4 \u0a89\u0aae\u0ac7\u0ab0\u0acb, \u0a85\u0aa8\u0ac7 \u0a86\u0a96\u0ac0 \u0ab5\u0ab8\u0acd\u0aa4\u0ac1\u0aa8\u0ac1\u0a82 \u0aa4\u0aae\u0abe\u0ab0\u0abe \u0aaa\u0acb\u0aa4\u0abe\u0aa8\u0abe \u0aab\u0acb\u0aa8 \u0aaa\u0ab0 \u0aaa\u0ac2\u0ab0\u0acd\u0ab5\u0abe\u0ab5\u0ab2\u0acb\u0a95\u0aa8 \u0a95\u0ab0\u0acb \u2014 \u0aac\u0aa7\u0ac1\u0a82 \u0aae\u0aab\u0aa4. \u0aa4\u0aae\u0ac7 \u0aab\u0a95\u0acd\u0aa4 \u0aaa\u0acd\u0ab0\u0a95\u0abe\u0ab6\u0abf\u0aa4 \u0a95\u0ab0\u0ab5\u0abe\u0aa8\u0ac1\u0a82 \u0aaa\u0ab8\u0a82\u0aa6 \u0a95\u0ab0\u0acb \u0aa4\u0acd\u0aaf\u0abe\u0ab0\u0ac7 \u0a9c \u0a9a\u0ac2\u0a95\u0ab5\u0acb \u0a9b\u0acb.",
+    "હા. કોઈપણ ડિઝાઇન પસંદ કરો, તમારા નામ, તારીખો અને સ્થળો ઉમેરો, અને આખી વસ્તુનું તમારા પોતાના ફોન પર પૂર્વાવલોકન કરો — બધું મફત. તમારા પોતાના ફોટા કે સંગીત ઉમેરવા માટે ફક્ત એક મફત ખાતું જોઈએ. તમે ફક્ત પ્રકાશિત કરવાનું પસંદ કરો ત્યારે જ ચૂકવો છો.",
   "faq.q1":
     "\u20b9599 \u0a96\u0ab0\u0ac7\u0a96\u0ab0 \u0ab6\u0ac7\u0aa8\u0abe \u0aae\u0abe\u0a9f\u0ac7 \u0a9a\u0ac2\u0a95\u0ab5\u0abe\u0aaf \u0a9b\u0ac7?",
   "faq.a1":
@@ -1078,6 +1098,9 @@ const bn: Partial<Dictionary> = {
   "nav.pricing": "মূল্য",
   "nav.faq": "সাধারণ জিজ্ঞাসা",
   "nav.createYours": "আপনারটি তৈরি করুন",
+  "nav.signIn": "সাইন ইন করুন",
+  "nav.dashboard": "ড্যাশবোর্ড",
+  "nav.signOut": "সাইন আউট করুন",
   "nav.openMenu": "মেনু খুলুন",
   "nav.closeMenu": "মেনু বন্ধ করুন",
   "nav.primaryLabel": "প্রধান",
@@ -1144,7 +1167,7 @@ const bn: Partial<Dictionary> = {
   "editor.togetherSince": "কবে থেকে একসাথে",
   "editor.replayOpening": "শুরুটা আবার দেখুন",
   "editor.previewNote":
-    "এটি একটি লাইভ প্রিভিউ — বাঁদিকে করা প্রতিটি পরিবর্তন এখানে সাথে সাথে দেখা যায়। কোনো ফিল্ড খালি রাখলে তা আপনার আমন্ত্রণে একেবারেই দেখা যাবে না; কখনো কোনো খালি লাইন বা প্লেসহোল্ডার টেক্সট দেখা যায় না।",
+    "এটি একটি লাইভ প্রিভিউ — বাঁদিকে করা প্রতিটি পরিবর্তন এখানে সাথে সাথে দেখা যায়। কোনো ফিল্ড খালি রাখলে তা আপনার আমন্ত্রণে একেবারেই দেখা যাবে না; কখনো কোনো খালি লাইন বা প্লেসহোল্ডার টেক্সট দেখা যায় না। নমুনা ছবি শুধুমাত্র এই প্রিভিউতে খালি ছবির স্থানগুলিতে দেখা যেতে পারে — আপনি নিজের ছবি যোগ না করা পর্যন্ত অতিথিরা সেই স্থানগুলি খালি দেখেন।",
   "collection.eyebrow": "\u09b8\u0982\u0997\u09cd\u09b0\u09b9",
   "collection.heading":
     "{count}\u099f\u09bf \u0989\u09aa\u09be\u09af\u09bc \u09ac\u09b2\u09be\u09b0",
@@ -1230,7 +1253,7 @@ const bn: Partial<Dictionary> = {
   "faq.q0":
     "\u09a1\u09bf\u099c\u09be\u0987\u09a8 \u0995\u09b0\u09be \u0995\u09bf \u09b8\u09a4\u09cd\u09af\u09bf\u0987 \u09ac\u09bf\u09a8\u09be\u09ae\u09c2\u09b2\u09cd\u09af\u09c7?",
   "faq.a0":
-    "\u09b9\u09cd\u09af\u09be\u0981\u0964 \u09af\u09c7\u0995\u09cb\u09a8\u09cb \u09a1\u09bf\u099c\u09be\u0987\u09a8 \u09ac\u09c7\u099b\u09c7 \u09a8\u09bf\u09a8, \u0986\u09aa\u09a8\u09be\u09b0 \u09a8\u09be\u09ae, \u09a4\u09be\u09b0\u09bf\u0996, \u09b8\u09cd\u09a5\u09be\u09a8, \u099b\u09ac\u09bf \u098f\u09ac\u0982 \u0997\u09be\u09a8 \u09af\u09cb\u0997 \u0995\u09b0\u09c1\u09a8, \u098f\u09ac\u0982 \u09aa\u09c1\u09b0\u09cb \u099c\u09bf\u09a8\u09bf\u09b8\u099f\u09bf \u09a8\u09bf\u099c\u09c7\u09b0 \u09ab\u09cb\u09a8\u09c7 \u09aa\u09c2\u09b0\u09cd\u09ac\u09b0\u09c2\u09aa \u09a6\u09c7\u0996\u09c1\u09a8 \u2014 \u09b8\u09ac\u0987 \u09ac\u09bf\u09a8\u09be\u09ae\u09c2\u09b2\u09cd\u09af\u09c7\u0964 \u0986\u09aa\u09a8\u09bf \u09b6\u09c1\u09a7\u09c1\u09ae\u09be\u09a4\u09cd\u09b0 \u09aa\u09cd\u09b0\u0995\u09be\u09b6 \u0995\u09b0\u09be\u09b0 \u09b8\u09ae\u09af\u09bc \u0985\u09b0\u09cd\u09a5 \u09aa\u09cd\u09b0\u09a6\u09be\u09a8 \u0995\u09b0\u09c7\u09a8\u0964",
+    "হ্যাঁ। যেকোনো ডিজাইন বেছে নিন, আপনার নাম, তারিখ ও স্থান যোগ করুন, এবং পুরো জিনিসটি নিজের ফোনে পূর্বরূপ দেখুন — সবই বিনামূল্যে। নিজের ছবি বা গান যোগ করতে শুধু একটি বিনামূল্যের অ্যাকাউন্ট লাগে। আপনি শুধুমাত্র প্রকাশ করার সময় অর্থ প্রদান করেন।",
   "faq.q1":
     "\u20b9599 \u0986\u09b8\u09b2\u09c7 \u0995\u09c0\u09b8\u09c7\u09b0 \u099c\u09a8\u09cd\u09af?",
   "faq.a1":
@@ -1285,6 +1308,9 @@ const pa: Partial<Dictionary> = {
   "nav.pricing": "ਕੀਮਤ",
   "nav.faq": "ਅਕਸਰ ਪੁੱਛੇ ਜਾਂਦੇ ਸਵਾਲ",
   "nav.createYours": "ਆਪਣਾ ਬਣਾਓ",
+  "nav.signIn": "ਸਾਈਨ ਇਨ ਕਰੋ",
+  "nav.dashboard": "ਡੈਸ਼ਬੋਰਡ",
+  "nav.signOut": "ਸਾਈਨ ਆਉਟ ਕਰੋ",
   "nav.openMenu": "ਮੀਨੂ ਖੋਲ੍ਹੋ",
   "nav.closeMenu": "ਮੀਨੂ ਬੰਦ ਕਰੋ",
   "nav.primaryLabel": "ਮੁੱਖ",
@@ -1351,7 +1377,7 @@ const pa: Partial<Dictionary> = {
   "editor.togetherSince": "ਕਦੋਂ ਤੋਂ ਇਕੱਠੇ ਹੋ",
   "editor.replayOpening": "ਸ਼ੁਰੂਆਤ ਮੁੜ ਵੇਖੋ",
   "editor.previewNote":
-    "ਇਹ ਇੱਕ ਲਾਈਵ ਝਲਕ ਹੈ — ਖੱਬੇ ਪਾਸੇ ਕੀਤੀ ਹਰ ਤਬਦੀਲੀ ਇੱਥੇ ਤੁਰੰਤ ਦਿਖਦੀ ਹੈ। ਕੋਈ ਖੇਤਰ ਖਾਲੀ ਛੱਡੋ ਤਾਂ ਇਹ ਤੁਹਾਡੇ ਸੱਦੇ ਵਿੱਚੋਂ ਬਿਲਕੁਲ ਛੱਡ ਦਿੱਤਾ ਜਾਂਦਾ ਹੈ; ਕਦੇ ਵੀ ਖਾਲੀ ਲਾਈਨ ਜਾਂ ਪਲੇਸਹੋਲਡਰ ਟੈਕਸਟ ਨਹੀਂ ਦਿਖਦਾ।",
+    "ਇਹ ਇੱਕ ਲਾਈਵ ਝਲਕ ਹੈ — ਖੱਬੇ ਪਾਸੇ ਕੀਤੀ ਹਰ ਤਬਦੀਲੀ ਇੱਥੇ ਤੁਰੰਤ ਦਿਖਦੀ ਹੈ। ਕੋਈ ਖੇਤਰ ਖਾਲੀ ਛੱਡੋ ਤਾਂ ਇਹ ਤੁਹਾਡੇ ਸੱਦੇ ਵਿੱਚੋਂ ਬਿਲਕੁਲ ਛੱਡ ਦਿੱਤਾ ਜਾਂਦਾ ਹੈ; ਕਦੇ ਵੀ ਖਾਲੀ ਲਾਈਨ ਜਾਂ ਪਲੇਸਹੋਲਡਰ ਟੈਕਸਟ ਨਹੀਂ ਦਿਖਦਾ। ਨਮੂਨਾ ਤਸਵੀਰਾਂ ਇਸ ਝਲਕ ਵਿੱਚ ਸਿਰਫ਼ ਖਾਲੀ ਤਸਵੀਰ ਥਾਵਾਂ ਵਿੱਚ ਦਿਖਾਈ ਦੇ ਸਕਦੀਆਂ ਹਨ — ਮਹਿਮਾਨ ਉਹ ਥਾਵਾਂ ਖਾਲੀ ਵੇਖਦੇ ਹਨ ਜਦ ਤੱਕ ਤੁਸੀਂ ਆਪਣੀਆਂ ਤਸਵੀਰਾਂ ਨਹੀਂ ਜੋੜਦੇ।",
   "collection.eyebrow": "\u0a38\u0a70\u0a17\u0a4d\u0a30\u0a39\u0a3f",
   "collection.heading":
     "{count} \u0a24\u0a30\u0a40\u0a15\u0a47 \u0a15\u0a39\u0a3f\u0a23 \u0a26\u0a47",
@@ -1435,7 +1461,7 @@ const pa: Partial<Dictionary> = {
   "faq.q0":
     "\u0a15\u0a40 \u0a21\u0a3f\u0a1c\u0a3c\u0a3e\u0a08\u0a28 \u0a15\u0a30\u0a28\u0a3e \u0a38\u0a71\u0a1a\u0a2e\u0a41\u0a71\u0a1a \u0a2e\u0a41\u0a2b\u0a3c\u0a24 \u0a39\u0a48?",
   "faq.a0":
-    "\u0a39\u0a3e\u0a02\u0964 \u0a15\u0a4b\u0a08 \u0a35\u0a40 \u0a21\u0a3f\u0a1c\u0a3c\u0a3e\u0a08\u0a28 \u0a1a\u0a41\u0a23\u0a4b, \u0a06\u0a2a\u0a23\u0a47 \u0a28\u0a3e\u0a2e, \u0a24\u0a3e\u0a30\u0a40\u0a16\u0a3e\u0a02, \u0a25\u0a3e\u0a35\u0a3e\u0a02, \u0a24\u0a38\u0a35\u0a40\u0a30\u0a3e\u0a02 \u0a05\u0a24\u0a47 \u0a38\u0a70\u0a17\u0a40\u0a24 \u0a38\u0a3c\u0a3e\u0a2e\u0a32 \u0a15\u0a30\u0a4b, \u0a05\u0a24\u0a47 \u0a2a\u0a42\u0a30\u0a40 \u0a1a\u0a40\u0a1c\u0a3c \u0a28\u0a42\u0a70 \u0a06\u0a2a\u0a23\u0a47 \u0a2b\u0a3c\u0a4b\u0a28 '\u0a24\u0a47 \u0a35\u0a47\u0a16\u0a4b \u2014 \u0a38\u0a2d \u0a2e\u0a41\u0a2b\u0a3c\u0a24\u0964 \u0a24\u0a41\u0a38\u0a40\u0a02 \u0a38\u0a3f\u0a30\u0a2b\u0a3c \u0a2a\u0a4d\u0a30\u0a15\u0a3e\u0a38\u0a3c\u0a3f\u0a24 \u0a15\u0a30\u0a28 \u0a35\u0a47\u0a32\u0a47 \u0a2d\u0a41\u0a17\u0a24\u0a3e\u0a28 \u0a15\u0a30\u0a26\u0a47 \u0a39\u0a4b\u0964",
+    "ਹਾਂ। ਕੋਈ ਵੀ ਡਿਜ਼ਾਈਨ ਚੁਣੋ, ਆਪਣੇ ਨਾਮ, ਤਾਰੀਖਾਂ ਅਤੇ ਥਾਵਾਂ ਜੋੜੋ, ਅਤੇ ਪੂਰੀ ਚੀਜ਼ ਨੂੰ ਆਪਣੇ ਫ਼ੋਨ 'ਤੇ ਵੇਖੋ — ਸਭ ਮੁਫ਼ਤ। ਆਪਣੀਆਂ ਤਸਵੀਰਾਂ ਜਾਂ ਸੰਗੀਤ ਜੋੜਨ ਲਈ ਸਿਰਫ਼ ਇੱਕ ਮੁਫ਼ਤ ਖਾਤਾ ਚਾਹੀਦਾ ਹੈ। ਤੁਸੀਂ ਸਿਰਫ਼ ਪ੍ਰਕਾਸ਼ਿਤ ਕਰਨ ਵੇਲੇ ਭੁਗਤਾਨ ਕਰਦੇ ਹੋ।",
   "faq.q1":
     "\u20b9599 \u0a05\u0a38\u0a32 \u0a35\u0a3f\u0a71\u0a1a \u0a15\u0a3f\u0a38 \u0a32\u0a08 \u0a39\u0a48?",
   "faq.a1":
@@ -1489,6 +1515,9 @@ const ur: Partial<Dictionary> = {
   "nav.pricing": "قیمت",
   "nav.faq": "اکثر پوچھے گئے سوالات",
   "nav.createYours": "اپنا بنائیں",
+  "nav.signIn": "سائن ان کریں",
+  "nav.dashboard": "ڈیش بورڈ",
+  "nav.signOut": "سائن آؤٹ کریں",
   "nav.openMenu": "مینو کھولیں",
   "nav.closeMenu": "مینو بند کریں",
   "nav.primaryLabel": "مرکزی",
@@ -1555,7 +1584,7 @@ const ur: Partial<Dictionary> = {
   "editor.togetherSince": "کب سے ساتھ ہیں",
   "editor.replayOpening": "آغاز دوبارہ دیکھیں",
   "editor.previewNote":
-    "یہ ایک لائیو پیش منظر ہے — بائیں طرف کی گئی ہر تبدیلی یہاں فوراً نظر آتی ہے۔ کوئی خانہ خالی چھوڑیں تو وہ آپ کے دعوت نامے میں بالکل نہیں آئے گا؛ کبھی کوئی خالی سطر یا نمونہ متن نظر نہیں آتا۔",
+    "یہ ایک لائیو پیش منظر ہے — بائیں طرف کی گئی ہر تبدیلی یہاں فوراً نظر آتی ہے۔ کوئی خانہ خالی چھوڑیں تو وہ آپ کے دعوت نامے میں بالکل نہیں آئے گا؛ کبھی کوئی خالی سطر یا نمونہ متن نظر نہیں آتا۔ نمونہ تصاویر اس پیش منظر میں صرف خالی تصویر خانوں میں نظر آ سکتی ہیں — مہمان وہ خانے خالی دیکھتے ہیں جب تک آپ اپنی تصاویر شامل نہیں کرتے۔",
   "collection.eyebrow": "\u0645\u062c\u0645\u0648\u0639\u06c1",
   "collection.heading":
     "{count} \u0637\u0631\u06cc\u0642\u06d2 \u06a9\u06c1\u0646\u06d2 \u06a9\u06d2",
@@ -1639,7 +1668,7 @@ const ur: Partial<Dictionary> = {
   "faq.q0":
     "\u06a9\u06cc\u0627 \u0688\u06cc\u0632\u0627\u0626\u0646 \u06a9\u0631\u0646\u0627 \u0648\u0627\u0642\u0639\u06cc \u0645\u0641\u062a \u06c1\u06d2\u061f",
   "faq.a0":
-    "\u062c\u06cc \u06c1\u0627\u06ba\u06d4 \u06a9\u0648\u0626\u06cc \u0628\u06be\u06cc \u0688\u06cc\u0632\u0627\u0626\u0646 \u0645\u0646\u062a\u062e\u0628 \u06a9\u0631\u06cc\u06ba\u060c \u0627\u067e\u0646\u06d2 \u0646\u0627\u0645\u060c \u062a\u0627\u0631\u06cc\u062e\u06cc\u06ba\u060c \u0645\u0642\u0627\u0645\u0627\u062a\u060c \u062a\u0635\u0627\u0648\u06cc\u0631 \u0627\u0648\u0631 \u0645\u0648\u0633\u06cc\u0642\u06cc \u0634\u0627\u0645\u0644 \u06a9\u0631\u06cc\u06ba\u060c \u0627\u0648\u0631 \u067e\u0648\u0631\u06cc \u0686\u06cc\u0632 \u06a9\u0648 \u0627\u067e\u0646\u06d2 \u0641\u0648\u0646 \u067e\u0631 \u062f\u06cc\u06a9\u06be\u06cc\u06ba \u2014 \u0633\u0628 \u0645\u0641\u062a\u06d4 \u0622\u067e \u0635\u0631\u0641 \u0634\u0627\u0626\u0639 \u06a9\u0631\u062a\u06d2 \u0648\u0642\u062a \u0627\u062f\u0627\u0626\u06cc\u06af\u06cc \u06a9\u0631\u062a\u06d2 \u06c1\u06cc\u06ba\u06d4",
+    "جی ہاں۔ کوئی بھی ڈیزائن منتخب کریں، اپنے نام، تاریخیں اور مقامات شامل کریں، اور پوری چیز کو اپنے فون پر دیکھیں — سب مفت۔ اپنی تصاویر یا موسیقی شامل کرنے کے لیے صرف ایک مفت اکاؤنٹ درکار ہے۔ آپ صرف شائع کرتے وقت ادائیگی کرتے ہیں۔",
   "faq.q1":
     "\u20b9599 \u062f\u0631\u0627\u0635\u0644 \u06a9\u0633 \u0686\u06cc\u0632 \u06a9\u06d2 \u0644\u06cc\u06d2 \u06c1\u06cc\u06ba\u061f",
   "faq.a1":
@@ -1693,6 +1722,9 @@ const fr: Partial<Dictionary> = {
   "nav.pricing": "Tarifs",
   "nav.faq": "FAQ",
   "nav.createYours": "Créez la vôtre",
+  "nav.signIn": "Se connecter",
+  "nav.dashboard": "Tableau de bord",
+  "nav.signOut": "Se déconnecter",
   "nav.openMenu": "Ouvrir le menu",
   "nav.closeMenu": "Fermer le menu",
   "nav.primaryLabel": "Principal",
@@ -1759,7 +1791,7 @@ const fr: Partial<Dictionary> = {
   "editor.togetherSince": "Ensemble depuis",
   "editor.replayOpening": "Revoir l'ouverture",
   "editor.previewNote":
-    "Ceci est un aperçu en direct — chaque modification à gauche apparaît ici instantanément. Laissez un champ vide et il est simplement omis de votre invitation ; aucune ligne vide ni texte de remplacement n'apparaît jamais.",
+    "Ceci est un aperçu en direct — chaque modification à gauche apparaît ici instantanément. Laissez un champ vide et il est simplement omis de votre invitation ; aucune ligne vide ni texte de remplacement n'apparaît jamais. Des photos d'exemple peuvent apparaître dans les emplacements photo vides, dans cet aperçu uniquement — les invités voient ces emplacements vides jusqu'à ce que vous ajoutiez vos propres photos.",
   "collection.eyebrow": "La collection",
   "collection.heading": "{count} fa\u00e7ons de dire",
   "collection.headingEm": "r\u00e9servez la date",
@@ -1818,7 +1850,7 @@ const fr: Partial<Dictionary> = {
   "faq.headingEm": "commencer",
   "faq.q0": "Est-ce vraiment gratuit de concevoir ?",
   "faq.a0":
-    "Oui. Choisissez n'importe quel design, ajoutez vos noms, dates, lieux, photos et musique, et pr\u00e9visualisez le tout sur votre propre t\u00e9l\u00e9phone \u2014 enti\u00e8rement gratuit. Vous ne payez que lorsque vous choisissez de publier.",
+    "Oui. Choisissez n'importe quel design, ajoutez vos noms, dates et lieux, et prévisualisez le tout sur votre propre téléphone — entièrement gratuit. Ajouter vos propres photos ou votre musique demande simplement un compte gratuit. Vous ne payez que lorsque vous choisissez de publier.",
   "faq.q1": "\u00c0 quoi servent r\u00e9ellement les \u20b9599 ?",
   "faq.a1":
     "Une invitation, publi\u00e9e une fois, avec son propre lien partageable \u2014 pas de filigrane, pas d'abonnement, pas de frais par invit\u00e9. Vous pouvez continuer \u00e0 la modifier apr\u00e8s publication, jusqu'au mariage.",
@@ -1865,6 +1897,9 @@ const de: Partial<Dictionary> = {
   "nav.pricing": "Preise",
   "nav.faq": "FAQ",
   "nav.createYours": "Erstelle deine",
+  "nav.signIn": "Anmelden",
+  "nav.dashboard": "Dashboard",
+  "nav.signOut": "Abmelden",
   "nav.openMenu": "Menü öffnen",
   "nav.closeMenu": "Menü schließen",
   "nav.primaryLabel": "Hauptnavigation",
@@ -1931,7 +1966,7 @@ const de: Partial<Dictionary> = {
   "editor.togetherSince": "Zusammen seit",
   "editor.replayOpening": "Eröffnung erneut ansehen",
   "editor.previewNote":
-    "Dies ist eine Live-Vorschau — jede Änderung links wird hier sofort angezeigt. Lässt du ein Feld leer, wird es einfach aus deiner Einladung weggelassen; es erscheinen nie leere Zeilen oder Platzhaltertext.",
+    "Dies ist eine Live-Vorschau — jede Änderung links wird hier sofort angezeigt. Lässt du ein Feld leer, wird es einfach aus deiner Einladung weggelassen; es erscheinen nie leere Zeilen oder Platzhaltertext. Beispielfotos können nur in dieser Vorschau in leeren Fotoplätzen erscheinen — Gäste sehen diese Plätze leer, bis du deine eigenen Fotos hinzufügst.",
   "collection.eyebrow": "Die Kollektion",
   "collection.heading": "{count} Wege zu sagen",
   "collection.headingEm": "Rettet das Datum",
@@ -1989,7 +2024,7 @@ const de: Partial<Dictionary> = {
   "faq.headingEm": "beginnen",
   "faq.q0": "Ist das Gestalten wirklich kostenlos?",
   "faq.a0":
-    "Ja. W\u00e4hlen Sie ein beliebiges Design, f\u00fcgen Sie Ihre Namen, Daten, Veranstaltungsorte, Fotos und Musik hinzu und schauen Sie sich alles auf Ihrem eigenen Telefon an \u2014 alles kostenlos. Sie zahlen erst, wenn Sie sich zur Ver\u00f6ffentlichung entscheiden.",
+    "Ja. Wählen Sie ein beliebiges Design, fügen Sie Ihre Namen, Daten und Veranstaltungsorte hinzu und schauen Sie sich alles auf Ihrem eigenen Telefon an — alles kostenlos. Um Ihre eigenen Fotos oder Ihre Musik hinzuzufügen, brauchen Sie nur ein kostenloses Konto. Sie zahlen erst, wenn Sie sich zur Veröffentlichung entscheiden.",
   "faq.q1": "Wof\u00fcr wird mit den \u20b9599 eigentlich bezahlt?",
   "faq.a1":
     "Eine Einladung, einmal ver\u00f6ffentlicht, mit eigenem teilbarem Link \u2014 kein Wasserzeichen, kein Abonnement, keine Geb\u00fchr pro Gast. Sie k\u00f6nnen sie nach der Ver\u00f6ffentlichung bis zur Hochzeit weiter bearbeiten.",
@@ -2035,6 +2070,9 @@ const es: Partial<Dictionary> = {
   "nav.pricing": "Precios",
   "nav.faq": "Preguntas frecuentes",
   "nav.createYours": "Crea la tuya",
+  "nav.signIn": "Iniciar sesión",
+  "nav.dashboard": "Panel",
+  "nav.signOut": "Cerrar sesión",
   "nav.openMenu": "Abrir menú",
   "nav.closeMenu": "Cerrar menú",
   "nav.primaryLabel": "Principal",
@@ -2101,7 +2139,7 @@ const es: Partial<Dictionary> = {
   "editor.togetherSince": "Juntos desde",
   "editor.replayOpening": "Repetir la apertura",
   "editor.previewNote":
-    "Esta es una vista previa en vivo — cada cambio a la izquierda aparece aquí al instante. Si dejas un campo en blanco, simplemente se omite de tu invitación; nunca aparecen líneas vacías ni texto de marcador de posición.",
+    "Esta es una vista previa en vivo — cada cambio a la izquierda aparece aquí al instante. Si dejas un campo en blanco, simplemente se omite de tu invitación; nunca aparecen líneas vacías ni texto de marcador de posición. Pueden aparecer fotos de muestra en los espacios de fotos vacíos solo en esta vista previa — los invitados ven esos espacios vacíos hasta que añadas tus propias fotos.",
   "collection.eyebrow": "La colecci\u00f3n",
   "collection.heading": "{count} formas de decir",
   "collection.headingEm": "guarda la fecha",
@@ -2160,7 +2198,7 @@ const es: Partial<Dictionary> = {
   "faq.headingEm": "empezar",
   "faq.q0": "\u00bfEs realmente gratis dise\u00f1ar?",
   "faq.a0":
-    "S\u00ed. Elige cualquier dise\u00f1o, a\u00f1ade vuestros nombres, fechas, lugares, fotos y m\u00fasica, y previsualiza todo en tu propio tel\u00e9fono \u2014 totalmente gratis. Solo pagas cuando decides publicar.",
+    "Sí. Elige cualquier diseño, añade vuestros nombres, fechas y lugares, y previsualiza todo en tu propio teléfono — totalmente gratis. Para añadir tus propias fotos o música solo necesitas una cuenta gratuita. Solo pagas cuando decides publicar.",
   "faq.q1": "\u00bfPara qu\u00e9 se usan realmente los \u20b9599?",
   "faq.a1":
     "Una invitaci\u00f3n, publicada una vez, con su propio enlace compartible \u2014 sin marca de agua, sin suscripci\u00f3n, sin cargo por invitado. Puedes seguir edit\u00e1ndola despu\u00e9s de publicarla, hasta la boda.",
@@ -2207,6 +2245,9 @@ const pt: Partial<Dictionary> = {
   "nav.pricing": "Preços",
   "nav.faq": "Perguntas frequentes",
   "nav.createYours": "Crie o seu",
+  "nav.signIn": "Entrar",
+  "nav.dashboard": "Painel",
+  "nav.signOut": "Sair",
   "nav.openMenu": "Abrir menu",
   "nav.closeMenu": "Fechar menu",
   "nav.primaryLabel": "Principal",
@@ -2273,7 +2314,7 @@ const pt: Partial<Dictionary> = {
   "editor.togetherSince": "Juntos desde",
   "editor.replayOpening": "Reassistir a abertura",
   "editor.previewNote":
-    "Esta é uma prévia ao vivo — cada alteração à esquerda aparece aqui instantaneamente. Deixe um campo em branco e ele simplesmente é omitido do seu convite; nunca aparecem linhas vazias ou texto de espaço reservado.",
+    "Esta é uma prévia ao vivo — cada alteração à esquerda aparece aqui instantaneamente. Deixe um campo em branco e ele simplesmente é omitido do seu convite; nunca aparecem linhas vazias ou texto de espaço reservado. Fotos de exemplo podem aparecer nos espaços de fotos vazios apenas nesta prévia — os convidados veem esses espaços vazios até você adicionar suas próprias fotos.",
   "collection.eyebrow": "A cole\u00e7\u00e3o",
   "collection.heading": "{count} formas de dizer",
   "collection.headingEm": "guarde a data",
@@ -2332,7 +2373,7 @@ const pt: Partial<Dictionary> = {
   "faq.headingEm": "come\u00e7ar",
   "faq.q0": "\u00c9 realmente gr\u00e1tis criar o design?",
   "faq.a0":
-    "Sim. Escolha qualquer design, adicione seus nomes, datas, locais, fotos e m\u00fasica, e visualize tudo no seu pr\u00f3prio telefone \u2014 totalmente gr\u00e1tis. Voc\u00ea s\u00f3 paga quando decide publicar.",
+    "Sim. Escolha qualquer design, adicione seus nomes, datas e locais, e visualize tudo no seu próprio telefone — totalmente grátis. Adicionar suas próprias fotos ou música só precisa de uma conta gratuita. Você só paga quando decide publicar.",
   "faq.q1": "Para que servem realmente os \u20b9599?",
   "faq.a1":
     "Um convite, publicado uma vez, com seu pr\u00f3prio link compartilh\u00e1vel \u2014 sem marca d'\u00e1gua, sem assinatura, sem cobran\u00e7a por convidado. Voc\u00ea pode continuar editando depois de publicar, at\u00e9 o casamento.",
@@ -2376,6 +2417,9 @@ const ru: Partial<Dictionary> = {
   "nav.pricing": "Цены",
   "nav.faq": "Частые вопросы",
   "nav.createYours": "Создать своё",
+  "nav.signIn": "Войти",
+  "nav.dashboard": "Панель",
+  "nav.signOut": "Выйти",
   "nav.openMenu": "Открыть меню",
   "nav.closeMenu": "Закрыть меню",
   "nav.primaryLabel": "Основная",
@@ -2442,7 +2486,7 @@ const ru: Partial<Dictionary> = {
   "editor.togetherSince": "Вместе с",
   "editor.replayOpening": "Посмотреть открытие снова",
   "editor.previewNote":
-    "Это живой предпросмотр — каждое изменение слева мгновенно отображается здесь. Оставьте поле пустым, и оно просто не попадёт в приглашение; пустые строки или текст-заполнитель никогда не отображаются.",
+    "Это живой предпросмотр — каждое изменение слева мгновенно отображается здесь. Оставьте поле пустым, и оно просто не попадёт в приглашение; пустые строки или текст-заполнитель никогда не отображаются. Образцы фотографий могут появляться в пустых местах для фото только в этом предпросмотре — гости видят эти места пустыми, пока вы не добавите свои фотографии.",
   "collection.eyebrow": "\u041a\u043e\u043b\u043b\u0435\u043a\u0446\u0438\u044f",
   "collection.heading":
     "{count} \u0441\u043f\u043e\u0441\u043e\u0431\u043e\u0432 \u0441\u043a\u0430\u0437\u0430\u0442\u044c",
@@ -2532,7 +2576,7 @@ const ru: Partial<Dictionary> = {
   "faq.q0":
     "\u042d\u0442\u043e \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043b\u044c\u043d\u043e \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e \u2014 \u0441\u043e\u0437\u0434\u0430\u0432\u0430\u0442\u044c \u0434\u0438\u0437\u0430\u0439\u043d?",
   "faq.a0":
-    "\u0414\u0430. \u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u043b\u044e\u0431\u043e\u0439 \u0434\u0438\u0437\u0430\u0439\u043d, \u0434\u043e\u0431\u0430\u0432\u044c\u0442\u0435 \u0438\u043c\u0435\u043d\u0430, \u0434\u0430\u0442\u044b, \u043c\u0435\u0441\u0442\u0430 \u043f\u0440\u043e\u0432\u0435\u0434\u0435\u043d\u0438\u044f, \u0444\u043e\u0442\u043e \u0438 \u043c\u0443\u0437\u044b\u043a\u0443 \u0438 \u043f\u0440\u043e\u0441\u043c\u043e\u0442\u0440\u0438\u0442\u0435 \u0432\u0441\u0451 \u043d\u0430 \u0441\u0432\u043e\u0451\u043c \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u0435 \u2014 \u0441\u043e\u0432\u0435\u0440\u0448\u0435\u043d\u043d\u043e \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e. \u0412\u044b \u043f\u043b\u0430\u0442\u0438\u0442\u0435 \u0442\u043e\u043b\u044c\u043a\u043e \u0442\u043e\u0433\u0434\u0430, \u043a\u043e\u0433\u0434\u0430 \u0440\u0435\u0448\u0438\u0442\u0435 \u043e\u043f\u0443\u0431\u043b\u0438\u043a\u043e\u0432\u0430\u0442\u044c.",
+    "Да. Выберите любой дизайн, добавьте имена, даты и места проведения и просмотрите всё на своём телефоне — совершенно бесплатно. Чтобы добавить свои фотографии или музыку, нужен только бесплатный аккаунт. Вы платите только тогда, когда решите опубликовать.",
   "faq.q1":
     "\u0417\u0430 \u0447\u0442\u043e \u043d\u0430 \u0441\u0430\u043c\u043e\u043c \u0434\u0435\u043b\u0435 \u043f\u043b\u0430\u0442\u044f\u0442\u0441\u044f \u20b9599?",
   "faq.a1":

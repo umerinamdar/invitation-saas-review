@@ -201,7 +201,7 @@ export function MusicPicker({
           <input
             type="file"
             accept="audio/mpeg,audio/mp4,audio/wav,audio/x-wav,audio/ogg"
-            hidden
+            className="sr-only"
             disabled={uploading}
             onChange={(e) => {
               void upload(e.target.files?.[0]);

@@ -275,7 +275,7 @@ function Landing() {
             {t("closing.headingSuffix")}
           </h2>
           <Link to="/create" className="btn btn-solid">
-            {t("closing.createYours" as any)} <ArrowRight size={16} />
+            {t("closing.createYours")} <ArrowRight size={16} />
           </Link>
         </section>
       </main>

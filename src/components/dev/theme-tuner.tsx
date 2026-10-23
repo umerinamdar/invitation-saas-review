@@ -28,7 +28,7 @@ const ROWS: {
 ];
 
 /**
- * Dev-only tool: open any /preview/:themeId with ?edit=seal and tune the
+ * Dev-only tool: open any /preview/:themeId with ?edit=theme and tune the
  * names heading and the parent/family lines (colour + size) live, then
  * copy the exact namesColor/namesScale/familyColor/familyScale fields to
  * paste into the theme file. Everything here reads and writes the SAME
@@ -45,7 +45,7 @@ export function ThemeTuner() {
   const [enabled] = useState(
     () =>
       typeof window !== "undefined" &&
-      new URLSearchParams(window.location.search).get("edit") === "seal",
+      new URLSearchParams(window.location.search).get("edit") === "theme",
   );
   const [ready, setReady] = useState(false);
   const [copied, setCopied] = useState(false);

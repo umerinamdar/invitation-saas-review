@@ -102,8 +102,11 @@ function Dashboard() {
       <main>
         <section className="page-head dash-head">
           <div>
-            <p className="eyebrow">Your invitations</p>
-            <h1>{session.user.email}</h1>
+            <p className="eyebrow">Dashboard</p>
+            {/* Task 15: the h1 names the page; the account email is
+                context, not a heading. */}
+            <h1>Your invitations</h1>
+            <p className="dash-email">{session.user.email}</p>
           </div>
           <button
             className="btn btn-solid"

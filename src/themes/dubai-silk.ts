@@ -42,9 +42,6 @@ export const dubaiSilk: Theme = {
   assets: {
     sealedBackdrop: "/themes/dubai-silk/silk.jpg",
     revealedBackdrop: "/themes/dubai-silk/skyline.jpg",
-    // A blank powder-blue wax disc with a laurel wreath and a gold rim,
-    // empty in the middle — the couple's monogram still prints over it
-    // dynamically, same as the CSS-drawn seal this replaces.
     // A tall, seamlessly-tiling continuation of the skyline scene — the
     // Burj Khalifa dissolving into a soft gold-and-blue gradient — that
     // runs behind every section after the hero instead of a flat colour.
@@ -63,7 +60,7 @@ export const dubaiSilk: Theme = {
     petals: "white-blossom",
   },
 
-  kicker: "WAX SEAL ENVELOPE",
+  kicker: "SILK ENVELOPE",
   tagline:
     "Powder-blue silk and gold Dubai skyline invitation that opens through a wax-sealed envelope, with a cinematic arch reveal and a scratch-to-reveal muhurat.",
   features: [

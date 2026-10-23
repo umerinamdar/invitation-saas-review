@@ -32,7 +32,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const trackUser = (next: Session | null) => {
       const nextUserId = next?.user?.id ?? null;
       if (draftClearsOnUserChange(previousUserId.current, nextUserId)) {
-        clearLocalDraftData();
+        // Task 9: pass the departing id so their editor mirrors are
+        // cleared with the draft (see local-draft.ts).
+        clearLocalDraftData(previousUserId.current ?? undefined);
       }
       previousUserId.current = nextUserId;
     };

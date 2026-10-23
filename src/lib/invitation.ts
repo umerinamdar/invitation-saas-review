@@ -15,19 +15,82 @@ export function offsetMinutes(iso: string): number {
 }
 
 const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
+const ISO_DATE_TIME =
+  /^(\d{4})-(\d{2})-(\d{2})(?:[Tt ](\d{2}):(\d{2})(?::(\d{2})(?:\.(\d+))?)?\s*(Z|[+-]\d{2}:?\d{2})?)?$/;
 
 /** India — the audience's home timezone, for values that carry no offset. */
 const HOME_OFFSET_MINUTES = 330;
 
+type IsoDateTimeParts = {
+  date: [number, number, number];
+  time: [number, number, number, number];
+  offset: number | null;
+};
+
+/**
+ * Strictly parse the ISO shapes the invitation data uses. `Date.parse`
+ * alone is not a validator here: it normalises an impossible day such as
+ * 2027-02-30 into 2027-03-02 instead of rejecting it. A missing offset
+ * is kept distinct (`offset: null`) so callers can anchor the value at
+ * home instead of silently using the reader's local timezone.
+ */
+function isoDateTimeParts(iso: string): IsoDateTimeParts | null {
+  const match = ISO_DATE_TIME.exec(iso);
+  if (!match) return null;
+  const [, yearText, monthText, dayText, hourText, minuteText, secondText, fractionText, zone] =
+    match;
+  const year = Number(yearText);
+  const month = Number(monthText);
+  const day = Number(dayText);
+  const probe = new Date(Date.UTC(year, month - 1, day));
+  if (
+    probe.getUTCFullYear() !== year ||
+    probe.getUTCMonth() !== month - 1 ||
+    probe.getUTCDate() !== day
+  ) {
+    return null;
+  }
+
+  const hour = hourText === undefined ? 0 : Number(hourText);
+  const minute = minuteText === undefined ? 0 : Number(minuteText);
+  const second = secondText === undefined ? 0 : Number(secondText);
+  const millisecond =
+    fractionText === undefined
+      ? 0
+      : Number((fractionText + "000").slice(0, 3));
+  if (hour > 23 || minute > 59 || second > 59) return null;
+
+  let offset: number | null = null;
+  if (zone === "Z") {
+    offset = 0;
+  } else if (zone) {
+    const sign = zone.startsWith("-") ? -1 : 1;
+    const digits = zone.slice(1).replace(":", "");
+    const offsetHour = Number(digits.slice(0, 2));
+    const offsetMinute = Number(digits.slice(2, 4));
+    if (offsetHour > 23 || offsetMinute > 59) return null;
+    offset = sign * (offsetHour * 60 + offsetMinute);
+  }
+
+  return {
+    date: [year, month - 1, day],
+    time: [hour, minute, second, millisecond],
+    offset,
+  };
+}
+
 /**
  * The offset a stored value's calendar dates are read in: its own suffix
- * when it carries one. A bare date (`2027-02-12`) carries none, and
- * `Date.parse` would read it as UTC midnight — 5½ hours late for the
- * Indian audience the invitations are written for — so a bare date is
- * read as a local calendar date at home offset instead.
+ * when it carries one. A bare date (`2027-02-12`) or an offset-less
+ * datetime carries none, and `Date.parse` would read those shapes using
+ * UTC or the reader's local clock — neither is the home anchor — so
+ * offset-less values are read at the home offset instead.
  */
 function anchorOffsetMinutes(iso: string): number {
-  return DATE_ONLY.test(iso) ? HOME_OFFSET_MINUTES : offsetMinutes(iso);
+  if (DATE_ONLY.test(iso)) return HOME_OFFSET_MINUTES;
+  const parsed = isoDateTimeParts(iso);
+  if (parsed) return parsed.offset ?? HOME_OFFSET_MINUTES;
+  return offsetMinutes(iso);
 }
 
 /**
@@ -40,6 +103,16 @@ function isoInstant(iso: string): number {
     if (!parts) return Number.NaN;
     return Date.UTC(parts[0], parts[1], parts[2]) - HOME_OFFSET_MINUTES * 60000;
   }
+  const parsed = isoDateTimeParts(iso);
+  if (parsed) {
+    const [year, month, day] = parsed.date;
+    const [hour, minute, second, millisecond] = parsed.time;
+    return (
+      Date.UTC(year, month, day, hour, minute, second, millisecond) -
+      (parsed.offset ?? HOME_OFFSET_MINUTES) * 60000
+    );
+  }
+  if (/^\d{4}-\d{2}-\d{2}(?:[Tt ]|$)/.test(iso)) return Number.NaN;
   return Date.parse(iso);
 }
 
@@ -58,18 +131,8 @@ function datePartsAt(
  * one (`2024-13-40`) names nothing, however date-shaped it looks.
  */
 function isoDateParts(iso: string): [number, number, number] | null {
-  if (DATE_ONLY.test(iso)) {
-    const [year, month, day] = iso.split("-").map(Number) as [
-      number,
-      number,
-      number,
-    ];
-    const probe = new Date(Date.UTC(year, month - 1, day));
-    const valid =
-      probe.getUTCFullYear() === year &&
-      probe.getUTCMonth() === month - 1 &&
-      probe.getUTCDate() === day;
-    return valid ? [year, month - 1, day] : null;
+  if (DATE_ONLY.test(iso) || ISO_DATE_TIME.test(iso)) {
+    return isoDateTimeParts(iso)?.date ?? null;
   }
   const parsed = Date.parse(iso);
   if (Number.isNaN(parsed)) return null;
@@ -92,13 +155,16 @@ export function musicFadeVolume(
   fadeMs: number,
   maxVolume: number,
 ) {
+  // A zero-length fade is already complete; dividing by it would make
+  // the volume NaN, which browsers reject when assigned to a player.
+  if (!Number.isFinite(fadeMs) || fadeMs <= 0) return maxVolume;
   const progress = Math.max(0, Math.min(1, elapsedMs / fadeMs));
   return maxVolume * progress * progress * (3 - 2 * progress);
 }
 
 /** True when a stored string is a date the countdown can count to. */
 export function hasValidEventDate(eventIso: string): boolean {
-  return Boolean(eventIso) && !Number.isNaN(Date.parse(eventIso));
+  return Boolean(eventIso) && !Number.isNaN(isoInstant(eventIso));
 }
 
 /**

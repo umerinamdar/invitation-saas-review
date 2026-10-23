@@ -60,7 +60,7 @@ export const mughalZamarrud: Theme = {
     petals: "marigold",
   },
 
-  kicker: "WAX SEAL ENVELOPE",
+  kicker: "EMERALD ENVELOPE",
   tagline:
     "Deep emerald and antique gold Mughal invitation that unseals onto a marble water garden at dusk, lit by lanterns and floating diyas.",
   features: [
