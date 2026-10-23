@@ -278,6 +278,9 @@ describe("Login/signup submit errors (impl round 2, A-2)", () => {
     fireEvent.change(screen.getByLabelText("Password"), {
       target: { value: "whatever123" },
     });
+    fireEvent.change(screen.getByLabelText(/confirm password/i), {
+      target: { value: "whatever123" },
+    });
     fireEvent.click(screen.getByRole("button", { name: "Create account" }));
     expect(
       await screen.findByText(/couldn't create your account/i),

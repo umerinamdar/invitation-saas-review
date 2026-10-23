@@ -5,6 +5,7 @@ dist/
 .tanstack/
 .vinxi/
 .wrangler/
+supabase/.temp/
 test-results/
 *.local
 .env

@@ -30,7 +30,7 @@ function Preview() {
   const { theme } = Route.useLoaderData();
   return (
     <>
-      <Invitation theme={theme} invite={getDemoInvite(theme.id)} />
+      <Invitation theme={theme} invite={getDemoInvite(theme.id)} watermark />
       <ThemeTuner />
     </>
   );

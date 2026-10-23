@@ -35,6 +35,7 @@ function Login() {
   const [mode, setMode] = useState<Mode>("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -87,6 +88,11 @@ function Login() {
     setNotice("");
     try {
       if (mode === "signup") {
+        if (password !== confirmPassword) {
+          setError("Passwords don't match. Please check and try again.");
+          setBusy(false);
+          return;
+        }
         const { data, error } = await supabase.auth.signUp({ email, password });
         if (error) throw error;
         // With email confirmation on, there is no session until they confirm.
@@ -147,6 +153,20 @@ function Login() {
               placeholder="At least 8 characters"
             />
           </label>
+          {mode === "signup" && (
+            <label>
+              Confirm password
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                minLength={8}
+                autoComplete="new-password"
+                placeholder="Re-enter your password"
+              />
+            </label>
+          )}
 
           {error && (
             <p className="form-error" role="alert">
@@ -183,6 +203,7 @@ function Login() {
             onClick={() => {
               setMode(mode === "signin" ? "signup" : "signin");
               setError("");
+              setConfirmPassword("");
             }}
           >
             {mode === "signin" ? "Create one" : "Sign in"}

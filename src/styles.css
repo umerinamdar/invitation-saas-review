@@ -210,6 +210,28 @@ a {
   color: var(--foreground);
   background-color: var(--background);
 }
+.preview-watermark {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: space-around;
+  justify-content: space-around;
+  gap: 48px;
+  transform: rotate(-28deg) scale(1.4);
+  opacity: 0.16;
+}
+.preview-watermark span {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ink, #1a1a1a);
+  white-space: nowrap;
+}
 
 /* One envelope, one continuous invitation. */
 .sealed-stage {
@@ -1037,11 +1059,6 @@ a {
   to {
     transform: rotate(360deg);
   }
-}
-.invitation-print {
-  display: flex;
-  justify-content: center;
-  padding: 28px 16px 40px;
 }
 .music-dock {
   position: fixed;

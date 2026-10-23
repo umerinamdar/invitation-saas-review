@@ -2194,16 +2194,3 @@ a.contact-card {
   color: var(--ink);
 }
 
-/* Print: drop site chrome so a saved/printed invitation page is the
-   invitation itself, and keep invitation sections from splitting
-   across pages. Added Stage E (QE) — no print stylesheet existed. */
-@media print {
-  .site-header,
-  .site-footer,
-  .invitation-print {
-    display: none !important;
-  }
-  .new-invitation section {
-    break-inside: avoid-page;
-  }
-}

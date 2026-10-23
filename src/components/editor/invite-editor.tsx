@@ -55,6 +55,12 @@ type Props = {
   draftMediaKey?: string | undefined;
   /** The bar above the form: save state, publish button, whatever fits. */
   toolbar: ReactNode;
+  /**
+   * Shows the preview watermark. Defaults to true (every editor use is
+   * pre-purchase except an already-published invite reopened for a
+   * config edit — editor.$id.tsx passes false once its row is published).
+   */
+  watermark?: boolean;
 };
 
 /**
@@ -69,6 +75,7 @@ export function InviteEditor({
   inviteId,
   draftMediaKey,
   toolbar,
+  watermark = true,
 }: Props) {
   // Remounting replays the opening, which is the part people want to re-watch.
   const [previewKey, setPreviewKey] = useState(0);
@@ -606,6 +613,7 @@ export function InviteEditor({
                 theme={theme}
                 invite={preview}
                 mediaUrlMap={mediaUrlMap}
+                watermark={watermark}
               />
             </div>
           </div>

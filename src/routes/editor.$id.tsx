@@ -392,6 +392,7 @@ function Editor() {
       onChange={setConfig}
       onThemeChange={setThemeId}
       inviteId={id}
+      watermark={row?.status !== "published"}
       toolbar={
         <>
           {/* Task 15: the editor pages had no h1 at all. */}

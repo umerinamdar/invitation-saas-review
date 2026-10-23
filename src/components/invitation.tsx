@@ -5,7 +5,6 @@ import {
   Infinity as InfinityIcon,
   LoaderCircle,
   MapPin,
-  Printer,
   RotateCcw,
   Volume2,
   VolumeX,
@@ -85,6 +84,7 @@ export function Invitation({
   theme,
   invite,
   mediaUrlMap,
+  watermark,
 }: {
   theme: Theme;
   invite: Invite;
@@ -95,6 +95,13 @@ export function Invitation({
    * media exactly as before.
    */
   mediaUrlMap?: MediaUrlMap;
+  /**
+   * Shows a non-interactive overlay marking the render as a pre-purchase
+   * preview, so theme designs aren't trivially screenshotted/reused from
+   * free browsing. Never set on the published guest page (/i/$slug) —
+   * a paying customer's own invitation renders clean.
+   */
+  watermark?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [opening, setOpening] = useState(false);
@@ -317,6 +324,13 @@ export function Invitation({
       className="new-invitation"
       style={paletteVariables(theme) as React.CSSProperties}
     >
+      {watermark && (
+        <div className="preview-watermark" aria-hidden="true">
+          {Array.from({ length: 24 }, (_, i) => (
+            <span key={i}>Preview — not yet published</span>
+          ))}
+        </div>
+      )}
       <audio
         ref={sealAudio}
         src={SEAL_CLICK}
@@ -820,16 +834,6 @@ export function Invitation({
                 </Button>
               </div>
             )}
-          </div>
-          {/* Only reachable once the envelope is open, i.e. when the full
-              invitation is on screen — printing from here captures the
-              invitation itself (print CSS drops the site chrome), and the
-              browser's own dialog offers "Save as PDF". This button is a
-              print action, not a generated-file export. */}
-          <div className="invitation-print">
-            <Button variant="outline" size="sm" onClick={() => window.print()}>
-              <Printer size={15} /> Save / Print
-            </Button>
           </div>
         </div>
       )}
