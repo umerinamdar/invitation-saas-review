@@ -134,6 +134,14 @@ describe("heading structure", () => {
     expect(/<h1[\s>]/.test(create + editor)).toBe(true);
     expect(/<h1[\s>]/.test(editorRoute + editor)).toBe(true);
   });
+
+  it("templates theme cards use h2 under the page h1 (audit A-2)", () => {
+    // The cards were <h3> directly under the /templates <h1>, skipping
+    // a heading level for screen-reader navigation.
+    const card = read("../components/site/theme-card.tsx");
+    expect(card).toContain("<h2>{theme.name}</h2>");
+    expect(card).not.toContain("<h3>{theme.name}</h3>");
+  });
 });
 
 describe("form focus indicator (A11Y-8)", () => {
@@ -166,6 +174,24 @@ describe("file upload keyboard reachability (A11Y-9)", () => {
   it("the wrapping label shows a focus outline while its input is focused", () => {
     const css = readSrc("../site.css");
     expect(css).toContain("label:focus-within");
+  });
+});
+
+describe("visually-hidden inputs keep sr-only geometry (audit A-1)", () => {
+  // The unlayered .auth-form/.editor-form input rule set width:100% +
+  // padding + border, overriding Tailwind's layered sr-only utility, so
+  // the pickers' hidden file inputs laid out ~1280px wide and defeated
+  // the pages' no-horizontal-scroll geometry (masked visually by
+  // clip-path + overflow-x: clip). The form-field rule must not apply
+  // to .sr-only inputs at all. (The :focus rule is deliberately out of
+  // scope: it sets no geometry, and A11Y-9 gives the wrapping label the
+  // visible focus outline.)
+  it("the base form-input rule excludes .sr-only inputs", () => {
+    const css = readSrc("../site.css");
+    const rule = /[^{}]*\.editor-form input[^{}]*\{/.exec(css);
+    expect(rule).not.toBeNull();
+    expect(rule![0]).toContain(".editor-form input:not(.sr-only)");
+    expect(rule![0]).toContain(".auth-form input:not(.sr-only)");
   });
 });
 

@@ -308,7 +308,12 @@ a {
   background: var(--paper-texture) center/400px var(--paper-light);
   border: 1px solid var(--gold-light);
   box-shadow: var(--shadow-paper);
-  transition: transform 1.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+  /* The sheet rises only once the flap is underway — one moving part
+   * at a time is what made the reference openings read as calm.
+   * 0.3s delay + 1s run still lands inside the 1.4s openMs. All five
+   * reveal mechanics share the one --ease-inout opening easing (see
+   * docs/motion-system.md): slow start, slow end, no front-loading. */
+  transition: transform 1s cubic-bezier(0.42, 0, 0.58, 1) 0.3s;
 }
 .envelope-flap {
   position: absolute;
@@ -323,7 +328,7 @@ a {
     var(--paper-texture) center/400px;
   transform-origin: top;
   z-index: 3;
-  transition: transform 1.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition: transform var(--open-duration, 1.4s) cubic-bezier(0.42, 0, 0.58, 1);
   filter: drop-shadow(0 3px 3px var(--paper-dark));
   box-shadow: var(--shadow-paper);
 }
@@ -384,7 +389,7 @@ a {
   position: relative;
   flex: 1;
   transform-style: preserve-3d;
-  transition: transform 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform var(--open-duration, 1.4s) cubic-bezier(0.42, 0, 0.58, 1);
 }
 .door-left {
   transform-origin: left center;
@@ -440,7 +445,7 @@ a {
   top: 0;
   bottom: 0;
   width: 52%;
-  transition: transform 1.5s cubic-bezier(0.5, 0, 0.25, 1);
+  transition: transform var(--open-duration, 1.5s) cubic-bezier(0.42, 0, 0.58, 1);
   background: repeating-linear-gradient(
     90deg,
     color-mix(in oklch, var(--paper-dark) 92%, transparent) 0 9px,
@@ -500,7 +505,7 @@ a {
   inset: 0;
   transform-origin: left center;
   transform-style: preserve-3d;
-  transition: transform 1.5s cubic-bezier(0.38, 0, 0.2, 1);
+  transition: transform var(--open-duration, 1.5s) cubic-bezier(0.42, 0, 0.58, 1);
   background: var(--paper-texture) center/400px var(--paper);
   border: 1px solid var(--paper-dark);
   box-shadow: var(--shadow-envelope);
@@ -565,8 +570,8 @@ a {
   border: 1px solid var(--paper-dark);
   box-shadow: var(--shadow-envelope);
   transition:
-    transform 1.5s cubic-bezier(0.33, 0, 0.2, 1),
-    opacity 1.5s;
+    transform var(--open-duration, 1.5s) cubic-bezier(0.42, 0, 0.58, 1),
+    opacity var(--open-duration, 1.5s) cubic-bezier(0.42, 0, 0.58, 1);
   z-index: 4;
 }
 .box-rim {

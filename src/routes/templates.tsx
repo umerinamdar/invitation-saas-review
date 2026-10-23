@@ -93,11 +93,23 @@ function Templates() {
           ))}
         </div>
         <section className="designs">
-          <div className="theme-grid">
-            {filtered.map((theme) => (
-              <ThemeCard key={theme.id} theme={theme} />
+          {/* Keyed by category so a filter change remounts the grid and
+              the cards settle in with a stagger (see .card-in in
+              site.css) instead of swapping instantly. */}
+          <div className="theme-grid" key={category}>
+            {filtered.map((theme, i) => (
+              <div
+                key={theme.id}
+                className="card-in"
+                style={{ animationDelay: `${Math.min(i * 70, 420)}ms` }}
+              >
+                <ThemeCard theme={theme} />
+              </div>
             ))}
           </div>
+          <p className="sr-only" role="status">
+            {`${filtered.length} ${filtered.length === 1 ? "design" : "designs"} shown`}
+          </p>
           {filtered.length === 0 && (
             <p className="category-empty">
               No designs in this category yet — check back soon.

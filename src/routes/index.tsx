@@ -83,7 +83,11 @@ function Landing() {
 
       <main>
         <section className="hero grain">
-          <Reveal as="div" className="hero-inner animate-rise">
+          {/* Reveal alone owns the hero entrance — this block used to
+              also carry .animate-rise, so two entrances (a CSS keyframe
+              and the Reveal transition) fought over the same transform
+              and the first ~200ms juddered. */}
+          <Reveal as="div" className="hero-inner">
             <p className="eyebrow">{t("hero.eyebrow")}</p>
             <h1>
               {t("hero.titleLine1")}

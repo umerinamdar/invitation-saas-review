@@ -41,6 +41,18 @@
     oklch(0.66 0.11 72)
   );
 
+  /* Motion tokens — the single source for the storefront/editor.
+   * Mirrored in src/lib/motion.ts for JS-driven timing. See
+   * docs/motion-system.md. Two easings only: --ease-out for entrances,
+   * --ease-inout for two-way state changes and openings. */
+  --dur-instant: 120ms;
+  --dur-fast: 180ms;
+  --dur-base: 240ms;
+  --dur-slow: 400ms;
+  --dur-slower: 700ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-inout: cubic-bezier(0.42, 0, 0.58, 1);
+
   background: var(--sheet);
   color: var(--ink);
   font-family: "Manrope", system-ui, sans-serif;
@@ -120,8 +132,24 @@
 .animate-float {
   animation: float-slow 7s ease-in-out infinite;
 }
+/* The hero's three phones used to float in perfect sync, which reads
+ * as a screensaver rather than objects in a scene. Desynchronised
+ * periods/phases make the group feel physical; the centre (hero)
+ * phone barely moves — it is the one being looked at. */
+.hero-phone-1 .animate-float {
+  animation-duration: 8.5s;
+  animation-delay: -2.2s;
+}
+.hero-phone-2 .animate-float {
+  animation-duration: 9.5s;
+  animation-delay: -4.5s;
+}
+.hero-phone-3 .animate-float {
+  animation-duration: 11s;
+  animation-delay: -1s;
+}
 .animate-rise {
-  animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: rise var(--dur-slower) var(--ease-out) both;
 }
 @media (prefers-reduced-motion: reduce) {
   .animate-float,
@@ -229,6 +257,13 @@
   background: color-mix(in oklch, var(--sheet) 80%, transparent);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid color-mix(in oklch, var(--line) 60%, transparent);
+  transition: box-shadow var(--dur-base) var(--ease-out);
+}
+.site-header.is-scrolled {
+  box-shadow: 0 12px 32px -18px oklch(0.3 0.04 40 / 28%);
+}
+.site-header.is-overlay.is-scrolled {
+  box-shadow: none;
 }
 /* Over a full-bleed hero the header is transparent and light-on-dark. */
 .site-header.is-overlay {
@@ -317,9 +352,35 @@
   font-weight: 600;
   letter-spacing: 0.01em;
   border-radius: 999px;
-  transition: 0.2s;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-instant) var(--ease-out);
   white-space: nowrap;
   box-shadow: var(--shadow-soft);
+}
+/* Press feedback: the button answers the tap, it doesn't just change
+ * colour on hover (touch guests never see hover). */
+.btn:active {
+  transform: scale(0.98);
+}
+/* One visible keyboard-focus system for the whole storefront/editor.
+ * Form inputs already carry their own gold outline on :focus; links
+ * and buttons had none, so keyboard users tabbed through invisible
+ * focus on pills, cards and nav. */
+.site a:focus-visible,
+.site button:focus-visible,
+.editor a:focus-visible,
+.editor button:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+.btn svg {
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.btn:hover svg[data-lucide="arrow-right"] {
+  transform: translateX(2px);
 }
 .btn-sm {
   padding: 10px 20px;
@@ -477,7 +538,14 @@
   font-size: 13px;
   letter-spacing: 0.02em;
   cursor: pointer;
-  transition: 0.16s;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-instant) var(--ease-out);
+}
+.category-pill:active {
+  transform: scale(0.97);
 }
 .category-pill:hover {
   border-color: var(--gold-soft);
@@ -539,10 +607,37 @@
   background: var(--sheet);
   padding: 44px 16% 34px;
   box-shadow: var(--shadow-soft);
-  transition: border-color 0.4s;
+  transition:
+    border-color var(--dur-slow) var(--ease-out),
+    box-shadow var(--dur-slow) var(--ease-out);
 }
 .theme-card:hover .theme-card-top {
   border-color: color-mix(in oklch, var(--gold) 60%, transparent);
+  box-shadow:
+    0 2px 4px oklch(0.3 0.04 40 / 8%),
+    0 20px 44px -14px oklch(0.3 0.04 40 / 26%);
+}
+/* Gallery entrance: when the grid (re)mounts — first view or a filter
+ * change — cards settle in with a short stagger instead of popping in
+ * as one flat block. Transform/opacity only; the stagger is capped in
+ * the component so late cards never wait long. */
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.theme-grid > .card-in {
+  animation: card-in var(--dur-slower) var(--ease-out) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .theme-grid > .card-in {
+    animation: none;
+  }
 }
 .theme-card-top::before {
   content: "";
@@ -578,7 +673,7 @@
 }
 .theme-phone {
   position: relative;
-  transition: transform 0.6s cubic-bezier(0.2, 0, 0.2, 1);
+  transition: transform var(--dur-slower) var(--ease-out);
 }
 .theme-card:hover .theme-phone {
   transform: translateY(-8px);
@@ -603,12 +698,23 @@
   letter-spacing: 0.04em;
   opacity: 0;
   pointer-events: none;
-  transition: 0.25s cubic-bezier(0.2, 0, 0.2, 1);
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
   z-index: 6;
 }
-.theme-card:hover .theme-phone-hover {
+.theme-card:hover .theme-phone-hover,
+.theme-phone-link:focus-visible .theme-phone-hover {
   opacity: 1;
   transform: translate(-50%, 0);
+}
+.theme-phone-link:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+.theme-card:focus-within .theme-phone {
+  transform: translateY(-8px);
 }
 .theme-phone-screen {
   /* Sized in container units so one rule serves every frame size. */
@@ -686,7 +792,7 @@
   justify-content: space-between;
   gap: 12px;
 }
-.theme-card-head h3 {
+.theme-card-head h2 {
   font-size: 24px;
 }
 .swatches {
@@ -707,7 +813,22 @@
   color: var(--ink-soft);
 }
 .feature-pills {
-  display: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 0;
+  list-style: none;
+}
+.feature-pills li {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 10px;
+  background: var(--paper-white);
 }
 .theme-card-actions {
   margin-top: 18px;
@@ -954,7 +1075,7 @@
 .faq-chevron {
   flex: none;
   color: var(--gold);
-  transition: transform 0.25s;
+  transition: transform var(--dur-base) var(--ease-out);
 }
 .faq-item[open] .faq-chevron {
   transform: rotate(180deg);
@@ -1129,6 +1250,16 @@
   border-radius: 999px;
   color: var(--ink);
 }
+@keyframes sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
 .nav-sheet {
   position: absolute;
   top: 100%;
@@ -1141,6 +1272,12 @@
   background: var(--sheet);
   border-bottom: 1px solid var(--line);
   box-shadow: var(--shadow-soft);
+  animation: sheet-in var(--dur-base) var(--ease-out) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-sheet {
+    animation: none;
+  }
 }
 .nav-sheet a {
   padding: 14px 0;
@@ -1325,8 +1462,8 @@ a.contact-card {
   text-transform: uppercase;
   color: var(--ink-faint);
 }
-.auth-form input,
-.editor-form input,
+.auth-form input:not(.sr-only),
+.editor-form input:not(.sr-only),
 .editor-form textarea {
   font-family: "Jost", sans-serif;
   font-size: 15px;
@@ -1337,7 +1474,9 @@ a.contact-card {
   border-radius: 1px;
   background: var(--sheet);
   width: 100%;
-  transition: 0.18s;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    outline-color var(--dur-fast) var(--ease-out);
 }
 .auth-form input:focus,
 .auth-form select:focus,
@@ -1596,7 +1735,14 @@ a.contact-card {
   padding: 8px 13px;
   border: 1px solid var(--line);
   color: var(--ink-soft);
-  transition: 0.16s;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-instant) var(--ease-out);
+}
+.theme-choice:active {
+  transform: scale(0.97);
 }
 .theme-choice:hover {
   border-color: var(--gold);
@@ -1703,6 +1849,27 @@ a.contact-card {
   line-height: 1.6;
   text-align: center;
   color: var(--ink-faint);
+}
+
+/* Switching themes remounts the preview invitation (key change in the
+ * editor); a short fade keeps that from reading as a hard cut. Scoped
+ * to the editor — the public invitation has its own appear animation
+ * and must not inherit this one. */
+@keyframes preview-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.editor-preview .new-invitation {
+  animation: preview-in var(--dur-slow) var(--ease-out);
+}
+@media (prefers-reduced-motion: reduce) {
+  .editor-preview .new-invitation {
+    animation: none;
+  }
 }
 
 /*
@@ -1907,9 +2074,8 @@ a.contact-card {
   opacity: 0;
   transform: translateY(22px);
   transition:
-    opacity 0.85s cubic-bezier(0.22, 0.61, 0.36, 1),
-    transform 0.85s cubic-bezier(0.22, 0.61, 0.36, 1);
-  will-change: opacity, transform;
+    opacity var(--dur-slower) var(--ease-out),
+    transform var(--dur-slower) var(--ease-out);
 }
 .reveal.is-shown {
   opacity: 1;
@@ -2228,3 +2394,15 @@ a.contact-card {
   color: var(--ink);
 }
 
+/* Print: drop site chrome so a saved/printed invitation page is the
+   invitation itself, and keep invitation sections from splitting
+   across pages. Added Stage E (QE) — no print stylesheet existed. */
+@media print {
+  .site-header,
+  .site-footer {
+    display: none !important;
+  }
+  .new-invitation section {
+    break-inside: avoid-page;
+  }
+}

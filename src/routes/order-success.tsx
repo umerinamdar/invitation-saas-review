@@ -212,6 +212,24 @@ function OrderSuccess() {
               </Link>
             </div>
           </>
+        ) : state === "unverified" ? (
+          <>
+            <div className="status-icon">
+              <AlertCircle size={48} />
+            </div>
+            <h1>No payment to confirm here</h1>
+            <p className="lede">
+              This page shows your payment status right after checkout. If
+              you've just paid, open the link from your payment confirmation —
+              or check your dashboard for your invitation's live link.
+            </p>
+
+            <div className="status-page-actions">
+              <Link to="/dashboard" className="btn btn-solid">
+                Go to dashboard
+              </Link>
+            </div>
+          </>
         ) : (
           <>
             <div className="status-icon">

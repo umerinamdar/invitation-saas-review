@@ -102,16 +102,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { rel: "stylesheet", href: siteCss },
         { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
       ],
-      scripts: [
-        {
-          src:
-            import.meta.env["VITE_YOUPI_CHECKOUT_URL"] &&
-            `${import.meta.env["VITE_YOUPI_CHECKOUT_URL"]}/youpi.js`,
-          async: true,
-          "data-youpi-key": import.meta.env["VITE_YOUPI_MERCHANT_PUBLIC_KEY"] || "",
-          "data-currency": "INR",
-        },
-      ].filter((s) => s.src),
     }),
     shellComponent: RootShell,
     component: RootComponent,
