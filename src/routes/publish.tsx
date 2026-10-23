@@ -7,7 +7,7 @@ import {
 import { useEffect, useState } from "react";
 import { ArrowLeft, Check } from "lucide-react";
 import { BRAND, SiteFooter, SiteHeader } from "@/components/site/chrome";
-import { PUBLISH_PRICE_LABEL } from "@/config/site";
+import { absoluteUrl, PUBLISH_PRICE_LABEL } from "@/config/site";
 import { getDraftIssues } from "@/lib/draft-validation";
 import { readDraft, setDraftInviteId } from "@/lib/local-draft";
 import { getTheme } from "@/themes";
@@ -30,6 +30,9 @@ interface PublishSearch {
   invite?: string | undefined;
 }
 
+/** This page's absolute URL — null until the canonical origin is set. */
+const OG_URL = absoluteUrl("/publish");
+
 export const Route = createFileRoute("/publish")({
   validateSearch: (search: Record<string, unknown>): PublishSearch => ({
     invite: (search["invite"] as string | undefined) || undefined,
@@ -38,6 +41,11 @@ export const Route = createFileRoute("/publish")({
     meta: [
       { title: `Publish your invitation — ${BRAND}` },
       { name: "robots", content: "noindex" },
+    ],
+    links: [
+      // Canonical — only once VITE_SITE_URL is configured, never a
+      // guessed or localhost URL (same guard as the public routes).
+      ...(OG_URL ? [{ rel: "canonical", href: OG_URL }] : []),
     ],
   }),
   component: Publish,

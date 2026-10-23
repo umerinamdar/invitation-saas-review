@@ -1,9 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { BRAND, SiteFooter, SiteHeader } from "@/components/site/chrome";
+import { absoluteUrl } from "@/config/site";
+
+/** This page's absolute URL — null until the canonical origin is set. */
+const OG_URL = absoluteUrl("/privacy");
 
 export const Route = createFileRoute("/privacy")({
   head: () => ({
     meta: [{ title: `Privacy policy — ${BRAND}` }],
+    links: [
+      // Canonical — only once VITE_SITE_URL is configured, never a
+      // guessed or localhost URL (same guard as the public routes).
+      ...(OG_URL ? [{ rel: "canonical", href: OG_URL }] : []),
+    ],
   }),
   component: Privacy,
 });

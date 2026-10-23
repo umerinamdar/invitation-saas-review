@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Check, LoaderCircle } from "lucide-react";
 import { BRAND } from "@/components/site/chrome";
-import { PUBLISH_PRICE_LABEL } from "@/config/site";
+import { absoluteUrl, PUBLISH_PRICE_LABEL } from "@/config/site";
 import { InviteEditor } from "@/components/editor/invite-editor";
 import { useAuth } from "@/lib/auth";
 import {
@@ -17,16 +17,24 @@ import { themes } from "@/themes";
 import type { InviteRow } from "@/lib/supabase";
 
 export const Route = createFileRoute("/editor/$id")({
-  head: () => ({
-    meta: [
-      { title: `Edit your invitation — ${BRAND}` },
-      { name: "robots", content: "noindex" },
-    ],
-    links: themes.map((theme) => ({
-      rel: "stylesheet",
-      href: theme.typography.fontsHref,
-    })),
-  }),
+  head: ({ params }) => {
+    // Canonical for this concrete editor URL — only when the owner has
+    // configured the canonical origin (VITE_SITE_URL).
+    const ogUrl = absoluteUrl(`/editor/${params.id}`);
+    return {
+      meta: [
+        { title: `Edit your invitation — ${BRAND}` },
+        { name: "robots", content: "noindex" },
+      ],
+      links: [
+        ...(ogUrl ? [{ rel: "canonical", href: ogUrl }] : []),
+        ...themes.map((theme) => ({
+          rel: "stylesheet",
+          href: theme.typography.fontsHref,
+        })),
+      ],
+    };
+  },
   component: Editor,
 });
 

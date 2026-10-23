@@ -7,10 +7,14 @@ import { getInviteById, toInvite } from "@/lib/invites-api";
 import type { InviteRow } from "@/lib/supabase";
 import { buildShareLinks, type ShareLinks } from "@/lib/share";
 import { clearDraft, readDraft } from "@/lib/local-draft";
+import { absoluteUrl } from "@/config/site";
 
 interface OrderSuccessSearch {
   order_id?: string | undefined;
 }
+
+/** This page's absolute URL — null until the canonical origin is set. */
+const OG_URL = absoluteUrl("/order-success");
 
 export const Route = createFileRoute("/order-success")({
   validateSearch: (search: Record<string, unknown>): OrderSuccessSearch => ({
@@ -20,6 +24,11 @@ export const Route = createFileRoute("/order-success")({
     meta: [
       { title: `Payment status — ${BRAND}` },
       { name: "robots", content: "noindex" },
+    ],
+    links: [
+      // Canonical — only once VITE_SITE_URL is configured, never a
+      // guessed or localhost URL (same guard as the public routes).
+      ...(OG_URL ? [{ rel: "canonical", href: OG_URL }] : []),
     ],
   }),
   component: OrderSuccess,

@@ -5,6 +5,16 @@ import { paletteVariables, type Theme } from "@/themes/types";
 import { useLocale } from "@/i18n/locale-context";
 import { getDemoInvite } from "@/invites/demo-wedding";
 
+/**
+ * The WebP sibling generated next to every theme hero image (same
+ * directory, same basename, `.webp`) — served via <picture> so modern
+ * browsers skip the larger JPEG while the original <img> stays as the
+ * fallback for browsers without WebP support.
+ */
+function webpVariant(src: string): string {
+  return src.replace(/\.(?:jpe?g|png)$/i, ".webp");
+}
+
 /** A miniature of the real invitation, drawn from the theme's own palette. */
 export function ThemePhoneScreen({ theme }: { theme: Theme }) {
   const { revealedBackdrop } = theme.assets;
@@ -16,7 +26,10 @@ export function ThemePhoneScreen({ theme }: { theme: Theme }) {
     <span className="theme-phone-screen">
       {revealedBackdrop ? (
         <>
-          <img src={revealedBackdrop} alt="" loading="lazy" />
+          <picture>
+            <source type="image/webp" srcSet={webpVariant(revealedBackdrop)} />
+            <img src={revealedBackdrop} alt="" loading="lazy" />
+          </picture>
           <span className="theme-card-veil" />
         </>
       ) : (
