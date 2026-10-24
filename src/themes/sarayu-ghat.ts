@@ -46,6 +46,7 @@ export const sarayuGhat: Theme = {
     // that runs behind every section after the hero instead of a flat colour.
     sectionBackdrop: "/themes/sarayu-ghat/section-bg.jpg",
     paperTexture: "/themes/sarayu-ghat/paper.jpg",
+    defaultMusic: "/themes/dubai-silk/track.mp3",
   },
 
   motion: {

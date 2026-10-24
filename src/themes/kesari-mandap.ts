@@ -50,6 +50,7 @@ export const kesariMandap: Theme = {
     // that runs behind every section after the hero instead of a flat colour.
     sectionBackdrop: "/themes/kesari-mandap/section-bg.jpg",
     paperTexture: "/themes/kesari-mandap/paper.jpg",
+    defaultMusic: "/themes/dubai-silk/track.mp3",
   },
 
   motion: {

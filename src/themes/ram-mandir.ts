@@ -51,6 +51,7 @@ export const ramMandir: Theme = {
     // Shares Kesari Mandap's warm saffron-cream grain — both themes sit in
     // the same palette family, so no new texture was generated for this.
     paperTexture: "/themes/kesari-mandap/paper.jpg",
+    defaultMusic: "/themes/dubai-silk/track.mp3",
   },
 
   motion: {

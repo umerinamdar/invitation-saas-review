@@ -168,6 +168,12 @@ export function InviteEditor({
         [which]: { ...config.hosts[which], ...next },
       },
     });
+  const patchMeta = (next: Partial<InviteConfig["meta"]>) =>
+    onChange({ ...config, meta: { ...config.meta, ...next } });
+  // A single host celebrates without a partner: the renderer already
+  // prints one name when person2 is absent, so the mode only has to
+  // drop person2 (the families fieldset below follows the same flag).
+  const singleHost = config.hosts.mode === "single";
 
   return (
     <div className="editor">
@@ -195,6 +201,28 @@ export function InviteEditor({
 
           <fieldset>
             <legend>{t("editor.yourNames")}</legend>
+            <div className="theme-choices">
+              <button
+                type="button"
+                className={`theme-choice ${singleHost ? "" : "is-active"}`}
+                onClick={() => patchHosts({ mode: "couple" })}
+              >
+                {t("editor.hostCouple")}
+              </button>
+              <button
+                type="button"
+                className={`theme-choice ${singleHost ? "is-active" : ""}`}
+                onClick={() => {
+                  const { person2: _drop, ...hosts } = config.hosts;
+                  onChange({
+                    ...config,
+                    hosts: { ...hosts, mode: "single" },
+                  });
+                }}
+              >
+                {t("editor.hostSingle")}
+              </button>
+            </div>
             <label>
               {t("editor.name")}
               <input
@@ -203,14 +231,16 @@ export function InviteEditor({
                 placeholder="Aarav"
               />
             </label>
-            <label>
-              {t("editor.partnersName")}
-              <input
-                value={config.hosts.person2 ?? ""}
-                onChange={(e) => patchHosts({ person2: e.target.value })}
-                placeholder="Diya"
-              />
-            </label>
+            {!singleHost && (
+              <label>
+                {t("editor.partnersName")}
+                <input
+                  value={config.hosts.person2 ?? ""}
+                  onChange={(e) => patchHosts({ person2: e.target.value })}
+                  placeholder="Diya"
+                />
+              </label>
+            )}
           </fieldset>
 
           <fieldset>
@@ -221,6 +251,7 @@ export function InviteEditor({
                 [
                   "family1",
                   config.hosts.person1 || t("editor.firstSide"),
+                  "Son of",
                   "Mr. & Mrs. Rajeev Mehra",
                   "Late Shri Mohanlal Mehra",
                   "MBBS, MD",
@@ -228,46 +259,68 @@ export function InviteEditor({
                 [
                   "family2",
                   config.hosts.person2 || t("editor.secondSide"),
+                  "Daughter of",
                   "Dr. & Mrs. Suresh Iyer",
                   "Shri & Smt. Ramanathan Iyer",
                   "MA, PhD",
                 ],
               ] as const
-            ).map(([key, who, parentsPlaceholder, grandparentsPlaceholder, credentialsPlaceholder]) => (
-              <div key={key} className="family-fields">
-                <p className="family-fields-who">{who}</p>
-                <label>
-                  {t("editor.parents")}
-                  <input
-                    value={config.hosts[key]?.parents ?? ""}
-                    onChange={(e) =>
-                      patchFamily(key, { parents: e.target.value })
-                    }
-                    placeholder={parentsPlaceholder}
-                  />
-                </label>
-                <label>
-                  {t("editor.grandparents")}
-                  <input
-                    value={config.hosts[key]?.grandparents ?? ""}
-                    onChange={(e) =>
-                      patchFamily(key, { grandparents: e.target.value })
-                    }
-                    placeholder={grandparentsPlaceholder}
-                  />
-                </label>
-                <label>
-                  {t("editor.qualifications")}
-                  <input
-                    value={config.hosts[key]?.credentials ?? ""}
-                    onChange={(e) =>
-                      patchFamily(key, { credentials: e.target.value })
-                    }
-                    placeholder={credentialsPlaceholder}
-                  />
-                </label>
-              </div>
-            ))}
+            )
+              .filter(([key]) => !singleHost || key === "family1")
+              .map(
+                ([
+                  key,
+                  who,
+                  relationPlaceholder,
+                  parentsPlaceholder,
+                  grandparentsPlaceholder,
+                  credentialsPlaceholder,
+                ]) => (
+                  <div key={key} className="family-fields">
+                    <p className="family-fields-who">{who}</p>
+                    <label>
+                      {t("editor.relation")}
+                      <input
+                        value={config.hosts[key]?.relation ?? ""}
+                        onChange={(e) =>
+                          patchFamily(key, { relation: e.target.value })
+                        }
+                        placeholder={relationPlaceholder}
+                      />
+                    </label>
+                    <label>
+                      {t("editor.parents")}
+                      <input
+                        value={config.hosts[key]?.parents ?? ""}
+                        onChange={(e) =>
+                          patchFamily(key, { parents: e.target.value })
+                        }
+                        placeholder={parentsPlaceholder}
+                      />
+                    </label>
+                    <label>
+                      {t("editor.grandparents")}
+                      <input
+                        value={config.hosts[key]?.grandparents ?? ""}
+                        onChange={(e) =>
+                          patchFamily(key, { grandparents: e.target.value })
+                        }
+                        placeholder={grandparentsPlaceholder}
+                      />
+                    </label>
+                    <label>
+                      {t("editor.qualifications")}
+                      <input
+                        value={config.hosts[key]?.credentials ?? ""}
+                        onChange={(e) =>
+                          patchFamily(key, { credentials: e.target.value })
+                        }
+                        placeholder={credentialsPlaceholder}
+                      />
+                    </label>
+                  </div>
+                ),
+              )}
           </fieldset>
 
           <fieldset>
@@ -358,6 +411,14 @@ export function InviteEditor({
               />
             </label>
             <label>
+              {t("editor.venueAddress")}
+              <input
+                value={config.event.venueAddress ?? ""}
+                onChange={(e) => patchEvent({ venueAddress: e.target.value })}
+                placeholder="21 Lake Palace Road, Udaipur"
+              />
+            </label>
+            <label>
               {t("editor.googleMapsLink")}
               <input
                 value={config.event.venueMapsUrl ?? ""}
@@ -371,62 +432,130 @@ export function InviteEditor({
               <p className="field-hint">{mapsWarning}</p>
             ) : null}
             <p className="field-hint">{t("editor.mapsHint")}</p>
+            <label>
+              {t("editor.muhurat")}
+              <input
+                value={config.event.muhuratText ?? ""}
+                onChange={(e) => patchEvent({ muhuratText: e.target.value })}
+                placeholder="Shubh muhurat 10:15 AM"
+              />
+            </label>
+            <label>
+              {t("editor.dressCode")}
+              <input
+                value={config.event.dressCode ?? ""}
+                onChange={(e) => patchEvent({ dressCode: e.target.value })}
+                placeholder="Traditional or cocktail"
+              />
+            </label>
           </fieldset>
 
           <fieldset>
             <legend>{t("editor.yourFunctions")}</legend>
             {(config.subEvents ?? []).map((sub, index) => (
-              <div className="sub-event-row" key={index}>
-                <input
-                  value={sub.label}
-                  placeholder="Mehendi"
-                  onChange={(e) =>
-                    patch({
-                      subEvents: replaceAt(config.subEvents, index, {
-                        ...sub,
-                        label: e.target.value,
-                      }),
-                    })
-                  }
-                />
-                <input
-                  value={sub.dateText}
-                  placeholder="12 February"
-                  onChange={(e) =>
-                    patch({
-                      subEvents: replaceAt(config.subEvents, index, {
-                        ...sub,
-                        dateText: e.target.value,
-                      }),
-                    })
-                  }
-                />
-                <input
-                  value={sub.timeText}
-                  placeholder="6:00 PM"
-                  onChange={(e) =>
-                    patch({
-                      subEvents: replaceAt(config.subEvents, index, {
-                        ...sub,
-                        timeText: e.target.value,
-                      }),
-                    })
-                  }
-                />
-                <button
-                  type="button"
-                  className="row-remove"
-                  aria-label={`Remove ${sub.label || "function"}`}
-                  onClick={() =>
-                    patch({
-                      subEvents: (config.subEvents ?? []).filter(
-                        (_, i) => i !== index,
-                      ),
-                    })
-                  }
-                >
-                  ×
-                </button>
+              <div className="sub-event-block" key={index}>
+                <div className="sub-event-row">
+                  <input
+                    value={sub.label}
+                    placeholder="Mehendi"
+                    onChange={(e) =>
+                      patch({
+                        subEvents: replaceAt(config.subEvents, index, {
+                          ...sub,
+                          label: e.target.value,
+                        }),
+                      })
+                    }
+                  />
+                  <input
+                    value={sub.dateText}
+                    placeholder="12 February"
+                    onChange={(e) =>
+                      patch({
+                        subEvents: replaceAt(config.subEvents, index, {
+                          ...sub,
+                          dateText: e.target.value,
+                        }),
+                      })
+                    }
+                  />
+                  <input
+                    value={sub.timeText}
+                    placeholder="6:00 PM"
+                    onChange={(e) =>
+                      patch({
+                        subEvents: replaceAt(config.subEvents, index, {
+                          ...sub,
+                          timeText: e.target.value,
+                        }),
+                      })
+                    }
+                  />
+                  <button
+                    type="button"
+                    className="row-remove"
+                    aria-label={`Remove ${sub.label || "function"}`}
+                    onClick={() =>
+                      patch({
+                        subEvents: (config.subEvents ?? []).filter(
+                          (_, i) => i !== index,
+                        ),
+                      })
+                    }
+                  >
+                    ×
+                  </button>
+                </div>
+                <div className="sub-event-row sub-event-details">
+                  <input
+                    value={sub.venueName ?? ""}
+                    placeholder="Venue"
+                    onChange={(e) =>
+                      patch({
+                        subEvents: replaceAt(config.subEvents, index, {
+                          ...sub,
+                          venueName: e.target.value,
+                        }),
+                      })
+                    }
+                  />
+                  <input
+                    value={sub.venueMapsUrl ?? ""}
+                    placeholder="Maps link"
+                    onChange={(e) =>
+                      patch({
+                        subEvents: replaceAt(config.subEvents, index, {
+                          ...sub,
+                          venueMapsUrl: e.target.value,
+                        }),
+                      })
+                    }
+                  />
+                  <input
+                    value={sub.dressCode ?? ""}
+                    placeholder="Dress code"
+                    onChange={(e) =>
+                      patch({
+                        subEvents: replaceAt(config.subEvents, index, {
+                          ...sub,
+                          dressCode: e.target.value,
+                        }),
+                      })
+                    }
+                  />
+                  <input
+                    value={sub.note ?? ""}
+                    placeholder="Note for guests"
+                    onChange={(e) =>
+                      patch({
+                        subEvents: replaceAt(config.subEvents, index, {
+                          ...sub,
+                          note: e.target.value,
+                        }),
+                      })
+                    }
+                  />
+                </div>
               </div>
             ))}
             <button
@@ -442,6 +571,66 @@ export function InviteEditor({
               }
             >
               {t("editor.addFunction")}
+            </button>
+          </fieldset>
+
+          <fieldset>
+            <legend>{t("editor.familyMembers")}</legend>
+            {(config.familyMembers ?? []).map((member, index) => (
+              <div className="sub-event-row member-row" key={index}>
+                <input
+                  value={member.name}
+                  placeholder="Priya Sharma"
+                  onChange={(e) =>
+                    patch({
+                      familyMembers: replaceAt(config.familyMembers, index, {
+                        ...member,
+                        name: e.target.value,
+                      }),
+                    })
+                  }
+                />
+                <input
+                  value={member.role}
+                  placeholder="Sister of the bride"
+                  onChange={(e) =>
+                    patch({
+                      familyMembers: replaceAt(config.familyMembers, index, {
+                        ...member,
+                        role: e.target.value,
+                      }),
+                    })
+                  }
+                />
+                <button
+                  type="button"
+                  className="row-remove"
+                  aria-label={`Remove ${member.name || "family member"}`}
+                  onClick={() =>
+                    patch({
+                      familyMembers: (config.familyMembers ?? []).filter(
+                        (_, i) => i !== index,
+                      ),
+                    })
+                  }
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              className="btn btn-quiet btn-sm"
+              onClick={() =>
+                patch({
+                  familyMembers: [
+                    ...(config.familyMembers ?? []),
+                    { name: "", role: "" },
+                  ],
+                })
+              }
+            >
+              {t("editor.addMember")}
             </button>
           </fieldset>
 
@@ -469,6 +658,44 @@ export function InviteEditor({
             {issueFor("whatsapp") && (
               <p className="field-error">{issueFor("whatsapp")!.message}</p>
             )}
+            <label>
+              {t("editor.phoneNumber")}
+              <input
+                type="tel"
+                inputMode="tel"
+                autoComplete="tel"
+                value={config.rsvp?.phone ?? ""}
+                onChange={(e) =>
+                  patch({
+                    rsvp: {
+                      ...config.rsvp,
+                      enabled: true,
+                      phone: e.target.value,
+                    },
+                  })
+                }
+                placeholder="+91 98200 00000"
+              />
+            </label>
+            <label>
+              {t("editor.emailAddress")}
+              <input
+                type="email"
+                inputMode="email"
+                autoComplete="email"
+                value={config.rsvp?.email ?? ""}
+                onChange={(e) =>
+                  patch({
+                    rsvp: {
+                      ...config.rsvp,
+                      enabled: true,
+                      email: e.target.value,
+                    },
+                  })
+                }
+                placeholder="you@example.com"
+              />
+            </label>
             <label>
               {t("editor.replyBy")}
               <input
@@ -592,6 +819,27 @@ export function InviteEditor({
                 onChange={(e) =>
                   patch({ story: sincePatch(config, e.target.value) })
                 }
+              />
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>{t("editor.linkPreview")}</legend>
+            <label>
+              {t("editor.pageTitle")}
+              <input
+                value={config.meta.title}
+                onChange={(e) => patchMeta({ title: e.target.value })}
+                placeholder="Aarav & Diya — Wedding"
+              />
+            </label>
+            <label>
+              {t("editor.pageDescription")}
+              <textarea
+                rows={2}
+                value={config.meta.description}
+                onChange={(e) => patchMeta({ description: e.target.value })}
+                placeholder="Join us in Udaipur on 14 February 2027."
               />
             </label>
           </fieldset>

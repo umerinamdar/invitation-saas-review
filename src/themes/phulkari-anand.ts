@@ -47,6 +47,7 @@ export const phulkariAnand: Theme = {
     // gradient — runs behind every section after the hero instead of a flat colour.
     sectionBackdrop: "/themes/phulkari-anand/section-bg.jpg",
     paperTexture: "/themes/phulkari-anand/paper.jpg",
+    defaultMusic: "/themes/dubai-silk/track.mp3",
   },
 
   motion: {
