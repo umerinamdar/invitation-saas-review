@@ -4,6 +4,7 @@ import { applyCacheHeaders } from "./lib/cache-headers";
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
 import { serverEnvStatus } from "./lib/env";
+import { maintenanceGate } from "./lib/maintenance";
 import { applySecurityHeaders } from "./lib/security-headers";
 
 // Startup configuration check (Round 2, §7.1): ONE loud line naming any
@@ -74,6 +75,12 @@ function isH3SwallowedErrorBody(body: string): boolean {
 
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
+    // Owner decision 2026-10-24: the site is not ready for real
+    // visitors while development continues. Checked before anything
+    // else — SSR, Supabase, YouPI never run for a gated request.
+    const maintenance = maintenanceGate(request);
+    if (maintenance) return applySecurityHeaders(maintenance);
+
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
