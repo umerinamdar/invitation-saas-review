@@ -2,6 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { X } from "lucide-react";
 import { Invitation } from "@/components/invitation";
 import { ThemeTuner } from "@/components/dev/theme-tuner";
+import { absoluteUrl } from "@/config/site";
 import { themesById } from "@/themes";
 import { getDemoInvite } from "@/invites/demo-wedding";
 
@@ -15,15 +16,28 @@ export const Route = createFileRoute("/preview/$themeId")({
     if (!theme) throw notFound();
     return { theme };
   },
-  head: ({ loaderData }) => ({
-    meta: [
-      { title: `${loaderData?.theme.name ?? "Template"} — Preview` },
-      { name: "robots", content: "noindex" },
-    ],
-    links: loaderData
-      ? [{ rel: "stylesheet", href: loaderData.theme.typography.fontsHref }]
-      : [],
-  }),
+  head: ({ loaderData, params }) => {
+    // Canonical for this concrete preview URL — only when the owner
+    // has configured the canonical origin (VITE_SITE_URL).
+    const ogUrl = absoluteUrl(`/preview/${params.themeId}`);
+    return {
+      meta: [
+        { title: `${loaderData?.theme.name ?? "Template"} — Preview` },
+        { name: "robots", content: "noindex" },
+      ],
+      links: [
+        ...(ogUrl ? [{ rel: "canonical", href: ogUrl }] : []),
+        ...(loaderData
+          ? [
+              {
+                rel: "stylesheet",
+                href: loaderData.theme.typography.fontsHref,
+              },
+            ]
+          : []),
+      ],
+    };
+  },
   component: Preview,
 });
 

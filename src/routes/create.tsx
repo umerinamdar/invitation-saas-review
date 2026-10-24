@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Check, LoaderCircle } from "lucide-react";
 import { BRAND } from "@/components/site/chrome";
 import { InviteEditor } from "@/components/editor/invite-editor";
-import { PUBLISH_PRICE_LABEL } from "@/config/site";
+import { absoluteUrl, PUBLISH_PRICE_LABEL } from "@/config/site";
 import { blankConfig, type InviteConfig } from "@/lib/invites-api";
 import {
   getDraftIssues,
@@ -19,6 +19,9 @@ type Search = { theme?: string };
  * only moves to the database when they publish, so the first thing a visitor
  * does is see their own names on the page rather than fill in a signup form.
  */
+/** This page's absolute URL — null until the canonical origin is set. */
+const OG_URL = absoluteUrl("/create");
+
 export const Route = createFileRoute("/create")({
   validateSearch: (search: Record<string, unknown>): Search =>
     typeof search["theme"] === "string" ? { theme: search["theme"] } : {},
@@ -29,10 +32,15 @@ export const Route = createFileRoute("/create")({
       // indexes, like the other account/app routes.
       { name: "robots", content: "noindex" },
     ],
-    links: themes.map((theme) => ({
-      rel: "stylesheet",
-      href: theme.typography.fontsHref,
-    })),
+    links: [
+      // Canonical — only once VITE_SITE_URL is configured, never a
+      // guessed or localhost URL (same guard as the public routes).
+      ...(OG_URL ? [{ rel: "canonical", href: OG_URL }] : []),
+      ...themes.map((theme) => ({
+        rel: "stylesheet",
+        href: theme.typography.fontsHref,
+      })),
+    ],
   }),
   component: Create,
 });

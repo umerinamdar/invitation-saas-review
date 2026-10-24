@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
 import { XCircle } from "lucide-react";
 import { BRAND, SiteFooter, SiteHeader } from "@/components/site/chrome";
+import { absoluteUrl } from "@/config/site";
 
 interface OrderFailedSearch {
   order_id?: string | undefined;
@@ -52,6 +53,9 @@ export function reasonMessage(code: string | null | undefined): string {
   );
 }
 
+/** This page's absolute URL — null until the canonical origin is set. */
+const OG_URL = absoluteUrl("/order-failed");
+
 export const Route = createFileRoute("/order-failed")({
   validateSearch: (search: Record<string, unknown>): OrderFailedSearch => ({
     order_id: (search["order_id"] as string | undefined) || undefined,
@@ -61,6 +65,11 @@ export const Route = createFileRoute("/order-failed")({
     meta: [
       { title: `Payment failed — ${BRAND}` },
       { name: "robots", content: "noindex" },
+    ],
+    links: [
+      // Canonical — only once VITE_SITE_URL is configured, never a
+      // guessed or localhost URL (same guard as the public routes).
+      ...(OG_URL ? [{ rel: "canonical", href: OG_URL }] : []),
     ],
   }),
   component: OrderFailed,

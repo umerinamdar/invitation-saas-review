@@ -37,6 +37,9 @@ export const Route = createFileRoute("/")({
       ...(OG_URL ? [{ property: "og:url", content: OG_URL }] : []),
     ],
     links: [
+      // Canonical — same configured-origin guard as og:url above:
+      // only emitted once VITE_SITE_URL is set, never a guessed URL.
+      ...(OG_URL ? [{ rel: "canonical", href: OG_URL }] : []),
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Manrope:wght@400;500;600;700&display=swap",

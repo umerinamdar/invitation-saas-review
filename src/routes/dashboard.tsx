@@ -10,6 +10,7 @@ import {
   Share2,
 } from "lucide-react";
 import { BRAND, SiteFooter, SiteHeader } from "@/components/site/chrome";
+import { absoluteUrl } from "@/config/site";
 import { useAuth } from "@/lib/auth";
 import { createInvite, listInvites, toInvite } from "@/lib/invites-api";
 import { qrDataUrlForInvite } from "@/lib/qr";
@@ -18,11 +19,19 @@ import { getTheme } from "@/themes";
 import { hostNames } from "@/invites/types";
 import type { InviteRow } from "@/lib/supabase";
 
+/** This page's absolute URL — null until the canonical origin is set. */
+const OG_URL = absoluteUrl("/dashboard");
+
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
       { title: `Your invitations — ${BRAND}` },
       { name: "robots", content: "noindex" },
+    ],
+    links: [
+      // Canonical — only once VITE_SITE_URL is configured, never a
+      // guessed or localhost URL (same guard as the public routes).
+      ...(OG_URL ? [{ rel: "canonical", href: OG_URL }] : []),
     ],
   }),
   component: Dashboard,

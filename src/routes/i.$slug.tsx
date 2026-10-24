@@ -57,7 +57,12 @@ export const Route = createFileRoute("/i/$slug")({
         ...(ogUrl ? [{ property: "og:url", content: ogUrl }] : []),
         { name: "twitter:card", content: "summary_large_image" },
       ],
-      links: [{ rel: "stylesheet", href: theme.typography.fontsHref }],
+      links: [
+        // Canonical — the same per-invite URL and configured-origin
+        // guard as og:url above.
+        ...(ogUrl ? [{ rel: "canonical", href: ogUrl }] : []),
+        { rel: "stylesheet", href: theme.typography.fontsHref },
+      ],
     };
   },
   component: PublicInvite,

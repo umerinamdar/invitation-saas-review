@@ -2,14 +2,23 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import { LoaderCircle } from "lucide-react";
 import { BRAND, SiteFooter, SiteHeader } from "@/components/site/chrome";
+import { absoluteUrl } from "@/config/site";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
+
+/** This page's absolute URL — null until the canonical origin is set. */
+const OG_URL = absoluteUrl("/login");
 
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
       { title: `Sign in — ${BRAND}` },
       { name: "robots", content: "noindex" },
+    ],
+    links: [
+      // Canonical — only once VITE_SITE_URL is configured, never a
+      // guessed or localhost URL (same guard as the public routes).
+      ...(OG_URL ? [{ rel: "canonical", href: OG_URL }] : []),
     ],
   }),
   component: Login,
