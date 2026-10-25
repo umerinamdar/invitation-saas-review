@@ -965,31 +965,32 @@ a {
   backface-visibility: hidden;
   transform: rotateX(180deg);
 }
+/* Owner request, 2026-10-26: both lines live near the bottom of the
+ * card, not centred — "Tap to open" above "You're Invited". */
 .isp-cue {
   position: absolute;
-  top: calc(50% - 4px);
-  left: 50%;
-  width: max-content;
+  inset-inline: 0;
+  bottom: 18%;
   margin: 0;
-  transform: translate(-50%, -50%);
   text-align: center;
   text-transform: uppercase;
   letter-spacing: 0.2em;
   font-size: 0.8rem;
   color: var(--muted-foreground);
-  white-space: nowrap;
 }
 /* No wax-seal graphic (owner request, 2026-10-26): a plain script line
- * stands where the seal used to sit, well below "Tap to open" rather
- * than close beneath it (owner request, 2026-10-26: the same wide gap
- * as Ram Mandir's .rmd-invited, not a tight stack). */
+ * stands where the seal used to sit. Parisienne, not Great Vibes —
+ * each bespoke mechanic gets its own script face (owner request,
+ * 2026-10-26: "different fonts for different templates") rather than
+ * one script reused everywhere; Dubai Silk keeps Great Vibes since
+ * that was its own seal's original pairing. */
 .isp-invited {
   position: absolute;
   inset-inline: 0;
   bottom: 8%;
   margin: 0;
-  font-family: "Great Vibes", cursive;
-  font-size: clamp(22px, 6vw, 28px);
+  font-family: "Parisienne", cursive;
+  font-size: clamp(24px, 6.5vw, 30px);
   color: var(--gold);
   text-align: center;
   will-change: transform, opacity;
@@ -1198,16 +1199,13 @@ a {
   filter: blur(6px);
   z-index: 3;
 }
-/* No wax-seal graphic (owner request, 2026-10-26): a plain script line
- * stands where the seal used to sit, below "Tap to open" (owner
- * request, 2026-10-26: swapped from the original above/below order). */
+/* Owner request, 2026-10-26: both lines live near the bottom of the
+ * doors, not centred — "Tap to open" above "You're Invited". */
 .rmd-cue {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: max-content;
+  inset-inline: 0;
+  bottom: 18%;
   margin: 0;
-  transform: translate(-50%, -50%);
   text-align: center;
   text-transform: uppercase;
   letter-spacing: 0.2em;
@@ -1217,13 +1215,19 @@ a {
   z-index: 4;
   transition: opacity 1.4s cubic-bezier(0.42, 0, 0.58, 1);
 }
+/* No wax-seal graphic (owner request, 2026-10-26): a plain script line
+ * stands where the seal used to sit. Yesteryear, not Great Vibes —
+ * each bespoke mechanic gets its own script face (owner request,
+ * 2026-10-26: "different fonts for different templates") rather than
+ * one script reused everywhere; Dubai Silk keeps Great Vibes since
+ * that was its own seal's original pairing. */
 .rmd-invited {
   position: absolute;
   inset-inline: 0;
   bottom: 8%;
   margin: 0;
-  font-family: "Great Vibes", cursive;
-  font-size: clamp(22px, 6vw, 28px);
+  font-family: "Yesteryear", cursive;
+  font-size: clamp(24px, 6.5vw, 30px);
   color: var(--paper-light);
   text-align: center;
   text-shadow: 0 2px 6px color-mix(in oklch, black 55%, transparent);

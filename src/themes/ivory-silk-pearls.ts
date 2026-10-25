@@ -59,7 +59,7 @@ export const ivorySilkPearls: Theme = {
     serif: "Bodoni Moda",
     sans: "Jost",
     fontsHref:
-      "https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;1,400&family=Great+Vibes&family=Jost:wght@400;500;600&display=swap",
+      "https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;1,400&family=Parisienne&family=Jost:wght@400;500;600&display=swap",
   },
 
   ornamentation: "none", // uses photography instead
