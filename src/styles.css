@@ -1588,7 +1588,15 @@ a {
   width: 42px;
   height: 42px;
   border-radius: 999px;
-  color: var(--ink-light);
+  /* Was var(--ink-light) — a near-white "glow" token, not a text/icon
+   * colour. The dock's own background always tracks var(--background),
+   * so matching that with var(--foreground) (its designed AA-contrast
+   * partner, same pairing .music-error already relies on below) keeps
+   * the icons visible on every theme; --ink-light only read correctly
+   * by coincidence on themes with a dark --background, and went
+   * invisible on light ones (Dubai Silk among them — caught during
+   * the Ivory Silk & Pearls review, but not specific to either theme). */
+  color: var(--foreground);
 }
 .music-dock button:hover {
   background: color-mix(in oklch, var(--gold) 22%, transparent);
@@ -2135,18 +2143,31 @@ a {
   opacity: 0.85;
 }
 /*
- * Ivory Silk & Pearls only: the shared scrim above is flat near-black
- * (rgba(20,14,8,.42)) by design, on purpose, for every other theme (see
- * the comment above .family-block) — but against this theme's pale,
- * painterly Lake Como backdrop it reads as a harsh black rectangle
- * rather than a considered panel. Warming it to the theme's own
- * foreground colour and adding a hairline gold edge keeps the same
- * legibility contract (still a solid-enough scrim behind light text)
- * while matching the ivory/gold palette instead of fighting it.
+ * Ivory Silk & Pearls only: the owner rejected the panel look outright
+ * (even warmed — see the 2026-10-25 history above) on this theme's
+ * pale, painterly Lake Como backdrop. No box at all here: instead, the
+ * same light-glow technique `.invitation-names h1` already uses below
+ * (text-shadow of var(--paper-light) around dark text) — the backdrop
+ * reads light-to-mid overall, so dark foreground text with a soft pale
+ * halo holds contrast on both the bright sky and the darker foliage
+ * without a panel sitting on top of the art.
  */
 [data-theme-id="ivory-silk-pearls"] .family-block {
-  background: color-mix(in oklch, var(--foreground) 55%, transparent);
-  border: 1px solid color-mix(in oklch, var(--gold-light) 35%, transparent);
+  background: transparent;
+  border: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  padding: 0;
+}
+[data-theme-id="ivory-silk-pearls"] .family-block p {
+  color: var(--foreground);
+  text-shadow:
+    0 0 10px var(--paper-light),
+    0 0 20px var(--paper-light),
+    0 0 2px var(--paper-light);
+}
+[data-theme-id="ivory-silk-pearls"] .family-block .family-credentials {
+  color: var(--foreground);
 }
 
 .venue-address,
