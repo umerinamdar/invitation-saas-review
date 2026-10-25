@@ -33,8 +33,11 @@ export const dubaiSilk: Theme = {
   typography: {
     serif: "Cormorant Garamond",
     sans: "Montserrat",
+    // Great Vibes added for the "You're Invited" script line over the
+    // envelope's wax seal (owner request, 2026-10-25) — used only by
+    // that scoped CSS in styles.css, not a theme-wide font slot.
     fontsHref:
-      "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@400;500;600&display=swap",
+      "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&family=Montserrat:wght@400;500;600&display=swap",
   },
 
   ornamentation: "none", // uses photography instead

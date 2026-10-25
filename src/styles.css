@@ -388,6 +388,41 @@ a {
 .is-opening .envelope-line {
   opacity: 0;
 }
+/*
+ * Dubai Silk only: a real wax-seal image (owner's own design, made in a
+ * separate Lovable project — public/themes/dubai-silk/seal.png) plus a
+ * "You're Invited" script line, over the flap's point. The plain
+ * `envelope` mechanic above (EnvelopeReveal) is shared by any theme
+ * that picks it, so this lives on `[data-theme-id="dubai-silk"]`
+ * instead of in the shared component — `.envelope::after` already
+ * holds every envelope theme's inset border accent and stays
+ * untouched; this uses the otherwise-unused `::before` slot. One box,
+ * not two: the seal art is `background-image` positioned at the top
+ * of the box, with the real (generated) text content sitting below it
+ * via `padding-top`, so both move and fade together as one unit.
+ */
+[data-theme-id="dubai-silk"] .envelope::before {
+  content: "You're Invited";
+  position: absolute;
+  top: 54%;
+  left: 50%;
+  width: max-content;
+  transform: translate(-50%, -50%);
+  padding-top: 86px;
+  background: url("/themes/dubai-silk/seal.png") top center / 80px 80px
+    no-repeat;
+  font-family: "Great Vibes", cursive;
+  font-size: clamp(20px, 5.5vw, 26px);
+  color: var(--gold);
+  text-align: center;
+  white-space: nowrap;
+  z-index: 5;
+  pointer-events: none;
+  transition: opacity 0.6s;
+}
+[data-theme-id="dubai-silk"] .is-opening .envelope::before {
+  opacity: 0;
+}
 /* Doors: two carved panels swing inward, the seal parting between them. */
 .doors {
   width: min(530px, 100%);
