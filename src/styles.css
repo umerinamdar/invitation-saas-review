@@ -262,7 +262,8 @@ a {
 .painted-stage .fan,
 .painted-stage .wrap,
 .painted-stage .blinds,
-.painted-stage .scroll-cover {
+.painted-stage .scroll-cover,
+.painted-stage .isp-cover {
   width: 100%;
   height: 100%;
   max-width: none;
@@ -848,6 +849,228 @@ a {
 .wrap.is-painted .wrap-half,
 .blinds.is-painted .blind-slat {
   background-color: transparent;
+}
+
+/*
+ * Ivory Silk & Pearls' own mechanic — a literal port of one theme's
+ * Lovable-built opening, not a shared gesture (docs/ops/
+ * OPENING-STUDY-ivory-silk-pearls.md has the full choreography this is
+ * read from). Unlike every mechanic above, these timings are hardcoded
+ * exactly as measured from the source build rather than derived from
+ * var(--open-duration) — porting means keeping its own numbers, not
+ * fitting it to the shared contract. One envelope texture is cut into
+ * four clipped pieces (flap, two wings, bottom pocket) by clip-path
+ * alone, same as the source: there is only ever one background image.
+ */
+.isp-cover {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  perspective: 2000px;
+  cursor: pointer;
+  overflow: hidden;
+}
+.isp-cover:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+.isp-underlay {
+  position: absolute;
+  inset: 0;
+  background: var(--paper-light);
+}
+.isp-shadow {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklch, var(--foreground) 35%, transparent),
+    transparent 65%
+  );
+}
+.isp-piece {
+  position: absolute;
+  inset: 0;
+  background-position: 50%;
+  background-size: cover;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+.isp-bottom {
+  clip-path: polygon(0 100%, 50% 50%, 100% 100%);
+  transform-origin: 50% 100%;
+}
+.isp-left {
+  clip-path: polygon(0 0, 50% 50%, 0 100%);
+  transform-origin: 0 50%;
+}
+.isp-right {
+  clip-path: polygon(100% 0, 100% 100%, 50% 50%);
+  transform-origin: 100% 50%;
+}
+.isp-flap {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 0;
+  transform-style: preserve-3d;
+  backface-visibility: visible;
+  will-change: transform, opacity;
+}
+.isp-flap-face {
+  clip-path: polygon(0 0, 100% 0, 50% 50%);
+}
+.isp-lining {
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(0 100%, 100% 100%, 50% 50%);
+  background: linear-gradient(180deg, var(--paper-dark), var(--highlight, var(--paper-light)));
+  backface-visibility: hidden;
+  transform: rotateX(180deg);
+}
+.isp-seal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 92px;
+  height: 108px;
+  margin: -54px 0 0 -46px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(
+    ellipse at 35% 30%,
+    var(--paper-light),
+    var(--paper) 75%
+  );
+  box-shadow:
+    0 6px 18px color-mix(in oklch, var(--foreground) 22%, transparent),
+    inset 0 0 0 2px color-mix(in oklch, var(--gold) 70%, transparent),
+    inset 0 0 0 6px var(--paper-light),
+    inset 0 0 0 7px color-mix(in oklch, var(--gold) 50%, transparent);
+  font-family: var(--font-serif);
+  color: var(--gold);
+  will-change: transform, opacity;
+}
+.isp-cue {
+  position: absolute;
+  inset-inline: 0;
+  top: calc(50% + 80px);
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.8rem;
+  color: var(--muted-foreground);
+}
+.isp-cover.is-opening .isp-seal,
+.isp-cover.is-opening .isp-cue {
+  transition:
+    transform 2.1s cubic-bezier(0.42, 0, 0.58, 1),
+    opacity 2.1s cubic-bezier(0.42, 0, 0.58, 1);
+  opacity: 0;
+  transform: translateY(-6px) scale(1.02);
+}
+.isp-cover.is-opening .isp-underlay {
+  transition: opacity 1.2s cubic-bezier(0.42, 0, 0.58, 1) 1.4s;
+  opacity: 0;
+}
+.isp-cover.is-opening .isp-flap {
+  transition:
+    transform 5s cubic-bezier(0.42, 0, 0.58, 1) 1.4s,
+    opacity 1s cubic-bezier(0.42, 0, 0.58, 1) 5.4s;
+  opacity: 0;
+  transform: rotateX(-172deg);
+}
+.isp-cover.is-opening .isp-shadow {
+  animation: isp-shadow-sweep 5s cubic-bezier(0.42, 0, 0.58, 1) 1.4s both;
+}
+.isp-cover.is-opening .isp-left {
+  transition:
+    transform 2.8s cubic-bezier(0.42, 0, 0.58, 1) 3.4s,
+    opacity 2.8s cubic-bezier(0.42, 0, 0.58, 1) 3.4s;
+  opacity: 0;
+  transform: rotateY(115deg);
+}
+.isp-cover.is-opening .isp-right {
+  transition:
+    transform 2.8s cubic-bezier(0.42, 0, 0.58, 1) 3.4s,
+    opacity 2.8s cubic-bezier(0.42, 0, 0.58, 1) 3.4s;
+  opacity: 0;
+  transform: rotateY(-115deg);
+}
+.isp-cover.is-opening .isp-bottom {
+  transition:
+    transform 2.8s cubic-bezier(0.42, 0, 0.58, 1) 3.4s,
+    opacity 2.8s cubic-bezier(0.42, 0, 0.58, 1) 3.4s;
+  opacity: 0;
+  transform: rotateX(115deg);
+}
+@keyframes isp-shadow-sweep {
+  0% {
+    opacity: 0;
+    transform: translateY(-30%);
+  }
+  50% {
+    opacity: 0.6;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(40%);
+  }
+}
+
+/*
+ * Ivory Silk & Pearls' post-open "emerge into focus" — also ported
+ * literally and scoped to this one theme only via [data-theme-id], not
+ * folded into the shared CinematicInvite every other theme uses.
+ */
+[data-theme-id="ivory-silk-pearls"] .skyline-backdrop {
+  animation: isp-backdrop-focus 3.6s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+[data-theme-id="ivory-silk-pearls"] .skyline-invitation {
+  animation: isp-slow-zoom-blend 3.6s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+[data-theme-id="ivory-silk-pearls"] .invitation-heading,
+[data-theme-id="ivory-silk-pearls"] .invitation-names {
+  animation: isp-detail-fade 1.4s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+@keyframes isp-backdrop-focus {
+  0% {
+    filter: blur(18px);
+    transform: scale(1.08);
+  }
+  to {
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+@keyframes isp-slow-zoom-blend {
+  0% {
+    opacity: 0;
+    filter: blur(8px);
+    transform: scale(0.92);
+  }
+  55% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+@keyframes isp-detail-fade {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Drawn decoration, used by templates that ship without photography. */

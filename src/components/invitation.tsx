@@ -329,6 +329,7 @@ export function Invitation({
   return (
     <main
       className="new-invitation"
+      data-theme-id={theme.id}
       style={paletteVariables(theme) as React.CSSProperties}
     >
       {watermark && (

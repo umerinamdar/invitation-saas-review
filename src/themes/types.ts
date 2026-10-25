@@ -30,6 +30,12 @@ export type PetalStyle = "white-blossom" | "marigold" | "rose" | "none";
  * iris/quadrant/fan/wrap/blinds/scroll added for the Lovable-20 conversion
  * (2026-10-25) — six genuinely new opening gestures the batch needed,
  * built as shared mechanics here rather than per-theme special cases.
+ *
+ * ivorySilkEnvelope added 2026-10-25 for the one-by-one template rework
+ * (see docs/ops/OPENING-STUDY-ivory-silk-pearls.md): a faithful, literal
+ * port of one theme's own Lovable-built mechanic, not a reusable gesture
+ * for the catalog — it carries its own hardcoded CSS timings rather than
+ * the shared var(--open-duration) contract the mechanics above use.
  */
 export type Reveal =
   | "envelope"
@@ -42,7 +48,8 @@ export type Reveal =
   | "fan"
   | "wrap"
   | "blinds"
-  | "scroll";
+  | "scroll"
+  | "ivorySilkEnvelope";
 
 /**
  * Drawn decoration used instead of photography. A theme naming one of these

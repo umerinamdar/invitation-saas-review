@@ -359,6 +359,47 @@ export function ScrollReveal(props: RevealProps) {
   );
 }
 
+/**
+ * Ivory Silk & Pearls' own mechanic, ported literally from its Lovable
+ * build (see docs/ops/OPENING-STUDY-ivory-silk-pearls.md) — one envelope
+ * texture cut into four clipped pieces (the flap, two side wings and the
+ * bottom pocket) plus a wax seal, not a shared/reused gesture.
+ */
+function sealInitials(hosts: string) {
+  return hosts
+    .split("&")
+    .map((name) => name.trim().charAt(0))
+    .filter(Boolean)
+    .join(" & ");
+}
+
+export function IvorySilkEnvelopeReveal(props: RevealProps) {
+  const { opening, onOpen, hosts, backdrop } = props;
+  const piece = backdrop
+    ? ({ backgroundImage: `url('${backdrop}')` } as React.CSSProperties)
+    : undefined;
+  return (
+    <div
+      className={`isp-cover ${opening ? "is-opening" : ""}`}
+      {...openTriggerProps(hosts, opening, onOpen)}
+    >
+      <div className="isp-underlay" />
+      <div className="isp-shadow" />
+      <div className="isp-piece isp-bottom" style={piece} />
+      <div className="isp-piece isp-left" style={piece} />
+      <div className="isp-piece isp-right" style={piece} />
+      <div className="isp-flap">
+        <div className="isp-piece isp-flap-face" style={piece} />
+        <div className="isp-lining" />
+      </div>
+      <div className="isp-seal" aria-hidden="true">
+        <span>{sealInitials(hosts)}</span>
+      </div>
+      <p className="isp-cue">Tap to open</p>
+    </div>
+  );
+}
+
 const reveals: Record<Reveal, (props: RevealProps) => React.JSX.Element> = {
   envelope: EnvelopeReveal,
   doors: DoorsReveal,
@@ -371,6 +412,7 @@ const reveals: Record<Reveal, (props: RevealProps) => React.JSX.Element> = {
   wrap: WrapReveal,
   blinds: BlindsReveal,
   scroll: ScrollReveal,
+  ivorySilkEnvelope: IvorySilkEnvelopeReveal,
 };
 
 export function RevealStage({
