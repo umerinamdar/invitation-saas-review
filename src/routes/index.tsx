@@ -74,11 +74,14 @@ const FAQ_KEYS = Array.from({ length: 11 }, (_, i) => i);
 const INCLUDED_KEYS = Array.from({ length: 6 }, (_, i) => i);
 
 function Landing() {
-  const [a, b, c] = [
-    themes[0]!,
-    themes[3] ?? themes[1]!,
-    themes[5] ?? themes[2]!,
-  ];
+  // Indices 0/3/5 pick three varied designs when the catalog is full size;
+  // wrapping with modulo (instead of the old themes[3] ?? themes[1] chain)
+  // keeps this safe down to a single registered theme too — the chain's
+  // last fallback, themes[2], was itself undefined during the catalog
+  // reset (2026-10-25, only 1-2 themes active), which crashed the
+  // homepage entirely rather than just repeating a design.
+  const pick = (i: number) => themes[i % themes.length]!;
+  const [a, b, c] = [pick(0), pick(3), pick(5)];
   const { t } = useLocale();
   return (
     <div className="site">
