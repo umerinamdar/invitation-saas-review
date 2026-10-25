@@ -365,9 +365,10 @@ export function ScrollReveal(props: RevealProps) {
  * texture cut into four clipped pieces (the flap, two side wings and the
  * bottom pocket), not a shared/reused gesture.
  *
- * No wax-seal graphic (owner request, 2026-10-26: "remove seal just add
- * you're invited" — for every template, existing and future): a plain
- * "You're Invited" line stands in its place on every bespoke mechanic.
+ * No wax-seal graphic here (owner request, 2026-10-26): a plain
+ * "You're Invited" line stands in its place. Dubai Silk keeps its own
+ * seal image — this request was specific to the mechanics that didn't
+ * already have an owner-made seal of their own.
  */
 export function IvorySilkEnvelopeReveal(props: RevealProps) {
   const { opening, onOpen, hosts, backdrop } = props;
