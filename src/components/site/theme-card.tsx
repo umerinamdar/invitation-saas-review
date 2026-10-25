@@ -15,6 +15,24 @@ function webpVariant(src: string): string {
   return src.replace(/\.(?:jpe?g|png)$/i, ".webp");
 }
 
+/**
+ * Not every theme's hero image has had a .webp sibling generated for it
+ * yet (caught on Ivory Silk & Pearls, 2026-10-25 — its venue.jpg has
+ * none, so the <picture> below picked the non-existent .webp source and
+ * never fell back, leaving the gallery card blank). <picture> only
+ * falls back to the <img> when no <source> matches syntactically, not
+ * when a matched source's file 404s, and merely reassigning the <img>'s
+ * own `src` doesn't help either — the sibling <source> still wins
+ * re-selection as long as it's present. Removing that <source> element
+ * outright is what actually stops the browser from retrying it.
+ */
+function handleMissingWebp(event: React.SyntheticEvent<HTMLImageElement>) {
+  const img = event.currentTarget;
+  const original = img.dataset["fallbackSrc"];
+  img.previousElementSibling?.remove();
+  if (original) img.src = original;
+}
+
 /** A miniature of the real invitation, drawn from the theme's own palette. */
 export function ThemePhoneScreen({ theme }: { theme: Theme }) {
   const { revealedBackdrop } = theme.assets;
@@ -28,7 +46,13 @@ export function ThemePhoneScreen({ theme }: { theme: Theme }) {
         <>
           <picture>
             <source type="image/webp" srcSet={webpVariant(revealedBackdrop)} />
-            <img src={revealedBackdrop} alt="" loading="lazy" />
+            <img
+              src={revealedBackdrop}
+              alt=""
+              loading="lazy"
+              data-fallback-src={revealedBackdrop}
+              onError={handleMissingWebp}
+            />
           </picture>
           <span className="theme-card-veil" />
         </>
