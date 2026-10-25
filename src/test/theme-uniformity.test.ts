@@ -27,7 +27,11 @@ const PHOTO_ASSET_FIELDS = [
 
 describe("theme uniformity (Dubai Silk is the reference)", () => {
   it("registers Dubai Silk and keeps it as the fallback theme", () => {
-    expect(themes.length).toBeGreaterThanOrEqual(14);
+    // Catalog reset (2026-10-25): every other theme was unregistered
+    // while each is reworked one at a time to Dubai Silk's opening
+    // quality — see docs/ops/OPENING-STUDY-ivory-silk-pearls.md. The
+    // count will climb back up as themes return; it must never be 0.
+    expect(themes.length).toBeGreaterThanOrEqual(1);
     expect(themes.some((theme) => theme.id === dubaiSilk.id)).toBe(true);
     expect(getTheme("no-such-theme").id).toBe(dubaiSilk.id);
   });
