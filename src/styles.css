@@ -1170,13 +1170,17 @@ a {
   left: 50%;
   transform-origin: right center;
 }
+/* Narrow and soft on purpose (owner feedback, 2026-10-26: a wider,
+ * brighter bar here read as the doors stuck open rather than a seam
+ * of light building before the swing) — a thin glint, not a visible
+ * gap. */
 .rmd-glow {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 50%;
-  width: 36px;
-  margin-left: -18px;
+  width: 8px;
+  margin-left: -4px;
   opacity: 0;
   pointer-events: none;
   background: linear-gradient(
@@ -1185,7 +1189,7 @@ a {
     color-mix(in oklch, var(--powder) 85%, transparent),
     transparent
   );
-  filter: blur(6px);
+  filter: blur(3px);
   z-index: 3;
 }
 /* Owner request, 2026-10-26: both lines live near the bottom of the
@@ -1265,7 +1269,7 @@ a {
     opacity: 0;
   }
   55% {
-    opacity: 0.9;
+    opacity: 0.55;
   }
   to {
     opacity: 0;
