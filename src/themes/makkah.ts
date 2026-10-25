@@ -50,6 +50,7 @@ export const makkah: Theme = {
     // Shares Cathedral Light's neutral ivory grain — both themes sit on a
     // light marble palette, so no new texture was generated for this.
     paperTexture: "/themes/cathedral-light/paper.jpg",
+    defaultMusic: "/themes/dubai-silk/track.mp3",
   },
 
   motion: {

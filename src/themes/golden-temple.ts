@@ -50,6 +50,7 @@ export const goldenTemple: Theme = {
     // Shares Phulkari Anand's warm saffron-ivory grain — both themes are
     // Sikh-tradition and sit in the same palette family.
     paperTexture: "/themes/phulkari-anand/paper.jpg",
+    defaultMusic: "/themes/dubai-silk/track.mp3",
   },
 
   motion: {

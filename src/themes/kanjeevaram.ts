@@ -48,6 +48,7 @@ export const kanjeevaram: Theme = {
     // that runs behind every section after the hero instead of a flat colour.
     sectionBackdrop: "/themes/kanjeevaram/section-bg.jpg",
     paperTexture: "/themes/kanjeevaram/paper.jpg",
+    defaultMusic: "/themes/dubai-silk/track.mp3",
   },
 
   motion: {

@@ -49,6 +49,8 @@ export type TranslationKey =
   | "editor.yourNames"
   | "editor.name"
   | "editor.partnersName"
+  | "editor.hostCouple"
+  | "editor.hostSingle"
   | "editor.families"
   | "editor.familiesNote"
   | "editor.firstSide"
@@ -56,6 +58,7 @@ export type TranslationKey =
   | "editor.parents"
   | "editor.grandparents"
   | "editor.qualifications"
+  | "editor.relation"
   | "editor.openingText"
   | "editor.openingTextHint"
   | "editor.welcomeLine"
@@ -65,12 +68,19 @@ export type TranslationKey =
   | "editor.occasion"
   | "editor.dateAndTime"
   | "editor.venue"
+  | "editor.venueAddress"
+  | "editor.muhurat"
+  | "editor.dressCode"
   | "editor.googleMapsLink"
   | "editor.mapsHint"
   | "editor.yourFunctions"
   | "editor.addFunction"
+  | "editor.familyMembers"
+  | "editor.addMember"
   | "editor.replies"
   | "editor.whatsappNumber"
+  | "editor.phoneNumber"
+  | "editor.emailAddress"
   | "editor.replyBy"
   | "editor.yourHashtag"
   | "editor.travelStay"
@@ -82,6 +92,9 @@ export type TranslationKey =
   | "editor.yourStory"
   | "editor.lineForGuests"
   | "editor.togetherSince"
+  | "editor.linkPreview"
+  | "editor.pageTitle"
+  | "editor.pageDescription"
   | "editor.replayOpening"
   | "editor.previewNote"
   | "collection.eyebrow"
@@ -201,6 +214,8 @@ const en: Dictionary = {
   "editor.yourNames": "Your names",
   "editor.name": "Name",
   "editor.partnersName": "Partner's name",
+  "editor.hostCouple": "Two of us",
+  "editor.hostSingle": "Just me",
   "editor.families": "Families",
   "editor.familiesNote":
     "Indian invitations name the parents; leave blank to omit.",
@@ -209,6 +224,7 @@ const en: Dictionary = {
   "editor.parents": "Parents",
   "editor.grandparents": "Grandparents",
   "editor.qualifications": "Qualifications",
+  "editor.relation": "Relation",
   "editor.openingText": "Opening text",
   "editor.openingTextHint":
     "Optional — most invitations open straight from the hero image into your names, which reads cleanest. Fill these in only if you want a line of text above them.",
@@ -219,13 +235,20 @@ const en: Dictionary = {
   "editor.occasion": "Occasion",
   "editor.dateAndTime": "Date and time",
   "editor.venue": "Venue",
+  "editor.venueAddress": "Venue address",
+  "editor.muhurat": "Muhurat (auspicious time)",
+  "editor.dressCode": "Dress code",
   "editor.googleMapsLink": "Google Maps link",
   "editor.mapsHint":
     "Optional — leave blank and tapping the venue name searches Google Maps for it automatically. Paste a link here only if you want guests sent to a specific pin instead.",
   "editor.yourFunctions": "Your functions",
   "editor.addFunction": "Add a function",
+  "editor.familyMembers": "Family members",
+  "editor.addMember": "Add a family member",
   "editor.replies": "Replies",
   "editor.whatsappNumber": "WhatsApp number",
+  "editor.phoneNumber": "Phone number",
+  "editor.emailAddress": "Email address",
   "editor.replyBy": "Reply by",
   "editor.yourHashtag": "Your hashtag",
   "editor.travelStay": "Travel & stay",
@@ -237,6 +260,9 @@ const en: Dictionary = {
   "editor.yourStory": "Your story",
   "editor.lineForGuests": "A line for your guests",
   "editor.togetherSince": "Together since",
+  "editor.linkPreview": "Link preview",
+  "editor.pageTitle": "Page title",
+  "editor.pageDescription": "Page description",
   "editor.replayOpening": "Replay the opening",
   "editor.previewNote":
     "This is a live preview — every change on the left shows up here instantly. Leave a field blank and it's simply left out of your invitation; no empty lines or placeholder text ever appear. Sample photos may appear in empty photo slots in this preview only — guests see those slots empty until you add your own photos.",
@@ -372,6 +398,8 @@ const hi: Dictionary = {
   "editor.yourNames": "आपके नाम",
   "editor.name": "नाम",
   "editor.partnersName": "साथी का नाम",
+  "editor.hostCouple": "हम दो",
+  "editor.hostSingle": "सिर्फ़ मैं",
   "editor.families": "परिवार",
   "editor.familiesNote":
     "भारतीय निमंत्रणों में माता-पिता का नाम दिया जाता है; छोड़ना हो तो खाली रखें।",
@@ -380,6 +408,7 @@ const hi: Dictionary = {
   "editor.parents": "माता-पिता",
   "editor.grandparents": "दादा-दादी/नाना-नानी",
   "editor.qualifications": "योग्यताएं",
+  "editor.relation": "संबंध",
   "editor.openingText": "शुरुआती पाठ",
   "editor.openingTextHint":
     "वैकल्पिक — अधिकतर निमंत्रण मुख्य चित्र से सीधे नामों पर जाते हैं, जो सबसे साफ़ दिखता है। इन्हें तभी भरें जब आप नामों के ऊपर एक पंक्ति चाहते हों।",
@@ -390,13 +419,20 @@ const hi: Dictionary = {
   "editor.occasion": "अवसर",
   "editor.dateAndTime": "तारीख़ और समय",
   "editor.venue": "स्थान",
+  "editor.venueAddress": "स्थल का पता",
+  "editor.muhurat": "मुहूर्त (शुभ समय)",
+  "editor.dressCode": "ड्रेस कोड",
   "editor.googleMapsLink": "गूगल मैप्स लिंक",
   "editor.mapsHint":
     "वैकल्पिक — खाली छोड़ें और स्थान के नाम पर टैप करने से अपने आप गूगल मैप्स पर खोज होगी। किसी खास पिन पर मेहमानों को भेजना हो तभी यहां लिंक डालें।",
   "editor.yourFunctions": "आपके कार्यक्रम",
   "editor.addFunction": "कार्यक्रम जोड़ें",
+  "editor.familyMembers": "परिवार के सदस्य",
+  "editor.addMember": "परिवार का सदस्य जोड़ें",
   "editor.replies": "जवाब",
   "editor.whatsappNumber": "व्हाट्सएप नंबर",
+  "editor.phoneNumber": "फ़ोन नंबर",
+  "editor.emailAddress": "ईमेल पता",
   "editor.replyBy": "इस तारीख़ तक जवाब दें",
   "editor.yourHashtag": "आपका हैशटैग",
   "editor.travelStay": "यात्रा और ठहराव",
@@ -408,6 +444,9 @@ const hi: Dictionary = {
   "editor.yourStory": "आपकी कहानी",
   "editor.lineForGuests": "मेहमानों के लिए एक पंक्ति",
   "editor.togetherSince": "साथ कब से हैं",
+  "editor.linkPreview": "लिंक झलक",
+  "editor.pageTitle": "पेज का शीर्षक",
+  "editor.pageDescription": "पेज का विवरण",
   "editor.replayOpening": "शुरुआत फिर से देखें",
   "editor.previewNote":
     "यह एक लाइव पूर्वावलोकन है — बाईं ओर किया गया हर बदलाव यहां तुरंत दिखता है। कोई फ़ील्ड खाली छोड़ें तो वह आपके निमंत्रण में बिल्कुल नहीं दिखेगी; कभी कोई खाली पंक्ति या प्लेसहोल्डर टेक्स्ट नहीं दिखता। नमूना तस्वीरें इस पूर्वावलोकन में केवल खाली फ़ोटो स्थानों में दिख सकती हैं — मेहमान वे स्थान खाली देखते हैं, जब तक आप अपनी तस्वीरें नहीं जोड़ते।",
@@ -543,6 +582,8 @@ const ar: Dictionary = {
   "editor.yourNames": "أسماؤكما",
   "editor.name": "الاسم",
   "editor.partnersName": "اسم الشريك",
+  "editor.hostCouple": "نحن الاثنان",
+  "editor.hostSingle": "أنا فقط",
   "editor.families": "العائلتان",
   "editor.familiesNote":
     "الدعوات الهندية تذكر أسماء الوالدين؛ اتركه فارغًا لتجاهله.",
@@ -551,6 +592,7 @@ const ar: Dictionary = {
   "editor.parents": "الوالدان",
   "editor.grandparents": "الأجداد",
   "editor.qualifications": "المؤهلات",
+  "editor.relation": "صلة القرابة",
   "editor.openingText": "نص الافتتاح",
   "editor.openingTextHint":
     "اختياري — معظم الدعوات تنتقل مباشرة من الصورة الرئيسية إلى الأسماء، وهو الأنظف. املأ هذا فقط إذا أردت سطرًا فوق الأسماء.",
@@ -561,13 +603,20 @@ const ar: Dictionary = {
   "editor.occasion": "المناسبة",
   "editor.dateAndTime": "التاريخ والوقت",
   "editor.venue": "المكان",
+  "editor.venueAddress": "عنوان المكان",
+  "editor.muhurat": "الموهورات (الوقت الميمون)",
+  "editor.dressCode": "قواعد اللباس",
   "editor.googleMapsLink": "رابط خرائط جوجل",
   "editor.mapsHint":
     "اختياري — اتركه فارغًا وسيبحث النقر على اسم المكان في خرائط جوجل تلقائيًا. الصق رابطًا هنا فقط إذا أردت توجيه الضيوف إلى نقطة محددة.",
   "editor.yourFunctions": "فعالياتكما",
   "editor.addFunction": "إضافة فعالية",
+  "editor.familyMembers": "أفراد العائلة",
+  "editor.addMember": "أضف فردًا من العائلة",
   "editor.replies": "الردود",
   "editor.whatsappNumber": "رقم واتساب",
+  "editor.phoneNumber": "رقم الهاتف",
+  "editor.emailAddress": "البريد الإلكتروني",
   "editor.replyBy": "الرد قبل",
   "editor.yourHashtag": "هاشتاغكما",
   "editor.travelStay": "السفر والإقامة",
@@ -579,6 +628,9 @@ const ar: Dictionary = {
   "editor.yourStory": "قصتكما",
   "editor.lineForGuests": "سطر للضيوف",
   "editor.togetherSince": "معًا منذ",
+  "editor.linkPreview": "معاينة الرابط",
+  "editor.pageTitle": "عنوان الصفحة",
+  "editor.pageDescription": "وصف الصفحة",
   "editor.replayOpening": "إعادة مشاهدة الافتتاح",
   "editor.previewNote":
     "هذه معاينة حية — كل تغيير على اليسار يظهر هنا فورًا. إذا تركت حقلًا فارغًا، فلن يظهر في دعوتك؛ لا تظهر أبدًا أسطر فارغة أو نص بديل. قد تظهر صور نموذجية في خانات الصور الفارغة في هذه المعاينة فقط — يرى الضيوف تلك الخانات فارغة حتى تضيف صورك الخاصة.",
@@ -714,6 +766,8 @@ const mr: Partial<Dictionary> = {
   "editor.yourNames": "तुमची नावे",
   "editor.name": "नाव",
   "editor.partnersName": "जोडीदाराचे नाव",
+  "editor.hostCouple": "आम्ही दोघे",
+  "editor.hostSingle": "फक्त मी",
   "editor.families": "कुटुंबे",
   "editor.familiesNote":
     "भारतीय आमंत्रणांमध्ये पालकांची नावे दिली जातात; वगळायचे असल्यास रिकामे ठेवा.",
@@ -722,6 +776,7 @@ const mr: Partial<Dictionary> = {
   "editor.parents": "पालक",
   "editor.grandparents": "आजी-आजोबा",
   "editor.qualifications": "पात्रता",
+  "editor.relation": "नाते",
   "editor.openingText": "सुरुवातीचा मजकूर",
   "editor.openingTextHint":
     "ऐच्छिक — बहुतेक आमंत्रणे मुख्य प्रतिमेपासून थेट नावांकडे जातात, जे सर्वात स्वच्छ दिसते. नावांच्या वर एक ओळ हवी असेल तरच हे भरा.",
@@ -732,13 +787,20 @@ const mr: Partial<Dictionary> = {
   "editor.occasion": "प्रसंग",
   "editor.dateAndTime": "तारीख आणि वेळ",
   "editor.venue": "ठिकाण",
+  "editor.venueAddress": "स्थळाचा पत्ता",
+  "editor.muhurat": "मुहूर्त (शुभ वेळ)",
+  "editor.dressCode": "ड्रेस कोड",
   "editor.googleMapsLink": "गुगल मॅप्स लिंक",
   "editor.mapsHint":
     "ऐच्छिक — रिकामे ठेवा आणि ठिकाणाच्या नावावर टॅप केल्यास आपोआप गुगल मॅप्सवर शोध होईल. विशिष्ट पिनवर पाहुण्यांना पाठवायचे असेल तरच इथे लिंक टाका.",
   "editor.yourFunctions": "तुमचे कार्यक्रम",
   "editor.addFunction": "कार्यक्रम जोडा",
+  "editor.familyMembers": "कुटुंबातील सदस्य",
+  "editor.addMember": "कुटुंबातील सदस्य जोडा",
   "editor.replies": "उत्तरे",
   "editor.whatsappNumber": "व्हॉट्सअ‍ॅप नंबर",
+  "editor.phoneNumber": "फोन नंबर",
+  "editor.emailAddress": "ईमेल पत्ता",
   "editor.replyBy": "या तारखेपर्यंत उत्तर द्या",
   "editor.yourHashtag": "तुमचा हॅशटॅग",
   "editor.travelStay": "प्रवास आणि मुक्काम",
@@ -750,6 +812,9 @@ const mr: Partial<Dictionary> = {
   "editor.yourStory": "तुमची कहाणी",
   "editor.lineForGuests": "पाहुण्यांसाठी एक ओळ",
   "editor.togetherSince": "एकत्र कधीपासून",
+  "editor.linkPreview": "लिंक झलक",
+  "editor.pageTitle": "पेजचे शीर्षक",
+  "editor.pageDescription": "पेजचे वर्णन",
   "editor.replayOpening": "सुरुवात पुन्हा पहा",
   "editor.previewNote":
     "ही थेट पूर्वावलोकन आहे — डावीकडे केलेला प्रत्येक बदल इथे लगेच दिसतो. एखादे फील्ड रिकामे ठेवल्यास ते तुमच्या आमंत्रणातून वगळले जाते; कधीही रिकामी ओळ किंवा प्लेसहोल्डर मजकूर दिसत नाही. नमुना फोटो या पूर्वावलोकनात फक्त रिकाम्या फोटो जागांमध्ये दिसू शकतात — तुम्ही तुमचे स्वतःचे फोटो जोडेपर्यंत पाहुण्यांना त्या जागा रिकाम्या दिसतात.",
@@ -921,6 +986,8 @@ const gu: Partial<Dictionary> = {
   "editor.yourNames": "તમારા નામો",
   "editor.name": "નામ",
   "editor.partnersName": "પાર્ટનરનું નામ",
+  "editor.hostCouple": "અમે બે",
+  "editor.hostSingle": "ફક્ત હું",
   "editor.families": "પરિવારો",
   "editor.familiesNote":
     "ભારતીય આમંત્રણોમાં માતા-પિતાના નામ આપવામાં આવે છે; છોડવું હોય તો ખાલી રાખો.",
@@ -929,6 +996,7 @@ const gu: Partial<Dictionary> = {
   "editor.parents": "માતા-પિતા",
   "editor.grandparents": "દાદા-દાદી",
   "editor.qualifications": "લાયકાત",
+  "editor.relation": "સંબંધ",
   "editor.openingText": "શરૂઆતનું લખાણ",
   "editor.openingTextHint":
     "વૈકલ્પિક — મોટાભાગના આમંત્રણો મુખ્ય છબીથી સીધા નામો પર જાય છે, જે સૌથી સ્વચ્છ દેખાય છે. નામોની ઉપર એક લીટી જોઈતી હોય તો જ આ ભરો.",
@@ -939,13 +1007,20 @@ const gu: Partial<Dictionary> = {
   "editor.occasion": "પ્રસંગ",
   "editor.dateAndTime": "તારીખ અને સમય",
   "editor.venue": "સ્થળ",
+  "editor.venueAddress": "સ્થળનું સરનામું",
+  "editor.muhurat": "મુહૂર્ત (શુભ સમય)",
+  "editor.dressCode": "ડ્રેસ કોડ",
   "editor.googleMapsLink": "ગૂગલ મેપ્સ લિંક",
   "editor.mapsHint":
     "વૈકલ્પિક — ખાલી રાખો અને સ્થળના નામ પર ટેપ કરવાથી આપમેળે ગૂગલ મેપ્સ પર શોધ થશે. મહેમાનોને ચોક્કસ પિન પર મોકલવા હોય તો જ અહીં લિંક પેસ્ટ કરો.",
   "editor.yourFunctions": "તમારા કાર્યક્રમો",
   "editor.addFunction": "કાર્યક્રમ ઉમેરો",
+  "editor.familyMembers": "પરિવારના સભ્યો",
+  "editor.addMember": "પરિવારનો સભ્ય ઉમેરો",
   "editor.replies": "જવાબો",
   "editor.whatsappNumber": "વોટ્સએપ નંબર",
+  "editor.phoneNumber": "ફોન નંબર",
+  "editor.emailAddress": "ઈમેઈલ સરનામું",
   "editor.replyBy": "આ તારીખ સુધીમાં જવાબ આપો",
   "editor.yourHashtag": "તમારો હેશટેગ",
   "editor.travelStay": "મુસાફરી અને રોકાણ",
@@ -957,6 +1032,9 @@ const gu: Partial<Dictionary> = {
   "editor.yourStory": "તમારી વાર્તા",
   "editor.lineForGuests": "મહેમાનો માટે એક લીટી",
   "editor.togetherSince": "ક્યારથી સાથે છો",
+  "editor.linkPreview": "લિંક ઝલક",
+  "editor.pageTitle": "પેજનું શીર્ષક",
+  "editor.pageDescription": "પેજનું વર્ણન",
   "editor.replayOpening": "શરૂઆત ફરીથી જુઓ",
   "editor.previewNote":
     "આ લાઇવ પૂર્વાવલોકન છે — ડાબી બાજુનો દરેક ફેરફાર અહીં તરત દેખાય છે. કોઈ ફીલ્ડ ખાલી રાખો તો તે તમારા આમંત્રણમાંથી બાકાત રહે છે; ક્યારેય ખાલી લીટી કે પ્લેસહોલ્ડર ટેક્સ્ટ દેખાતું નથી. નમૂના ફોટા આ પૂર્વાવલોકનમાં માત્ર ખાલી ફોટો સ્થાનોમાં દેખાઈ શકે છે — તમે તમારા પોતાના ફોટા ઉમેરો ત્યાં સુધી મહેમાનોને તે સ્થાનો ખાલી દેખાય છે.",
@@ -1129,6 +1207,8 @@ const bn: Partial<Dictionary> = {
   "editor.yourNames": "আপনাদের নাম",
   "editor.name": "নাম",
   "editor.partnersName": "সঙ্গীর নাম",
+  "editor.hostCouple": "আমরা দুজন",
+  "editor.hostSingle": "শুধু আমি",
   "editor.families": "পরিবার",
   "editor.familiesNote":
     "ভারতীয় আমন্ত্রণে বাবা-মায়ের নাম দেওয়া হয়; বাদ দিতে চাইলে খালি রাখুন।",
@@ -1137,6 +1217,7 @@ const bn: Partial<Dictionary> = {
   "editor.parents": "বাবা-মা",
   "editor.grandparents": "দাদা-দাদি/নানা-নানি",
   "editor.qualifications": "যোগ্যতা",
+  "editor.relation": "সম্পর্ক",
   "editor.openingText": "শুরুর লেখা",
   "editor.openingTextHint":
     "ঐচ্ছিক — বেশিরভাগ আমন্ত্রণ মূল ছবি থেকে সরাসরি নামে চলে যায়, যা সবচেয়ে পরিষ্কার দেখায়। নামের উপরে একটি লাইন চাইলে তবেই এটি পূরণ করুন।",
@@ -1147,13 +1228,20 @@ const bn: Partial<Dictionary> = {
   "editor.occasion": "উপলক্ষ",
   "editor.dateAndTime": "তারিখ ও সময়",
   "editor.venue": "স্থান",
+  "editor.venueAddress": "অনুষ্ঠানস্থলের ঠিকানা",
+  "editor.muhurat": "মুহূর্ত (শুভ সময়)",
+  "editor.dressCode": "পোশাকের নিয়ম",
   "editor.googleMapsLink": "গুগল ম্যাপস লিঙ্ক",
   "editor.mapsHint":
     "ঐচ্ছিক — খালি রাখুন এবং স্থানের নামে ট্যাপ করলে স্বয়ংক্রিয়ভাবে গুগল ম্যাপসে খোঁজা হবে। নির্দিষ্ট পিনে অতিথিদের পাঠাতে চাইলে তবেই এখানে লিঙ্ক দিন।",
   "editor.yourFunctions": "আপনাদের অনুষ্ঠান",
   "editor.addFunction": "অনুষ্ঠান যোগ করুন",
+  "editor.familyMembers": "পরিবারের সদস্যরা",
+  "editor.addMember": "পরিবারের সদস্য যোগ করুন",
   "editor.replies": "উত্তর",
   "editor.whatsappNumber": "হোয়াটসঅ্যাপ নম্বর",
+  "editor.phoneNumber": "ফোন নম্বর",
+  "editor.emailAddress": "ইমেল ঠিকানা",
   "editor.replyBy": "এই তারিখের মধ্যে উত্তর দিন",
   "editor.yourHashtag": "আপনাদের হ্যাশট্যাগ",
   "editor.travelStay": "ভ্রমণ ও থাকার ব্যবস্থা",
@@ -1165,6 +1253,9 @@ const bn: Partial<Dictionary> = {
   "editor.yourStory": "আপনাদের গল্প",
   "editor.lineForGuests": "অতিথিদের জন্য একটি লাইন",
   "editor.togetherSince": "কবে থেকে একসাথে",
+  "editor.linkPreview": "লিঙ্কের ঝলক",
+  "editor.pageTitle": "পেজের শিরোনাম",
+  "editor.pageDescription": "পেজের বিবরণ",
   "editor.replayOpening": "শুরুটা আবার দেখুন",
   "editor.previewNote":
     "এটি একটি লাইভ প্রিভিউ — বাঁদিকে করা প্রতিটি পরিবর্তন এখানে সাথে সাথে দেখা যায়। কোনো ফিল্ড খালি রাখলে তা আপনার আমন্ত্রণে একেবারেই দেখা যাবে না; কখনো কোনো খালি লাইন বা প্লেসহোল্ডার টেক্সট দেখা যায় না। নমুনা ছবি শুধুমাত্র এই প্রিভিউতে খালি ছবির স্থানগুলিতে দেখা যেতে পারে — আপনি নিজের ছবি যোগ না করা পর্যন্ত অতিথিরা সেই স্থানগুলি খালি দেখেন।",
@@ -1339,6 +1430,8 @@ const pa: Partial<Dictionary> = {
   "editor.yourNames": "ਤੁਹਾਡੇ ਨਾਂ",
   "editor.name": "ਨਾਮ",
   "editor.partnersName": "ਸਾਥੀ ਦਾ ਨਾਮ",
+  "editor.hostCouple": "ਅਸੀਂ ਦੋਵੇਂ",
+  "editor.hostSingle": "ਸਿਰਫ਼ ਮੈਂ",
   "editor.families": "ਪਰਿਵਾਰ",
   "editor.familiesNote":
     "ਭਾਰਤੀ ਸੱਦਿਆਂ ਵਿੱਚ ਮਾਪਿਆਂ ਦੇ ਨਾਮ ਦਿੱਤੇ ਜਾਂਦੇ ਹਨ; ਛੱਡਣਾ ਹੋਵੇ ਤਾਂ ਖਾਲੀ ਰੱਖੋ।",
@@ -1347,6 +1440,7 @@ const pa: Partial<Dictionary> = {
   "editor.parents": "ਮਾਪੇ",
   "editor.grandparents": "ਦਾਦਾ-ਦਾਦੀ/ਨਾਨਾ-ਨਾਨੀ",
   "editor.qualifications": "ਯੋਗਤਾਵਾਂ",
+  "editor.relation": "ਰਿਸ਼ਤਾ",
   "editor.openingText": "ਸ਼ੁਰੂਆਤੀ ਲਿਖਤ",
   "editor.openingTextHint":
     "ਵਿਕਲਪਿਕ — ਜ਼ਿਆਦਾਤਰ ਸੱਦੇ ਮੁੱਖ ਤਸਵੀਰ ਤੋਂ ਸਿੱਧੇ ਨਾਵਾਂ ਵੱਲ ਜਾਂਦੇ ਹਨ, ਜੋ ਸਭ ਤੋਂ ਸਾਫ਼ ਲੱਗਦਾ ਹੈ। ਨਾਵਾਂ ਦੇ ਉੱਪਰ ਇੱਕ ਲਾਈਨ ਚਾਹੀਦੀ ਹੋਵੇ ਤਾਂ ਹੀ ਇਹ ਭਰੋ।",
@@ -1357,13 +1451,20 @@ const pa: Partial<Dictionary> = {
   "editor.occasion": "ਮੌਕਾ",
   "editor.dateAndTime": "ਤਾਰੀਖ ਅਤੇ ਸਮਾਂ",
   "editor.venue": "ਸਥਾਨ",
+  "editor.venueAddress": "ਸਥਾਨ ਦਾ ਪਤਾ",
+  "editor.muhurat": "ਮੁਹੂਰਤ (ਸ਼ੁਭ ਸਮਾਂ)",
+  "editor.dressCode": "ਡ੍ਰੈਸ ਕੋਡ",
   "editor.googleMapsLink": "ਗੂਗਲ ਮੈਪਸ ਲਿੰਕ",
   "editor.mapsHint":
     "ਵਿਕਲਪਿਕ — ਖਾਲੀ ਰੱਖੋ ਅਤੇ ਸਥਾਨ ਦੇ ਨਾਮ 'ਤੇ ਟੈਪ ਕਰਨ ਨਾਲ ਆਪਣੇ ਆਪ ਗੂਗਲ ਮੈਪਸ 'ਤੇ ਖੋਜ ਹੋਵੇਗੀ। ਮਹਿਮਾਨਾਂ ਨੂੰ ਕਿਸੇ ਖਾਸ ਪਿੰਨ 'ਤੇ ਭੇਜਣਾ ਹੋਵੇ ਤਾਂ ਹੀ ਇੱਥੇ ਲਿੰਕ ਪਾਓ।",
   "editor.yourFunctions": "ਤੁਹਾਡੇ ਸਮਾਗਮ",
   "editor.addFunction": "ਸਮਾਗਮ ਜੋੜੋ",
+  "editor.familyMembers": "ਪਰਿਵਾਰ ਦੇ ਮੈਂਬਰ",
+  "editor.addMember": "ਪਰਿਵਾਰ ਦਾ ਮੈਂਬਰ ਸ਼ਾਮਲ ਕਰੋ",
   "editor.replies": "ਜਵਾਬ",
   "editor.whatsappNumber": "ਵਟਸਐਪ ਨੰਬਰ",
+  "editor.phoneNumber": "ਫ਼ੋਨ ਨੰਬਰ",
+  "editor.emailAddress": "ਈਮੇਲ ਪਤਾ",
   "editor.replyBy": "ਇਸ ਤਾਰੀਖ ਤੱਕ ਜਵਾਬ ਦਿਓ",
   "editor.yourHashtag": "ਤੁਹਾਡਾ ਹੈਸ਼ਟੈਗ",
   "editor.travelStay": "ਯਾਤਰਾ ਅਤੇ ਠਹਿਰਾਅ",
@@ -1375,6 +1476,9 @@ const pa: Partial<Dictionary> = {
   "editor.yourStory": "ਤੁਹਾਡੀ ਕਹਾਣੀ",
   "editor.lineForGuests": "ਮਹਿਮਾਨਾਂ ਲਈ ਇੱਕ ਲਾਈਨ",
   "editor.togetherSince": "ਕਦੋਂ ਤੋਂ ਇਕੱਠੇ ਹੋ",
+  "editor.linkPreview": "ਲਿੰਕ ਝਲਕ",
+  "editor.pageTitle": "ਪੇਜ ਦਾ ਸਿਰਲੇਖ",
+  "editor.pageDescription": "ਪੇਜ ਦਾ ਵੇਰਵਾ",
   "editor.replayOpening": "ਸ਼ੁਰੂਆਤ ਮੁੜ ਵੇਖੋ",
   "editor.previewNote":
     "ਇਹ ਇੱਕ ਲਾਈਵ ਝਲਕ ਹੈ — ਖੱਬੇ ਪਾਸੇ ਕੀਤੀ ਹਰ ਤਬਦੀਲੀ ਇੱਥੇ ਤੁਰੰਤ ਦਿਖਦੀ ਹੈ। ਕੋਈ ਖੇਤਰ ਖਾਲੀ ਛੱਡੋ ਤਾਂ ਇਹ ਤੁਹਾਡੇ ਸੱਦੇ ਵਿੱਚੋਂ ਬਿਲਕੁਲ ਛੱਡ ਦਿੱਤਾ ਜਾਂਦਾ ਹੈ; ਕਦੇ ਵੀ ਖਾਲੀ ਲਾਈਨ ਜਾਂ ਪਲੇਸਹੋਲਡਰ ਟੈਕਸਟ ਨਹੀਂ ਦਿਖਦਾ। ਨਮੂਨਾ ਤਸਵੀਰਾਂ ਇਸ ਝਲਕ ਵਿੱਚ ਸਿਰਫ਼ ਖਾਲੀ ਤਸਵੀਰ ਥਾਵਾਂ ਵਿੱਚ ਦਿਖਾਈ ਦੇ ਸਕਦੀਆਂ ਹਨ — ਮਹਿਮਾਨ ਉਹ ਥਾਵਾਂ ਖਾਲੀ ਵੇਖਦੇ ਹਨ ਜਦ ਤੱਕ ਤੁਸੀਂ ਆਪਣੀਆਂ ਤਸਵੀਰਾਂ ਨਹੀਂ ਜੋੜਦੇ।",
@@ -1546,6 +1650,8 @@ const ur: Partial<Dictionary> = {
   "editor.yourNames": "آپ کے نام",
   "editor.name": "نام",
   "editor.partnersName": "ساتھی کا نام",
+  "editor.hostCouple": "ہم دو",
+  "editor.hostSingle": "صرف میں",
   "editor.families": "خاندان",
   "editor.familiesNote":
     "ہندوستانی دعوت ناموں میں والدین کے نام دیے جاتے ہیں؛ چھوڑنا ہو تو خالی رکھیں۔",
@@ -1554,6 +1660,7 @@ const ur: Partial<Dictionary> = {
   "editor.parents": "والدین",
   "editor.grandparents": "دادا دادی/نانا نانی",
   "editor.qualifications": "قابلیت",
+  "editor.relation": "رشتہ",
   "editor.openingText": "ابتدائی متن",
   "editor.openingTextHint":
     "اختیاری — زیادہ تر دعوت نامے مرکزی تصویر سے سیدھا ناموں کی طرف جاتے ہیں، جو سب سے صاف لگتا ہے۔ ناموں کے اوپر ایک سطر چاہیے تو ہی یہ بھریں۔",
@@ -1564,13 +1671,20 @@ const ur: Partial<Dictionary> = {
   "editor.occasion": "موقع",
   "editor.dateAndTime": "تاریخ اور وقت",
   "editor.venue": "مقام",
+  "editor.venueAddress": "مقام کا پتہ",
+  "editor.muhurat": "مہورت (مبارک وقت)",
+  "editor.dressCode": "ضابطہ لباس",
   "editor.googleMapsLink": "گوگل میپس لنک",
   "editor.mapsHint":
     "اختیاری — خالی رکھیں اور مقام کے نام پر ٹیپ کرنے سے خود بخود گوگل میپس پر تلاش ہوگی۔ مہمانوں کو کسی خاص پن پر بھیجنا ہو تو ہی یہاں لنک پیسٹ کریں۔",
   "editor.yourFunctions": "آپ کی تقریبات",
   "editor.addFunction": "تقریب شامل کریں",
+  "editor.familyMembers": "خاندان کے افراد",
+  "editor.addMember": "خاندان کا فرد شامل کریں",
   "editor.replies": "جوابات",
   "editor.whatsappNumber": "واٹس ایپ نمبر",
+  "editor.phoneNumber": "فون نمبر",
+  "editor.emailAddress": "ای میل ایڈریس",
   "editor.replyBy": "اس تاریخ تک جواب دیں",
   "editor.yourHashtag": "آپ کا ہیش ٹیگ",
   "editor.travelStay": "سفر اور قیام",
@@ -1582,6 +1696,9 @@ const ur: Partial<Dictionary> = {
   "editor.yourStory": "آپ کی کہانی",
   "editor.lineForGuests": "مہمانوں کے لیے ایک سطر",
   "editor.togetherSince": "کب سے ساتھ ہیں",
+  "editor.linkPreview": "لنک کی جھلک",
+  "editor.pageTitle": "صفحے کا عنوان",
+  "editor.pageDescription": "صفحے کی تفصیل",
   "editor.replayOpening": "آغاز دوبارہ دیکھیں",
   "editor.previewNote":
     "یہ ایک لائیو پیش منظر ہے — بائیں طرف کی گئی ہر تبدیلی یہاں فوراً نظر آتی ہے۔ کوئی خانہ خالی چھوڑیں تو وہ آپ کے دعوت نامے میں بالکل نہیں آئے گا؛ کبھی کوئی خالی سطر یا نمونہ متن نظر نہیں آتا۔ نمونہ تصاویر اس پیش منظر میں صرف خالی تصویر خانوں میں نظر آ سکتی ہیں — مہمان وہ خانے خالی دیکھتے ہیں جب تک آپ اپنی تصاویر شامل نہیں کرتے۔",
@@ -1753,6 +1870,8 @@ const fr: Partial<Dictionary> = {
   "editor.yourNames": "Vos noms",
   "editor.name": "Nom",
   "editor.partnersName": "Nom du partenaire",
+  "editor.hostCouple": "À deux",
+  "editor.hostSingle": "Moi seul",
   "editor.families": "Familles",
   "editor.familiesNote":
     "Les invitations indiennes mentionnent les parents ; laissez vide pour omettre.",
@@ -1761,6 +1880,7 @@ const fr: Partial<Dictionary> = {
   "editor.parents": "Parents",
   "editor.grandparents": "Grands-parents",
   "editor.qualifications": "Qualifications",
+  "editor.relation": "Lien de parenté",
   "editor.openingText": "Texte d'ouverture",
   "editor.openingTextHint":
     "Facultatif — la plupart des invitations passent directement de l'image principale aux noms, ce qui est le plus épuré. Remplissez ceci seulement si vous voulez une ligne de texte au-dessus.",
@@ -1771,13 +1891,20 @@ const fr: Partial<Dictionary> = {
   "editor.occasion": "Occasion",
   "editor.dateAndTime": "Date et heure",
   "editor.venue": "Lieu",
+  "editor.venueAddress": "Adresse du lieu",
+  "editor.muhurat": "Muhurat (moment auspicieux)",
+  "editor.dressCode": "Code vestimentaire",
   "editor.googleMapsLink": "Lien Google Maps",
   "editor.mapsHint":
     "Facultatif — laissez vide et toucher le nom du lieu lancera automatiquement une recherche Google Maps. Collez un lien ici seulement si vous voulez envoyer les invités vers un point précis.",
   "editor.yourFunctions": "Vos événements",
   "editor.addFunction": "Ajouter un événement",
+  "editor.familyMembers": "Membres de la famille",
+  "editor.addMember": "Ajouter un membre de la famille",
   "editor.replies": "Réponses",
   "editor.whatsappNumber": "Numéro WhatsApp",
+  "editor.phoneNumber": "Numéro de téléphone",
+  "editor.emailAddress": "Adresse e-mail",
   "editor.replyBy": "Répondre avant le",
   "editor.yourHashtag": "Votre hashtag",
   "editor.travelStay": "Voyage et séjour",
@@ -1789,6 +1916,9 @@ const fr: Partial<Dictionary> = {
   "editor.yourStory": "Votre histoire",
   "editor.lineForGuests": "Une ligne pour vos invités",
   "editor.togetherSince": "Ensemble depuis",
+  "editor.linkPreview": "Aperçu du lien",
+  "editor.pageTitle": "Titre de la page",
+  "editor.pageDescription": "Description de la page",
   "editor.replayOpening": "Revoir l'ouverture",
   "editor.previewNote":
     "Ceci est un aperçu en direct — chaque modification à gauche apparaît ici instantanément. Laissez un champ vide et il est simplement omis de votre invitation ; aucune ligne vide ni texte de remplacement n'apparaît jamais. Des photos d'exemple peuvent apparaître dans les emplacements photo vides, dans cet aperçu uniquement — les invités voient ces emplacements vides jusqu'à ce que vous ajoutiez vos propres photos.",
@@ -1928,6 +2058,8 @@ const de: Partial<Dictionary> = {
   "editor.yourNames": "Eure Namen",
   "editor.name": "Name",
   "editor.partnersName": "Name des Partners",
+  "editor.hostCouple": "Zu zweit",
+  "editor.hostSingle": "Nur ich",
   "editor.families": "Familien",
   "editor.familiesNote":
     "Indische Einladungen nennen die Eltern; leer lassen, um es wegzulassen.",
@@ -1936,6 +2068,7 @@ const de: Partial<Dictionary> = {
   "editor.parents": "Eltern",
   "editor.grandparents": "Großeltern",
   "editor.qualifications": "Qualifikationen",
+  "editor.relation": "Verwandtschaft",
   "editor.openingText": "Eröffnungstext",
   "editor.openingTextHint":
     "Optional — die meisten Einladungen gehen direkt vom Hauptbild zu den Namen über, was am saubersten wirkt. Fülle dies nur aus, wenn du eine Textzeile darüber möchtest.",
@@ -1946,13 +2079,20 @@ const de: Partial<Dictionary> = {
   "editor.occasion": "Anlass",
   "editor.dateAndTime": "Datum und Uhrzeit",
   "editor.venue": "Ort",
+  "editor.venueAddress": "Adresse der Location",
+  "editor.muhurat": "Muhurat (Glückszeit)",
+  "editor.dressCode": "Dresscode",
   "editor.googleMapsLink": "Google-Maps-Link",
   "editor.mapsHint":
     "Optional — leer lassen, dann wird beim Tippen auf den Ortsnamen automatisch bei Google Maps gesucht. Füge hier nur einen Link ein, wenn Gäste zu einem bestimmten Pin geleitet werden sollen.",
   "editor.yourFunctions": "Eure Veranstaltungen",
   "editor.addFunction": "Veranstaltung hinzufügen",
+  "editor.familyMembers": "Familienmitglieder",
+  "editor.addMember": "Familienmitglied hinzufügen",
   "editor.replies": "Antworten",
   "editor.whatsappNumber": "WhatsApp-Nummer",
+  "editor.phoneNumber": "Telefonnummer",
+  "editor.emailAddress": "E-Mail-Adresse",
   "editor.replyBy": "Antwort bis",
   "editor.yourHashtag": "Euer Hashtag",
   "editor.travelStay": "Anreise & Unterkunft",
@@ -1964,6 +2104,9 @@ const de: Partial<Dictionary> = {
   "editor.yourStory": "Eure Geschichte",
   "editor.lineForGuests": "Eine Zeile für eure Gäste",
   "editor.togetherSince": "Zusammen seit",
+  "editor.linkPreview": "Linkvorschau",
+  "editor.pageTitle": "Seitentitel",
+  "editor.pageDescription": "Seitenbeschreibung",
   "editor.replayOpening": "Eröffnung erneut ansehen",
   "editor.previewNote":
     "Dies ist eine Live-Vorschau — jede Änderung links wird hier sofort angezeigt. Lässt du ein Feld leer, wird es einfach aus deiner Einladung weggelassen; es erscheinen nie leere Zeilen oder Platzhaltertext. Beispielfotos können nur in dieser Vorschau in leeren Fotoplätzen erscheinen — Gäste sehen diese Plätze leer, bis du deine eigenen Fotos hinzufügst.",
@@ -2101,6 +2244,8 @@ const es: Partial<Dictionary> = {
   "editor.yourNames": "Vuestros nombres",
   "editor.name": "Nombre",
   "editor.partnersName": "Nombre de la pareja",
+  "editor.hostCouple": "Los dos",
+  "editor.hostSingle": "Solo yo",
   "editor.families": "Familias",
   "editor.familiesNote":
     "Las invitaciones indias mencionan a los padres; déjalo en blanco para omitirlo.",
@@ -2109,6 +2254,7 @@ const es: Partial<Dictionary> = {
   "editor.parents": "Padres",
   "editor.grandparents": "Abuelos",
   "editor.qualifications": "Cualificaciones",
+  "editor.relation": "Parentesco",
   "editor.openingText": "Texto de apertura",
   "editor.openingTextHint":
     "Opcional — la mayoría de las invitaciones pasan directamente de la imagen principal a los nombres, lo cual se ve más limpio. Completa esto solo si quieres una línea de texto encima.",
@@ -2119,13 +2265,20 @@ const es: Partial<Dictionary> = {
   "editor.occasion": "Ocasión",
   "editor.dateAndTime": "Fecha y hora",
   "editor.venue": "Lugar",
+  "editor.venueAddress": "Dirección del lugar",
+  "editor.muhurat": "Muhurat (hora auspiciosa)",
+  "editor.dressCode": "Código de vestimenta",
   "editor.googleMapsLink": "Enlace de Google Maps",
   "editor.mapsHint":
     "Opcional — déjalo en blanco y al tocar el nombre del lugar se buscará automáticamente en Google Maps. Pega un enlace aquí solo si quieres enviar a los invitados a un punto específico.",
   "editor.yourFunctions": "Vuestros eventos",
   "editor.addFunction": "Añadir evento",
+  "editor.familyMembers": "Familiares",
+  "editor.addMember": "Añadir un familiar",
   "editor.replies": "Respuestas",
   "editor.whatsappNumber": "Número de WhatsApp",
+  "editor.phoneNumber": "Número de teléfono",
+  "editor.emailAddress": "Correo electrónico",
   "editor.replyBy": "Responder antes del",
   "editor.yourHashtag": "Vuestro hashtag",
   "editor.travelStay": "Viaje y alojamiento",
@@ -2137,6 +2290,9 @@ const es: Partial<Dictionary> = {
   "editor.yourStory": "Vuestra historia",
   "editor.lineForGuests": "Una línea para vuestros invitados",
   "editor.togetherSince": "Juntos desde",
+  "editor.linkPreview": "Vista previa del enlace",
+  "editor.pageTitle": "Título de la página",
+  "editor.pageDescription": "Descripción de la página",
   "editor.replayOpening": "Repetir la apertura",
   "editor.previewNote":
     "Esta es una vista previa en vivo — cada cambio a la izquierda aparece aquí al instante. Si dejas un campo en blanco, simplemente se omite de tu invitación; nunca aparecen líneas vacías ni texto de marcador de posición. Pueden aparecer fotos de muestra en los espacios de fotos vacíos solo en esta vista previa — los invitados ven esos espacios vacíos hasta que añadas tus propias fotos.",
@@ -2276,6 +2432,8 @@ const pt: Partial<Dictionary> = {
   "editor.yourNames": "Seus nomes",
   "editor.name": "Nome",
   "editor.partnersName": "Nome do parceiro",
+  "editor.hostCouple": "Nós dois",
+  "editor.hostSingle": "Só eu",
   "editor.families": "Famílias",
   "editor.familiesNote":
     "Convites indianos mencionam os pais; deixe em branco para omitir.",
@@ -2284,6 +2442,7 @@ const pt: Partial<Dictionary> = {
   "editor.parents": "Pais",
   "editor.grandparents": "Avós",
   "editor.qualifications": "Qualificações",
+  "editor.relation": "Parentesco",
   "editor.openingText": "Texto de abertura",
   "editor.openingTextHint":
     "Opcional — a maioria dos convites vai direto da imagem principal para os nomes, o que fica mais limpo. Preencha isso apenas se quiser uma linha de texto acima deles.",
@@ -2294,13 +2453,20 @@ const pt: Partial<Dictionary> = {
   "editor.occasion": "Ocasião",
   "editor.dateAndTime": "Data e hora",
   "editor.venue": "Local",
+  "editor.venueAddress": "Endereço do local",
+  "editor.muhurat": "Muhurat (hora auspiciosa)",
+  "editor.dressCode": "Traje",
   "editor.googleMapsLink": "Link do Google Maps",
   "editor.mapsHint":
     "Opcional — deixe em branco e tocar no nome do local buscará automaticamente no Google Maps. Cole um link aqui apenas se quiser enviar os convidados para um ponto específico.",
   "editor.yourFunctions": "Seus eventos",
   "editor.addFunction": "Adicionar evento",
+  "editor.familyMembers": "Familiares",
+  "editor.addMember": "Adicionar um familiar",
   "editor.replies": "Respostas",
   "editor.whatsappNumber": "Número do WhatsApp",
+  "editor.phoneNumber": "Número de telefone",
+  "editor.emailAddress": "E-mail",
   "editor.replyBy": "Responder até",
   "editor.yourHashtag": "Sua hashtag",
   "editor.travelStay": "Viagem e hospedagem",
@@ -2312,6 +2478,9 @@ const pt: Partial<Dictionary> = {
   "editor.yourStory": "Sua história",
   "editor.lineForGuests": "Uma linha para seus convidados",
   "editor.togetherSince": "Juntos desde",
+  "editor.linkPreview": "Pré-visualização do link",
+  "editor.pageTitle": "Título da página",
+  "editor.pageDescription": "Descrição da página",
   "editor.replayOpening": "Reassistir a abertura",
   "editor.previewNote":
     "Esta é uma prévia ao vivo — cada alteração à esquerda aparece aqui instantaneamente. Deixe um campo em branco e ele simplesmente é omitido do seu convite; nunca aparecem linhas vazias ou texto de espaço reservado. Fotos de exemplo podem aparecer nos espaços de fotos vazios apenas nesta prévia — os convidados veem esses espaços vazios até você adicionar suas próprias fotos.",
@@ -2448,6 +2617,8 @@ const ru: Partial<Dictionary> = {
   "editor.yourNames": "Ваши имена",
   "editor.name": "Имя",
   "editor.partnersName": "Имя партнёра",
+  "editor.hostCouple": "\u041c\u044b \u0432\u0434\u0432\u043e\u0451\u043c",
+  "editor.hostSingle": "\u0422\u043e\u043b\u044c\u043a\u043e \u044f",
   "editor.families": "Семьи",
   "editor.familiesNote":
     "В индийских приглашениях указываются родители; оставьте пустым, чтобы пропустить.",
@@ -2456,6 +2627,7 @@ const ru: Partial<Dictionary> = {
   "editor.parents": "Родители",
   "editor.grandparents": "Бабушка и дедушка",
   "editor.qualifications": "Квалификация",
+  "editor.relation": "\u0420\u043e\u0434\u0441\u0442\u0432\u043e",
   "editor.openingText": "Вступительный текст",
   "editor.openingTextHint":
     "Необязательно — большинство приглашений переходят прямо от главного изображения к именам, что выглядит чище всего. Заполните это, только если хотите строку текста над именами.",
@@ -2466,13 +2638,26 @@ const ru: Partial<Dictionary> = {
   "editor.occasion": "Повод",
   "editor.dateAndTime": "Дата и время",
   "editor.venue": "Место проведения",
+  "editor.venueAddress":
+    "\u0410\u0434\u0440\u0435\u0441 \u043c\u0435\u0441\u0442\u0430 \u043f\u0440\u043e\u0432\u0435\u0434\u0435\u043d\u0438\u044f",
+  "editor.muhurat":
+    "\u041c\u0443\u0445\u0443\u0440\u0442\u0430 (\u0431\u043b\u0430\u0433\u043e\u043f\u0440\u0438\u044f\u0442\u043d\u043e\u0435 \u0432\u0440\u0435\u043c\u044f)",
+  "editor.dressCode": "\u0414\u0440\u0435\u0441\u0441-\u043a\u043e\u0434",
   "editor.googleMapsLink": "Ссылка на Google Maps",
   "editor.mapsHint":
     "Необязательно — оставьте пустым, и нажатие на название места автоматически запустит поиск в Google Maps. Вставляйте ссылку здесь, только если хотите отправить гостей на конкретную точку.",
   "editor.yourFunctions": "Ваши мероприятия",
   "editor.addFunction": "Добавить мероприятие",
+  "editor.familyMembers":
+    "\u0427\u043b\u0435\u043d\u044b \u0441\u0435\u043c\u044c\u0438",
+  "editor.addMember":
+    "\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0447\u043b\u0435\u043d\u0430 \u0441\u0435\u043c\u044c\u0438",
   "editor.replies": "Ответы",
   "editor.whatsappNumber": "Номер WhatsApp",
+  "editor.phoneNumber":
+    "\u041d\u043e\u043c\u0435\u0440 \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u0430",
+  "editor.emailAddress":
+    "\u042d\u043b\u0435\u043a\u0442\u0440\u043e\u043d\u043d\u0430\u044f \u043f\u043e\u0447\u0442\u0430",
   "editor.replyBy": "Ответить до",
   "editor.yourHashtag": "Ваш хэштег",
   "editor.travelStay": "Поездка и проживание",
@@ -2484,6 +2669,12 @@ const ru: Partial<Dictionary> = {
   "editor.yourStory": "Ваша история",
   "editor.lineForGuests": "Строка для гостей",
   "editor.togetherSince": "Вместе с",
+  "editor.linkPreview":
+    "\u041f\u0440\u0435\u0434\u043f\u0440\u043e\u0441\u043c\u043e\u0442\u0440 \u0441\u0441\u044b\u043b\u043a\u0438",
+  "editor.pageTitle":
+    "\u0417\u0430\u0433\u043e\u043b\u043e\u0432\u043e\u043a \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b",
+  "editor.pageDescription":
+    "\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b",
   "editor.replayOpening": "Посмотреть открытие снова",
   "editor.previewNote":
     "Это живой предпросмотр — каждое изменение слева мгновенно отображается здесь. Оставьте поле пустым, и оно просто не попадёт в приглашение; пустые строки или текст-заполнитель никогда не отображаются. Образцы фотографий могут появляться в пустых местах для фото только в этом предпросмотре — гости видят эти места пустыми, пока вы не добавите свои фотографии.",

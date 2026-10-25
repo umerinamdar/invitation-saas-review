@@ -51,6 +51,7 @@ export const mayuraMahal: Theme = {
     // that runs behind every section after the hero instead of a flat colour.
     sectionBackdrop: "/themes/mayura-mahal/section-bg.jpg",
     paperTexture: "/themes/mayura-mahal/paper.jpg",
+    defaultMusic: "/themes/dubai-silk/track.mp3",
   },
 
   motion: {

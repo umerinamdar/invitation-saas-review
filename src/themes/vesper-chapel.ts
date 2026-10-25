@@ -56,6 +56,7 @@ export const vesperChapel: Theme = {
     // Shares Cathedral Light's neutral ivory grain — both themes are
     // Christian-tradition and sit in a related palette family.
     paperTexture: "/themes/cathedral-light/paper.jpg",
+    defaultMusic: "/themes/dubai-silk/track.mp3",
   },
 
   motion: {

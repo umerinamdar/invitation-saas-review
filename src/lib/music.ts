@@ -37,11 +37,16 @@ export function tracksByLanguage(language: Track["language"]) {
 
 /**
  * Release Fix 9 (C-3): the label for the music picker's default
- * option. Only a theme that actually ships a track (today: Dubai
- * Silk) may call it "theme music" — the other designs are silent
- * until the customer picks the library track or uploads their own,
- * and the option must say so. The option's VALUE is unaffected: it
- * still selects the theme default (undefined) either way.
+ * option. Only a theme that actually ships a track may call it
+ * "theme music" — a design that ships none is silent until the
+ * customer picks the library track or uploads their own, and the
+ * option must say so. The option's VALUE is unaffected: it still
+ * selects the theme default (undefined) either way.
+ *
+ * Uniformity round (2026-10-24): every theme now ships the shared
+ * library track as its default, so every theme takes the
+ * "theme music" branch; the silent label remains as the honest
+ * fallback if a future theme ships without one.
  */
 export function themeDefaultLabel(
   themeName: string,

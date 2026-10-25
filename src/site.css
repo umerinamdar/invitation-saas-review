@@ -1779,6 +1779,17 @@ a.contact-card {
   padding: 10px 11px;
   min-width: 0;
 }
+/* A function's optional details (venue / maps / dress / note) sit in a
+   second, even four-column row under its name/date/time row. */
+.sub-event-details {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  margin-top: 6px;
+}
+/* Family-member rows carry name + role + remove, not the function's
+   four columns. */
+.member-row {
+  grid-template-columns: 1fr 1fr auto;
+}
 .row-remove {
   width: 32px;
   height: 32px;

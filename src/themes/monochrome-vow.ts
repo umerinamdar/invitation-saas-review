@@ -47,6 +47,7 @@ export const monochromeVow: Theme = {
     // that runs behind every section after the hero instead of a flat colour.
     sectionBackdrop: "/themes/monochrome-vow/section-bg.jpg",
     paperTexture: "/themes/monochrome-vow/paper.jpg",
+    defaultMusic: "/themes/dubai-silk/track.mp3",
   },
 
   motion: {
