@@ -173,12 +173,204 @@ export function BoxReveal(props: RevealProps) {
   );
 }
 
+/**
+ * A circular shutter dissolves open from the centre, like a camera iris
+ * letting light in. The single moving part is the shutter disc itself.
+ */
+export function IrisReveal(props: RevealProps) {
+  const { opening, onOpen, hosts, backdrop } = props;
+  const painted = Boolean(backdrop);
+  return (
+    <div
+      className={`iris ${opening ? "is-opening" : ""} ${painted ? "is-painted" : ""}`}
+      {...openTriggerProps(hosts, opening, onOpen)}
+    >
+      <div
+        className="iris-shutter"
+        style={
+          backdrop
+            ? ({
+                backgroundImage: `url('${backdrop}')`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              } as React.CSSProperties)
+            : undefined
+        }
+      />
+      <span className="iris-ring" />
+    </div>
+  );
+}
+
+/**
+ * Four quarter-panels, each sliding away to its own diagonal corner —
+ * the "four panels to corners" gesture.
+ */
+export function QuadrantReveal(props: RevealProps) {
+  const { opening, onOpen, hosts, backdrop } = props;
+  const painted = Boolean(backdrop);
+  const quarter = (corner: "tl" | "tr" | "bl" | "br") =>
+    backdrop
+      ? ({
+          backgroundImage: `url('${backdrop}')`,
+          backgroundSize: "200% 200%",
+          backgroundPosition:
+            corner === "tl"
+              ? "left top"
+              : corner === "tr"
+                ? "right top"
+                : corner === "bl"
+                  ? "left bottom"
+                  : "right bottom",
+        } as React.CSSProperties)
+      : undefined;
+  return (
+    <div
+      className={`quadrant ${opening ? "is-opening" : ""} ${painted ? "is-painted" : ""}`}
+      {...openTriggerProps(hosts, opening, onOpen)}
+    >
+      <span className="quadrant-panel tl" style={quarter("tl")} />
+      <span className="quadrant-panel tr" style={quarter("tr")} />
+      <span className="quadrant-panel bl" style={quarter("bl")} />
+      <span className="quadrant-panel br" style={quarter("br")} />
+    </div>
+  );
+}
+
+/** Five blades sharing one pivot, fanning open at staggered angles. */
+const FAN_BLADE_ANGLES = [-72, -36, 0, 36, 72] as const;
+
+export function FanReveal(props: RevealProps) {
+  const { opening, onOpen, hosts, backdrop } = props;
+  const painted = Boolean(backdrop);
+  return (
+    <div
+      className={`fan ${opening ? "is-opening" : ""} ${painted ? "is-painted" : ""}`}
+      {...openTriggerProps(hosts, opening, onOpen)}
+    >
+      {FAN_BLADE_ANGLES.map((angle, i) => (
+        <span
+          key={angle}
+          className="fan-blade"
+          style={
+            {
+              "--fan-angle": `${angle}deg`,
+              transitionDelay: `${i * 60}ms`,
+              ...(backdrop
+                ? {
+                    backgroundImage: `url('${backdrop}')`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }
+                : {}),
+            } as React.CSSProperties
+          }
+        />
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Top and bottom halves slide away vertically, opposite directions —
+ * the "wrap slides vertically" gesture.
+ */
+export function WrapReveal(props: RevealProps) {
+  const { opening, onOpen, hosts, backdrop } = props;
+  const painted = Boolean(backdrop);
+  const half = (side: "top" | "bottom") =>
+    backdrop
+      ? ({
+          backgroundImage: `url('${backdrop}')`,
+          backgroundSize: "100% 200%",
+          backgroundPosition: side === "top" ? "center top" : "center bottom",
+        } as React.CSSProperties)
+      : undefined;
+  return (
+    <div
+      className={`wrap ${opening ? "is-opening" : ""} ${painted ? "is-painted" : ""}`}
+      {...openTriggerProps(hosts, opening, onOpen)}
+    >
+      <span className="wrap-half wrap-top" style={half("top")} />
+      <span className="wrap-half wrap-bottom" style={half("bottom")} />
+    </div>
+  );
+}
+
+/** Six horizontal slats flipping open in a staggered cascade. */
+const BLIND_SLAT_COUNT = 6;
+
+export function BlindsReveal(props: RevealProps) {
+  const { opening, onOpen, hosts, backdrop } = props;
+  const painted = Boolean(backdrop);
+  return (
+    <div
+      className={`blinds ${opening ? "is-opening" : ""} ${painted ? "is-painted" : ""}`}
+      {...openTriggerProps(hosts, opening, onOpen)}
+    >
+      {Array.from({ length: BLIND_SLAT_COUNT }, (_, i) => (
+        <span
+          key={i}
+          className="blind-slat"
+          style={
+            {
+              transitionDelay: `${i * 70}ms`,
+              ...(backdrop
+                ? {
+                    backgroundImage: `url('${backdrop}')`,
+                    backgroundSize: `100% ${BLIND_SLAT_COUNT * 100}%`,
+                    backgroundPosition: `center ${(i * 100) / (BLIND_SLAT_COUNT - 1)}%`,
+                  }
+                : {}),
+            } as React.CSSProperties
+          }
+        />
+      ))}
+    </div>
+  );
+}
+
+/**
+ * The sheet rolls up and away past a decorative rod, like a parchment
+ * scroll — the "scroll rolls up" gesture.
+ */
+export function ScrollReveal(props: RevealProps) {
+  const { opening, onOpen, hosts, backdrop } = props;
+  const painted = Boolean(backdrop);
+  return (
+    <div
+      className={`scroll-cover ${opening ? "is-opening" : ""} ${painted ? "is-painted" : ""}`}
+      {...openTriggerProps(hosts, opening, onOpen)}
+    >
+      <div
+        className="scroll-sheet"
+        style={
+          backdrop
+            ? ({
+                backgroundImage: `url('${backdrop}')`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              } as React.CSSProperties)
+            : undefined
+        }
+      />
+      <span className="scroll-rod" />
+    </div>
+  );
+}
+
 const reveals: Record<Reveal, (props: RevealProps) => React.JSX.Element> = {
   envelope: EnvelopeReveal,
   doors: DoorsReveal,
   curtain: CurtainReveal,
   book: BookReveal,
   box: BoxReveal,
+  iris: IrisReveal,
+  quadrant: QuadrantReveal,
+  fan: FanReveal,
+  wrap: WrapReveal,
+  blinds: BlindsReveal,
+  scroll: ScrollReveal,
 };
 
 export function RevealStage({

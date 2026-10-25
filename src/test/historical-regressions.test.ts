@@ -28,11 +28,12 @@ describe("historical B.1 — the ₹999 tier-pricing bug (2026-10-21 QA)", () =>
   it("the catalogue still contains both tiers the bug split on — price is not derived from either", () => {
     // The original defect: 'royal' themes charged ₹999 while 'classic'
     // charged ₹599. Both tiers still exist as design metadata (12 royal
-    // / 2 classic at the time of the bug); the price constant above is
-    // the ONLY price, for every one of them.
+    // / 2 classic at the time of the bug, 34 themes total after the
+    // Lovable-20 conversion); the price constant above is the ONLY
+    // price, for every one of them.
     const tiers = new Set(themes.map((theme) => theme.tier));
     expect(tiers).toEqual(new Set(["royal", "classic"]));
-    expect(themes.length).toBe(14);
+    expect(themes.length).toBe(34);
     for (const theme of themes) {
       expect(theme.tier === "royal" || theme.tier === "classic").toBe(true);
       // No theme carries its own price — a per-theme price field is how

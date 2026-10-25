@@ -256,7 +256,13 @@ a {
 .painted-stage .doors,
 .painted-stage .curtain,
 .painted-stage .book,
-.painted-stage .box {
+.painted-stage .box,
+.painted-stage .iris,
+.painted-stage .quadrant,
+.painted-stage .fan,
+.painted-stage .wrap,
+.painted-stage .blinds,
+.painted-stage .scroll-cover {
   width: 100%;
   height: 100%;
   max-width: none;
@@ -289,7 +295,13 @@ a {
 .doors:focus-visible,
 .curtain:focus-visible,
 .book:focus-visible,
-.box:focus-visible {
+.box:focus-visible,
+.iris:focus-visible,
+.quadrant:focus-visible,
+.fan:focus-visible,
+.wrap:focus-visible,
+.blinds:focus-visible,
+.scroll-cover:focus-visible {
   outline: 2px solid var(--gold);
   outline-offset: 4px;
 }
@@ -604,6 +616,238 @@ a {
   .box {
     aspect-ratio: 1.05;
   }
+}
+
+/*
+ * Six mechanics added for the Lovable-20 conversion (2026-10-25). Same
+ * contract as the five above: one moving-part transition keyed off
+ * var(--open-duration) with the shared cubic-bezier(0.42, 0, 0.58, 1)
+ * easing, triggered by the stage's own .is-opening class — nothing
+ * theme-specific lives here.
+ */
+
+/* Iris: a circular shutter dissolves open from the centre. */
+.iris {
+  width: min(480px, 100%);
+  aspect-ratio: 1;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  container-type: inline-size;
+  cursor: pointer;
+}
+.iris-shutter {
+  position: absolute;
+  inset: 0;
+  background: var(--paper-texture) center/400px var(--paper);
+  clip-path: circle(0% at 50% 50%);
+  transition: clip-path var(--open-duration, 1.4s)
+    cubic-bezier(0.42, 0, 0.58, 1);
+}
+.iris-ring {
+  position: absolute;
+  inset: 14px;
+  border: 1px solid
+    color-mix(in oklch, var(--gold-light) 65%, transparent);
+  border-radius: 999px;
+  pointer-events: none;
+}
+.iris.is-opening .iris-shutter {
+  clip-path: circle(85% at 50% 50%);
+}
+
+/* Quadrant: four quarter-panels slide away to their own corner. */
+.quadrant {
+  width: min(480px, 100%);
+  aspect-ratio: 1;
+  position: relative;
+  overflow: hidden;
+  container-type: inline-size;
+  cursor: pointer;
+}
+.quadrant-panel {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  background: var(--paper-texture) center/400px var(--paper);
+  border: 1px solid var(--paper-dark);
+  box-shadow: var(--shadow-envelope);
+  transition: transform var(--open-duration, 1.4s)
+    cubic-bezier(0.42, 0, 0.58, 1);
+}
+.quadrant-panel.tl {
+  top: 0;
+  left: 0;
+}
+.quadrant-panel.tr {
+  top: 0;
+  right: 0;
+}
+.quadrant-panel.bl {
+  bottom: 0;
+  left: 0;
+}
+.quadrant-panel.br {
+  bottom: 0;
+  right: 0;
+}
+.quadrant.is-opening .quadrant-panel.tl {
+  transform: translate(-105%, -105%);
+}
+.quadrant.is-opening .quadrant-panel.tr {
+  transform: translate(105%, -105%);
+}
+.quadrant.is-opening .quadrant-panel.bl {
+  transform: translate(-105%, 105%);
+}
+.quadrant.is-opening .quadrant-panel.br {
+  transform: translate(105%, 105%);
+}
+
+/* Fan: blades sharing one pivot, fanning open at staggered angles. */
+.fan {
+  width: min(480px, 100%);
+  aspect-ratio: 1.1;
+  position: relative;
+  overflow: hidden;
+  container-type: inline-size;
+  cursor: pointer;
+}
+.fan-blade {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 55%;
+  height: 100%;
+  transform-origin: bottom center;
+  transform: translateX(-50%);
+  background: var(--paper-texture) center/400px var(--paper);
+  border: 1px solid var(--paper-dark);
+  transition: transform var(--open-duration, 1.4s)
+    cubic-bezier(0.42, 0, 0.58, 1);
+}
+.fan.is-opening .fan-blade {
+  transform: translateX(-50%) rotate(var(--fan-angle, 0deg));
+}
+
+/* Wrap: top and bottom halves slide away, opposite directions. */
+.wrap {
+  width: min(530px, 100%);
+  aspect-ratio: 1.1;
+  position: relative;
+  overflow: hidden;
+  container-type: inline-size;
+  cursor: pointer;
+}
+.wrap-half {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 52%;
+  background: var(--paper-texture) center/400px var(--paper);
+  border: 1px solid var(--paper-dark);
+  box-shadow: var(--shadow-envelope);
+  transition: transform var(--open-duration, 1.4s)
+    cubic-bezier(0.42, 0, 0.58, 1);
+}
+.wrap-top {
+  top: 0;
+}
+.wrap-bottom {
+  bottom: 0;
+}
+.wrap.is-opening .wrap-top {
+  transform: translateY(-101%);
+}
+.wrap.is-opening .wrap-bottom {
+  transform: translateY(101%);
+}
+
+/* Blinds: horizontal slats flipping open in a staggered cascade. */
+.blinds {
+  width: min(530px, 100%);
+  aspect-ratio: 1.1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  perspective: 900px;
+  container-type: inline-size;
+  cursor: pointer;
+}
+.blind-slat {
+  flex: 1;
+  transform-origin: top;
+  background: var(--paper-texture) center/400px var(--paper);
+  border-bottom: 1px solid var(--paper-dark);
+  transition: transform var(--open-duration, 1.4s)
+    cubic-bezier(0.42, 0, 0.58, 1);
+}
+.blinds.is-opening .blind-slat {
+  transform: rotateX(86deg);
+}
+
+/* Scroll: the sheet rolls up and away past a decorative rod. */
+.scroll-cover {
+  width: min(430px, 100%);
+  aspect-ratio: 0.82;
+  position: relative;
+  overflow: hidden;
+  container-type: inline-size;
+  cursor: pointer;
+}
+.scroll-sheet {
+  position: absolute;
+  inset: 0;
+  background: var(--paper-texture) center/400px var(--paper-light);
+  border: 1px solid var(--paper-dark);
+  box-shadow: var(--shadow-paper);
+  transition: transform var(--open-duration, 1.5s)
+    cubic-bezier(0.42, 0, 0.58, 1);
+}
+.scroll-rod {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 14px;
+  background: linear-gradient(180deg, var(--gold-light), var(--gold));
+  border-radius: 999px;
+  box-shadow: 0 2px 7px color-mix(in oklch, var(--foreground) 30%, transparent);
+  transition: transform var(--open-duration, 1.5s)
+    cubic-bezier(0.42, 0, 0.58, 1);
+  z-index: 2;
+}
+.scroll-cover.is-opening .scroll-sheet,
+.scroll-cover.is-opening .scroll-rod {
+  transform: translateY(-100%);
+}
+@media (max-width: 640px) {
+  .fan,
+  .wrap,
+  .blinds {
+    aspect-ratio: 0.95;
+  }
+  .scroll-cover {
+    width: min(330px, 100%);
+  }
+}
+
+/* Painted-artwork variants: the image IS the scene, so drop the drawn
+ * paper styling (borders/shadows) the same way doors/curtain/book/box do. */
+.iris.is-painted .iris-shutter,
+.quadrant.is-painted .quadrant-panel,
+.fan.is-painted .fan-blade,
+.wrap.is-painted .wrap-half,
+.blinds.is-painted .blind-slat,
+.scroll-cover.is-painted .scroll-sheet {
+  border: none;
+  box-shadow: none;
+}
+.quadrant.is-painted .quadrant-panel,
+.wrap.is-painted .wrap-half,
+.blinds.is-painted .blind-slat {
+  background-color: transparent;
 }
 
 /* Drawn decoration, used by templates that ship without photography. */

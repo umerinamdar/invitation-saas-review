@@ -972,6 +972,1129 @@ const DEMO_OVERRIDES: Record<string, DemoOverride> = {
     email: "arjun.tara@example.com",
     hashtag: "#ArjunWedsTara",
   },
+
+  // ---------------------------------------------------------------------
+  // Lovable-20 conversion (2026-10-25). Couples, venues, dates and dress
+  // codes below are ported from each source project's own invitation.ts.
+  // Parents'/grandparents' names, sibling family members, and the two
+  // sub-event entries per theme are invented in this file's existing
+  // house style (the source designs give a same-day run of show, not
+  // separate pre-/post-wedding days) — the same kind of filled-in detail
+  // every other theme in this file already carries.
+  // ---------------------------------------------------------------------
+
+  "ivory-silk-pearls": {
+    person1: "Charlotte",
+    person2: "Henry",
+    family1: {
+      relation: "Daughter of",
+      parents: "Mr. & Mrs. Edward Bennett",
+      grandparents: "Late Mr. George Bennett",
+    },
+    family2: {
+      relation: "Son of",
+      parents: "Dr. & Mrs. William Ashford",
+      grandparents: "Mr. & Mrs. Arthur Ashford",
+    },
+    familyMembers: [
+      { name: "Sophie Bennett", role: "Sister of the bride" },
+      { name: "James Ashford", role: "Brother of the groom" },
+    ],
+    event: {
+      typeLabel: "Wedding Ceremony",
+      startIso: "2027-06-12T16:00:00+02:00",
+      dateText: "12 June 2027",
+      dayText: "Saturday",
+      timeText: "4:00 PM onwards",
+      venueName: "Villa del Balbianello",
+      venueAddress: "Via Comoedia 5, Lenno, Lake Como, Italy",
+      dressCode: "Black tie — garden elegance",
+    },
+    subEvents: [
+      {
+        label: "Welcome Aperitivo",
+        dateText: "11 June",
+        timeText: "7:00 PM onwards",
+        venueName: "Lenno Lakefront",
+        dressCode: "Smart casual",
+      },
+      {
+        label: "Farewell Brunch",
+        dateText: "13 June",
+        timeText: "11:00 AM onwards",
+        venueName: "Villa Terrace",
+        dressCode: "Casual",
+      },
+    ],
+    logistics: {
+      transport:
+        "Private boats depart Lenno pier from 2:45 PM. Return boats run until 1 AM.",
+      accommodation:
+        "Rooms are held at Grand Hotel Tremezzo and Hotel Villa Cipressi under the Bennett–Ashford wedding.",
+      note: "June evenings on the lake are mild — a light wrap is enough.",
+    },
+    rsvpByDateText: "1 May 2027",
+    email: "charlotte.henry@example.com",
+    hashtag: "#CharlotteWedsHenry",
+  },
+
+  "chateau-de-fleurs": {
+    person1: "Amélie",
+    person2: "Louis",
+    family1: {
+      relation: "Daughter of",
+      parents: "Mr. & Mrs. Philippe Rousseau",
+      grandparents: "Late M. Henri Rousseau",
+    },
+    family2: {
+      relation: "Son of",
+      parents: "Dr. & Mrs. Bernard Marchand",
+      grandparents: "M. & Mme Claude Marchand",
+    },
+    familyMembers: [
+      { name: "Camille Rousseau", role: "Sister of the bride" },
+      { name: "Antoine Marchand", role: "Brother of the groom" },
+    ],
+    event: {
+      typeLabel: "Wedding Ceremony",
+      startIso: "2027-05-22T17:00:00+02:00",
+      dateText: "22 May 2027",
+      dayText: "Saturday",
+      timeText: "5:00 PM onwards",
+      venueName: "Château de Chantilly Gardens",
+      venueAddress: "Route de la Reine, Provence, France",
+      dressCode: "Formal — pastel garden tones welcome",
+    },
+    subEvents: [
+      {
+        label: "Welcome Drinks",
+        dateText: "21 May",
+        timeText: "7:00 PM onwards",
+        venueName: "The Orangerie",
+        dressCode: "Smart casual",
+      },
+      {
+        label: "Farewell Brunch",
+        dateText: "23 May",
+        timeText: "11:00 AM onwards",
+        venueName: "Château Courtyard",
+        dressCode: "Casual",
+      },
+    ],
+    logistics: {
+      transport:
+        "Private coaches depart from Aix-en-Provence station at 3:45 PM. Return coaches run until midnight.",
+      accommodation:
+        "Rooms are held at Auberge du Jeu de Paume and Château de la Messardière under the Rousseau–Marchand wedding.",
+      note: "May evenings in the gardens are gentle — gravel paths favour low heels.",
+    },
+    rsvpByDateText: "1 April 2027",
+    email: "amelie.louis@example.com",
+    hashtag: "#AmélieWedsLouis",
+  },
+
+  "heirloom-lace-curtains": {
+    person1: "Eleanor",
+    person2: "Thomas",
+    family1: {
+      relation: "Daughter of",
+      parents: "Mr. & Mrs. Charles Whitcombe",
+      grandparents: "Late Mr. Reginald Whitcombe",
+    },
+    family2: {
+      relation: "Son of",
+      parents: "Dr. & Mrs. Edmund Hale",
+      grandparents: "Mr. & Mrs. Albert Hale",
+    },
+    familyMembers: [
+      { name: "Imogen Whitcombe", role: "Sister of the bride" },
+      { name: "Oliver Hale", role: "Brother of the groom" },
+    ],
+    event: {
+      typeLabel: "Wedding Ceremony",
+      startIso: "2027-09-18T15:00:00+01:00",
+      dateText: "18 September 2027",
+      dayText: "Saturday",
+      timeText: "3:00 PM onwards",
+      venueName: "Avington Park Manor",
+      venueAddress: "Itchen Abbas, Hampshire, England",
+      dressCode: "Formal — vintage touches welcome",
+    },
+    subEvents: [
+      {
+        label: "Welcome Tea",
+        dateText: "17 September",
+        timeText: "4:00 PM onwards",
+        venueName: "The Orangery",
+        dressCode: "Smart casual",
+      },
+      {
+        label: "Farewell Brunch",
+        dateText: "19 September",
+        timeText: "11:00 AM onwards",
+        venueName: "Manor Lawn",
+        dressCode: "Casual",
+      },
+    ],
+    logistics: {
+      transport:
+        "Complimentary coaches depart Winchester station at 1:45 PM and return at the close of the evening.",
+      accommodation:
+        "Rooms are held at The Wykeham Arms and Lainston House under the Whitcombe–Hale wedding.",
+      note: "September evenings can turn cool on the lawn — a shawl is a good idea.",
+    },
+    rsvpByDateText: "1 August 2027",
+    email: "eleanor.thomas@example.com",
+    hashtag: "#EleanorWedsThomas",
+  },
+
+  "barcelona-rosette": {
+    person1: "Alba",
+    person2: "Felipe",
+    family1: {
+      relation: "Daughter of",
+      parents: "Sr. & Sra. Joan Ferrer",
+      grandparents: "Late Sr. Miquel Ferrer",
+    },
+    family2: {
+      relation: "Son of",
+      parents: "Dr. & Sra. Rafael Navarro",
+      grandparents: "Sr. & Sra. Esteban Navarro",
+    },
+    familyMembers: [
+      { name: "Marta Ferrer", role: "Sister of the bride" },
+      { name: "Pau Navarro", role: "Brother of the groom" },
+    ],
+    event: {
+      typeLabel: "Wedding Mass",
+      startIso: "2027-04-17T17:30:00+02:00",
+      dateText: "17 April 2027",
+      dayText: "Saturday",
+      timeText: "5:30 PM onwards",
+      venueName: "Basilica of Santa Maria del Mar",
+      venueAddress: "Plaça de Santa Maria, Barcelona, Spain",
+      dressCode: "Formal attire — shoulders covered within the basilica",
+    },
+    subEvents: [
+      {
+        label: "Welcome Tapas",
+        dateText: "16 April",
+        timeText: "8:00 PM onwards",
+        venueName: "Gothic Quarter Terrace",
+        dressCode: "Smart casual",
+      },
+      {
+        label: "Farewell Brunch",
+        dateText: "18 April",
+        timeText: "11:00 AM onwards",
+        venueName: "La Baronia Courtyard",
+        dressCode: "Casual",
+      },
+    ],
+    logistics: {
+      transport:
+        "Coaches depart Plaça de Catalunya at 4:15 PM for the basilica, continuing to La Baronia after Mass.",
+      accommodation:
+        "Rooms are held at Hotel Arts Barcelona and Mercer Hotel under the Ferrer–Navarro wedding.",
+      note: "April evenings in Barcelona are mild — a light jacket is enough.",
+    },
+    rsvpByDateText: "1 March 2027",
+    email: "alba.felipe@example.com",
+    hashtag: "#AlbaWedsFelipe",
+  },
+
+  "marigold-mandap": {
+    person1: "Aarav",
+    person2: "Priya",
+    family1: {
+      relation: "Son of",
+      parents: "Mr. & Mrs. Rakesh Mehta",
+      grandparents: "Late Shri Govind Mehta",
+    },
+    family2: {
+      relation: "Daughter of",
+      parents: "Dr. & Mrs. Suresh Nair",
+      grandparents: "Shri & Smt. Krishnan Nair",
+    },
+    familyMembers: [
+      { name: "Rhea Mehta", role: "Sister of the groom" },
+      { name: "Arjun Nair", role: "Brother of the bride" },
+    ],
+    event: {
+      typeLabel: "Wedding Ceremony",
+      startIso: "2027-11-20T09:00:00+05:30",
+      dateText: "20 November 2027",
+      dayText: "Saturday",
+      timeText: "9:00 AM onwards",
+      venueName: "The City Palace Lawns",
+      venueAddress: "City Palace Road, Jaipur, Rajasthan 302002",
+      muhuratText: "Shubh Muhurat · 9:12 AM to 9:58 AM",
+      dressCode: "Traditional Indian festive — bright colours welcome",
+    },
+    subEvents: [
+      {
+        label: "Mehendi",
+        dateText: "18 November",
+        timeText: "4:00 PM onwards",
+        venueName: "Courtyard Lawn",
+        dressCode: "Yellows and greens",
+      },
+      {
+        label: "Sangeet",
+        dateText: "19 November",
+        timeText: "7:00 PM onwards",
+        venueName: "The Durbar Hall",
+        dressCode: "Indian festive",
+      },
+    ],
+    logistics: {
+      transport:
+        "Complimentary coaches will depart from Jaipur city hotels from 7:00 AM and return after the festivities.",
+      accommodation:
+        "Rooms are held at Rambagh Palace and ITC Rajputana under the Mehta–Nair wedding.",
+      note: "November mornings in Jaipur are pleasant — a light shawl suits the evening.",
+    },
+    rsvpByDateText: "20 October 2027",
+    email: "aarav.priya@example.com",
+    hashtag: "#AaravWedsPriya",
+  },
+
+  "emerald-mihrab": {
+    person1: "Yusuf",
+    person2: "Zainab",
+    family1: {
+      relation: "Son of",
+      parents: "Mr. & Mrs. Imran Rahman",
+      grandparents: "Late Haji Abdul Rahman",
+    },
+    family2: {
+      relation: "Daughter of",
+      parents: "Dr. & Mrs. Tariq Qureshi",
+      grandparents: "Mr. & Mrs. Nasir Qureshi",
+    },
+    familyMembers: [
+      { name: "Hana Rahman", role: "Sister of the groom" },
+      { name: "Bilal Qureshi", role: "Brother of the bride" },
+    ],
+    event: {
+      typeLabel: "Nikah Ceremony",
+      startIso: "2027-03-06T16:00:00+04:00",
+      dateText: "6 March 2027",
+      dayText: "Saturday",
+      timeText: "4:00 PM onwards",
+      venueName: "The Palm Garden, Atlantis The Palm",
+      venueAddress: "Crescent Road, The Palm Jumeirah, Dubai, UAE",
+      dressCode: "Formal — modest elegance",
+    },
+    subEvents: [
+      {
+        label: "Mehndi Night",
+        dateText: "4 March",
+        timeText: "7:00 PM onwards",
+        venueName: "Garden Terrace",
+        dressCode: "Festive colours",
+      },
+      {
+        label: "Walima",
+        dateText: "6 March",
+        timeText: "7:00 PM onwards",
+        venueName: "The Palm Garden",
+        dressCode: "Formal — modest elegance",
+      },
+    ],
+    logistics: {
+      transport:
+        "Complimentary coaches depart from Dubai Marina and Deira at 2:45 PM. An alcohol-free celebration with halal catering throughout.",
+      accommodation:
+        "Rooms are held at Atlantis The Palm and Sofitel Dubai The Palm under the Rahman–Qureshi wedding.",
+      note: "Evenings by the Palm are warm — light fabrics are recommended.",
+    },
+    rsvpByDateText: "1 February 2027",
+    email: "yusuf.zainab@example.com",
+    hashtag: "#YusufWedsZainab",
+  },
+
+  "golden-darbar": {
+    // Full given first+middle name, not just "Harpreet"/"Simran": the
+    // unrelated existing Golden Temple theme's demo couple already uses
+    // those exact first names (a real coincidence, both Sikh designs) —
+    // this stays the couple's own actual name, just not truncated as
+    // far, so the two theme cards read as different weddings.
+    person1: "Harpreet Singh",
+    person2: "Simran Kaur",
+    family1: {
+      relation: "Son of",
+      parents: "S. & Mrs. Jagtar Singh Gill",
+      grandparents: "Late S. Mohan Singh Gill",
+    },
+    family2: {
+      relation: "Daughter of",
+      parents: "S. & Mrs. Baldev Kaur Bains",
+      grandparents: "S. & Mrs. Ranjit Singh Bains",
+    },
+    familyMembers: [
+      { name: "Amrit Gill", role: "Sister of the groom" },
+      { name: "Manpreet Bains", role: "Brother of the bride" },
+    ],
+    event: {
+      typeLabel: "Anand Karaj",
+      startIso: "2027-10-09T10:00:00+01:00",
+      dateText: "9 October 2027",
+      dayText: "Saturday",
+      timeText: "10:00 AM onwards",
+      venueName: "The Grand Gurdwara Hall & Lawns",
+      venueAddress: "Western Road, Southall, London, UK",
+      dressCode: "Traditional or formal — heads covered in the Darbar Hall",
+    },
+    subEvents: [
+      {
+        label: "Milni",
+        dateText: "9 October",
+        timeText: "9:00 AM onwards",
+        venueName: "Gurdwara Entrance",
+        dressCode: "Traditional",
+      },
+      {
+        label: "Reception",
+        dateText: "9 October",
+        timeText: "6:00 PM onwards",
+        venueName: "The Grand Hall",
+        dressCode: "Festive",
+      },
+    ],
+    logistics: {
+      transport:
+        "Complimentary coaches run from Southall station throughout the morning. An alcohol-free and meat-free celebration.",
+      accommodation:
+        "Rooms are held at Premier Inn Southall and Radisson Red Heathrow under the Gill–Bains wedding.",
+      note: "Scarves are provided at the entrance for the Darbar Hall.",
+    },
+    rsvpByDateText: "1 September 2027",
+    email: "harpreet.simran@example.com",
+    hashtag: "#Harpreet Singh Weds Simran Kaur",
+  },
+
+  "amalfi-fresco-wrap": {
+    person1: "Giulia",
+    person2: "Marco",
+    family1: {
+      relation: "Daughter of",
+      parents: "Sig. & Sig.ra Antonio Romano",
+      grandparents: "Late Sig. Vincenzo Romano",
+    },
+    family2: {
+      relation: "Son of",
+      parents: "Dott. & Sig.ra Paolo De Luca",
+      grandparents: "Sig. & Sig.ra Franco De Luca",
+    },
+    familyMembers: [
+      { name: "Chiara Romano", role: "Sister of the bride" },
+      { name: "Luca De Luca", role: "Brother of the groom" },
+    ],
+    event: {
+      typeLabel: "Wedding Ceremony",
+      startIso: "2027-07-24T17:30:00+02:00",
+      dateText: "24 July 2027",
+      dayText: "Saturday",
+      timeText: "5:30 PM onwards",
+      venueName: "Villa Cimbrone",
+      venueAddress: "Via Santa Chiara 26, Ravello, Amalfi Coast, Italy",
+      dressCode: "Summer formal — Mediterranean colours",
+    },
+    subEvents: [
+      {
+        label: "Welcome Limonata",
+        dateText: "23 July",
+        timeText: "7:00 PM onwards",
+        venueName: "Piazza Duomo",
+        dressCode: "Smart casual",
+      },
+      {
+        label: "Farewell Brunch",
+        dateText: "25 July",
+        timeText: "11:00 AM onwards",
+        venueName: "Villa Terrace",
+        dressCode: "Casual",
+      },
+    ],
+    logistics: {
+      transport:
+        "Shuttle buses depart from Amalfi town from 3:45 PM, carrying guests up the coast to Ravello.",
+      accommodation:
+        "Rooms are held at Belmond Caruso and Palazzo Avino under the Romano–De Luca wedding.",
+      note: "July evenings on the coast are warm — light linens are recommended.",
+    },
+    rsvpByDateText: "1 May 2027",
+    email: "giulia.marco@example.com",
+    hashtag: "#GiuliaWedsMarco",
+  },
+
+  "monochrome-loft": {
+    person1: "Noah",
+    person2: "Ava",
+    family1: {
+      relation: "Son of",
+      parents: "Mr. & Mrs. Erik Lindqvist",
+      grandparents: "Late Mr. Lars Lindqvist",
+    },
+    family2: {
+      relation: "Daughter of",
+      parents: "Dr. & Mrs. Wei Chen",
+      grandparents: "Mr. & Mrs. Jun Chen",
+    },
+    familyMembers: [
+      { name: "Elsa Lindqvist", role: "Sister of the groom" },
+      { name: "Mia Chen", role: "Sister of the bride" },
+    ],
+    event: {
+      typeLabel: "Wedding Ceremony",
+      startIso: "2027-08-14T18:00:00-04:00",
+      dateText: "14 August 2027",
+      dayText: "Saturday",
+      timeText: "6:00 PM onwards",
+      venueName: "The Glasshouse Loft",
+      venueAddress: "25 Kent Avenue, Brooklyn, New York",
+      dressCode: "Black & white — strictly monochrome",
+    },
+    subEvents: [
+      {
+        label: "Welcome Drinks",
+        dateText: "13 August",
+        timeText: "7:00 PM onwards",
+        venueName: "Rooftop Bar",
+        dressCode: "Smart casual, monochrome",
+      },
+      {
+        label: "Farewell Brunch",
+        dateText: "15 August",
+        timeText: "11:00 AM onwards",
+        venueName: "The Glasshouse Loft",
+        dressCode: "Casual",
+      },
+    ],
+    logistics: {
+      transport:
+        "Take the L train to Bedford Avenue — the loft is a short walk away. A shuttle departs the venue at the end of the night.",
+      accommodation:
+        "Rooms are held at The William Vale and Wythe Hotel under the Lindqvist–Chen wedding.",
+      note: "August evenings in Brooklyn are warm — the ceremony is held indoors.",
+    },
+    rsvpByDateText: "1 July 2027",
+    email: "noah.ava@example.com",
+    hashtag: "#NoahWedsAva",
+  },
+
+  "udaipur-royal-scroll": {
+    person1: "Vikramaditya",
+    person2: "Kanika",
+    family1: {
+      relation: "Son of",
+      parents: "Thakur & Thakurani Pratap Singh Rathore",
+      grandparents: "Late Thakur Bhairon Singh Rathore",
+    },
+    family2: {
+      relation: "Daughter of",
+      parents: "Mr. & Mrs. Vijendra Shekhawat",
+      grandparents: "Shri & Smt. Devendra Shekhawat",
+    },
+    familyMembers: [
+      { name: "Padmini Rathore", role: "Sister of the groom" },
+      { name: "Yuvraj Shekhawat", role: "Brother of the bride" },
+    ],
+    event: {
+      typeLabel: "Wedding Ceremony",
+      startIso: "2027-12-04T16:30:00+05:30",
+      dateText: "4 December 2027",
+      dayText: "Saturday",
+      timeText: "4:30 PM onwards",
+      venueName: "The City Palace",
+      venueAddress: "Palace Road, Udaipur, Rajasthan 313001",
+      muhuratText: "Shubh Muhurat · 4:42 PM to 5:30 PM",
+      dressCode: "Regal traditional — sherwanis, lehengas & bandhgalas",
+    },
+    subEvents: [
+      {
+        label: "Royal Welcome",
+        dateText: "2 December",
+        timeText: "3:30 PM onwards",
+        venueName: "Palace Courtyard",
+        dressCode: "Festive",
+      },
+      {
+        label: "Sangeet",
+        dateText: "3 December",
+        timeText: "7:30 PM onwards",
+        venueName: "Lakeview Terrace",
+        dressCode: "Indian festive",
+      },
+    ],
+    logistics: {
+      transport:
+        "Vintage cars and coaches depart from the city hotels from 2:45 PM, carrying guests to the palace gates.",
+      accommodation:
+        "Rooms are held at Taj Lake Palace and The Leela Palace Udaipur under the Rathore–Shekhawat wedding.",
+      note: "December evenings by the lake are cool — a shawl is recommended.",
+    },
+    rsvpByDateText: "1 November 2027",
+    email: "vikramaditya.kanika@example.com",
+    hashtag: "#VikramadityaWedsKanika",
+  },
+
+  "rajputana-heritage": {
+    person1: "Aditya",
+    person2: "Divya",
+    family1: {
+      relation: "Son of",
+      parents: "Thakur & Thakurani Vijay Singh Chauhan",
+      grandparents: "Late Thakur Udai Singh Chauhan",
+    },
+    family2: {
+      relation: "Daughter of",
+      parents: "Mr. & Mrs. Hemant Rathore",
+      grandparents: "Shri & Smt. Narendra Rathore",
+    },
+    familyMembers: [
+      { name: "Kavya Chauhan", role: "Sister of the groom" },
+      { name: "Dev Rathore", role: "Brother of the bride" },
+    ],
+    event: {
+      typeLabel: "Shubh Vivah",
+      startIso: "2027-01-16T10:00:00+05:30",
+      dateText: "16 January 2027",
+      dayText: "Saturday",
+      timeText: "10:00 AM onwards",
+      venueName: "Samode Palace",
+      venueAddress: "Samode, Jaipur, Rajasthan 303806",
+      muhuratText: "Shubh Vivah · 10:12 AM to 11:00 AM",
+      dressCode: "Regal traditional — bandhgala, sherwani, lehenga & saree",
+    },
+    subEvents: [
+      {
+        label: "Baraat",
+        dateText: "16 January",
+        timeText: "8:30 AM onwards",
+        venueName: "Palace Gates",
+        dressCode: "Regal traditional",
+      },
+      {
+        label: "Reception Under the Stars",
+        dateText: "16 January",
+        timeText: "7:30 PM onwards",
+        venueName: "Palace Lawns",
+        dressCode: "Festive",
+      },
+    ],
+    logistics: {
+      transport:
+        "Complimentary coaches depart from Jaipur city hotels from 7:30 AM and return after the reception.",
+      accommodation:
+        "Rooms are held at Samode Haveli and Rambagh Palace under the Chauhan–Rathore wedding.",
+      note: "January mornings in Jaipur are cool — a shawl is welcome at the Baraat.",
+    },
+    rsvpByDateText: "16 December 2026",
+    email: "aditya.divya@example.com",
+    hashtag: "#AdityaWedsDivya",
+  },
+
+  "taj-mughal": {
+    person1: "Farhan",
+    person2: "Ayesha",
+    family1: {
+      relation: "Son of",
+      parents: "Mr. & Mrs. Zafar Sheikh",
+      grandparents: "Late Haji Rafiq Sheikh",
+    },
+    family2: {
+      relation: "Daughter of",
+      parents: "Dr. & Mrs. Naveed Khan",
+      grandparents: "Mr. & Mrs. Iqbal Khan",
+    },
+    familyMembers: [
+      { name: "Sana Sheikh", role: "Sister of the groom" },
+      { name: "Hamza Khan", role: "Brother of the bride" },
+    ],
+    event: {
+      typeLabel: "Nikah Ceremony",
+      startIso: "2027-02-06T16:30:00+05:30",
+      dateText: "6 February 2027",
+      dayText: "Saturday",
+      timeText: "4:30 PM onwards",
+      venueName: "The Oberoi Amarvilas Lawns",
+      venueAddress: "Taj East Gate Road, Agra, Uttar Pradesh 282001",
+      dressCode: "Formal — modest elegance",
+    },
+    subEvents: [
+      {
+        label: "Mehndi",
+        dateText: "4 February",
+        timeText: "6:00 PM onwards",
+        venueName: "Hotel Lawns",
+        dressCode: "Festive colours",
+      },
+      {
+        label: "Walima",
+        dateText: "7 February",
+        timeText: "7:30 PM onwards",
+        venueName: "The Oberoi Amarvilas Lawns",
+        dressCode: "Formal — modest elegance",
+      },
+    ],
+    logistics: {
+      transport:
+        "Coaches depart from Agra hotels at 2:45 PM and return after the farewell. An alcohol-free celebration with halal catering.",
+      accommodation:
+        "Rooms are held at The Oberoi Amarvilas and ITC Mughal under the Sheikh–Khan wedding.",
+      note: "February evenings in Agra are cool — a shawl suits the Taj-view lawns.",
+    },
+    rsvpByDateText: "6 January 2027",
+    email: "farhan.ayesha@example.com",
+    hashtag: "#FarhanWedsAyesha",
+  },
+
+  "banarasi-silk": {
+    person1: "Rohan",
+    person2: "Shreya",
+    family1: {
+      relation: "Son of",
+      parents: "Mr. & Mrs. Vinod Mishra",
+      grandparents: "Late Pandit Ramkishore Mishra",
+    },
+    family2: {
+      relation: "Daughter of",
+      parents: "Dr. & Mrs. Anand Tiwari",
+      grandparents: "Shri & Smt. Madhav Tiwari",
+    },
+    familyMembers: [
+      { name: "Aditi Mishra", role: "Sister of the groom" },
+      { name: "Siddharth Tiwari", role: "Brother of the bride" },
+    ],
+    event: {
+      typeLabel: "Wedding Ceremony",
+      startIso: "2027-03-20T09:30:00+05:30",
+      dateText: "20 March 2027",
+      dayText: "Saturday",
+      timeText: "9:30 AM onwards",
+      venueName: "Brijrama Palace Lawns",
+      venueAddress: "Darbhanga Ghat, Varanasi, Uttar Pradesh 221001",
+      muhuratText: "Shubh Muhurat · 9:30 AM to 10:18 AM",
+      dressCode: "Traditional — Banarasi silk welcome",
+    },
+    subEvents: [
+      {
+        label: "Baraat & Swagat",
+        dateText: "20 March",
+        timeText: "8:00 AM onwards",
+        venueName: "Palace Ghat",
+        dressCode: "Traditional",
+      },
+      {
+        label: "Ganga Aarti Reception",
+        dateText: "20 March",
+        timeText: "6:30 PM onwards",
+        venueName: "Brijrama Palace Lawns",
+        dressCode: "Festive",
+      },
+    ],
+    logistics: {
+      transport:
+        "Boats and coaches depart from city hotels from 7:00 AM, bringing guests to the palace ghat in time for the Baraat.",
+      accommodation:
+        "Rooms are held at Brijrama Palace and Taj Ganges under the Mishra–Tiwari wedding.",
+      note: "March mornings on the ghats are pleasant — comfortable footwear for the steps.",
+    },
+    rsvpByDateText: "20 February 2027",
+    email: "rohan.shreya@example.com",
+    hashtag: "#RohanWedsShreya",
+  },
+
+  "kerala-kasavu": {
+    person1: "Arun",
+    person2: "Lakshmi",
+    family1: {
+      relation: "Son of",
+      parents: "Mr. & Mrs. Mohandas Menon",
+      grandparents: "Late Shri Krishnan Menon",
+    },
+    family2: {
+      relation: "Daughter of",
+      parents: "Dr. & Mrs. Gopalakrishnan Nair",
+      grandparents: "Shri & Smt. Raghavan Nair",
+    },
+    familyMembers: [
+      { name: "Anjali Menon", role: "Sister of the groom" },
+      { name: "Vivek Nair", role: "Brother of the bride" },
+    ],
+    event: {
+      typeLabel: "Muhurtham",
+      startIso: "2027-05-08T09:00:00+05:30",
+      dateText: "8 May 2027",
+      dayText: "Saturday",
+      timeText: "9:00 AM onwards",
+      venueName: "The Leela Ashtamudi Lawns",
+      venueAddress: "Ashtamudi Lake Road, Kollam, Kerala 691001",
+      muhuratText: "Muhurtham · 9:00 AM to 9:40 AM",
+      dressCode: "Traditional — kasavu & mundu welcome",
+    },
+    subEvents: [
+      {
+        label: "Nadaswaram Welcome",
+        dateText: "8 May",
+        timeText: "8:00 AM onwards",
+        venueName: "Lawn Entrance",
+        dressCode: "Traditional",
+      },
+      {
+        label: "Reception & Mohiniyattam",
+        dateText: "8 May",
+        timeText: "5:00 PM onwards",
+        venueName: "Backwater Lawns",
+        dressCode: "Festive Indian",
+      },
+    ],
+    logistics: {
+      transport:
+        "Coaches depart from Kollam hotels from 7:15 AM, bringing guests to the lawns in good time for the Nadaswaram.",
+      accommodation:
+        "Rooms are held at The Leela Ashtamudi and Fragrant Nature Kollam under the Menon–Nair wedding.",
+      note: "May mornings by the backwaters are warm — light cottons are recommended.",
+    },
+    rsvpByDateText: "1 April 2027",
+    email: "arun.lakshmi@example.com",
+    hashtag: "#ArunWedsLakshmi",
+  },
+
+  "bengali-jamdani": {
+    person1: "Arjun",
+    person2: "Debjani",
+    family1: {
+      relation: "Son of",
+      parents: "Mr. & Mrs. Subrata Banerjee",
+      grandparents: "Late Shri Amitava Banerjee",
+    },
+    family2: {
+      relation: "Daughter of",
+      parents: "Dr. & Mrs. Partha Chatterjee",
+      grandparents: "Shri & Smt. Debashish Chatterjee",
+    },
+    familyMembers: [
+      { name: "Payel Banerjee", role: "Sister of the groom" },
+      { name: "Souvik Chatterjee", role: "Brother of the bride" },
+    ],
+    event: {
+      typeLabel: "Biye",
+      startIso: "2027-06-26T10:00:00+05:30",
+      dateText: "26 June 2027",
+      dayText: "Saturday",
+      timeText: "10:00 AM onwards",
+      venueName: "The Rajbari Bawali Lawns",
+      venueAddress: "Bawali, Kolkata, West Bengal 743502",
+      dressCode:
+        "Traditional Bengali festive — Dhakai, Jamdani & dhoti-panjabi",
+    },
+    subEvents: [
+      {
+        label: "Gaye Holud",
+        dateText: "25 June",
+        timeText: "8:30 AM onwards",
+        venueName: "Rajbari Courtyard",
+        dressCode: "Yellows",
+      },
+      {
+        label: "Reception & Music",
+        dateText: "26 June",
+        timeText: "7:00 PM onwards",
+        venueName: "The Rajbari Bawali Lawns",
+        dressCode: "Festive",
+      },
+    ],
+    logistics: {
+      transport:
+        "Coaches depart from Park Street hotels from 7:30 AM and return after the reception.",
+      accommodation:
+        "Rooms are held at The Oberoi Grand and Taj Bengal under the Banerjee–Chatterjee wedding.",
+      note: "June evenings in Kolkata can bring showers — an umbrella is a good idea.",
+    },
+    rsvpByDateText: "26 May 2027",
+    email: "arjun.debjani@example.com",
+    hashtag: "#ArjunWedsDebjani",
+  },
+
+  "punjabi-phulkari": {
+    person1: "Gurpreet",
+    person2: "Jasleen",
+    family1: {
+      relation: "Son of",
+      parents: "S. & Mrs. Harvinder Singh Sandhu",
+      grandparents: "Late S. Kuldeep Singh Sandhu",
+    },
+    family2: {
+      relation: "Daughter of",
+      parents: "S. & Mrs. Amarjit Kaur Dhillon",
+      grandparents: "S. & Mrs. Gurdial Singh Dhillon",
+    },
+    familyMembers: [
+      { name: "Navjot Sandhu", role: "Sister of the groom" },
+      { name: "Ravneet Dhillon", role: "Brother of the bride" },
+    ],
+    event: {
+      typeLabel: "Anand Karaj",
+      startIso: "2027-08-28T10:00:00+05:30",
+      dateText: "28 August 2027",
+      dayText: "Saturday",
+      timeText: "10:00 AM onwards",
+      venueName: "The Umrao Lawns",
+      venueAddress: "Majitha Road, Amritsar, Punjab 143001",
+      dressCode: "Punjabi festive — colourful & joyful",
+    },
+    subEvents: [
+      {
+        label: "Milni & Breakfast",
+        dateText: "28 August",
+        timeText: "9:00 AM onwards",
+        venueName: "Haveli Entrance",
+        dressCode: "Traditional",
+      },
+      {
+        label: "Reception, Dhol & Bhangra",
+        dateText: "28 August",
+        timeText: "7:00 PM onwards",
+        venueName: "The Umrao Lawns",
+        dressCode: "Festive",
+      },
+    ],
+    logistics: {
+      transport:
+        "Coaches run from Amritsar hotels from 8:00 AM, bringing guests directly to the venue. An alcohol-free and meat-free celebration.",
+      accommodation:
+        "Rooms are held at Hyatt Regency Amritsar and Taj Swarna under the Sandhu–Dhillon wedding.",
+      note: "Heads are covered in the Darbar Hall — scarves are provided.",
+    },
+    rsvpByDateText: "31 July 2027",
+    email: "gurpreet.jasleen@example.com",
+    hashtag: "#GurpreetWedsJasleen",
+  },
+
+  "kashmiri-garden": {
+    person1: "Danish",
+    person2: "Saima",
+    family1: {
+      relation: "Son of",
+      parents: "Mr. & Mrs. Ghulam Bhat",
+      grandparents: "Late Haji Mushtaq Bhat",
+    },
+    family2: {
+      relation: "Daughter of",
+      parents: "Dr. & Mrs. Fayaz Wani",
+      grandparents: "Mr. & Mrs. Abdul Wani",
+    },
+    familyMembers: [
+      { name: "Insha Bhat", role: "Sister of the groom" },
+      { name: "Owais Wani", role: "Brother of the bride" },
+    ],
+    event: {
+      typeLabel: "Nikah Ceremony",
+      startIso: "2027-09-04T17:00:00+05:30",
+      dateText: "4 September 2027",
+      dayText: "Saturday",
+      timeText: "5:00 PM onwards",
+      venueName: "The Lalit Grand Palace Lawns",
+      venueAddress: "Gupkar Road, Srinagar, Kashmir 190001",
+      dressCode: "Formal — Kashmiri elegance",
+    },
+    subEvents: [
+      {
+        label: "Henditt (Mehndi)",
+        dateText: "2 September",
+        timeText: "6:00 PM onwards",
+        venueName: "Palace Gardens",
+        dressCode: "Festive colours",
+      },
+      {
+        label: "Wazwan Feast",
+        dateText: "4 September",
+        timeText: "8:00 PM onwards",
+        venueName: "The Lalit Grand Palace Lawns",
+        dressCode: "Formal — Kashmiri elegance",
+      },
+    ],
+    logistics: {
+      transport:
+        "Coaches and shikaras depart from partner Srinagar hotels from 3:15 PM, bringing guests to the palace lawns. An alcohol-free celebration.",
+      accommodation:
+        "Rooms are held at The Lalit Grand Palace and Vivanta Dal View under the Bhat–Wani wedding.",
+      note: "September evenings by Dal Lake are cool — a shawl is recommended.",
+    },
+    rsvpByDateText: "1 August 2027",
+    email: "danish.saima@example.com",
+    hashtag: "#DanishWedsSaima",
+  },
+
+  "goan-azulejos": {
+    person1: "Ryan",
+    person2: "Maria",
+    family1: {
+      relation: "Son of",
+      parents: "Mr. & Mrs. Francis D'Souza",
+      grandparents: "Late Mr. Joaquim D'Souza",
+    },
+    family2: {
+      relation: "Daughter of",
+      parents: "Dr. & Mrs. Lawrence Fernandes",
+      grandparents: "Mr. & Mrs. Caetano Fernandes",
+    },
+    familyMembers: [
+      { name: "Priya D'Souza", role: "Sister of the groom" },
+      { name: "Clive Fernandes", role: "Brother of the bride" },
+    ],
+    event: {
+      typeLabel: "Nuptial Mass",
+      startIso: "2027-10-23T16:00:00+05:30",
+      dateText: "23 October 2027",
+      dayText: "Saturday",
+      timeText: "4:00 PM onwards",
+      venueName: "Sé Cathedral & Assagao Villa Lawn",
+      venueAddress: "Assagao, Bardez, Goa 403507",
+      dressCode: "Formal — tropical elegance",
+    },
+    subEvents: [
+      {
+        label: "Welcome Serenade",
+        dateText: "22 October",
+        timeText: "7:00 PM onwards",
+        venueName: "Villa Lawn",
+        dressCode: "Smart casual",
+      },
+      {
+        label: "Dinner Under the Palms",
+        dateText: "23 October",
+        timeText: "7:30 PM onwards",
+        venueName: "Assagao Villa Lawn",
+        dressCode: "Formal — tropical elegance",
+      },
+    ],
+    logistics: {
+      transport:
+        "Coaches depart from Panjim and Mapusa at 2:00 PM and return after the celebrations.",
+      accommodation:
+        "Rooms are held at Taj Fort Aguada and W Goa under the D'Souza–Fernandes wedding.",
+      note: "October evenings in Goa are balmy — light linens are welcome.",
+    },
+    rsvpByDateText: "1 September 2027",
+    email: "ryan.maria@example.com",
+    hashtag: "#RyanWedsMaria",
+  },
+
+  "gujarati-patola": {
+    person1: "Jay",
+    person2: "Riya",
+    family1: {
+      relation: "Son of",
+      parents: "Mr. & Mrs. Kiran Shah",
+      grandparents: "Late Shri Chimanlal Shah",
+    },
+    family2: {
+      relation: "Daughter of",
+      parents: "Dr. & Mrs. Mahesh Desai",
+      grandparents: "Shri & Smt. Jayantilal Desai",
+    },
+    familyMembers: [
+      { name: "Nisha Shah", role: "Sister of the groom" },
+      { name: "Kunal Desai", role: "Brother of the bride" },
+    ],
+    event: {
+      typeLabel: "Wedding Ceremony",
+      startIso: "2027-11-06T09:30:00+05:30",
+      dateText: "6 November 2027",
+      dayText: "Saturday",
+      timeText: "9:30 AM onwards",
+      venueName: "The Green Acre Lawns",
+      venueAddress: "SG Highway, Ahmedabad, Gujarat 380054",
+      muhuratText: "Shubh Muhurat · 9:30 AM to 10:12 AM",
+      dressCode: "Traditional Gujarati festive — Chaniya Choli & Kediyu",
+    },
+    subEvents: [
+      {
+        label: "Garba Night",
+        dateText: "4 November",
+        timeText: "8:00 PM onwards",
+        venueName: "Lawn Pavilion",
+        dressCode: "Chaniya choli & kediyu",
+      },
+      {
+        label: "Garba & Reception Evening",
+        dateText: "6 November",
+        timeText: "7:00 PM onwards",
+        venueName: "The Green Acre Lawns",
+        dressCode: "Festive",
+      },
+    ],
+    logistics: {
+      transport:
+        "Coaches run from the city hotels to the venue from 7:15 AM. A vegetarian celebration — Jain options available on request.",
+      accommodation:
+        "Rooms are held at ITC Narmada and Hyatt Ahmedabad under the Shah–Desai wedding.",
+      note: "November mornings in Ahmedabad are pleasant — light layers are enough.",
+    },
+    rsvpByDateText: "1 October 2027",
+    email: "jay.riya@example.com",
+    hashtag: "#JayWedsRiya",
+  },
+
+  "kanchipuram-temple": {
+    person1: "Karthik",
+    person2: "Deepa",
+    family1: {
+      relation: "Son of",
+      parents: "Mr. & Mrs. Ramaswamy Subramaniam",
+      grandparents: "Late Shri Krishnaswamy Subramaniam",
+    },
+    family2: {
+      relation: "Daughter of",
+      parents: "Dr. & Mrs. Venkataraman Venkatesh",
+      grandparents: "Shri & Smt. Natarajan Venkatesh",
+    },
+    familyMembers: [
+      { name: "Meenakshi Subramaniam", role: "Sister of the groom" },
+      { name: "Ashwin Venkatesh", role: "Brother of the bride" },
+    ],
+    event: {
+      typeLabel: "Muhurtham",
+      startIso: "2027-12-18T09:00:00+05:30",
+      dateText: "18 December 2027",
+      dayText: "Saturday",
+      timeText: "9:00 AM onwards",
+      venueName: "A Heritage Kalyana Mandapam",
+      venueAddress: "Kanchipuram, Tamil Nadu 631502",
+      muhuratText: "Auspicious Muhurtham · 9:00 AM to 9:45 AM",
+      dressCode: "Traditional — Kanjivaram silk & veshti welcome",
+    },
+    subEvents: [
+      {
+        label: "Nadaswaram & Welcome",
+        dateText: "18 December",
+        timeText: "7:30 AM onwards",
+        venueName: "Mandapam Entrance",
+        dressCode: "Traditional",
+      },
+      {
+        label: "Reception & Carnatic Evening",
+        dateText: "18 December",
+        timeText: "5:30 PM onwards",
+        venueName: "Mandapam Lawns",
+        dressCode: "Festive Indian",
+      },
+    ],
+    logistics: {
+      transport:
+        "Coaches depart from partner hotels in Chennai from 6:00 AM, arriving in good time for the Nadaswaram.",
+      accommodation:
+        "Rooms are held at ITC Grand Chola, Chennai, and Radisson Blu Temple Bay, Mahabalipuram, under the Subramaniam–Venkatesh wedding.",
+      note: "December mornings are pleasant — traditional silks suit the mandapam.",
+    },
+    rsvpByDateText: "15 November 2027",
+    email: "karthik.deepa@example.com",
+    hashtag: "#KarthikWedsDeepa",
+  },
 };
 
 /**

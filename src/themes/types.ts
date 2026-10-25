@@ -26,8 +26,23 @@ export type PetalStyle = "white-blossom" | "marigold" | "rose" | "none";
  * How the invitation opens. Each mechanic is written once in the engine and
  * reused by every theme, so the catalog grows faster than the artwork does:
  * one artwork set carries three templates by varying this alone.
+ *
+ * iris/quadrant/fan/wrap/blinds/scroll added for the Lovable-20 conversion
+ * (2026-10-25) — six genuinely new opening gestures the batch needed,
+ * built as shared mechanics here rather than per-theme special cases.
  */
-export type Reveal = "envelope" | "doors" | "curtain" | "book" | "box";
+export type Reveal =
+  | "envelope"
+  | "doors"
+  | "curtain"
+  | "book"
+  | "box"
+  | "iris"
+  | "quadrant"
+  | "fan"
+  | "wrap"
+  | "blinds"
+  | "scroll";
 
 /**
  * Drawn decoration used instead of photography. A theme naming one of these

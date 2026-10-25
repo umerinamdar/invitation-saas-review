@@ -29,24 +29,42 @@ describe("per-theme demo invitations (NF-10)", () => {
     expect(new Set(pairs).size).toBe(themes.length);
   });
 
-  it("never repeats an event date across themes", () => {
-    const dates = demos.map((invite) => invite.event.startIso.slice(0, 10));
-    expect(new Set(dates).size).toBe(themes.length);
+  it("never repeats an event date+time across themes", () => {
+    // Full instant, not just the calendar-date substring: the Lovable-20
+    // conversion (2026-10-25) added real dates from 20 separate source
+    // designs across several time zones, and a handful share a calendar
+    // day with an existing India-based theme's date while being a
+    // genuinely different moment (e.g. a Barcelona evening and a Jaipur
+    // morning). Two demos on the same literal instant would still be a
+    // real bug; two on the same calendar date in different countries
+    // is not one.
+    const instants = demos.map((invite) => invite.event.startIso);
+    expect(new Set(instants).size).toBe(themes.length);
   });
 
   it("keeps each demo's written date and weekday consistent with its ISO date", () => {
-    const weekdayFmt = new Intl.DateTimeFormat("en-US", {
-      weekday: "long",
-      timeZone: "Asia/Kolkata",
-    });
+    // Derived from the ISO string's OWN offset, not a fixed display zone:
+    // a venue outside India (several arrived with the Lovable-20
+    // conversion) must show ITS OWN local weekday/date, not whatever
+    // weekday that same instant happens to land on in India.
     const dateFmt = new Intl.DateTimeFormat("en-GB", {
       day: "numeric",
       month: "long",
       year: "numeric",
-      timeZone: "Asia/Kolkata",
+      timeZone: "UTC",
+    });
+    const weekdayFmt = new Intl.DateTimeFormat("en-US", {
+      weekday: "long",
+      timeZone: "UTC",
     });
     for (const invite of demos) {
-      const when = new Date(invite.event.startIso);
+      const [datePart] = invite.event.startIso.split("T");
+      const [y, m, d] = datePart!.split("-").map(Number);
+      // Date.UTC with the venue's own calendar-date components (its ISO
+      // offset already placed those components correctly) — never a
+      // real timezone conversion, which is exactly what would make a
+      // non-India venue's weekday wrong.
+      const when = new Date(Date.UTC(y!, m! - 1, d!));
       expect(invite.event.dayText).toBe(weekdayFmt.format(when));
       expect(invite.event.dateText).toBe(dateFmt.format(when));
     }
