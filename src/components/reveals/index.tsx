@@ -400,6 +400,41 @@ export function IvorySilkEnvelopeReveal(props: RevealProps) {
   );
 }
 
+/**
+ * Ram Mandir's own mechanic, built directly in this engine (no Lovable
+ * component existed to port — see Reveal's comment in themes/types.ts):
+ * the sealedBackdrop photo itself — carved temple doors — split down
+ * its own centre seam into two panels that swing open on their outer
+ * edges, in the same three-beat spirit as Ivory Silk & Pearls'
+ * envelope (a held glow, then one continuous swing with the card never
+ * moving, text last) but built for a door rather than ported from one.
+ */
+export function RamMandirDoorsReveal(props: RevealProps) {
+  const { opening, onOpen, hosts, backdrop } = props;
+  const half = (side: "left" | "right") =>
+    backdrop
+      ? ({
+          backgroundImage: `url('${backdrop}')`,
+          backgroundSize: "200% 100%",
+          backgroundPosition: side === "left" ? "left center" : "right center",
+        } as React.CSSProperties)
+      : undefined;
+  return (
+    <div
+      className={`rmd-cover ${opening ? "is-opening" : ""}`}
+      {...openTriggerProps(hosts, opening, onOpen)}
+    >
+      <div className="rmd-underlay" />
+      <div className="rmd-shadow" />
+      <div className="rmd-door rmd-door-left" style={half("left")} />
+      <div className="rmd-door rmd-door-right" style={half("right")} />
+      <div className="rmd-glow" aria-hidden="true" />
+      <div className="rmd-seal" aria-hidden="true" />
+      <p className="rmd-cue">Tap to open</p>
+    </div>
+  );
+}
+
 const reveals: Record<Reveal, (props: RevealProps) => React.JSX.Element> = {
   envelope: EnvelopeReveal,
   doors: DoorsReveal,
@@ -413,6 +448,7 @@ const reveals: Record<Reveal, (props: RevealProps) => React.JSX.Element> = {
   blinds: BlindsReveal,
   scroll: ScrollReveal,
   ivorySilkEnvelope: IvorySilkEnvelopeReveal,
+  ramMandirDoors: RamMandirDoorsReveal,
 };
 
 export function RevealStage({

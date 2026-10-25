@@ -36,6 +36,12 @@ export type PetalStyle = "white-blossom" | "marigold" | "rose" | "none";
  * port of one theme's own Lovable-built mechanic, not a reusable gesture
  * for the catalog — it carries its own hardcoded CSS timings rather than
  * the shared var(--open-duration) contract the mechanics above use.
+ *
+ * ramMandirDoors added 2026-10-26, same one-off contract as
+ * ivorySilkEnvelope: Ram Mandir's own carved temple doors (the
+ * sealedBackdrop photo itself, split down the centre seam) swinging
+ * open on their own hinges, built directly in this engine (no Lovable
+ * component existed to port) with hardcoded ceremonial timings.
  */
 export type Reveal =
   | "envelope"
@@ -49,7 +55,8 @@ export type Reveal =
   | "wrap"
   | "blinds"
   | "scroll"
-  | "ivorySilkEnvelope";
+  | "ivorySilkEnvelope"
+  | "ramMandirDoors";
 
 /**
  * Drawn decoration used instead of photography. A theme naming one of these

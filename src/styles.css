@@ -263,7 +263,8 @@ a {
 .painted-stage .wrap,
 .painted-stage .blinds,
 .painted-stage .scroll-cover,
-.painted-stage .isp-cover {
+.painted-stage .isp-cover,
+.painted-stage .rmd-cover {
   width: 100%;
   height: 100%;
   max-width: none;
@@ -1072,6 +1073,22 @@ a {
 [data-theme-id="ivory-silk-pearls"] .invitation-names {
   animation: isp-detail-fade 1.4s cubic-bezier(0.42, 0, 0.58, 1) both;
 }
+/*
+ * Ram Mandir's own post-open "emerge into focus" — same shared
+ * blur/zoom keyframes as Ivory Silk & Pearls above (they aren't
+ * actually specific to that theme despite the isp- prefix), just a
+ * slightly shorter settle to suit a punchier door-opening beat.
+ */
+[data-theme-id="ram-mandir"] .skyline-backdrop {
+  animation: isp-backdrop-focus 3.2s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+[data-theme-id="ram-mandir"] .skyline-invitation {
+  animation: isp-slow-zoom-blend 3.2s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+[data-theme-id="ram-mandir"] .invitation-heading,
+[data-theme-id="ram-mandir"] .invitation-names {
+  animation: isp-detail-fade 1.2s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
 @keyframes isp-backdrop-focus {
   0% {
     filter: blur(18px);
@@ -1105,6 +1122,161 @@ a {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/*
+ * Ram Mandir's own mechanic — built directly in this engine, not
+ * ported (no Lovable component existed for it; see the Reveal comment
+ * in themes/types.ts). Same choreography discipline as Ivory Silk &
+ * Pearls: a held beat first, then one continuous motion with the
+ * content card never moving, text last. The sealedBackdrop photo
+ * itself — carved doors under marigold garlands — is split into two
+ * halves by background-position alone (one image, same technique the
+ * shared DoorsReveal above already uses), each hinged on its own outer
+ * edge rather than the centre, matching how real temple doors open.
+ */
+.rmd-cover {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  perspective: 2200px;
+  cursor: pointer;
+  overflow: hidden;
+}
+.rmd-cover:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+.rmd-underlay {
+  position: absolute;
+  inset: 0;
+  /* NOT var(--background) — that token is a near-black brown used for
+   * page chrome elsewhere, and showed through as a jarring dark void
+   * while the doors swing open (nothing is mounted behind them yet, by
+   * the same "card isn't there to move" discipline as Ivory Silk &
+   * Pearls). A warm gold matching the temple's own golden-hour light
+   * keeps the swing feeling like doors opening onto something lit,
+   * not a hole. */
+  background: var(--tint);
+}
+.rmd-shadow {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklch, black 45%, transparent),
+    transparent 65%
+  );
+}
+.rmd-door {
+  position: absolute;
+  inset: 0;
+  width: 50%;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+  box-shadow: inset 0 0 60px color-mix(in oklch, black 35%, transparent);
+}
+.rmd-door-left {
+  left: 0;
+  transform-origin: left center;
+}
+.rmd-door-right {
+  left: 50%;
+  transform-origin: right center;
+}
+.rmd-glow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 36px;
+  margin-left: -18px;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklch, var(--tint) 85%, transparent),
+    transparent
+  );
+  filter: blur(6px);
+  z-index: 3;
+}
+.rmd-seal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: clamp(60px, 18%, 84px);
+  aspect-ratio: 1;
+  margin-top: calc(-0.5 * clamp(60px, 18%, 84px));
+  margin-left: calc(-0.5 * clamp(60px, 18%, 84px));
+  background: url("/themes/ram-mandir/seal.png") center/contain no-repeat;
+  filter: drop-shadow(0 4px 10px color-mix(in oklch, black 45%, transparent));
+  z-index: 4;
+  pointer-events: none;
+  transition: opacity 1.4s cubic-bezier(0.42, 0, 0.58, 1);
+}
+.rmd-cue {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 14%;
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.8rem;
+  color: var(--paper-light);
+  text-shadow: 0 1px 4px color-mix(in oklch, black 60%, transparent);
+  z-index: 4;
+  transition: opacity 1.4s cubic-bezier(0.42, 0, 0.58, 1);
+}
+/* Beat 1 (0–1.8s): a warm glow rises at the seam, held before anything
+ * moves — temple-bell-at-dusk stillness rather than an instant snap. */
+.rmd-cover.is-opening .rmd-glow {
+  animation: rmd-glow-pulse 1.8s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+.rmd-cover.is-opening .rmd-seal,
+.rmd-cover.is-opening .rmd-cue {
+  opacity: 0;
+}
+/* Beat 2 (1.4s–5.4s): the doors swing open on their own outer hinges,
+ * fading only in the final second — the content behind has no CSS
+ * here at all, so it cannot move during this beat (same discipline as
+ * Ivory Silk & Pearls' card: nothing to move because it isn't mounted
+ * yet). The underlay itself stays fully visible the whole time — fading
+ * IT out mid-swing was the actual cause of the dark-void bug: it let the
+ * page's own near-black background show through behind the gold the
+ * moment the underlay's opacity dropped, which is the opposite of what
+ * it exists for. */
+.rmd-cover.is-opening .rmd-shadow {
+  animation: isp-shadow-sweep 4s cubic-bezier(0.42, 0, 0.58, 1) 1.4s both;
+}
+.rmd-cover.is-opening .rmd-door-left {
+  transition:
+    transform 4s cubic-bezier(0.42, 0, 0.58, 1) 1.4s,
+    opacity 1s cubic-bezier(0.42, 0, 0.58, 1) 4.4s;
+  transform: rotateY(-108deg);
+  opacity: 0;
+}
+.rmd-cover.is-opening .rmd-door-right {
+  transition:
+    transform 4s cubic-bezier(0.42, 0, 0.58, 1) 1.4s,
+    opacity 1s cubic-bezier(0.42, 0, 0.58, 1) 4.4s;
+  transform: rotateY(108deg);
+  opacity: 0;
+}
+@keyframes rmd-glow-pulse {
+  0% {
+    opacity: 0;
+  }
+  55% {
+    opacity: 0.9;
+  }
+  to {
+    opacity: 0;
   }
 }
 

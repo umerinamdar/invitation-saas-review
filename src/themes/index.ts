@@ -1,6 +1,7 @@
 import type { Theme } from "./types";
 import { dubaiSilk } from "./dubai-silk";
 import { ivorySilkPearls } from "./ivory-silk-pearls";
+import { ramMandir } from "./ram-mandir";
 
 /**
  * Catalog reset (2026-10-25, owner decision): every theme except Dubai
@@ -16,15 +17,20 @@ import { ivorySilkPearls } from "./ivory-silk-pearls";
  * Ivory Silk & Pearls (2026-10-25) is the first one back — ported
  * literally from its own Lovable build, with its own mechanic
  * (`ivorySilkEnvelope` in reveals/index.tsx) and its own hardcoded CSS
- * timings, not generalized into the shared engine. Pending the owner's
- * playback approval before the next theme is reworked.
+ * timings, not generalized into the shared engine.
+ *
+ * Ram Mandir (2026-10-26) is the second — reworked from its old
+ * lifting-casket ("box") opening to a bespoke temple-doors mechanic
+ * (`ramMandirDoors`), built directly in this engine since no Lovable
+ * component existed for it to port. Placed FIRST in the array at the
+ * owner's request, so it's the first design shown in the gallery.
  *
  * Every other theme's file is untouched on disk — src/themes/*.ts for
- * the 13 pre-existing designs and the remaining 19 Lovable-20
+ * the remaining 12 pre-existing designs and the 19 Lovable-20
  * conversions — and will be brought back the same way, one at a time.
  * Do not re-add a batch at once.
  */
-export const themes: Theme[] = [dubaiSilk, ivorySilkPearls];
+export const themes: Theme[] = [ramMandir, dubaiSilk, ivorySilkPearls];
 
 export const themesById = new Map(themes.map((theme) => [theme.id, theme]));
 

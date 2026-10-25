@@ -286,7 +286,17 @@ export function Invitation({
 
   function openEnvelope() {
     if (opening || open) return;
-    setOpening(true);
+    // Two rAFs, not one state set: this guarantees the browser has actually
+    // painted the mechanic's closed frame before the "is-opening" class
+    // lands, so its CSS transition always has a real before/after to
+    // animate between. Without this, React can coalesce the click's commit
+    // with the very first paint and the transition silently never starts
+    // (confirmed on Ram Mandir's door panels — no transitionrun event
+    // fired on a same-tick setOpening(true), even though the CSS itself
+    // was correct).
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => setOpening(true));
+    });
     // A separate, short tactile accent never interrupts the silently primed song.
     const click = sealAudio.current;
     if (click) {
