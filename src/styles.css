@@ -390,17 +390,14 @@ a {
   opacity: 0;
 }
 /*
- * Dubai Silk only: a real wax-seal image (owner's own design, made in a
- * separate Lovable project — public/themes/dubai-silk/seal.png) plus a
- * "You're Invited" script line, over the flap's point. The plain
- * `envelope` mechanic above (EnvelopeReveal) is shared by any theme
- * that picks it, so this lives on `[data-theme-id="dubai-silk"]`
+ * Dubai Silk only: a "You're Invited" script line over the flap's
+ * point — no wax-seal graphic (owner request, 2026-10-26: "remove seal
+ * just add you're invited" for every template, existing and future).
+ * The plain `envelope` mechanic above (EnvelopeReveal) is shared by any
+ * theme that picks it, so this lives on `[data-theme-id="dubai-silk"]`
  * instead of in the shared component — `.envelope::after` already
  * holds every envelope theme's inset border accent and stays
- * untouched; this uses the otherwise-unused `::before` slot. One box,
- * not two: the seal art is `background-image` positioned at the top
- * of the box, with the real (generated) text content sitting below it
- * via `padding-top`, so both move and fade together as one unit.
+ * untouched; this uses the otherwise-unused `::before` slot.
  */
 [data-theme-id="dubai-silk"] .envelope::before {
   content: "You're Invited";
@@ -409,9 +406,6 @@ a {
   left: 50%;
   width: max-content;
   transform: translate(-50%, -50%);
-  padding-top: 86px;
-  background: url("/themes/dubai-silk/seal.png") top center / 80px 80px
-    no-repeat;
   font-family: "Great Vibes", cursive;
   font-size: clamp(20px, 5.5vw, 26px);
   color: var(--gold);
@@ -965,29 +959,20 @@ a {
   backface-visibility: hidden;
   transform: rotateX(180deg);
 }
-.isp-seal {
+/* No wax-seal graphic (owner request, 2026-10-26): a plain script line
+ * stands where the seal used to sit. */
+.isp-invited {
   position: absolute;
-  top: 50%;
+  top: calc(50% - 4px);
   left: 50%;
-  width: 92px;
-  height: 108px;
-  margin: -54px 0 0 -46px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: radial-gradient(
-    ellipse at 35% 30%,
-    var(--paper-light),
-    var(--paper) 75%
-  );
-  box-shadow:
-    0 6px 18px color-mix(in oklch, var(--foreground) 22%, transparent),
-    inset 0 0 0 2px color-mix(in oklch, var(--gold) 70%, transparent),
-    inset 0 0 0 6px var(--paper-light),
-    inset 0 0 0 7px color-mix(in oklch, var(--gold) 50%, transparent);
-  font-family: var(--font-serif);
+  width: max-content;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  font-family: "Great Vibes", cursive;
+  font-size: clamp(22px, 6vw, 28px);
   color: var(--gold);
+  text-align: center;
+  white-space: nowrap;
   will-change: transform, opacity;
 }
 .isp-cue {
@@ -1001,7 +986,7 @@ a {
   font-size: 0.8rem;
   color: var(--muted-foreground);
 }
-.isp-cover.is-opening .isp-seal,
+.isp-cover.is-opening .isp-invited,
 .isp-cover.is-opening .isp-cue {
   transition:
     transform 2.1s cubic-bezier(0.42, 0, 0.58, 1),
@@ -1205,16 +1190,21 @@ a {
   filter: blur(6px);
   z-index: 3;
 }
-.rmd-seal {
+/* No wax-seal graphic (owner request, 2026-10-26): a plain script line
+ * stands where the seal used to sit. */
+.rmd-invited {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: clamp(60px, 18%, 84px);
-  aspect-ratio: 1;
-  margin-top: calc(-0.5 * clamp(60px, 18%, 84px));
-  margin-left: calc(-0.5 * clamp(60px, 18%, 84px));
-  background: url("/themes/ram-mandir/seal.png") center/contain no-repeat;
-  filter: drop-shadow(0 4px 10px color-mix(in oklch, black 45%, transparent));
+  width: max-content;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  font-family: "Great Vibes", cursive;
+  font-size: clamp(22px, 6vw, 28px);
+  color: var(--paper-light);
+  text-align: center;
+  white-space: nowrap;
+  text-shadow: 0 2px 6px color-mix(in oklch, black 55%, transparent);
   z-index: 4;
   pointer-events: none;
   transition: opacity 1.4s cubic-bezier(0.42, 0, 0.58, 1);
@@ -1238,7 +1228,7 @@ a {
 .rmd-cover.is-opening .rmd-glow {
   animation: rmd-glow-pulse 1.8s cubic-bezier(0.42, 0, 0.58, 1) both;
 }
-.rmd-cover.is-opening .rmd-seal,
+.rmd-cover.is-opening .rmd-invited,
 .rmd-cover.is-opening .rmd-cue {
   opacity: 0;
 }

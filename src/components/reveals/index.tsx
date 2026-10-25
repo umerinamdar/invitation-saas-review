@@ -363,16 +363,12 @@ export function ScrollReveal(props: RevealProps) {
  * Ivory Silk & Pearls' own mechanic, ported literally from its Lovable
  * build (see docs/ops/OPENING-STUDY-ivory-silk-pearls.md) — one envelope
  * texture cut into four clipped pieces (the flap, two side wings and the
- * bottom pocket) plus a wax seal, not a shared/reused gesture.
+ * bottom pocket), not a shared/reused gesture.
+ *
+ * No wax-seal graphic (owner request, 2026-10-26: "remove seal just add
+ * you're invited" — for every template, existing and future): a plain
+ * "You're Invited" line stands in its place on every bespoke mechanic.
  */
-function sealInitials(hosts: string) {
-  return hosts
-    .split("&")
-    .map((name) => name.trim().charAt(0))
-    .filter(Boolean)
-    .join(" & ");
-}
-
 export function IvorySilkEnvelopeReveal(props: RevealProps) {
   const { opening, onOpen, hosts, backdrop } = props;
   const piece = backdrop
@@ -392,9 +388,9 @@ export function IvorySilkEnvelopeReveal(props: RevealProps) {
         <div className="isp-piece isp-flap-face" style={piece} />
         <div className="isp-lining" />
       </div>
-      <div className="isp-seal" aria-hidden="true">
-        <span>{sealInitials(hosts)}</span>
-      </div>
+      <p className="isp-invited" aria-hidden="true">
+        You&rsquo;re Invited
+      </p>
       <p className="isp-cue">Tap to open</p>
     </div>
   );
@@ -429,7 +425,9 @@ export function RamMandirDoorsReveal(props: RevealProps) {
       <div className="rmd-door rmd-door-left" style={half("left")} />
       <div className="rmd-door rmd-door-right" style={half("right")} />
       <div className="rmd-glow" aria-hidden="true" />
-      <div className="rmd-seal" aria-hidden="true" />
+      <p className="rmd-invited" aria-hidden="true">
+        You&rsquo;re Invited
+      </p>
       <p className="rmd-cue">Tap to open</p>
     </div>
   );
