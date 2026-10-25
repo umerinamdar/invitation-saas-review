@@ -335,7 +335,7 @@ export function Invitation({
       {watermark && (
         <div className="preview-watermark" aria-hidden="true">
           {Array.from({ length: 24 }, (_, i) => (
-            <span key={i}>Preview — not yet published</span>
+            <span key={i}>easyinvitemaker.com</span>
           ))}
         </div>
       )}
