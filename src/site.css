@@ -1892,6 +1892,30 @@ a.contact-card {
 .editor-preview .new-invitation {
   animation: preview-in var(--dur-slow) var(--ease-out);
 }
+/*
+ * The device mockup renders the invitation into a FIXED-size canvas
+ * (.phone-screen is a literal 375×836px box, independently scaled down
+ * — see `.phone > .phone-screen` below), not the real browser viewport.
+ * The invitation engine's own `.sealed-stage` sizes its hero with
+ * `min-height: 100svh` (styles.css), which is correct in production —
+ * there, the invitation genuinely IS the full page — but inside this
+ * fixed canvas `svh` still resolves against the real page's viewport,
+ * not the canvas, so it comes out shorter than the 836px canvas here.
+ * A small centred card (the plain envelope mechanic) just gets extra
+ * invisible margin from the shortfall; a full-bleed painted mechanic
+ * (doors/curtain/book/box/iris/quadrant/fan/wrap/blinds/scroll/the
+ * per-theme ivorySilkEnvelope) stops short and leaves a bare gap of
+ * plain background below it. Giving the hero section a real 100%
+ * against the canvas's own explicit height, scoped to this device
+ * mockup only, makes every mechanic fill it exactly like Dubai Silk's
+ * does — production is untouched.
+ */
+.phone-screen .new-invitation {
+  height: 100%;
+}
+.phone-screen .sealed-stage {
+  min-height: 100%;
+}
 @media (prefers-reduced-motion: reduce) {
   .editor-preview .new-invitation {
     animation: none;

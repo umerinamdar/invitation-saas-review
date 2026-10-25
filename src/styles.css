@@ -1979,6 +1979,31 @@ a {
     no-repeat,
     no-repeat;
 }
+/*
+ * Ivory Silk & Pearls only: its section backdrop is the reused hero
+ * photo (a sharp, busy watercolour, not a purpose-built soft section
+ * asset — see the comment on sectionBackdrop in themes/ivory-silk-
+ * pearls.ts), so the shared 20%-opacity tint above isn't enough to
+ * keep plain foreground-coloured text (venue name, countdown, sub-
+ * event labels) legible against it — bright sky and dark foliage both
+ * land directly behind the same text. Scoped stronger tint, this theme
+ * only, rather than raising the shared 20% for every theme with a
+ * dedicated, already-soft section image.
+ */
+[data-theme-id="ivory-silk-pearls"]
+  .opened-invitation
+  > section:not(.skyline-invitation):not(.ring-section)::before {
+  background-image:
+    radial-gradient(
+      90% 60% at 50% 0%,
+      color-mix(in oklch, var(--gold) 9%, transparent),
+      transparent 70%
+    ),
+    linear-gradient(
+      color-mix(in oklch, var(--invitation-surface) 62%, transparent),
+      color-mix(in oklch, var(--invitation-surface) 62%, transparent)
+    );
+}
 
 /* A hairline between sections, centred and fading at the ends. */
 .opened-invitation > section + section::after {
