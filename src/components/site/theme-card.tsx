@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Eye } from "lucide-react";
 import { OrnateFrame, PatternBackdrop } from "@/components/ornament";
@@ -21,16 +22,32 @@ function webpVariant(src: string): string {
  * none, so the <picture> below picked the non-existent .webp source and
  * never fell back, leaving the gallery card blank). <picture> only
  * falls back to the <img> when no <source> matches syntactically, not
- * when a matched source's file 404s, and merely reassigning the <img>'s
- * own `src` doesn't help either — the sibling <source> still wins
- * re-selection as long as it's present. Removing that <source> element
- * outright is what actually stops the browser from retrying it.
+ * when a matched source's file 404s.
+ *
+ * The fix has to be React state, not a raw DOM mutation on the <img>:
+ * an earlier version removed the failing <source> node directly via
+ * `.previousElementSibling.remove()`, which worked for one render but
+ * fought React's own reconciliation — any later re-render of this
+ * component put the <source> right back, since React's virtual DOM had
+ * no idea the real node had been removed out from under it. Tracking
+ * "this theme's webp failed" in state and conditionally rendering the
+ * <source> lets React own the DOM, so the fix survives re-renders.
  */
-function handleMissingWebp(event: React.SyntheticEvent<HTMLImageElement>) {
-  const img = event.currentTarget;
-  const original = img.dataset["fallbackSrc"];
-  img.previousElementSibling?.remove();
-  if (original) img.src = original;
+function HeroImage({ src, alt }: { src: string; alt: string }) {
+  const [webpFailed, setWebpFailed] = useState(false);
+  return (
+    <picture>
+      {!webpFailed && (
+        <source type="image/webp" srcSet={webpVariant(src)} />
+      )}
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        onError={() => setWebpFailed(true)}
+      />
+    </picture>
+  );
 }
 
 /** A miniature of the real invitation, drawn from the theme's own palette. */
@@ -44,16 +61,7 @@ export function ThemePhoneScreen({ theme }: { theme: Theme }) {
     <span className="theme-phone-screen">
       {revealedBackdrop ? (
         <>
-          <picture>
-            <source type="image/webp" srcSet={webpVariant(revealedBackdrop)} />
-            <img
-              src={revealedBackdrop}
-              alt=""
-              loading="lazy"
-              data-fallback-src={revealedBackdrop}
-              onError={handleMissingWebp}
-            />
-          </picture>
+          <HeroImage src={revealedBackdrop} alt="" />
           <span className="theme-card-veil" />
         </>
       ) : (
