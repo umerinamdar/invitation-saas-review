@@ -81,7 +81,7 @@ export function ThemeTuner() {
     valuesRef.current = {
       namesColor: readColor(
         "--names-color",
-        document.querySelector<HTMLElement>(".invitation-names h1"),
+        document.querySelector<HTMLElement>(".invitation-person-name"),
       ),
       namesScale: readNum("--names-scale", 1),
       familyColor: readColor(

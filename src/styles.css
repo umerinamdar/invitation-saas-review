@@ -1228,22 +1228,38 @@ a {
   margin: auto 0;
   padding: 70px 0 35px;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   transition:
     opacity 1.3s,
     transform 1.3s;
 }
-.invitation-names h1 {
+/* Each host gets their own name directly over their own family lines,
+ * with "&" standing alone between the two groups — not one shared
+ * heading with both names inline and the families in a separate row
+ * (owner request, 2026-10-25: the old layout read as disconnected from
+ * who belonged to which family). */
+.invitation-person {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.invitation-person-name {
+  margin: 0;
   font-size: calc(76px * var(--names-scale, 1));
   line-height: 1.1;
   font-weight: 500;
   color: var(--names-color, var(--foreground));
   text-shadow: 0 1px 15px var(--paper-light);
 }
-.invitation-names em {
-  font-size: calc(55px * var(--names-scale, 1));
+.invitation-and {
+  display: block;
+  font-size: calc(40px * var(--names-scale, 1));
+  font-style: italic;
   font-weight: 400;
   color: var(--gold);
-  padding: 0 12px;
+  margin: 10px 0;
 }
 .invitation-date {
   width: min(460px, 100%);
@@ -1887,17 +1903,13 @@ a {
   .invitation-names {
     padding: 56px 0 18px;
   }
-  .invitation-names h1 {
+  .invitation-person-name {
     font-size: calc(38px * var(--names-scale, 1));
     line-height: 1.15;
   }
-  .invitation-names em {
-    font-size: calc(24px * var(--names-scale, 1));
-    padding: 0 6px;
-  }
-  .invitation-families {
-    gap: 14px;
-    margin-top: 16px;
+  .invitation-and {
+    font-size: calc(22px * var(--names-scale, 1));
+    margin: 4px 0;
   }
   .family-block p {
     font-size: calc(12px * var(--family-scale, 1));
@@ -1942,7 +1954,7 @@ a {
     padding-left: 14px;
     padding-right: 14px;
   }
-  .invitation-names h1 {
+  .invitation-person-name {
     font-size: calc(33px * var(--names-scale, 1));
   }
   .revealed-date h2 {
@@ -2098,76 +2110,36 @@ a {
   color: var(--muted-foreground);
 }
 
-/* Parents and grandparents under each name. */
-.invitation-families {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr));
-  gap: 26px;
-  margin: 26px auto 0;
-  width: min(760px, 100%);
-}
 /*
- * Text-shadow alone can't reliably hold contrast against an arbitrary
- * photo — a golden-hour sky, a dark doorway, a bright marble floor, all in
- * the same backdrop. A dark edge plus a light glow (the previous approach)
- * reads fine on a mid-toned patch but washes into a bright one and muddies
- * into a dark one. A translucent scrim behind the block is not
- * backdrop-dependent: it sits a fixed amount darker than whatever's behind
- * it, so legibility holds everywhere the text can land.
+ * Parents and grandparents directly under each name (2026-10-25: no
+ * panel, anywhere — the owner rejected the scrim outright, even warmed,
+ * after seeing it on real artwork). Previously a dark scrim sat behind
+ * light text, which held contrast against ANY photo tone but read as a
+ * harsh black box on the catalog's lighter, painterly hero images. The
+ * light-glow technique `.invitation-person-name` already uses below
+ * (a pale text-shadow halo around dark text) replaces it: every theme
+ * currently registered (Dubai Silk, Ivory Silk & Pearls) has an
+ * overall light-to-mid hero, where this holds up fine. A theme with a
+ * genuinely dark hero coming back into the catalog later may need its
+ * own look here — not solved pre-emptively, per the one-theme-at-a-
+ * time rework this catalog is going through.
  */
-.family-block {
-  /* Fixed dark, NOT var(--background) — several themes (Cathedral Light,
-   * Dubai Silk, Monochrome Vow, Phulkari Anand) have a light background,
-   * which would make this scrim light too and defeat the point of the
-   * light text below. This is a legibility utility, not a themed panel, so
-   * it stays dark on every theme regardless of the theme's own palette. */
-  background: rgba(20, 14, 8, 0.42);
-  backdrop-filter: blur(5px) saturate(1.1);
-  -webkit-backdrop-filter: blur(5px) saturate(1.1);
-  border-radius: 10px;
-  padding: 8px 14px;
-}
 .family-block p {
   font-family: var(--font-sans);
   font-size: calc(13.5px * var(--family-scale, 1));
   line-height: 1.6;
-  color: var(--family-color, var(--paper-light));
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-}
-.family-block .family-credentials {
-  font-style: italic;
-  color: var(--family-color, var(--tint));
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-}
-.family-block .family-grandparents {
-  opacity: 0.85;
-}
-/*
- * Ivory Silk & Pearls only: the owner rejected the panel look outright
- * (even warmed — see the 2026-10-25 history above) on this theme's
- * pale, painterly Lake Como backdrop. No box at all here: instead, the
- * same light-glow technique `.invitation-names h1` already uses below
- * (text-shadow of var(--paper-light) around dark text) — the backdrop
- * reads light-to-mid overall, so dark foreground text with a soft pale
- * halo holds contrast on both the bright sky and the darker foliage
- * without a panel sitting on top of the art.
- */
-[data-theme-id="ivory-silk-pearls"] .family-block {
-  background: transparent;
-  border: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  padding: 0;
-}
-[data-theme-id="ivory-silk-pearls"] .family-block p {
-  color: var(--foreground);
+  margin: 2px 0;
+  color: var(--family-color, var(--foreground));
   text-shadow:
     0 0 10px var(--paper-light),
     0 0 20px var(--paper-light),
     0 0 2px var(--paper-light);
 }
-[data-theme-id="ivory-silk-pearls"] .family-block .family-credentials {
-  color: var(--foreground);
+.family-block .family-credentials {
+  font-style: italic;
+}
+.family-block .family-grandparents {
+  opacity: 0.85;
 }
 
 .venue-address,

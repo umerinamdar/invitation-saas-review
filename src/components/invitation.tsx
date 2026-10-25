@@ -129,7 +129,6 @@ export function Invitation({
   const audio = useRef<HTMLAudioElement>(null);
   const sealAudio = useRef<HTMLAudioElement>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const musicDelay = useRef<ReturnType<typeof setTimeout> | null>(null);
   const fade = useRef(0);
   const primedPlayback = useRef<Promise<void> | null>(null);
   const opened = useRef(false);
@@ -245,7 +244,6 @@ export function Invitation({
     return () => {
       clearInterval(id);
       if (timer.current) clearTimeout(timer.current);
-      if (musicDelay.current) clearTimeout(musicDelay.current);
       cancelAnimationFrame(fade.current);
     };
   }, [event.startIso, sinceIso]);
@@ -309,7 +307,11 @@ export function Invitation({
         opened.current = true;
         setOpen(true);
         setOpening(false);
-        musicDelay.current = setTimeout(startMusic, 1000);
+        // Music no longer auto-starts on open (owner request, 2026-10-
+        // 25) — it stays off until a guest presses "Play" in the dock.
+        // The gesture-primed, muted playback above is left in place: it
+        // costs nothing audible and lets that manual play start
+        // instantly rather than waiting on a fresh play() call.
       },
       // Reduced-motion guests: the CSS collapses the opening to an
       // instant change for them, so the timer must not keep them
@@ -427,27 +429,36 @@ export function Invitation({
               <p className="invitation-welcome">{invite.welcome}</p>
             )}
             <div className="invitation-names">
-              <h1>
-                {invite.hosts.person1}
-                {invite.hosts.person2 && (
-                  <>
-                    {" "}
-                    <em>&</em> {invite.hosts.person2}
-                  </>
-                )}
-              </h1>
-              {(hasFamily(invite.hosts.family1) ||
-                hasFamily(invite.hosts.family2)) && (
-                <div className="invitation-families">
-                  <FamilyLines
-                    name={invite.hosts.person1}
-                    family={invite.hosts.family1}
-                  />
-                  <FamilyLines
-                    name={invite.hosts.person2}
-                    family={invite.hosts.family2}
-                  />
-                </div>
+              {/* One real h1 for the page, carrying both names for
+                  accessibility/SEO; the visible per-person headings
+                  below are styled paragraphs so the heading outline
+                  stays correct (same reasoning as the sr-only h2 on
+                  the family section further down). */}
+              <h1 className="sr-only">{names}</h1>
+              <div className="invitation-person">
+                <p className="invitation-person-name">
+                  {invite.hosts.person1}
+                </p>
+                <FamilyLines
+                  name={invite.hosts.person1}
+                  family={invite.hosts.family1}
+                />
+              </div>
+              {invite.hosts.person2 && (
+                <>
+                  <span className="invitation-and" aria-hidden="true">
+                    &
+                  </span>
+                  <div className="invitation-person">
+                    <p className="invitation-person-name">
+                      {invite.hosts.person2}
+                    </p>
+                    <FamilyLines
+                      name={invite.hosts.person2}
+                      family={invite.hosts.family2}
+                    />
+                  </div>
+                </>
               )}
             </div>
             {popped && !flowers && (

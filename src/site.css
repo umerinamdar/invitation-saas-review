@@ -772,8 +772,8 @@
   text-align: center;
   padding: 0 7cqw;
   z-index: 1;
-  /* Matches .invitation-names h1's glow (styles.css) so the gallery card's
-   * mini-preview reads the same as the real invitation it links to. */
+  /* Matches .invitation-person-name's glow (styles.css) so the gallery
+   * card's mini-preview reads the same as the real invitation it links to. */
   text-shadow: 0 1px 15px var(--paper-light);
 }
 .theme-card-names em {
