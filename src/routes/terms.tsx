@@ -24,7 +24,7 @@ function Terms() {
       <section className="legal-page">
         <p className="eyebrow">Legal</p>
         <h1>Terms of service</h1>
-        <p className="legal-updated">Last updated 18 October 2026</p>
+        <p className="legal-updated">Last updated 25 October 2026</p>
 
         <h2>1. What {BRAND} is</h2>
         <p>
@@ -57,11 +57,12 @@ function Terms() {
 
         <h2>4. After you publish</h2>
         <p>
-          A published invitation stays live and editable until your event
-          has passed, so you can correct a typo or update a venue after
-          sharing the link. We don't guarantee a link stays live forever;
-          we'll give reasonable notice before removing any invitation that's
-          been inactive for an extended period.
+          A published invitation stays live indefinitely — we don't delete
+          it for inactivity or take it down after your event has passed.
+          It also stays editable at any time, so you can correct a typo or
+          update a venue even years later. You can delete your own
+          invitation at any time from your dashboard if you no longer want
+          it online.
         </p>
 
         <h2>5. Payments</h2>
