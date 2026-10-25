@@ -422,7 +422,6 @@ export function RamMandirDoorsReveal(props: RevealProps) {
       {...openTriggerProps(hosts, opening, onOpen)}
     >
       <div className="rmd-underlay" />
-      <div className="rmd-shadow" />
       <div className="rmd-door rmd-door-left" style={half("left")} />
       <div className="rmd-door rmd-door-right" style={half("right")} />
       <div className="rmd-glow" aria-hidden="true" />

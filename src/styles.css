@@ -1152,18 +1152,7 @@ a {
    * Pearls). A warm gold matching the temple's own golden-hour light
    * keeps the swing feeling like doors opening onto something lit,
    * not a hole. */
-  background: var(--tint);
-}
-.rmd-shadow {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  pointer-events: none;
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklch, black 45%, transparent),
-    transparent 65%
-  );
+  background: var(--powder);
 }
 .rmd-door {
   position: absolute;
@@ -1193,7 +1182,7 @@ a {
   background: linear-gradient(
     90deg,
     transparent,
-    color-mix(in oklch, var(--tint) 85%, transparent),
+    color-mix(in oklch, var(--powder) 85%, transparent),
     transparent
   );
   filter: blur(6px);
@@ -1252,10 +1241,11 @@ a {
  * IT out mid-swing was the actual cause of the dark-void bug: it let the
  * page's own near-black background show through behind the gold the
  * moment the underlay's opacity dropped, which is the opposite of what
- * it exists for. */
-.rmd-cover.is-opening .rmd-shadow {
-  animation: isp-shadow-sweep 4s cubic-bezier(0.42, 0, 0.58, 1) 1.4s both;
-}
+ * it exists for. No shadow-sweep overlay here either (unlike Ivory
+ * Silk's wide-open cover) — owner feedback, 2026-10-26: with only a
+ * narrow centre gap exposed between the two doors, that overlay's dark
+ * top-to-bottom gradient read as a solid dark bar rather than a soft
+ * shadow, making the opening look broken. */
 .rmd-cover.is-opening .rmd-door-left {
   transition:
     transform 4s cubic-bezier(0.42, 0, 0.58, 1) 1.4s,
