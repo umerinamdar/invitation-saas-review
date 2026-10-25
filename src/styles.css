@@ -2074,6 +2074,20 @@ a {
 .family-block .family-grandparents {
   opacity: 0.85;
 }
+/*
+ * Ivory Silk & Pearls only: the shared scrim above is flat near-black
+ * (rgba(20,14,8,.42)) by design, on purpose, for every other theme (see
+ * the comment above .family-block) — but against this theme's pale,
+ * painterly Lake Como backdrop it reads as a harsh black rectangle
+ * rather than a considered panel. Warming it to the theme's own
+ * foreground colour and adding a hairline gold edge keeps the same
+ * legibility contract (still a solid-enough scrim behind light text)
+ * while matching the ivory/gold palette instead of fighting it.
+ */
+[data-theme-id="ivory-silk-pearls"] .family-block {
+  background: color-mix(in oklch, var(--foreground) 55%, transparent);
+  border: 1px solid color-mix(in oklch, var(--gold-light) 35%, transparent);
+}
 
 .venue-address,
 .venue-muhurat,
