@@ -1795,6 +1795,16 @@ a {
 .music-dock button:hover {
   background: color-mix(in oklch, var(--gold) 22%, transparent);
 }
+/* Ram Mandir only, 2026-10-26: --foreground/--background are NOT an
+ * AA-contrast pair on this theme the way the comment above assumes —
+ * --foreground here is the on-paper body-text colour (dark, for the
+ * cream/paper sections elsewhere in the invitation), while --background
+ * is a separate, also-dark page-chrome colour the dock tracks. Dark
+ * icon on a dark dock was invisible; --paper-light actually contrasts
+ * with this theme's --background. */
+[data-theme-id="ram-mandir"] .music-dock button {
+  color: var(--paper-light);
+}
 .music-dock svg {
   width: 17px;
 }
