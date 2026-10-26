@@ -434,14 +434,14 @@ export function RamMandirDoorsReveal(props: RevealProps) {
 }
 
 /**
- * Golden Temple's own mechanic — the same split-in-two-halves markup
- * and glow beat as ramMandirDoors above (built directly in this
- * engine, not ported), but NOT a hinge swing (owner correction,
- * 2026-10-27: "I want it to be open like camera opening this door, not
- * same like ram mandir") — the two leaves slide straight apart and
- * push toward the viewer instead of rotating, continuing straight into
- * the forward dolly the post-open .gtd-dolly-in keyframes take over
- * once they're gone (see styles.css for both).
+ * Golden Temple's own mechanic — the same split-in-two-halves markup,
+ * glow beat and outer-hinge swing as ramMandirDoors above (built
+ * directly in this engine, not ported). Two earlier variants (a
+ * slide-apart push, then a centre hinge) were each tried and rejected
+ * in turn; the owner's final word (2026-10-27) was to make it exactly
+ * like Ram Mandir's own doors. Once they clear, the revealed hero
+ * scene dollies forward via the post-open .gtd-dolly-in keyframes
+ * (see styles.css for both).
  */
 export function GoldenTempleDoorsReveal(props: RevealProps) {
   const { opening, onOpen, hosts, backdrop } = props;

@@ -43,13 +43,13 @@ export type PetalStyle = "white-blossom" | "marigold" | "rose" | "none";
  * open on their own hinges, built directly in this engine (no Lovable
  * component existed to port) with hardcoded ceremonial timings.
  *
- * goldenTempleDoors added 2026-10-27, same split-in-two markup as
- * ramMandirDoors but a different motion — the leaves slide apart and
- * push toward the viewer rather than swinging on a hinge (owner
- * correction: "like camera opening this door, not same like ram
- * mandir") — and once they clear, the revealed hero scene doesn't just
- * blur-focus in place, it dollies forward, as if the camera is walking
- * through the doorway into the courtyard beyond.
+ * goldenTempleDoors added 2026-10-27, same split-in-two markup and
+ * outer-hinge swing as ramMandirDoors (after two rejected variants —
+ * a slide-apart push, then a centre hinge — the owner's final word was
+ * to make it exactly like Ram Mandir's own doors). The one real
+ * difference: once the doors clear, the revealed hero scene doesn't
+ * just blur-focus in place, it dollies forward, as if the camera is
+ * walking through the doorway into the courtyard beyond.
  */
 export type Reveal =
   | "envelope"
