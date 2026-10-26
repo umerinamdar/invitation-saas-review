@@ -146,16 +146,6 @@ export function ThemeCard({ theme }: { theme: Theme }) {
         </div>
         <p className="theme-tagline">{theme.tagline}</p>
 
-        {/* The four things this design does that another doesn't —
-            the data has always been in the theme (see themes/types.ts)
-            but was never rendered, so shoppers compared 14 near-
-            identical phones on tagline alone. */}
-        <ul className="feature-pills">
-          {theme.features.map((feature) => (
-            <li key={feature}>{feature}</li>
-          ))}
-        </ul>
-
         <div className="theme-card-actions">
           <Link
             to="/create"
