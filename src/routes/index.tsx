@@ -1,7 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Check, ChevronDown, X } from "lucide-react";
 import { BRAND, SiteFooter, SiteHeader } from "@/components/site/chrome";
-import { absoluteUrl, PUBLISH_PRICE_LABEL } from "@/config/site";
+import {
+  absoluteUrl,
+  PUBLISH_DISCOUNT_PERCENT,
+  PUBLISH_ORIGINAL_PRICE_LABEL,
+  PUBLISH_PRICE_LABEL,
+} from "@/config/site";
 import { ThemeCard, ThemePhone } from "@/components/site/theme-card";
 import { Reveal } from "@/components/site/reveal";
 import { themes, themesById } from "@/themes";
@@ -234,11 +239,24 @@ function Landing() {
               <p>{t("pricing.body")}</p>
             </div>
             <div className="price-card">
-              <p className="eyebrow">{t("pricing.theInvitation")}</p>
+              <div className="price-card-top">
+                <p className="eyebrow">{t("pricing.theInvitation")}</p>
+                <span className="price-offer-badge">
+                  {t("pricing.limitedOffer")}
+                </span>
+              </div>
               <div className="price-amount">
+                <span className="price-was">
+                  {PUBLISH_ORIGINAL_PRICE_LABEL}
+                </span>
                 <strong>{PUBLISH_PRICE_LABEL}</strong>
                 <span>{t("pricing.oneTime")}</span>
               </div>
+              <p className="price-discount">
+                {t("pricing.discountOff", {
+                  percent: PUBLISH_DISCOUNT_PERCENT,
+                })}
+              </p>
               <div className="gold-rule" />
               <ul className="price-list">
                 {INCLUDED_KEYS.map((i) => (

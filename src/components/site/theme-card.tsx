@@ -145,11 +145,6 @@ export function ThemeCard({ theme }: { theme: Theme }) {
       <div className="theme-card-body">
         <div className="theme-card-head">
           <h2>{theme.name}</h2>
-          <span className="swatches" aria-hidden="true">
-            <i style={{ background: theme.palette.background }} />
-            <i style={{ background: theme.palette.accent }} />
-            <i style={{ background: theme.palette.paper }} />
-          </span>
         </div>
         <div className="theme-card-actions">
           <Link
