@@ -32,6 +32,14 @@ function webpVariant(src: string): string {
  * no idea the real node had been removed out from under it. Tracking
  * "this theme's webp failed" in state and conditionally rendering the
  * <source> lets React own the DOM, so the fix survives re-renders.
+ *
+ * That alone still wasn't enough (caught again, same Ivory Silk card):
+ * removing the <source> doesn't change the <img>'s own src attribute,
+ * since it was always the JPEG path, never the WebP one. An unchanged
+ * attribute never makes the browser refetch it, so the broken image
+ * stayed put. The key prop below forces React to unmount and remount
+ * the <img> as a brand-new element once the WebP fails, which does
+ * force a fresh request for its src.
  */
 function HeroImage({ src, alt }: { src: string; alt: string }) {
   const [webpFailed, setWebpFailed] = useState(false);
@@ -41,6 +49,7 @@ function HeroImage({ src, alt }: { src: string; alt: string }) {
         <source type="image/webp" srcSet={webpVariant(src)} />
       )}
       <img
+        key={webpFailed ? "jpg" : "webp-or-jpg"}
         src={src}
         alt={alt}
         loading="lazy"
@@ -120,8 +129,6 @@ export function ThemeCard({ theme }: { theme: Theme }) {
   return (
     <article className="theme-card">
       <div className="theme-card-top">
-        <span className="theme-kicker">{theme.kicker}</span>
-        <span className="theme-card-reveal">{theme.motion.reveal}</span>
         <Link
           to="/preview/$themeId"
           params={{ themeId: theme.id }}
@@ -144,8 +151,6 @@ export function ThemeCard({ theme }: { theme: Theme }) {
             <i style={{ background: theme.palette.paper }} />
           </span>
         </div>
-        <p className="theme-tagline">{theme.tagline}</p>
-
         <div className="theme-card-actions">
           <Link
             to="/create"

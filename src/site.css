@@ -646,27 +646,6 @@
   height: 50%;
   background: linear-gradient(to top, var(--sheet-warm), transparent);
 }
-.theme-kicker {
-  position: absolute;
-  top: 12px;
-  left: 16px;
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: 13px;
-  font-style: italic;
-  color: var(--ink-faint);
-  z-index: 1;
-}
-.theme-card-reveal {
-  position: absolute;
-  top: 14px;
-  right: 16px;
-  font-size: 0.56rem;
-  font-weight: 600;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  z-index: 1;
-}
 .theme-phone-link {
   position: relative;
   display: block;
@@ -820,12 +799,6 @@
   height: 9px;
   border-radius: 50%;
   box-shadow: inset 0 0 0 1px oklch(0.2 0.01 62 / 0.18);
-}
-.theme-tagline {
-  margin-top: 4px;
-  font-size: 13.5px;
-  line-height: 1.6;
-  color: var(--ink-soft);
 }
 .theme-card-actions {
   margin-top: 18px;
