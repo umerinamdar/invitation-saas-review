@@ -2299,6 +2299,36 @@ a {
 }
 
 /*
+ * Editor-only (see EditableField in invitation.tsx): the editable fields
+ * it swaps in are real inputs/textareas so typing in the preview behaves
+ * exactly like typing in the sidebar form, but they need to look like
+ * the plain text they replace rather than like form controls — `all:
+ * unset` strips the browser chrome, then `font`/`color`/`text-align`
+ * inherit from whatever class this same element would otherwise carry
+ * (e.g. `.invitation-welcome`, `.invitation-person-name`), since
+ * EditableField passes that class straight through.
+ */
+.editable-field-input {
+  all: unset;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  cursor: text;
+  resize: none;
+}
+.editable-field-input:focus,
+.editable-field-input:hover {
+  outline: 1px dashed color-mix(in oklch, currentColor 55%, transparent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/*
  * Parents and grandparents directly under each name (2026-10-25: no
  * panel, anywhere — the owner rejected the scrim outright, even warmed,
  * after seeing it on real artwork). Previously a dark scrim sat behind

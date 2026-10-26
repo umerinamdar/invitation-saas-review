@@ -78,6 +78,64 @@ function FamilyLines({
 }
 
 /**
+ * Lets the editor's own form and this component edit the same field two
+ * ways at once — only ever supplied by InviteEditor (never the public
+ * /preview/$themeId or /i/$slug routes), so a guest's own invitation and
+ * a free theme preview render exactly the plain text they always have.
+ */
+export type InvitationEditing = {
+  onCommit: (field: string, value: string) => void;
+};
+
+/**
+ * One editable string, rendered as plain text normally. Inside the
+ * editor (`editing` supplied), it becomes a real input/textarea in
+ * place — typing there calls `onCommit` the same way the sidebar
+ * form's own field does, and focusing it (by click or by tab) scrolls
+ * that sidebar field into view, so either side shows where the other
+ * one is. The sidebar input's id must be `field-${field}` for the
+ * scroll-into-view half of this to find it — see invite-editor.tsx.
+ */
+function EditableField({
+  field,
+  value,
+  editing,
+  as = "span",
+  className,
+  multiline = false,
+}: {
+  field: string;
+  value: string;
+  editing: InvitationEditing | undefined;
+  as?: "span" | "p" | "div";
+  className?: string;
+  multiline?: boolean;
+}) {
+  if (!editing) {
+    const Tag = as;
+    return <Tag className={className}>{value}</Tag>;
+  }
+  const focusSidebar = () => {
+    document
+      .getElementById(`field-${field}`)
+      ?.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+  const commonProps = {
+    className: `${className ?? ""} editable-field-input`.trim(),
+    value,
+    onFocus: focusSidebar,
+    onChange: (
+      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    ) => editing.onCommit(field, e.target.value),
+  };
+  return multiline ? (
+    <textarea rows={2} {...commonProps} />
+  ) : (
+    <input type="text" {...commonProps} />
+  );
+}
+
+/**
  * The invite engine. Everything it draws comes from `theme` (how it looks)
  * and `invite` (whose event it is) — it holds no event details of its own.
  */
@@ -86,6 +144,7 @@ export function Invitation({
   invite,
   mediaUrlMap,
   watermark,
+  editing,
 }: {
   theme: Theme;
   invite: Invite;
@@ -103,6 +162,12 @@ export function Invitation({
    * a paying customer's own invitation renders clean.
    */
   watermark?: boolean;
+  /**
+   * Supplied only by InviteEditor's own preview pane — turns the fields
+   * listed in InviteEditor's `EDITABLE_FIELD_IDS` into real inputs edited
+   * in place. See `InvitationEditing` above.
+   */
+  editing?: InvitationEditing;
 }) {
   const [open, setOpen] = useState(false);
   const [opening, setOpening] = useState(false);
@@ -425,18 +490,36 @@ export function Invitation({
             />
             {invite.blessing?.text && (
               <div className="invitation-blessing">
-                <p>{invite.blessing.text}</p>
+                <EditableField
+                  as="p"
+                  field="blessing.text"
+                  value={invite.blessing.text}
+                  editing={editing}
+                  multiline
+                />
                 {invite.blessing.attribution && (
                   <cite>{invite.blessing.attribution}</cite>
                 )}
               </div>
             )}
             <div className="invitation-heading">
-              <p>{event.typeLabel}</p>
+              <EditableField
+                as="p"
+                field="event.typeLabel"
+                value={event.typeLabel}
+                editing={editing}
+              />
               <span className="heading-rule" />
             </div>
             {invite.welcome && (
-              <p className="invitation-welcome">{invite.welcome}</p>
+              <EditableField
+                as="p"
+                className="invitation-welcome"
+                field="welcome"
+                value={invite.welcome}
+                editing={editing}
+                multiline
+              />
             )}
             <div className="invitation-names">
               {/* One real h1 for the page, carrying both names for
@@ -446,9 +529,13 @@ export function Invitation({
                   the family section further down). */}
               <h1 className="sr-only">{names}</h1>
               <div className="invitation-person">
-                <p className="invitation-person-name">
-                  {invite.hosts.person1}
-                </p>
+                <EditableField
+                  as="p"
+                  className="invitation-person-name"
+                  field="hosts.person1"
+                  value={invite.hosts.person1}
+                  editing={editing}
+                />
                 <FamilyLines
                   name={invite.hosts.person1}
                   family={invite.hosts.family1}
@@ -460,9 +547,13 @@ export function Invitation({
                     &
                   </span>
                   <div className="invitation-person">
-                    <p className="invitation-person-name">
-                      {invite.hosts.person2}
-                    </p>
+                    <EditableField
+                      as="p"
+                      className="invitation-person-name"
+                      field="hosts.person2"
+                      value={invite.hosts.person2}
+                      editing={editing}
+                    />
                     <FamilyLines
                       name={invite.hosts.person2}
                       family={invite.hosts.family2}
@@ -529,6 +620,15 @@ export function Invitation({
                 }
                 target="_blank"
                 rel="noreferrer"
+                onClick={(e) => {
+                  // In the editor, this link's job is to point at the
+                  // matching sidebar field, not open a maps tab over it.
+                  if (!editing) return;
+                  e.preventDefault();
+                  document
+                    .getElementById("field-event.venueName")
+                    ?.scrollIntoView({ behavior: "smooth", block: "center" });
+                }}
               >
                 {event.venueName} <ArrowUpRight size={20} />
               </a>
@@ -634,12 +734,22 @@ export function Invitation({
               </span>
               {story?.quote && (
                 <blockquote>
-                  {story.quote.split("\n").map((line, i, all) => (
-                    <span key={line}>
-                      {line}
-                      {i < all.length - 1 && <br />}
-                    </span>
-                  ))}
+                  {editing ? (
+                    <EditableField
+                      as="div"
+                      field="story.quote"
+                      value={story.quote}
+                      editing={editing}
+                      multiline
+                    />
+                  ) : (
+                    story.quote.split("\n").map((line, i, all) => (
+                      <span key={line}>
+                        {line}
+                        {i < all.length - 1 && <br />}
+                      </span>
+                    ))
+                  )}
                 </blockquote>
               )}
               {childhood && (
@@ -785,7 +895,12 @@ export function Invitation({
 
           {invite.hashtag && (
             <section className="hashtag-section">
-              <p>{invite.hashtag}</p>
+              <EditableField
+                as="p"
+                field="hashtag"
+                value={invite.hashtag}
+                editing={editing}
+              />
             </section>
           )}
 

@@ -175,6 +175,47 @@ export function InviteEditor({
   // drop person2 (the families fieldset below follows the same flag).
   const singleHost = config.hosts.mode === "single";
 
+  // Lets the preview edit a handful of its own plain-text fields in
+  // place (see EditableField in invitation.tsx) — each case here mirrors
+  // the matching sidebar input's own onChange above, and each matching
+  // input carries `id={"field-" + this field name}` so clicking the
+  // field in the preview can scroll straight to it.
+  const commitField = (field: string, value: string) => {
+    switch (field) {
+      case "event.typeLabel":
+        patchEvent({ typeLabel: value });
+        return;
+      case "event.venueName":
+        patchEvent({ venueName: value });
+        return;
+      case "hosts.person1":
+        patchHosts({ person1: value });
+        return;
+      case "hosts.person2":
+        patchHosts({ person2: value });
+        return;
+      case "welcome":
+        patch(
+          value
+            ? { welcome: value }
+            : (() => {
+                const { welcome: _drop, ...rest } = config;
+                return rest;
+              })(),
+        );
+        return;
+      case "blessing.text":
+        patch({ blessing: { ...config.blessing, text: value } });
+        return;
+      case "story.quote":
+        patch({ story: { ...config.story, quote: value } });
+        return;
+      case "hashtag":
+        patch({ hashtag: value });
+        return;
+    }
+  };
+
   return (
     <div className="editor">
       {toolbar}
@@ -226,6 +267,7 @@ export function InviteEditor({
             <label>
               {t("editor.name")}
               <input
+                id="field-hosts.person1"
                 value={config.hosts.person1}
                 onChange={(e) => patchHosts({ person1: e.target.value })}
                 placeholder="Aarav"
@@ -235,6 +277,7 @@ export function InviteEditor({
               <label>
                 {t("editor.partnersName")}
                 <input
+                  id="field-hosts.person2"
                   value={config.hosts.person2 ?? ""}
                   onChange={(e) => patchHosts({ person2: e.target.value })}
                   placeholder="Diya"
@@ -329,6 +372,7 @@ export function InviteEditor({
             <label>
               {t("editor.welcomeLine")}
               <textarea
+                id="field-welcome"
                 rows={2}
                 value={config.welcome ?? ""}
                 onChange={(e) =>
@@ -347,6 +391,7 @@ export function InviteEditor({
             <label>
               {t("editor.blessingOrVerse")}
               <textarea
+                id="field-blessing.text"
                 rows={2}
                 value={config.blessing?.text ?? ""}
                 onChange={(e) => {
@@ -386,6 +431,7 @@ export function InviteEditor({
             <label>
               {t("editor.occasion")}
               <input
+                id="field-event.typeLabel"
                 value={config.event.typeLabel}
                 onChange={(e) => patchEvent({ typeLabel: e.target.value })}
                 placeholder="Wedding Ceremony"
@@ -405,6 +451,7 @@ export function InviteEditor({
             <label>
               {t("editor.venue")}
               <input
+                id="field-event.venueName"
                 value={config.event.venueName}
                 onChange={(e) => patchEvent({ venueName: e.target.value })}
                 placeholder="The Grand Pavilion"
@@ -715,6 +762,7 @@ export function InviteEditor({
             <label>
               {t("editor.yourHashtag")}
               <input
+                id="field-hashtag"
                 value={config.hashtag ?? ""}
                 onChange={(e) => patch({ hashtag: e.target.value })}
                 placeholder="#AaravWedsDiya"
@@ -803,6 +851,7 @@ export function InviteEditor({
             <label>
               {t("editor.lineForGuests")}
               <textarea
+                id="field-story.quote"
                 rows={2}
                 value={config.story?.quote ?? ""}
                 onChange={(e) =>
@@ -862,6 +911,7 @@ export function InviteEditor({
                 invite={preview}
                 mediaUrlMap={mediaUrlMap}
                 watermark={watermark}
+                editing={{ onCommit: commitField }}
               />
             </div>
           </div>
