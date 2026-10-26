@@ -1433,18 +1433,27 @@ a {
 .gtd-cover.is-opening .gtd-cue {
   opacity: 0;
 }
+/* Owner correction, 2026-10-27: NOT a hinge swing like Ram Mandir — "I
+ * want it to be open like camera opening this door." The two leaves
+ * slide straight apart off their own edges while moving toward the
+ * viewer (translateZ, inside this cover's own perspective) and growing
+ * slightly larger as they go, so they read as rushing past the camera
+ * on either side rather than rotating on a hinge — the camera feels
+ * like it's pushing straight through the gap they leave, continuing
+ * into the forward dolly the post-open gtd-dolly-in keyframes take
+ * over once the doors are gone. */
 .gtd-cover.is-opening .gtd-door-left {
   transition:
     transform 4s cubic-bezier(0.42, 0, 0.58, 1) 1.4s,
     opacity 1s cubic-bezier(0.42, 0, 0.58, 1) 4.4s;
-  transform: rotateY(86deg);
+  transform: translate3d(-102%, 0, 420px) scale(1.3);
   opacity: 0;
 }
 .gtd-cover.is-opening .gtd-door-right {
   transition:
     transform 4s cubic-bezier(0.42, 0, 0.58, 1) 1.4s,
     opacity 1s cubic-bezier(0.42, 0, 0.58, 1) 4.4s;
-  transform: rotateY(-86deg);
+  transform: translate3d(102%, 0, 420px) scale(1.3);
   opacity: 0;
 }
 

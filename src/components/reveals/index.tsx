@@ -434,12 +434,14 @@ export function RamMandirDoorsReveal(props: RevealProps) {
 }
 
 /**
- * Golden Temple's own mechanic — the same carved-doors contract as
- * ramMandirDoors above (built directly in this engine, not ported),
- * reusing its gtd- prefix of class names so the CSS can share its
- * hinge/glow rules; only the post-open "emerge" differs (a forward
- * dolly into the courtyard beyond, not just a blur/zoom focus — see
- * .gtd-dolly-in in styles.css).
+ * Golden Temple's own mechanic — the same split-in-two-halves markup
+ * and glow beat as ramMandirDoors above (built directly in this
+ * engine, not ported), but NOT a hinge swing (owner correction,
+ * 2026-10-27: "I want it to be open like camera opening this door, not
+ * same like ram mandir") — the two leaves slide straight apart and
+ * push toward the viewer instead of rotating, continuing straight into
+ * the forward dolly the post-open .gtd-dolly-in keyframes take over
+ * once they're gone (see styles.css for both).
  */
 export function GoldenTempleDoorsReveal(props: RevealProps) {
   const { opening, onOpen, hosts, backdrop } = props;
