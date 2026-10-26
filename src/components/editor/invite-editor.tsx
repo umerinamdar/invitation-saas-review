@@ -170,10 +170,6 @@ export function InviteEditor({
     });
   const patchMeta = (next: Partial<InviteConfig["meta"]>) =>
     onChange({ ...config, meta: { ...config.meta, ...next } });
-  // A single host celebrates without a partner: the renderer already
-  // prints one name when person2 is absent, so the mode only has to
-  // drop person2 (the families fieldset below follows the same flag).
-  const singleHost = config.hosts.mode === "single";
 
   // Lets the preview edit a handful of its own plain-text fields in
   // place (see EditableField in invitation.tsx) — each case here mirrors
@@ -242,28 +238,6 @@ export function InviteEditor({
 
           <fieldset>
             <legend>{t("editor.yourNames")}</legend>
-            <div className="theme-choices">
-              <button
-                type="button"
-                className={`theme-choice ${singleHost ? "" : "is-active"}`}
-                onClick={() => patchHosts({ mode: "couple" })}
-              >
-                {t("editor.hostCouple")}
-              </button>
-              <button
-                type="button"
-                className={`theme-choice ${singleHost ? "is-active" : ""}`}
-                onClick={() => {
-                  const { person2: _drop, ...hosts } = config.hosts;
-                  onChange({
-                    ...config,
-                    hosts: { ...hosts, mode: "single" },
-                  });
-                }}
-              >
-                {t("editor.hostSingle")}
-              </button>
-            </div>
             <label>
               {t("editor.name")}
               <input
@@ -273,17 +247,15 @@ export function InviteEditor({
                 placeholder="Aarav"
               />
             </label>
-            {!singleHost && (
-              <label>
-                {t("editor.partnersName")}
-                <input
-                  id="field-hosts.person2"
-                  value={config.hosts.person2 ?? ""}
-                  onChange={(e) => patchHosts({ person2: e.target.value })}
-                  placeholder="Diya"
-                />
-              </label>
-            )}
+            <label>
+              {t("editor.partnersName")}
+              <input
+                id="field-hosts.person2"
+                value={config.hosts.person2 ?? ""}
+                onChange={(e) => patchHosts({ person2: e.target.value })}
+                placeholder="Diya"
+              />
+            </label>
           </fieldset>
 
           <fieldset>
@@ -309,7 +281,6 @@ export function InviteEditor({
                 ],
               ] as const
             )
-              .filter(([key]) => !singleHost || key === "family1")
               .map(
                 ([
                   key,
