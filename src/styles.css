@@ -1250,18 +1250,28 @@ a {
  * narrow centre gap exposed between the two doors, that overlay's dark
  * top-to-bottom gradient read as a solid dark bar rather than a soft
  * shadow, making the opening look broken. */
+/* The rotation signs below were backwards for two prior revisions —
+ * both leaves swung the wrong way — confirmed by Lovable's own geometry
+ * check (2026-10-26): for a CSS rotateY, a point's z-offset relative to
+ * its hinge is -sin(angle) * x. The LEFT leaf's free (inner) edge sits
+ * at positive x relative to its left-edge hinge, so it needs a POSITIVE
+ * angle to move away (negative z); the RIGHT leaf's free edge sits at
+ * negative x relative to its right-edge hinge, so it needs a NEGATIVE
+ * angle for the same away motion. 86deg, not 108deg, so backface
+ * culling never abruptly hides a leaf before its own opacity fade
+ * finishes — the remaining sliver fades out instead of popping away. */
 .rmd-cover.is-opening .rmd-door-left {
   transition:
     transform 4s cubic-bezier(0.42, 0, 0.58, 1) 1.4s,
     opacity 1s cubic-bezier(0.42, 0, 0.58, 1) 4.4s;
-  transform: rotateY(-108deg);
+  transform: rotateY(86deg);
   opacity: 0;
 }
 .rmd-cover.is-opening .rmd-door-right {
   transition:
     transform 4s cubic-bezier(0.42, 0, 0.58, 1) 1.4s,
     opacity 1s cubic-bezier(0.42, 0, 0.58, 1) 4.4s;
-  transform: rotateY(108deg);
+  transform: rotateY(-86deg);
   opacity: 0;
 }
 @keyframes rmd-glow-pulse {
