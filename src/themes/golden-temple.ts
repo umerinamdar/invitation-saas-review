@@ -1,9 +1,22 @@
 import type { Theme } from "./types";
 
 /**
- * Gold and white, opening like a lifted casket onto the Harmandir Sahib
- * reflected in the Amrit Sarovar at dusk. Artwork and palette generated in
- * Lovable, matching the temple's own gold-on-water glow.
+ * Gold and white, its gilded temple doors swinging open on their own
+ * hinges onto the Harmandir Sahib reflected in the Amrit Sarovar at
+ * dusk — then the camera dollies forward through the doorway into the
+ * courtyard beyond. Artwork and palette generated in Lovable, matching
+ * the temple's own gold-on-water glow.
+ *
+ * Reworked 2026-10-27 (owner request) from the original lifting-casket
+ * ("box") opening to a bespoke doors mechanic — goldenTempleDoors in
+ * reveals/index.tsx, built directly in this engine on the same
+ * carved-doors contract as Ram Mandir (see docs/ops/OPENING-STUDY-
+ * ivory-silk-pearls.md for the choreography standard both measure
+ * against), reusing the sealed/hero artwork already on disk — no new
+ * assets were needed, the existing sealed.jpg already shows a
+ * symmetric pair of gold doors with its seam within ~1% of centre.
+ * No wax seal (owner request): "You're Invited" in its own script,
+ * same convention as every other bespoke door mechanic.
  */
 export const goldenTemple: Theme = {
   id: "golden-temple",
@@ -54,8 +67,13 @@ export const goldenTemple: Theme = {
   },
 
   motion: {
-    reveal: "box",
-    openMs: 1500,
+    // openMs matches exactly when the doors' own CSS choreography
+    // finishes (1.4s hold + 4s swing = 5.4s) — see the mechanic's CSS
+    // in styles.css. Like Ram Mandir's doors, this mechanic doesn't
+    // scale with openMs; the number exists only so the JS unmount
+    // timer in invitation.tsx fires exactly when the CSS ends.
+    reveal: "goldenTempleDoors",
+    openMs: 5400,
     introSeconds: 6,
     musicFadeMs: 8000,
     maxVolume: 0.6,
@@ -63,11 +81,11 @@ export const goldenTemple: Theme = {
     petals: "marigold",
   },
 
-  kicker: "KEEPSAKE BOX",
+  kicker: "TEMPLE DOORS",
   tagline:
-    "Gold and white invitation whose lifted casket opens onto the Harmandir Sahib reflected in the Amrit Sarovar at dusk.",
+    "Gold and white invitation whose gilded temple doors swing open onto the Harmandir Sahib reflected in the Amrit Sarovar at dusk, the camera dollying forward through the doorway as they clear.",
   features: [
-    "Lifting Casket Opening",
+    "Ceremonial Temple-Door Opening",
     "Dusk Reflection Hero",
     "Scratch-to-Reveal Date",
     "Marigold Petal Shower",

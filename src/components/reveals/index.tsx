@@ -433,6 +433,41 @@ export function RamMandirDoorsReveal(props: RevealProps) {
   );
 }
 
+/**
+ * Golden Temple's own mechanic — the same carved-doors contract as
+ * ramMandirDoors above (built directly in this engine, not ported),
+ * reusing its gtd- prefix of class names so the CSS can share its
+ * hinge/glow rules; only the post-open "emerge" differs (a forward
+ * dolly into the courtyard beyond, not just a blur/zoom focus — see
+ * .gtd-dolly-in in styles.css).
+ */
+export function GoldenTempleDoorsReveal(props: RevealProps) {
+  const { opening, onOpen, hosts, backdrop } = props;
+  const half = (side: "left" | "right") =>
+    backdrop
+      ? ({
+          backgroundImage: `url('${backdrop}')`,
+          backgroundSize: "200% 100%",
+          backgroundPosition: side === "left" ? "left center" : "right center",
+        } as React.CSSProperties)
+      : undefined;
+  return (
+    <div
+      className={`gtd-cover ${opening ? "is-opening" : ""}`}
+      {...openTriggerProps(hosts, opening, onOpen)}
+    >
+      <div className="gtd-underlay" />
+      <div className="gtd-door gtd-door-left" style={half("left")} />
+      <div className="gtd-door gtd-door-right" style={half("right")} />
+      <div className="gtd-glow" aria-hidden="true" />
+      <p className="gtd-invited" aria-hidden="true">
+        You&rsquo;re Invited
+      </p>
+      <p className="gtd-cue">Tap to open</p>
+    </div>
+  );
+}
+
 const reveals: Record<Reveal, (props: RevealProps) => React.JSX.Element> = {
   envelope: EnvelopeReveal,
   doors: DoorsReveal,
@@ -447,6 +482,7 @@ const reveals: Record<Reveal, (props: RevealProps) => React.JSX.Element> = {
   scroll: ScrollReveal,
   ivorySilkEnvelope: IvorySilkEnvelopeReveal,
   ramMandirDoors: RamMandirDoorsReveal,
+  goldenTempleDoors: GoldenTempleDoorsReveal,
 };
 
 export function RevealStage({

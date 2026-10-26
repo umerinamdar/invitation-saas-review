@@ -1,5 +1,6 @@
 import type { Theme } from "./types";
 import { dubaiSilk } from "./dubai-silk";
+import { goldenTemple } from "./golden-temple";
 import { ivorySilkPearls } from "./ivory-silk-pearls";
 import { ramMandir } from "./ram-mandir";
 
@@ -25,12 +26,26 @@ import { ramMandir } from "./ram-mandir";
  * component existed for it to port. Placed FIRST in the array at the
  * owner's request, so it's the first design shown in the gallery.
  *
+ * Golden Temple (2026-10-27) is the third — same rework as Ram Mandir:
+ * its old lifting-casket ("box") opening replaced with a bespoke
+ * temple-doors mechanic (`goldenTempleDoors`), reusing Ram Mandir's
+ * carved-doors contract directly since the artwork already on disk
+ * (never regenerated — its gold doors were already a symmetric pair
+ * with a near-centred seam) needed no new mechanic of its own, just a
+ * different post-open beat: a forward camera dolly through the
+ * doorway instead of a blur/zoom settle.
+ *
  * Every other theme's file is untouched on disk — src/themes/*.ts for
- * the remaining 12 pre-existing designs and the 19 Lovable-20
+ * the remaining 11 pre-existing designs and the 19 Lovable-20
  * conversions — and will be brought back the same way, one at a time.
  * Do not re-add a batch at once.
  */
-export const themes: Theme[] = [ramMandir, dubaiSilk, ivorySilkPearls];
+export const themes: Theme[] = [
+  ramMandir,
+  dubaiSilk,
+  ivorySilkPearls,
+  goldenTemple,
+];
 
 export const themesById = new Map(themes.map((theme) => [theme.id, theme]));
 

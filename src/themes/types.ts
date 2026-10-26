@@ -42,6 +42,12 @@ export type PetalStyle = "white-blossom" | "marigold" | "rose" | "none";
  * sealedBackdrop photo itself, split down the centre seam) swinging
  * open on their own hinges, built directly in this engine (no Lovable
  * component existed to port) with hardcoded ceremonial timings.
+ *
+ * goldenTempleDoors added 2026-10-27, same contract again but with one
+ * difference from ramMandirDoors: once the gold doors swing clear, the
+ * revealed hero scene doesn't just blur-focus in place — it dollies
+ * forward, as if the camera is walking through the doorway into the
+ * courtyard beyond.
  */
 export type Reveal =
   | "envelope"
@@ -56,7 +62,8 @@ export type Reveal =
   | "blinds"
   | "scroll"
   | "ivorySilkEnvelope"
-  | "ramMandirDoors";
+  | "ramMandirDoors"
+  | "goldenTempleDoors";
 
 /**
  * Drawn decoration used instead of photography. A theme naming one of these
