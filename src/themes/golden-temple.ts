@@ -34,7 +34,12 @@ export const goldenTemple: Theme = {
     paper: "#f6ecd2",
     paperLight: "#fcf7e9",
     paperDark: "#e8d6a5",
-    highlight: "#ead9a0",
+    // Was #ead9a0 (a muted gold) — Palette's own doc comment on
+    // `highlight` says "near-white inner glow", which this wasn't,
+    // leaving the date-reveal card muddy instead of a clean glass
+    // card, the same bug caught and fixed on Ram Mandir for the same
+    // reason. Near-white, matching that contract.
+    highlight: "oklch(0.985 0.01 85)",
     surface: "#fdf9ee",
     scratchFoil: "#d4af37",
     scratchInk: "#4a3a0f",

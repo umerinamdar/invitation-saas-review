@@ -29,7 +29,14 @@ export const ramMandir: Theme = {
     paper: "#f7e8c9",
     paperLight: "#fdf6e6",
     paperDark: "#e8c98f",
-    highlight: "#e0a23c",
+    // Was #e0a23c (a mid-tone gold) — Palette's own doc comment on
+    // `highlight` says "near-white inner glow", which this wasn't,
+    // leaving the date-reveal card (styles.css's frosted-glass
+    // .revealed-date, built from var(--ink-light)) a muddy amber-brown
+    // instead of a clean glass card (owner report, 2026-10-27: "this
+    // font box colour can be changed"). Near-white, matching the
+    // documented contract every other theme already follows.
+    highlight: "oklch(0.985 0.012 85)",
     surface: "#fffaef",
     scratchFoil: "#d9a23b",
     scratchInk: "#5c2a0d",
