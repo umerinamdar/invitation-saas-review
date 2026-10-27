@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { BRAND, SiteFooter, SiteHeader } from "@/components/site/chrome";
 import { absoluteUrl } from "@/config/site";
 import { ThemeCard } from "@/components/site/theme-card";
@@ -55,6 +55,25 @@ export const Route = createFileRoute("/templates")({
 
 function Templates() {
   const [category, setCategory] = useState<CategoryFilter>("all");
+  // The card list itself is static data, so there is no fetch to wait
+  // on — but the cards draw in each theme's own typeface, which arrives
+  // asynchronously. Until the fonts settle, skeleton cards hold the grid
+  // so the real cards don't pop in mid font-swap.
+  const [fontsReady, setFontsReady] = useState(false);
+  useEffect(() => {
+    let live = true;
+    const fonts = document.fonts;
+    if (!fonts) {
+      setFontsReady(true);
+      return;
+    }
+    void fonts.ready.then(() => {
+      if (live) setFontsReady(true);
+    });
+    return () => {
+      live = false;
+    };
+  }, []);
   const filtered = useMemo(
     () => {
       if (category === "all") return themes;
@@ -99,17 +118,29 @@ function Templates() {
           {/* Keyed by category so a filter change remounts the grid and
               the cards settle in with a stagger (see .card-in in
               site.css) instead of swapping instantly. */}
-          <div className="theme-grid" key={category}>
-            {filtered.map((theme, i) => (
-              <div
-                key={theme.id}
-                className="card-in"
-                style={{ animationDelay: `${Math.min(i * 70, 420)}ms` }}
-              >
-                <ThemeCard theme={theme} />
-              </div>
-            ))}
-          </div>
+          {fontsReady ? (
+            <div className="theme-grid" key={category}>
+              {filtered.map((theme, i) => (
+                <div
+                  key={theme.id}
+                  className="card-in"
+                  style={{ animationDelay: `${Math.min(i * 70, 420)}ms` }}
+                >
+                  <ThemeCard theme={theme} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="theme-grid" aria-hidden="true">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="skeleton-card">
+                  <div className="skeleton skeleton-card-art" />
+                  <div className="skeleton skeleton-card-line" />
+                  <div className="skeleton skeleton-card-line short" />
+                </div>
+              ))}
+            </div>
+          )}
           <p className="sr-only" role="status">
             {`${filtered.length} ${filtered.length === 1 ? "design" : "designs"} shown`}
           </p>

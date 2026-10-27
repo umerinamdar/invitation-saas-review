@@ -571,6 +571,7 @@
   font-size: clamp(2.1rem, 5vw, 3.6rem);
   line-height: 1.02;
   margin-top: 18px;
+  text-wrap: balance;
 }
 .section-sub {
   margin-top: 18px;
@@ -633,6 +634,64 @@
 }
 .theme-grid > .card-in {
   animation: card-in var(--dur-slower) var(--ease-out) both;
+}
+/* Loading skeletons: plain pulsing gray blocks that hold the layout
+ * while real content loads, so it doesn't pop in. */
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.skeleton {
+  background: color-mix(in oklch, var(--ink) 12%, transparent);
+  border-radius: 8px;
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}
+/* Gallery skeleton: same grid, phone-ratio art block + heading lines. */
+.skeleton-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.skeleton-card-art {
+  aspect-ratio: 9 / 19.5;
+  width: min(100%, 280px);
+  border-radius: 28px;
+}
+.skeleton-card-line {
+  height: 16px;
+}
+.skeleton-card-line.short {
+  width: 55%;
+}
+/* Editor skeleton: fieldset-shaped blocks with input-sized rows. */
+.editor-skeleton {
+  max-width: 640px;
+  margin: 0 auto;
+  display: grid;
+  gap: 28px;
+  padding: 24px 20px;
+  width: 100%;
+}
+.skeleton-fieldset {
+  display: grid;
+  gap: 12px;
+}
+.skeleton-field {
+  height: 44px;
+}
+.skeleton-legend {
+  height: 20px;
+  width: 40%;
 }
 @media (prefers-reduced-motion: reduce) {
   .theme-grid > .card-in {
@@ -772,6 +831,7 @@
   text-align: center;
   padding: 0 7cqw;
   z-index: 1;
+  text-wrap: balance;
   /* Matches .invitation-names h1's glow (styles.css) so the gallery card's
    * mini-preview reads the same as the real invitation it links to. */
   text-shadow: 0 1px 15px var(--paper-light);
@@ -809,6 +869,7 @@
 }
 .theme-card-head h2 {
   font-size: 24px;
+  text-wrap: balance;
 }
 .swatches {
   display: flex;
@@ -826,6 +887,7 @@
   font-size: 13.5px;
   line-height: 1.6;
   color: var(--ink-soft);
+  text-wrap: balance;
 }
 .feature-pills {
   display: flex;
@@ -1807,6 +1869,22 @@ a.contact-card {
   font-size: 12.5px;
   color: var(--ink-faint);
 }
+/* Undo banner for destructive row removals (family members, sub-events):
+ * a plain inline strip, shown for a few seconds until it expires. */
+.editor-undo-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  font-size: 13.5px;
+  border: 1px solid color-mix(in oklch, var(--ink) 70%, transparent);
+  background: var(--sheet-warm);
+  color: var(--ink);
+}
+.editor-undo-banner span {
+  flex: 1;
+}
 .field-hint {
   margin-top: -6px;
   margin-bottom: 4px;
@@ -1852,13 +1930,15 @@ a.contact-card {
  * there is no way back except the browser's own back button. */
 .preview-close {
   position: fixed;
-  top: 16px;
-  right: 16px;
+  /* Clear the notch / home-indicator bar on devices that have one;
+   * env() is 0 elsewhere, so positioning is unchanged there. */
+  top: max(16px, calc(env(safe-area-inset-top) + 16px));
+  right: max(16px, calc(env(safe-area-inset-right) + 16px));
   z-index: 100;
   display: grid;
   place-items: center;
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   border-radius: 999px;
   border: 1px solid color-mix(in oklch, var(--ink) 80%, transparent);
   background: var(--sheet-warm);

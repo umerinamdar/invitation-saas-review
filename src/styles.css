@@ -689,6 +689,23 @@ a {
   object-position: 50% 35%;
   z-index: -3;
 }
+/* Blur-up placeholders: theme/section images start transparent over the
+ * section's own palette background and cross-fade in once the file has
+ * loaded, instead of popping in. Reduced-motion users get the image
+ * immediately, with no transition. */
+.blur-up {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.blur-up.is-loaded {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .blur-up {
+    transition: none;
+    opacity: 1;
+  }
+}
 .skyline-veil {
   position: absolute;
   inset: 0;
@@ -736,6 +753,7 @@ a {
   font-weight: 500;
   color: var(--names-color, var(--foreground));
   text-shadow: 0 1px 15px var(--paper-light);
+  text-wrap: balance;
 }
 .invitation-names em {
   font-size: calc(55px * var(--names-scale, 1));
@@ -823,6 +841,9 @@ a {
   height: 44px;
   color: var(--gold);
   transition: opacity 1s;
+  /* Last element of the hero: keep it above the home-indicator bar
+   * on notched devices; 0 elsewhere, so layout is unchanged there. */
+  margin-bottom: env(safe-area-inset-bottom);
 }
 .venue-section {
   text-align: center;
@@ -1067,8 +1088,10 @@ a {
 }
 .music-dock {
   position: fixed;
-  bottom: 18px;
-  right: 18px;
+  /* Lift above the home-indicator bar / side notch on devices that
+   * have one; env() is 0 elsewhere, so spacing is unchanged there. */
+  bottom: max(18px, calc(env(safe-area-inset-bottom) + 18px));
+  right: max(18px, calc(env(safe-area-inset-right) + 18px));
   display: flex;
   gap: 4px;
   /* A single icon (most themes, no music yet) looked like a stray dark
@@ -1083,8 +1106,8 @@ a {
   box-shadow: var(--shadow-dock);
 }
 .music-dock button {
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   border-radius: 999px;
   color: var(--ink-light);
 }
