@@ -1685,14 +1685,21 @@ a.contact-card {
   .editor-bar {
     gap: 10px;
     padding: 12px 14px;
+    /* Safety net: even with .save-state hidden below, the brand mark and
+     * both buttons alone are too tight to guarantee one line on every
+     * phone width/font-rendering combo. min-width:0 on .save-state used
+     * to collapse it to a 0-width flex item whose text had nowhere to
+     * go but to spill over the "Start new" button — wrapping instead
+     * guarantees the row never overlaps, it just grows a second line. */
+    flex-wrap: wrap;
   }
   .editor-bar .brand {
     font-size: 19px;
   }
   .save-state {
-    min-width: 0;
-    font-size: 9.5px;
-    letter-spacing: 0.08em;
+    /* No room for this label too once wrapping would otherwise trigger
+     * on every phone-width load; it's a nice-to-have, not essential. */
+    display: none;
   }
   .editor-bar .btn {
     padding: 9px 14px;
