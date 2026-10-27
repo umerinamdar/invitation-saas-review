@@ -239,8 +239,8 @@ export function InviteEditor({
             <div className="editor-undo-banner" role="status">
               <span>
                 {undo.kind === "familyMembers"
-                  ? "Family member removed."
-                  : "Function removed."}
+                  ? `${undo.item.name || "Family member"} removed.`
+                  : `${undo.item.label || "Function"} removed.`}
               </span>
               <button
                 type="button"
