@@ -79,6 +79,32 @@ export function InviteEditor({
 }: Props) {
   // Remounting replays the opening, which is the part people want to re-watch.
   const [previewKey, setPreviewKey] = useState(0);
+  // Undo for destructive row removals (family members, sub-events).
+  // Sonner's Toaster exists in the tree (src/components/ui/sonner.tsx)
+  // but is never mounted anywhere, so wiring it up would be a bigger
+  // change than this fix allows — this minimal inline banner is the
+  // alternative. Only the last removal is kept; expiry dismisses it
+  // with no further effect.
+  type UndoRemoval =
+    | {
+        kind: "familyMembers";
+        index: number;
+        item: NonNullable<InviteConfig["familyMembers"]>[number];
+      }
+    | {
+        kind: "subEvents";
+        index: number;
+        item: NonNullable<InviteConfig["subEvents"]>[number];
+      };
+  const [undo, setUndo] = useState<UndoRemoval | null>(null);
+  const undoTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    if (!undo) return;
+    undoTimerRef.current = setTimeout(() => setUndo(null), 5000);
+    return () => {
+      if (undoTimerRef.current) clearTimeout(undoTimerRef.current);
+    };
+  }, [undo]);
   const { t } = useLocale();
   const user = useUser();
   // Storage's owner-write policy takes segment one from the signed-in
@@ -153,6 +179,35 @@ export function InviteEditor({
 
   const patch = (next: Partial<InviteConfig>) =>
     onChange({ ...config, ...next });
+
+  // Remove a row but keep it restorable for a few seconds. The banner
+  // (rendered at the top of the form) restores the row at its original
+  // position; if the list changed meanwhile it lands at the nearest
+  // valid index instead.
+  const removeWithUndo = (kind: UndoRemoval["kind"], index: number) => {
+    const list =
+      (kind === "familyMembers" ? config.familyMembers : config.subEvents) ??
+      [];
+    const item = list[index];
+    if (!item) return;
+    patch({
+      [kind]: list.filter((_, i) => i !== index),
+    } as Partial<InviteConfig>);
+    setUndo({ kind, index, item } as UndoRemoval);
+  };
+  const restoreUndo = () => {
+    if (!undo) return;
+    if (undo.kind === "familyMembers") {
+      const list = [...(config.familyMembers ?? [])];
+      list.splice(Math.min(undo.index, list.length), 0, undo.item);
+      patch({ familyMembers: list });
+    } else {
+      const list = [...(config.subEvents ?? [])];
+      list.splice(Math.min(undo.index, list.length), 0, undo.item);
+      patch({ subEvents: list });
+    }
+    setUndo(null);
+  };
   const patchEvent = (next: Partial<InviteConfig["event"]>) =>
     onChange({ ...config, event: { ...config.event, ...next } });
   const patchHosts = (next: Partial<InviteConfig["hosts"]>) =>
@@ -180,6 +235,30 @@ export function InviteEditor({
       {toolbar}
       <main className="editor-body">
         <form className="editor-form" onSubmit={(e) => e.preventDefault()}>
+          {undo && (
+            <div className="editor-undo-banner" role="status">
+              <span>
+                {undo.kind === "familyMembers"
+                  ? "Family member removed."
+                  : "Function removed."}
+              </span>
+              <button
+                type="button"
+                className="btn btn-quiet btn-sm"
+                onClick={restoreUndo}
+              >
+                Undo
+              </button>
+              <button
+                type="button"
+                className="row-remove"
+                aria-label="Dismiss"
+                onClick={() => setUndo(null)}
+              >
+                ×
+              </button>
+            </div>
+          )}
           <fieldset>
             <legend>{t("editor.design")}</legend>
             <div className="theme-choices">
@@ -495,13 +574,7 @@ export function InviteEditor({
                     type="button"
                     className="row-remove"
                     aria-label={`Remove ${sub.label || "function"}`}
-                    onClick={() =>
-                      patch({
-                        subEvents: (config.subEvents ?? []).filter(
-                          (_, i) => i !== index,
-                        ),
-                      })
-                    }
+                    onClick={() => removeWithUndo("subEvents", index)}
                   >
                     ×
                   </button>
@@ -606,13 +679,7 @@ export function InviteEditor({
                   type="button"
                   className="row-remove"
                   aria-label={`Remove ${member.name || "family member"}`}
-                  onClick={() =>
-                    patch({
-                      familyMembers: (config.familyMembers ?? []).filter(
-                        (_, i) => i !== index,
-                      ),
-                    })
-                  }
+                  onClick={() => removeWithUndo("familyMembers", index)}
                 >
                   ×
                 </button>

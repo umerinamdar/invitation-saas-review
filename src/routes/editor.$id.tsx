@@ -384,10 +384,24 @@ function Editor() {
   }
 
   if (!config) {
+    // Skeleton shaped like the editor form (fieldset blocks with
+    // input-sized rows), replacing the bare spinner so the form
+    // doesn't pop in once the invite loads.
     return (
       <div className="site">
         <main className="auth">
-          <LoaderCircle className="loading-spinner" />
+          <p className="sr-only" role="status">
+            Loading editor…
+          </p>
+          <div className="editor-skeleton" aria-hidden="true">
+            {[0, 1, 2].map((group) => (
+              <div key={group} className="skeleton-fieldset">
+                <div className="skeleton skeleton-legend" />
+                <div className="skeleton skeleton-field" />
+                <div className="skeleton skeleton-field" />
+              </div>
+            ))}
+          </div>
         </main>
       </div>
     );

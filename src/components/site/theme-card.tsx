@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Eye } from "lucide-react";
 import { OrnateFrame, PatternBackdrop } from "@/components/ornament";
@@ -18,6 +19,10 @@ function webpVariant(src: string): string {
 /** A miniature of the real invitation, drawn from the theme's own palette. */
 export function ThemePhoneScreen({ theme }: { theme: Theme }) {
   const { revealedBackdrop } = theme.assets;
+  // Blur-up: the card art starts transparent over the card's palette
+  // background and cross-fades in on load (or on error, so a broken
+  // file still shows its alt text). The ref check covers cached files.
+  const [backdropLoaded, setBackdropLoaded] = useState(false);
   // The card shows the same demo couple and date as this theme's full
   // preview, so the gallery doesn't promise one wedding and open another.
   const demo = getDemoInvite(theme.id);
@@ -28,7 +33,18 @@ export function ThemePhoneScreen({ theme }: { theme: Theme }) {
         <>
           <picture>
             <source type="image/webp" srcSet={webpVariant(revealedBackdrop)} />
-            <img src={revealedBackdrop} alt="" loading="lazy" />
+            <img
+              src={revealedBackdrop}
+              alt=""
+              loading="lazy"
+              className={`blur-up${backdropLoaded ? " is-loaded" : ""}`}
+              ref={(el) => {
+                if (el && el.complete && el.naturalWidth > 0)
+                  setBackdropLoaded(true);
+              }}
+              onLoad={() => setBackdropLoaded(true)}
+              onError={() => setBackdropLoaded(true)}
+            />
           </picture>
           <span className="theme-card-veil" />
         </>

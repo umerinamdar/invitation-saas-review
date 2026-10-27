@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ImgHTMLAttributes,
+} from "react";
 import {
   ArrowDown,
   ArrowUpRight,
@@ -81,6 +87,38 @@ function FamilyLines({
  * The invite engine. Everything it draws comes from `theme` (how it looks)
  * and `invite` (whose event it is) — it holds no event details of its own.
  */
+/**
+ * Blur-up image: starts transparent over the section's own palette
+ * background and cross-fades in once the file loads (or fails, so a
+ * broken file still shows its alt text instead of an empty block).
+ * The ref check covers already-cached files whose load event may
+ * have fired before the handler attached.
+ */
+function BlurUpImage(props: ImgHTMLAttributes<HTMLImageElement>) {
+  const [loaded, setLoaded] = useState(false);
+  const { onLoad, onError, className, ...rest } = props;
+  const classes = className
+    ? `${className} blur-up${loaded ? " is-loaded" : ""}`
+    : `blur-up${loaded ? " is-loaded" : ""}`;
+  return (
+    <img
+      {...rest}
+      ref={(el) => {
+        if (el && el.complete && el.naturalWidth > 0) setLoaded(true);
+      }}
+      className={classes}
+      onLoad={(e) => {
+        setLoaded(true);
+        onLoad?.(e);
+      }}
+      onError={(e) => {
+        setLoaded(true);
+        onError?.(e);
+      }}
+    />
+  );
+}
+
 export function Invitation({
   theme,
   invite,
@@ -363,7 +401,7 @@ export function Invitation({
           }`}
         >
           {sealedBackdrop && !paintedOpening(reveal) ? (
-            <img
+            <BlurUpImage
               src={sealedBackdrop}
               className="sealed-backdrop"
               alt=""
@@ -391,7 +429,7 @@ export function Invitation({
           <section className="skyline-invitation">
             {revealedBackdrop ? (
               <>
-                <img
+                <BlurUpImage
                   src={revealedBackdrop}
                   className="skyline-backdrop"
                   width={1536}
@@ -595,7 +633,7 @@ export function Invitation({
 
           {ring && (
             <section className="ring-section">
-              <img
+              <BlurUpImage
                 src={ringUrl}
                 width={ring.width}
                 height={ring.height}
@@ -621,7 +659,7 @@ export function Invitation({
                 </blockquote>
               )}
               {childhood && (
-                <img
+                <BlurUpImage
                   src={childhoodUrl}
                   width={childhood.width}
                   height={childhood.height}
@@ -646,7 +684,7 @@ export function Invitation({
                 aria-label="Infinity"
               />
               {forever && (
-                <img
+                <BlurUpImage
                   src={foreverUrl}
                   width={forever.width}
                   height={forever.height}
