@@ -2,6 +2,7 @@ import type { Theme } from "./types";
 import { dubaiSilk } from "./dubai-silk";
 import { goldenTemple } from "./golden-temple";
 import { ivorySilkPearls } from "./ivory-silk-pearls";
+import { noorInvitation } from "./noor-invitation";
 import { ramMandir } from "./ram-mandir";
 
 /**
@@ -35,6 +36,15 @@ import { ramMandir } from "./ram-mandir";
  * different post-open beat: a forward camera dolly through the
  * doorway instead of a blur/zoom settle.
  *
+ * Noor Invitation (2026-10-28) is the fifth — a new Lovable project,
+ * neither a pre-existing theme nor one of the 20 conversions, ported
+ * from the owner's "Noor Invitation" project: a bespoke noorBook
+ * mechanic (right-spine book swing over an ivory first page, no seal
+ * anywhere on the cover), a Quran verse blessing (Ar-Rum 30:21) as
+ * the first thing after entering, and its own page-settle + verse
+ * illumination inside animation. It joins as the fifth theme in the
+ * active catalog.
+ *
  * Every other theme's file is untouched on disk — src/themes/*.ts for
  * the remaining 11 pre-existing designs and the 19 Lovable-20
  * conversions — and will be brought back the same way, one at a time.
@@ -45,6 +55,7 @@ export const themes: Theme[] = [
   dubaiSilk,
   ivorySilkPearls,
   goldenTemple,
+  noorInvitation,
 ];
 
 export const themesById = new Map(themes.map((theme) => [theme.id, theme]));

@@ -470,6 +470,48 @@ export function GoldenTempleDoorsReveal(props: RevealProps) {
   );
 }
 
+/**
+ * Noor Invitation's own mechanic (owner request 2026-10-28): the
+ * sealedBackdrop photo itself — a horizontal emerald keepsake book —
+ * opened like a book, not split like doors. One full-cover panel
+ * hinged on the RIGHT edge (Arabic opening: the front cover lifts
+ * from the left and folds back to the right) that swings back over
+ * 4.5s after a 1.2s hold (openMs 5700), revealing an ivory first page
+ * beneath it. Deliberately no seal, no plate and no names on the
+ * cover — only a Tap to open pill and a You're Invited line, both
+ * centred on the book. The generic `book` mechanic is a small
+ * portrait card hinged on the left; this one is a full-bleed
+ * landscape cover hinged on the right, which is why it is bespoke.
+ */
+export function NoorBookReveal(props: RevealProps) {
+  const { opening, onOpen, hosts, backdrop } = props;
+  return (
+    <div
+      className={`noor-cover ${opening ? "is-opening" : ""} ${backdrop ? "is-painted" : ""}`}
+      {...openTriggerProps(hosts, opening, onOpen)}
+    >
+      <div className="noor-page" />
+      <div
+        className="noor-book-cover"
+        style={
+          backdrop
+            ? ({
+                backgroundImage: `url('${backdrop}')`,
+                backgroundSize: "100% 100%",
+                backgroundPosition: "center",
+              } as React.CSSProperties)
+            : undefined
+        }
+      />
+      <span className="noor-spine-glow" aria-hidden="true" />
+      <p className="noor-cue">Tap to open</p>
+      <p className="noor-invited" aria-hidden="true">
+        You&rsquo;re Invited
+      </p>
+    </div>
+  );
+}
+
 const reveals: Record<Reveal, (props: RevealProps) => React.JSX.Element> = {
   envelope: EnvelopeReveal,
   doors: DoorsReveal,
@@ -485,6 +527,7 @@ const reveals: Record<Reveal, (props: RevealProps) => React.JSX.Element> = {
   ivorySilkEnvelope: IvorySilkEnvelopeReveal,
   ramMandirDoors: RamMandirDoorsReveal,
   goldenTempleDoors: GoldenTempleDoorsReveal,
+  noorBook: NoorBookReveal,
 };
 
 export function RevealStage({

@@ -50,6 +50,15 @@ export type PetalStyle = "white-blossom" | "marigold" | "rose" | "none";
  * difference: once the doors clear, the revealed hero scene doesn't
  * just blur-focus in place, it dollies forward, as if the camera is
  * walking through the doorway into the courtyard beyond.
+ *
+ * noorBook added 2026-10-28 (Noor Invitation, owner request): NOT
+ * doors at all — one full-cover panel hinged on the right (Arabic
+ * opening) that swings back like a book cover (1.2s hold + 4.5s
+ * swing) over an ivory first page, with no seal, no plate and no
+ * names on the cover. The generic `book` mechanic is a small
+ * portrait card hinged on the left, so it could not carry this
+ * landscape book. The inside animation is its own page-settle +
+ * verse illumination, not a zoom, dolly or bloom.
  */
 export type Reveal =
   | "envelope"
@@ -65,7 +74,8 @@ export type Reveal =
   | "scroll"
   | "ivorySilkEnvelope"
   | "ramMandirDoors"
-  | "goldenTempleDoors";
+  | "goldenTempleDoors"
+  | "noorBook";
 
 /**
  * Drawn decoration used instead of photography. A theme naming one of these

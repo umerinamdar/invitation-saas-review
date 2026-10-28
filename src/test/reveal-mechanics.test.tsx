@@ -27,6 +27,7 @@ import {
   CurtainReveal,
   DoorsReveal,
   EnvelopeReveal,
+  NoorBookReveal,
   RevealStage,
   type RevealProps,
 } from "@/components/reveals";
@@ -48,6 +49,12 @@ const MECHANICS: MechanicCase[] = [
   { reveal: "curtain", Component: CurtainReveal, rootClass: ".curtain", painted: true },
   { reveal: "book", Component: BookReveal, rootClass: ".book", painted: true },
   { reveal: "box", Component: BoxReveal, rootClass: ".box", painted: true },
+  {
+    reveal: "noorBook",
+    Component: NoorBookReveal,
+    rootClass: ".noor-cover",
+    painted: true,
+  },
 ];
 
 function baseProps(onOpen: () => void, opening = false): RevealProps {

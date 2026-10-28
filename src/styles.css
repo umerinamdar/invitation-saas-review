@@ -265,7 +265,8 @@ a {
 .painted-stage .scroll-cover,
 .painted-stage .isp-cover,
 .painted-stage .rmd-cover,
-.painted-stage .gtd-cover {
+.painted-stage .gtd-cover,
+.painted-stage .noor-cover {
   width: 100%;
   height: 100%;
   max-width: none;
@@ -1457,6 +1458,194 @@ a {
   opacity: 0;
 }
 
+/*
+ * Noor Invitation's own book mechanic (owner request, 2026-10-28):
+ * one full-cover panel hinged on the RIGHT edge (Arabic opening),
+ * swinging back like a book cover over an ivory first page. No seal,
+ * no plate, no names on the cover — only the cue and invited line.
+ * 1.2s hold, then 4.5s on a gentle ease (openMs 5700). The panel's
+ * backface is hidden, so past edge-on it simply vanishes instead of
+ * showing a mirrored cover.
+ */
+.noor-cover {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  perspective: 2200px;
+  cursor: pointer;
+  overflow: hidden;
+}
+.noor-cover:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+.noor-page {
+  position: absolute;
+  inset: 0;
+  background: var(--paper-light);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklch, var(--gold) 45%, transparent),
+    inset 0 0 0 10px var(--paper-light),
+    inset 0 0 0 11px color-mix(in oklch, var(--gold) 35%, transparent);
+}
+.noor-book-cover {
+  position: absolute;
+  inset: 0;
+  transform-origin: right center;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  box-shadow: -18px 0 40px rgb(0 0 0 / 0.45);
+}
+.noor-spine-glow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+  opacity: 0.7;
+  z-index: 3;
+  animation: noor-spine-pulse 1.8s cubic-bezier(0.42, 0, 0.58, 1) infinite;
+}
+@keyframes noor-spine-pulse {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+.noor-cue {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  bottom: 14%;
+  margin: 0;
+  z-index: 4;
+  padding: 10px 22px;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--tint) 82%, transparent);
+  border: 1px solid color-mix(in oklch, var(--gold) 70%, transparent);
+  color: var(--gold-light);
+  font-size: 12px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  transition: opacity 1.2s cubic-bezier(0.42, 0, 0.58, 1);
+}
+.noor-invited {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  bottom: 6%;
+  margin: 0;
+  z-index: 4;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(20px, 5vw, 34px);
+  color: var(--gold-light);
+  text-shadow: 0 2px 12px rgb(0 0 0 / 0.6);
+  transition: opacity 1.2s cubic-bezier(0.42, 0, 0.58, 1);
+}
+/* Slow book swing — 1.2s hold, then 4.5s on a gentle ease. The cover
+ * rotates past edge-on (102°) and its hidden backface takes it out
+ * of view, leaving the ivory first page until the JS unmount timer
+ * fires at 5.7s. Cue, invited line and spine glow fade during the
+ * hold so nothing rides along with the turning cover. */
+.noor-cover.is-opening .noor-book-cover {
+  transition: transform 4.5s cubic-bezier(0.65, 0, 0.35, 1) 1.2s;
+  transform: rotateY(102deg);
+}
+.noor-cover.is-opening .noor-spine-glow,
+.noor-cover.is-opening .noor-invited,
+.noor-cover.is-opening .noor-cue {
+  transition: opacity 1.2s cubic-bezier(0.42, 0, 0.58, 1);
+  opacity: 0;
+  animation: none;
+}
+/*
+ * Noor Invitation's own post-open beat (owner request, 2026-10-28):
+ * not a zoom like Ram Mandir's, not a dolly like Golden Temple's,
+ * not a bloom like Cathedral Light's — the hero settles like a page
+ * falling flat (a slight rightward tilt easing to flat), and the
+ * Quran verse illuminates in gold beneath it.
+ */
+[data-theme-id="noor-invitation"] .skyline-invitation {
+  perspective: 1600px;
+}
+[data-theme-id="noor-invitation"] .skyline-backdrop {
+  animation: noor-page-settle 2.8s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+[data-theme-id="noor-invitation"] .invitation-blessing {
+  animation: noor-verse-in 1.6s cubic-bezier(0.42, 0, 0.58, 1) 0.9s both;
+}
+[data-theme-id="noor-invitation"] .invitation-blessing::after {
+  content: "";
+  display: block;
+  width: 96px;
+  height: 1px;
+  margin: 18px auto 0;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  transform-origin: center;
+  animation: noor-rule-in 1.2s cubic-bezier(0.42, 0, 0.58, 1) 1.4s both;
+}
+[data-theme-id="noor-invitation"] .invitation-heading,
+[data-theme-id="noor-invitation"] .invitation-names {
+  animation: noor-detail-rise 1.6s cubic-bezier(0.42, 0, 0.58, 1) 0.5s both;
+}
+/* The hero image is a dark night courtyard, so the hero's own text
+ * — verse, citation and section heading — must be light, not the
+ * theme's dark foreground ink (which is for the light page below).
+ * Names take the same light colour via the theme's namesColor. */
+[data-theme-id="noor-invitation"] .invitation-blessing p {
+  color: var(--paper-light);
+}
+[data-theme-id="noor-invitation"] .invitation-blessing cite {
+  color: var(--gold-light);
+}
+[data-theme-id="noor-invitation"] .invitation-heading {
+  color: var(--paper-light);
+}
+@keyframes noor-page-settle {
+  0% {
+    transform: rotateY(10deg) scale(1.03);
+    filter: brightness(0.8);
+  }
+  to {
+    transform: rotateY(0) scale(1);
+    filter: brightness(1);
+  }
+}
+@keyframes noor-verse-in {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes noor-rule-in {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes noor-detail-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 /* Drawn decoration, used by templates that ship without photography. */
 .pattern-backdrop {
   position: absolute;
