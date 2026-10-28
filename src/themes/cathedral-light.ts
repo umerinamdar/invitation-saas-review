@@ -63,8 +63,8 @@ export const cathedralLight: Theme = {
 
   motion: {
     // openMs matches exactly when the doors' own CSS choreography
-    // finishes (1.2s hold + 5s swing = 6.2s, panels fading out over the
-    // last second) — see the mechanic's CSS in styles.css. Like the
+    // finishes (1.2s hold + 5s glide = 6.2s, panels sliding fully off
+    // the cover) — see the mechanic's CSS in styles.css. Like the
     // temple doors, this mechanic doesn't scale with openMs; the number
     // exists only so the JS unmount timer in invitation.tsx fires
     // exactly when the CSS ends.
@@ -79,7 +79,7 @@ export const cathedralLight: Theme = {
 
   kicker: "CARVED OAK DOORS",
   tagline:
-    "Ivory and warm stone invitation whose carved oak doors swing inward on a cathedral lit by its rose window and candles.",
+    "Ivory and warm stone invitation whose carved oak doors glide apart on a cathedral lit by its rose window and candles.",
   features: [
     "Carved Door Opening",
     "Rose Window Light",
