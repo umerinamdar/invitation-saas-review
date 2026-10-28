@@ -1090,14 +1090,16 @@ a {
  * blur) reads muddy amber-brown on this theme, because the artwork
  * behind the card is a saturated golden temple scene — even with
  * --ink-light at near-white, the glass tints gold (verified by render,
- * 2026-10-28; the earlier highlight-only fix was not enough). This
- * theme's own paper is the fix: the same pale cream the venue card
- * below it already uses, so the date reads clean and the two cards
- * match. Scoped to this theme only; every other theme keeps the
+ * 2026-10-28; the earlier highlight-only fix was not enough). A solid
+ * card in this theme's own palette is the fix. First try was
+ * --paper-light, but the owner found it too white against the golden
+ * artwork, so this is --paper-dark: the warm sandstone gold of the
+ * temple itself, still light enough for the dark brown date text to
+ * read clean. Scoped to this theme only; every other theme keeps the
  * glass card.
  */
 [data-theme-id="ram-mandir"] .date-revealed .revealed-date {
-  background: var(--paper-light);
+  background: var(--paper-dark);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
