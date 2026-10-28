@@ -40,12 +40,20 @@ function webpVariant(src: string): string {
  * stayed put. The key prop below forces React to unmount and remount
  * the <img> as a brand-new element once the WebP fails, which does
  * force a fresh request for its src.
+ *
+ * And even that cannot rescue a theme with no .webp sibling at all:
+ * a 404 on the chosen <source> leaves the <img> complete-but-broken
+ * without firing its error handler, so the state above never flips
+ * (caught on Noor Invitation, 2026-10-28 — its hero.webp was never
+ * generated, and the card stayed blank). Such a theme opts out via
+ * hasWebpHero: false, which skips the <source> entirely so the JPEG
+ * loads directly.
  */
-function HeroImage({ src, alt }: { src: string; alt: string }) {
+function HeroImage({ src, alt, webp }: { src: string; alt: string; webp: boolean }) {
   const [webpFailed, setWebpFailed] = useState(false);
   return (
     <picture>
-      {!webpFailed && (
+      {webp && !webpFailed && (
         <source type="image/webp" srcSet={webpVariant(src)} />
       )}
       <img
@@ -61,7 +69,7 @@ function HeroImage({ src, alt }: { src: string; alt: string }) {
 
 /** A miniature of the real invitation, drawn from the theme's own palette. */
 export function ThemePhoneScreen({ theme }: { theme: Theme }) {
-  const { revealedBackdrop } = theme.assets;
+  const { revealedBackdrop, hasWebpHero } = theme.assets;
   // The card shows the same demo couple and date as this theme's full
   // preview, so the gallery doesn't promise one wedding and open another.
   const demo = getDemoInvite(theme.id);
@@ -70,7 +78,7 @@ export function ThemePhoneScreen({ theme }: { theme: Theme }) {
     <span className="theme-phone-screen">
       {revealedBackdrop ? (
         <>
-          <HeroImage src={revealedBackdrop} alt="" />
+          <HeroImage src={revealedBackdrop} alt="" webp={hasWebpHero !== false} />
           <span className="theme-card-veil" />
         </>
       ) : (

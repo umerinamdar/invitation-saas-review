@@ -66,6 +66,9 @@ export const noorInvitation: Theme = {
   assets: {
     sealedBackdrop: "/themes/noor-invitation/sealed.jpg",
     revealedBackdrop: "/themes/noor-invitation/hero.jpg",
+    // No hero.webp sibling exists for this theme, so the gallery card
+    // must use the JPEG directly — see hasWebpHero in types.ts.
+    hasWebpHero: false,
     sectionBackdrop: "/themes/noor-invitation/section-bg.jpg",
     paperTexture: "/themes/noor-invitation/paper.jpg",
     defaultMusic: "/themes/dubai-silk/track.mp3",

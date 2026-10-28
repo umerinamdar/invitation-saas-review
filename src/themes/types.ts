@@ -125,6 +125,17 @@ export type ThemeAssets = {
   sealedBackdrop?: string; // behind the closed envelope
   revealedBackdrop?: string; // hero behind the names
   /**
+   * Gallery card WebP: the card serves a `.webp` sibling of the hero
+   * (same directory, same basename) first, because it weighs roughly
+   * a third of the JPEG. A theme WITHOUT that sibling must set this
+   * false — otherwise the card picks the missing file, gets a 404,
+   * and shows blank instead of falling back to the JPEG (caught on
+   * Noor Invitation, 2026-10-28: its hero.webp was never generated,
+   * and the <picture> fallback never fired). Omit (or true) for
+   * every theme that ships the sibling.
+   */
+  hasWebpHero?: boolean;
+  /**
    * A tall (1080×3600) image, purpose-built to repeat seamlessly top-to-
    * bottom, that continues the hero's own motif and colour story behind
    * every section after it. Omit it and the engine falls back to a
