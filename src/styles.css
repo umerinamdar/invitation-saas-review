@@ -1085,6 +1085,23 @@ a {
   animation: isp-detail-fade 1.2s cubic-bezier(0.42, 0, 0.58, 1) both;
 }
 /*
+ * Ram Mandir date card (owner report, 2026-10-28): the shared
+ * frosted-glass treatment (20% --ink-light over the section artwork +
+ * blur) reads muddy amber-brown on this theme, because the artwork
+ * behind the card is a saturated golden temple scene — even with
+ * --ink-light at near-white, the glass tints gold (verified by render,
+ * 2026-10-28; the earlier highlight-only fix was not enough). This
+ * theme's own paper is the fix: the same pale cream the venue card
+ * below it already uses, so the date reads clean and the two cards
+ * match. Scoped to this theme only; every other theme keeps the
+ * glass card.
+ */
+[data-theme-id="ram-mandir"] .date-revealed .revealed-date {
+  background: var(--paper-light);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+/*
  * Golden Temple's own post-open beat (owner request, 2026-10-27): not
  * a blur/zoom settle like the two above, but a forward dolly — as if
  * the camera is walking through the doorway it just watched open, into
