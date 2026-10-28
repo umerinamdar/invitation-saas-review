@@ -1,4 +1,5 @@
 import type { Theme } from "./types";
+import { cathedralLight } from "./cathedral-light";
 import { dubaiSilk } from "./dubai-silk";
 import { goldenTemple } from "./golden-temple";
 import { ivorySilkPearls } from "./ivory-silk-pearls";
@@ -35,8 +36,16 @@ import { ramMandir } from "./ram-mandir";
  * different post-open beat: a forward camera dolly through the
  * doorway instead of a blur/zoom settle.
  *
+ * Cathedral Light (2026-10-28) is the fourth — reworked from its
+ * generic fast doors (1.6s) to a bespoke cathedralDoors mechanic
+ * (slow smooth swing, plain wax seal with no letters, no names on
+ * the cover, larger Tap to open plus a You're Invited line, and a
+ * candlelight-bloom post-open transition), following the Lovable
+ * "Cathedral Light Invitations" cover the owner sent. It returns as
+ * the fifth theme in the active catalog.
+ *
  * Every other theme's file is untouched on disk — src/themes/*.ts for
- * the remaining 11 pre-existing designs and the 19 Lovable-20
+ * the remaining 10 pre-existing designs and the 19 Lovable-20
  * conversions — and will be brought back the same way, one at a time.
  * Do not re-add a batch at once.
  */
@@ -45,6 +54,7 @@ export const themes: Theme[] = [
   dubaiSilk,
   ivorySilkPearls,
   goldenTemple,
+  cathedralLight,
 ];
 
 export const themesById = new Map(themes.map((theme) => [theme.id, theme]));

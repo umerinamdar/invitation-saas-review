@@ -470,6 +470,53 @@ export function GoldenTempleDoorsReveal(props: RevealProps) {
   );
 }
 
+/**
+ * Cathedral Light's own mechanic (rework, owner request 2026-10-28):
+ * the sealedBackdrop photo itself — carved oak doors under a gothic
+ * arch — split down the artwork's own seam into two panels that swing
+ * open on their outer edges. Deliberately NOT Ram Mandir's mechanic:
+ * the swing is slower and smoother (1.2s hold, then a 5s swing on a
+ * gentler ease, openMs 6200), the cover carries a plain wax seal with
+ * no letters (owner request: the Lovable version's "A & A" seal and
+ * the couple names outside are both gone), a larger Tap to open pill
+ * and a You're Invited script line, both centred on the seam axis —
+ * and once the doors clear, the hero blooms in through candlelight
+ * (see ctd-bloom-in in styles.css) instead of a zoom or a dolly.
+ *
+ * Seam: sealed.jpg's doors sit left of image centre — the seam
+ * measures ~46.5% of the image width (darkest-column scan, bands
+ * 30%-70% agreeing on x≈714/1536), so the panels are 46.5%/53.5%
+ * with backgrounds rescaled to exactly 100% of cover width
+ * (100/46.5 = 215.05%, 100/53.5 = 186.92%), exactly the way
+ * goldenTempleDoors handles its own 51% seam.
+ */
+export function CathedralDoorsReveal(props: RevealProps) {
+  const { opening, onOpen, hosts, backdrop } = props;
+  const half = (side: "left" | "right") =>
+    backdrop
+      ? ({
+          backgroundImage: `url('${backdrop}')`,
+          backgroundSize: side === "left" ? "215.05% 100%" : "186.92% 100%",
+          backgroundPosition: side === "left" ? "left center" : "right center",
+        } as React.CSSProperties)
+      : undefined;
+  return (
+    <div
+      className={`ctd-cover ${opening ? "is-opening" : ""} ${backdrop ? "is-painted" : ""}`}
+      {...openTriggerProps(hosts, opening, onOpen)}
+    >
+      <div className="ctd-underlay" />
+      <div className="ctd-door ctd-door-left" style={half("left")} />
+      <div className="ctd-door ctd-door-right" style={half("right")} />
+      <div className="ctd-glow" aria-hidden="true" />
+      <div className="ctd-seal" aria-hidden="true" />
+      <p className="ctd-cue">Tap to open</p>
+      <p className="ctd-invited" aria-hidden="true">
+        You&rsquo;re Invited
+      </p>
+    </div>
+  );
+}
 const reveals: Record<Reveal, (props: RevealProps) => React.JSX.Element> = {
   envelope: EnvelopeReveal,
   doors: DoorsReveal,
@@ -485,6 +532,7 @@ const reveals: Record<Reveal, (props: RevealProps) => React.JSX.Element> = {
   ivorySilkEnvelope: IvorySilkEnvelopeReveal,
   ramMandirDoors: RamMandirDoorsReveal,
   goldenTempleDoors: GoldenTempleDoorsReveal,
+  cathedralDoors: CathedralDoorsReveal,
 };
 
 export function RevealStage({

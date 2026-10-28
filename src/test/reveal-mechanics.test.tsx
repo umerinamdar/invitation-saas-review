@@ -24,6 +24,7 @@ import { describe, expect, it, vi } from "vitest";
 import {
   BookReveal,
   BoxReveal,
+  CathedralDoorsReveal,
   CurtainReveal,
   DoorsReveal,
   EnvelopeReveal,
@@ -48,6 +49,12 @@ const MECHANICS: MechanicCase[] = [
   { reveal: "curtain", Component: CurtainReveal, rootClass: ".curtain", painted: true },
   { reveal: "book", Component: BookReveal, rootClass: ".book", painted: true },
   { reveal: "box", Component: BoxReveal, rootClass: ".box", painted: true },
+  {
+    reveal: "cathedralDoors",
+    Component: CathedralDoorsReveal,
+    rootClass: ".ctd-cover",
+    painted: true,
+  },
 ];
 
 function baseProps(onOpen: () => void, opening = false): RevealProps {

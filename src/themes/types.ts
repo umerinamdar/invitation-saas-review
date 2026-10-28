@@ -50,6 +50,14 @@ export type PetalStyle = "white-blossom" | "marigold" | "rose" | "none";
  * difference: once the doors clear, the revealed hero scene doesn't
  * just blur-focus in place, it dollies forward, as if the camera is
  * walking through the doorway into the courtyard beyond.
+ *
+ * cathedralDoors added 2026-10-28 (Cathedral Light rework, owner
+ * request): the same split-in-two markup, but deliberately NOT Ram
+ * Mandir's mechanic — a slower, smoother swing (1.2s hold + 5s swing
+ * on a gentler ease) with its own plain wax seal, no names on the
+ * cover, and a candlelight-bloom post-open transition instead of a
+ * zoom or a dolly. The split follows this artwork's own seam
+ * (measured ~46.5% of sealed.jpg, not the screen centre).
  */
 export type Reveal =
   | "envelope"
@@ -65,7 +73,8 @@ export type Reveal =
   | "scroll"
   | "ivorySilkEnvelope"
   | "ramMandirDoors"
-  | "goldenTempleDoors";
+  | "goldenTempleDoors"
+  | "cathedralDoors";
 
 /**
  * Drawn decoration used instead of photography. A theme naming one of these

@@ -265,7 +265,8 @@ a {
 .painted-stage .scroll-cover,
 .painted-stage .isp-cover,
 .painted-stage .rmd-cover,
-.painted-stage .gtd-cover {
+.painted-stage .gtd-cover,
+.painted-stage .ctd-cover {
   width: 100%;
   height: 100%;
   max-width: none;
@@ -1133,6 +1134,52 @@ a {
     transform: scale(1);
   }
 }
+/*
+ * Cathedral Light's own post-open beat (rework, owner request,
+ * 2026-10-28): not a zoom like Ram Mandir's and not a dolly like
+ * Golden Temple's — a candlelight bloom. The hero emerges from warm
+ * dimness into full light while the card rises gently into place.
+ */
+[data-theme-id="cathedral-light"] .skyline-backdrop {
+  animation: ctd-bloom-in 3s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+[data-theme-id="cathedral-light"] .skyline-invitation {
+  animation: ctd-rise-in 2.4s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+[data-theme-id="cathedral-light"] .invitation-heading,
+[data-theme-id="cathedral-light"] .invitation-names {
+  animation: ctd-detail-rise 1.4s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+@keyframes ctd-bloom-in {
+  0% {
+    filter: brightness(0.65) blur(6px);
+    transform: scale(1.05);
+  }
+  to {
+    filter: brightness(1) blur(0);
+    transform: scale(1);
+  }
+}
+@keyframes ctd-rise-in {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes ctd-detail-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 @keyframes isp-backdrop-focus {
   0% {
     filter: blur(18px);
@@ -1453,6 +1500,169 @@ a {
   transition:
     transform 4s cubic-bezier(0.42, 0, 0.58, 1) 1.4s,
     opacity 1s cubic-bezier(0.42, 0, 0.58, 1) 4.4s;
+  transform: rotateY(-86deg);
+  opacity: 0;
+}
+/*
+ * Cathedral Light's own doors mechanic (rework, owner request,
+ * 2026-10-28): same split-in-two idea as the temple doors, but its
+ * own choreography — a slower, smoother swing, a plain wax seal, and
+ * a candlelight bloom after opening. Split at the artwork's own seam
+ * (46.5%), not the screen centre; seal, cue and invited line all
+ * centre on that same axis, so the whole cover reads as one composed
+ * block on phone and desktop alike.
+ */
+.ctd-cover {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  perspective: 2200px;
+  cursor: pointer;
+  overflow: hidden;
+}
+.ctd-cover:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+.ctd-underlay {
+  position: absolute;
+  inset: 0;
+  background: var(--powder);
+}
+.ctd-door {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+  box-shadow: inset 0 0 60px color-mix(in oklch, black 35%, transparent);
+}
+.ctd-door-left {
+  left: 0;
+  width: 46.5%;
+  transform-origin: left center;
+}
+.ctd-door-right {
+  left: 46.5%;
+  width: 53.5%;
+  transform-origin: right center;
+}
+.ctd-glow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 46.5%;
+  width: 8px;
+  margin-left: -4px;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklch, var(--powder) 85%, transparent),
+    transparent
+  );
+  filter: blur(3px);
+  z-index: 3;
+}
+/* Plain wax seal, no letters (owner request): an organic wax blob in
+ * the theme's own ivory/gold, with a thin gold inner ring. Pure CSS —
+ * no image asset — so nothing new is shipped for it. */
+.ctd-seal {
+  position: absolute;
+  left: 46.5%;
+  top: 52%;
+  transform: translate(-50%, -50%);
+  width: clamp(84px, 11vw, 136px);
+  aspect-ratio: 1;
+  z-index: 4;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 35% 30%,
+    #fbf6ec,
+    #e9d9b8 55%,
+    #d9c08a 100%
+  );
+  border-radius: 46% 54% 52% 48% / 52% 46% 54% 48%;
+  box-shadow:
+    inset 0 0 0 2px color-mix(in oklch, var(--gold) 55%, transparent),
+    inset 0 2px 6px rgb(255 255 255 / 0.7),
+    inset 0 -4px 10px color-mix(in oklch, black 25%, transparent),
+    0 6px 18px color-mix(in oklch, black 35%, transparent);
+  transition: opacity 1.2s cubic-bezier(0.42, 0, 0.58, 1);
+}
+.ctd-seal::after {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  border: 1.5px solid color-mix(in oklch, var(--gold) 60%, transparent);
+  border-radius: inherit;
+}
+/* Larger Tap to open than the temple doors' small cue (owner
+ * request): a cream pill with a gold hairline, sitting above the
+ * invited line the way the Lovable cover stacked tap-then-names. */
+.ctd-cue {
+  position: absolute;
+  left: 46.5%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  bottom: 14%;
+  margin: 0;
+  padding: 10px 24px;
+  font-size: clamp(15px, 4vw, 19px);
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--foreground);
+  background: var(--paper-light);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: 0 4px 16px color-mix(in oklch, black 25%, transparent);
+  z-index: 4;
+  transition: opacity 1.2s cubic-bezier(0.42, 0, 0.58, 1);
+}
+/* No couple names on the cover (owner request) — the invited line
+ * stands in their place, same convention as the temple doors. */
+.ctd-invited {
+  position: absolute;
+  left: 46.5%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  bottom: 6%;
+  margin: 0;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: clamp(26px, 7vw, 34px);
+  color: var(--paper-light);
+  text-align: center;
+  text-shadow: 0 2px 6px color-mix(in oklch, black 55%, transparent);
+  z-index: 4;
+  pointer-events: none;
+  transition: opacity 1.2s cubic-bezier(0.42, 0, 0.58, 1);
+}
+.ctd-cover.is-opening .ctd-glow {
+  animation: rmd-glow-pulse 1.8s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+.ctd-cover.is-opening .ctd-seal,
+.ctd-cover.is-opening .ctd-invited,
+.ctd-cover.is-opening .ctd-cue {
+  opacity: 0;
+}
+/* Slow, smooth swing — 1.2s hold, then 5s on a gentler ease than the
+ * temple doors' (0.42,0,0.58,1), so the heavy oak reads heavy instead
+ * of hurried. Same outer-hinge signs as ramMandirDoors (see the
+ * rotation-sign comment above .rmd-cover.is-opening .rmd-door-left).
+ * Opacity fades the panels out over the last second so the hero is
+ * fully clear at 6.2s, exactly when the JS unmount timer fires. */
+.ctd-cover.is-opening .ctd-door-left {
+  transition:
+    transform 5s cubic-bezier(0.65, 0, 0.35, 1) 1.2s,
+    opacity 1s cubic-bezier(0.42, 0, 0.58, 1) 5.2s;
+  transform: rotateY(86deg);
+  opacity: 0;
+}
+.ctd-cover.is-opening .ctd-door-right {
+  transition:
+    transform 5s cubic-bezier(0.65, 0, 0.35, 1) 1.2s,
+    opacity 1s cubic-bezier(0.42, 0, 0.58, 1) 5.2s;
   transform: rotateY(-86deg);
   opacity: 0;
 }
