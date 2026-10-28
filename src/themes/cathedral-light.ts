@@ -9,8 +9,9 @@ import type { Theme } from "./types";
  * Invitations" cover): the generic fast doors (1.6s) are replaced by a
  * bespoke cathedralDoors mechanic — a slow slide-apart (1.2s hold +
  * 5s glide) opening exactly from the artwork's middle line, with
- * warm light spilling from the gap, a plain wax seal with no
- * letters, no couple names on the cover, a larger Tap to open pill
+ * warm light spilling from the gap, an SVG wax seal with no
+ * letters (blush wax, gold lily wreath, lily centre), no couple
+ * names on the cover, a larger Tap to open pill
  * plus a You're Invited line, and a candlelight-bloom post-open
  * transition. Deliberately not Ram Mandir's mechanic. The split
  * follows this artwork's own middle line (~50%).

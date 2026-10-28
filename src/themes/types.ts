@@ -55,7 +55,8 @@ export type PetalStyle = "white-blossom" | "marigold" | "rose" | "none";
  * request): the same split-in-two markup, but deliberately NOT Ram
  * Mandir's mechanic — no swing at all: a slow slide-apart (1.2s hold
  * + 5s glide) opening exactly from the artwork's middle line, with
- * warm light spilling from the gap, its own plain wax seal, no names
+ * warm light spilling from the gap, its own SVG wax seal (gold lily
+ * wreath, lily centre, no letters), no names
  * on the cover, and a candlelight-bloom post-open transition
  * instead of a zoom or a dolly. The split follows this artwork's
  * own middle line (seam, arch apex and handle midpoint all ~50% of
