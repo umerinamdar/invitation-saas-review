@@ -1376,17 +1376,19 @@ a {
  * was Ram Mandir's own outer-hinge swing. */
 .gtd-door-left {
   left: 0;
+  width: 51%;
   transform-origin: left center;
 }
 .gtd-door-right {
-  left: 50%;
+  left: 51%;
+  width: 49%;
   transform-origin: right center;
 }
 .gtd-glow {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 50%;
+  left: 51%;
   width: 8px;
   margin-left: -4px;
   opacity: 0;
@@ -1402,7 +1404,12 @@ a {
 }
 .gtd-cue {
   position: absolute;
-  inset-inline: 0;
+  /* Centred on the doors' own seam (51% of the cover, measured from
+   * sealed.jpg), not the screen centre — so the cue sits on exactly
+   * the same vertical axis the doors part on, on every viewport. */
+  left: 51%;
+  transform: translateX(-50%);
+  white-space: nowrap;
   bottom: 18%;
   margin: 0;
   text-align: center;
@@ -1419,7 +1426,11 @@ a {
  * other bespoke door mechanic, in its own face. */
 .gtd-invited {
   position: absolute;
-  inset-inline: 0;
+  /* Same seam axis as .gtd-cue above: the invited line and the cue
+   * share one vertical centre with the doors' parting line. */
+  left: 51%;
+  transform: translateX(-50%);
+  white-space: nowrap;
   bottom: 8%;
   margin: 0;
   font-family: "Cormorant Garamond", serif;

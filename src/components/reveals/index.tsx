@@ -468,11 +468,21 @@ export function RamMandirDoorsReveal(props: RevealProps) {
  */
 export function GoldenTempleDoorsReveal(props: RevealProps) {
   const { opening, onOpen, hosts, backdrop } = props;
+  // The doors part on the artwork's own seam, not the screen centre:
+  // sealed.jpg's seam measures x=429/840 = 51.07%, stable across every
+  // height band (owner report, 2026-10-28: the 50% split visibly missed
+  // the drawn seam). Panels are 51%/49% wide (see styles.css), so each
+  // panel's background is scaled to exactly 100% of the cover width —
+  // 100/51 = 196.08% of the left panel, 100/49 = 204.08% of the right —
+  // and positioned to its own edge, so the two panels together still
+  // reproduce the full photograph seamlessly. Texts and glow follow the
+  // same 51% axis in styles.css.
   const half = (side: "left" | "right") =>
     backdrop
       ? ({
           backgroundImage: `url('${backdrop}')`,
-          backgroundSize: "200% 100%",
+          backgroundSize:
+            side === "left" ? "196.08% 100%" : "204.08% 100%",
           backgroundPosition: side === "left" ? "left center" : "right center",
         } as React.CSSProperties)
       : undefined;
