@@ -1134,52 +1134,6 @@ a {
     transform: scale(1);
   }
 }
-/*
- * Cathedral Light's own post-open beat (rework, owner request,
- * 2026-10-28): not a zoom like Ram Mandir's and not a dolly like
- * Golden Temple's — a candlelight bloom. The hero emerges from warm
- * dimness into full light while the card rises gently into place.
- */
-[data-theme-id="cathedral-light"] .skyline-backdrop {
-  animation: ctd-bloom-in 3s cubic-bezier(0.42, 0, 0.58, 1) both;
-}
-[data-theme-id="cathedral-light"] .skyline-invitation {
-  animation: ctd-rise-in 2.4s cubic-bezier(0.42, 0, 0.58, 1) both;
-}
-[data-theme-id="cathedral-light"] .invitation-heading,
-[data-theme-id="cathedral-light"] .invitation-names {
-  animation: ctd-detail-rise 1.4s cubic-bezier(0.42, 0, 0.58, 1) both;
-}
-@keyframes ctd-bloom-in {
-  0% {
-    filter: brightness(0.65) blur(6px);
-    transform: scale(1.05);
-  }
-  to {
-    filter: brightness(1) blur(0);
-    transform: scale(1);
-  }
-}
-@keyframes ctd-rise-in {
-  0% {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@keyframes ctd-detail-rise {
-  0% {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 @keyframes isp-backdrop-focus {
   0% {
     filter: blur(18px);
@@ -1503,14 +1457,16 @@ a {
   transform: rotateY(-86deg);
   opacity: 0;
 }
+
 /*
  * Cathedral Light's own doors mechanic (rework, owner request,
- * 2026-10-28): same split-in-two idea as the temple doors, but its
- * own choreography — a slower, smoother swing, a plain wax seal, and
- * a candlelight bloom after opening. Split at the artwork's own seam
- * (46.5%), not the screen centre; seal, cue and invited line all
- * centre on that same axis, so the whole cover reads as one composed
- * block on phone and desktop alike.
+ * 2026-10-28): NOT a swing — the two panels glide apart sideways
+ * from the artwork's own middle line (50%: seam, arch apex and
+ * ring-handle midpoint all agree), opening exactly from that line
+ * while warm light spills from the widening gap, then a candlelight
+ * bloom after opening. Seal, cue and invited line all centre on that
+ * same axis, so the whole cover reads as one composed block on
+ * phone and desktop alike.
  */
 .ctd-cover {
   width: 100%;
@@ -1527,7 +1483,15 @@ a {
 .ctd-underlay {
   position: absolute;
   inset: 0;
-  background: var(--powder);
+  /* Warm light spilling from the doorway: revealed progressively as
+   * the panels glide apart, so the gap itself glows before the hero
+   * blooms in. */
+  background: radial-gradient(
+    ellipse 90% 70% at 50% 45%,
+    #f7e3ac 0%,
+    var(--powder) 45%,
+    var(--paper-dark) 100%
+  );
 }
 .ctd-door {
   position: absolute;
@@ -1538,19 +1502,17 @@ a {
 }
 .ctd-door-left {
   left: 0;
-  width: 46.5%;
-  transform-origin: left center;
+  width: 50%;
 }
 .ctd-door-right {
-  left: 46.5%;
-  width: 53.5%;
-  transform-origin: right center;
+  left: 50%;
+  width: 50%;
 }
 .ctd-glow {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 46.5%;
+  left: 50%;
   width: 8px;
   margin-left: -4px;
   opacity: 0;
@@ -1569,7 +1531,7 @@ a {
  * no image asset — so nothing new is shipped for it. */
 .ctd-seal {
   position: absolute;
-  left: 46.5%;
+  left: 50%;
   top: 52%;
   transform: translate(-50%, -50%);
   width: clamp(84px, 11vw, 136px);
@@ -1602,7 +1564,7 @@ a {
  * invited line the way the Lovable cover stacked tap-then-names. */
 .ctd-cue {
   position: absolute;
-  left: 46.5%;
+  left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
   bottom: 14%;
@@ -1623,7 +1585,7 @@ a {
  * stands in their place, same convention as the temple doors. */
 .ctd-invited {
   position: absolute;
-  left: 46.5%;
+  left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
   bottom: 6%;
@@ -1646,25 +1608,21 @@ a {
 .ctd-cover.is-opening .ctd-cue {
   opacity: 0;
 }
-/* Slow, smooth swing — 1.2s hold, then 5s on a gentler ease than the
- * temple doors' (0.42,0,0.58,1), so the heavy oak reads heavy instead
- * of hurried. Same outer-hinge signs as ramMandirDoors (see the
- * rotation-sign comment above .rmd-cover.is-opening .rmd-door-left).
- * Opacity fades the panels out over the last second so the hero is
- * fully clear at 6.2s, exactly when the JS unmount timer fires. */
+/* Slow, majestic glide apart — 1.2s hold, then 5s on a gentle ease,
+ * so the heavy oak reads heavy instead of hurried. No rotation at
+ * all: the left panel translates exactly its own width left and the
+ * right panel exactly its own width right, so both panels end fully
+ * off the cover and the gap opens symmetrically about the middle
+ * line from the first frame — nothing like the temple doors' 3D
+ * swing. The JS unmount timer fires at 6.2s, exactly when the glide
+ * ends. */
 .ctd-cover.is-opening .ctd-door-left {
-  transition:
-    transform 5s cubic-bezier(0.65, 0, 0.35, 1) 1.2s,
-    opacity 1s cubic-bezier(0.42, 0, 0.58, 1) 5.2s;
-  transform: rotateY(86deg);
-  opacity: 0;
+  transition: transform 5s cubic-bezier(0.65, 0, 0.35, 1) 1.2s;
+  transform: translateX(-100%);
 }
 .ctd-cover.is-opening .ctd-door-right {
-  transition:
-    transform 5s cubic-bezier(0.65, 0, 0.35, 1) 1.2s,
-    opacity 1s cubic-bezier(0.42, 0, 0.58, 1) 5.2s;
-  transform: rotateY(-86deg);
-  opacity: 0;
+  transition: transform 5s cubic-bezier(0.65, 0, 0.35, 1) 1.2s;
+  transform: translateX(100%);
 }
 
 /* Drawn decoration, used by templates that ship without photography. */

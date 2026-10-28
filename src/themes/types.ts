@@ -53,11 +53,13 @@ export type PetalStyle = "white-blossom" | "marigold" | "rose" | "none";
  *
  * cathedralDoors added 2026-10-28 (Cathedral Light rework, owner
  * request): the same split-in-two markup, but deliberately NOT Ram
- * Mandir's mechanic — a slower, smoother swing (1.2s hold + 5s swing
- * on a gentler ease) with its own plain wax seal, no names on the
- * cover, and a candlelight-bloom post-open transition instead of a
- * zoom or a dolly. The split follows this artwork's own seam
- * (measured ~46.5% of sealed.jpg, not the screen centre).
+ * Mandir's mechanic — no swing at all: a slow slide-apart (1.2s hold
+ * + 5s glide) opening exactly from the artwork's middle line, with
+ * warm light spilling from the gap, its own plain wax seal, no names
+ * on the cover, and a candlelight-bloom post-open transition
+ * instead of a zoom or a dolly. The split follows this artwork's
+ * own middle line (seam, arch apex and handle midpoint all ~50% of
+ * sealed.jpg; an early 46.5% split was a plank-gap misread).
  */
 export type Reveal =
   | "envelope"
