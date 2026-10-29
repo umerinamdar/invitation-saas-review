@@ -5,8 +5,13 @@ import type { Theme } from "./types";
  * moonlit mosque courtyard. Ported from the owner's Lovable project
  * "Noor Invitation" (054990d9, October 2026) — the sealed image is a
  * horizontal lacquered book, so the opening is a book opening, not
- * doors: one full-cover panel hinged on the right (Arabic opening)
- * that swings back over 4.5s after a 1.2s hold (openMs 5700).
+ * doors: the sealed photo's right half is the cover, hinged on the
+ * vertical centre spine, and swings left over 4.5s after a 1.2s hold
+ * into a flat two-page spread; a 1.0s warm flash bursts from the
+ * centre on its own, then the Surah Ar-Rum 30:21 quote sits readable
+ * on the spread for 5.2s, then a 1.0s fade into the courtyard
+ * welcome (openMs 12900 = the full Lovable timeline in
+ * noorOpeningMilestones, lib/motion.ts).
  *
  * Deliberately no seal anywhere on the cover (owner request) — the
  * Lovable cover's wax seal and initials are gone; only a Tap to open
@@ -57,8 +62,14 @@ export const noorInvitation: Theme = {
   typography: {
     serif: "Cormorant Garamond",
     sans: "Jost",
+    // Amiri is Lovable's Arabic verse font (its root loads Cormorant
+    // Garamond + Jost + Amiri); without it the Ar-Rum Arabic on the
+    // spread falls back to a generic serif instead of Lovable's
+    // calligraphic face. The Cormorant/Jost weights stay the site's
+    // superset — extra weights change no rendering, a missing
+    // family would.
     fontsHref:
-      "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap",
+      "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&family=Amiri:wght@400;700&display=swap",
   },
 
   ornamentation: "none",
@@ -82,13 +93,15 @@ export const noorInvitation: Theme = {
   namesColor: "#fbf7ec",
 
   motion: {
-    // openMs matches exactly when the book's own CSS choreography
-    // finishes (1.2s hold + 4.5s swing = 5.7s) — see the mechanic's CSS
-    // in styles.css. Like the temple doors, this mechanic doesn't scale
-    // with openMs; the number exists only so the JS unmount timer in
-    // invitation.tsx fires exactly when the CSS ends.
+    // openMs matches exactly when the book's own choreography
+    // finishes: 1.2s hold + 4.5s swing + 1.0s flash + 5.2s quote +
+    // 1.0s fade = 12.9s (noorOpeningMilestones in lib/motion.ts) —
+    // see the mechanic's CSS in styles.css. Like the temple doors,
+    // this mechanic doesn't scale with openMs; the number exists only
+    // so the JS unmount timer in invitation.tsx fires exactly when
+    // the settled fade ends.
     reveal: "noorBook",
-    openMs: 5700,
+    openMs: 12900,
     introSeconds: 6,
     musicFadeMs: 8000,
     maxVolume: 0.55,

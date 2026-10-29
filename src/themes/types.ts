@@ -51,14 +51,30 @@ export type PetalStyle = "white-blossom" | "marigold" | "rose" | "none";
  * just blur-focus in place, it dollies forward, as if the camera is
  * walking through the doorway into the courtyard beyond.
  *
- * noorBook added 2026-10-28 (Noor Invitation, owner request): NOT
- * doors at all — one full-cover panel hinged on the right (Arabic
- * opening) that swings back like a book cover (1.2s hold + 4.5s
- * swing) over an ivory first page, with no seal, no plate and no
- * names on the cover. The generic `book` mechanic is a small
- * portrait card hinged on the left, so it could not carry this
- * landscape book. The inside animation is its own page-settle +
- * verse illumination, not a zoom, dolly or bloom.
+ * noorBook added 2026-10-28 (Noor Invitation, owner request),
+ * reworked 2026-10-29 as a CONVERSION of the fixed Lovable
+ * opening (project 054990d9): Lovable's OpeningBook preserved
+ * exactly inside the site's container — centred portrait book,
+ * 1.2s hold, 4.5s left-hinged swing with the camera reframing
+ * into the flat two-page spread, 1.0s warm flash from the centre
+ * on its own, Ar-Rum 30:21 readable on the spread for 5.2s, 1.0s
+ * settled fade (openMs 12900) — with no seal and no names on the
+ * cover. The old right-hinged panel swing was removed, not
+ * stacked on top. The generic `book` mechanic is a small portrait
+ * card with different geometry, so it could not carry this. The
+ * inside animation is its own page-settle + verse illumination,
+ * not a zoom, dolly or bloom.
+ *
+ * cathedralDoors added 2026-10-28 (Cathedral Light rework, owner
+ * request): the same split-in-two markup, but deliberately NOT Ram
+ * Mandir's mechanic — no swing at all: a slow slide-apart (1.2s hold
+ * + 5s glide) opening exactly from the artwork's middle line, with
+ * warm light spilling from the gap, its own SVG wax seal (gold lily
+ * wreath, lily centre, no letters), no names
+ * on the cover, and a candlelight-bloom post-open transition
+ * instead of a zoom or a dolly. The split follows this artwork's
+ * own middle line (seam, arch apex and handle midpoint all ~50% of
+ * sealed.jpg; an early 46.5% split was a plank-gap misread).
  */
 export type Reveal =
   | "envelope"
@@ -75,7 +91,8 @@ export type Reveal =
   | "ivorySilkEnvelope"
   | "ramMandirDoors"
   | "goldenTempleDoors"
-  | "noorBook";
+  | "noorBook"
+  | "cathedralDoors";
 
 /**
  * Drawn decoration used instead of photography. A theme naming one of these

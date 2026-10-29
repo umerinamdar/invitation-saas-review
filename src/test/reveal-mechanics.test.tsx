@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 
@@ -24,6 +24,7 @@ import { describe, expect, it, vi } from "vitest";
 import {
   BookReveal,
   BoxReveal,
+  CathedralDoorsReveal,
   CurtainReveal,
   DoorsReveal,
   EnvelopeReveal,
@@ -32,6 +33,8 @@ import {
   type RevealProps,
 } from "@/components/reveals";
 import type { Reveal } from "@/themes/types";
+import { noorOpeningMilestones } from "@/lib/motion";
+import { noorInvitation } from "@/themes/noor-invitation";
 
 const HOSTS = "Aisha & Rohan";
 const LABEL = "Wedding";
@@ -53,6 +56,12 @@ const MECHANICS: MechanicCase[] = [
     reveal: "noorBook",
     Component: NoorBookReveal,
     rootClass: ".noor-cover",
+    painted: true,
+  },
+  {
+    reveal: "cathedralDoors",
+    Component: CathedralDoorsReveal,
+    rootClass: ".ctd-cover",
     painted: true,
   },
 ];
@@ -172,6 +181,156 @@ describe.each(MECHANICS)(
     }
   },
 );
+
+/**
+ * Noor Invitation's fixed opening sequence (conversion 2026-10-29
+ * of the Lovable project's OpeningBook + opening-timeline):
+ * sealed book with TAP TO OPEN + You're invited → 1.2s hold →
+ * 4.5s left-hinged swing with the camera reframing into a flat
+ * two-page spread → 1.0s warm flash from the centre ON ITS OWN →
+ * Ar-Rum 30:21 quote readable on the spread for 5.2s → 1.0s
+ * settled fade. Flash and quote are conditionally rendered
+ * phases, so they must NEVER coexist — every step below asserts
+ * that mutual exclusion, not just the happy path. Timings are
+ * pinned against noorOpeningMilestones so the CSS swing (1.2s
+ * hold + 4.5s in styles.css) and the JS phases cannot drift.
+ */
+describe("noorBook opening sequence", () => {
+  it("sealed: cover, cue and invited line, no flash, no quote", () => {
+    const { container } = render(<NoorBookReveal {...baseProps(vi.fn())} />);
+    const root = container.querySelector(".noor-cover")!;
+    expect(root).toHaveAttribute("data-phase", "sealed");
+    expect(screen.getByText("Tap to open")).not.toBeNull();
+    expect(screen.getByText("You’re invited")).not.toBeNull();
+    expect(container.querySelector(".noor-flash")).toBeNull();
+    expect(screen.queryByText("Surah Ar-Rum · 30:21")).toBeNull();
+  });
+
+  it("walks sealed → spread → flash → quote → settled, flash and quote never overlapping", () => {
+    vi.useFakeTimers();
+    try {
+      const { container, rerender } = render(
+        <NoorBookReveal {...baseProps(vi.fn())} />,
+      );
+      const root = () => container.querySelector(".noor-cover")!;
+      rerender(<NoorBookReveal {...baseProps(vi.fn(), true)} />);
+      expect(root()).toHaveAttribute("data-phase", "opening");
+      expect(root()).toHaveClass("is-opening");
+      // Mid-opening: Lovable's manuscript structure is in the DOM —
+      // camera reframing the volume, cover turning on its left
+      // spine, right page + page edges + spine beneath it.
+      expect(root()).toHaveClass("has-started");
+      expect(container.querySelector(".noor-camera")).not.toBeNull();
+      expect(container.querySelector(".noor-volume")).not.toBeNull();
+      expect(container.querySelector(".noor-manuscript-cover")).not.toBeNull();
+      expect(container.querySelector(".noor-page.noor-right")).not.toBeNull();
+      expect(container.querySelector(".noor-page-edges")).not.toBeNull();
+      expect(container.querySelector(".noor-spine")).not.toBeNull();
+      // The cue leaves with the sealed state; nothing rides the cover.
+      expect(screen.queryByText("Tap to open")).toBeNull();
+      expect(container.querySelector(".noor-flash")).toBeNull();
+      expect(screen.queryByText("Surah Ar-Rum · 30:21")).toBeNull();
+
+      // 1.2s hold + 4.5s swing: flash, alone — no quote under it.
+      act(() => {
+        vi.advanceTimersByTime(5700);
+      });
+      expect(root()).toHaveAttribute("data-phase", "flash");
+      expect(container.querySelector(".noor-flash")).not.toBeNull();
+      expect(screen.queryByText("Surah Ar-Rum · 30:21")).toBeNull();
+
+      // Flash fades, quote appears on the spread — flash gone.
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+      expect(root()).toHaveAttribute("data-phase", "quote");
+      expect(container.querySelector(".noor-flash")).toBeNull();
+      expect(screen.getByText("Surah Ar-Rum · 30:21")).not.toBeNull();
+      expect(
+        screen.getByText(/that you may find tranquillity in them/),
+      ).not.toBeNull();
+      // Lovable's verse sits inside the volume AFTER the cover, so
+      // it paints above the cover's ivory back (the spread's left
+      // page) instead of being covered by it.
+      const coverEl = container.querySelector(".noor-manuscript-cover")!;
+      const verseEl = container.querySelector(".noor-verse")!;
+      expect(verseEl.closest(".noor-volume")).not.toBeNull();
+      expect(
+        coverEl.compareDocumentPosition(verseEl) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+      ).not.toBe(0);
+
+      // Quote sits readable for 5.2s, then the settled fade.
+      act(() => {
+        vi.advanceTimersByTime(5200);
+      });
+      expect(root()).toHaveAttribute("data-phase", "settled");
+      expect(root()).toHaveClass("is-settled");
+      expect(root()).toHaveClass("has-finished");
+      expect(container.querySelector(".noor-flash")).toBeNull();
+      expect(screen.getByText("Surah Ar-Rum · 30:21")).not.toBeNull();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("paints Lovable's book from the backdrop: floor scene and cover face", () => {
+    const { container } = render(
+      <NoorBookReveal
+        {...baseProps(vi.fn())}
+        backdrop="/themes/noor-invitation/sealed.jpg"
+      />,
+    );
+    expect(container.querySelector(".noor-cover")).toHaveClass("is-painted");
+    const floor = container.querySelector(
+      ".noor-floor",
+    ) as HTMLImageElement | null;
+    const coverImg = container.querySelector(
+      ".noor-front img",
+    ) as HTMLImageElement | null;
+    expect(floor?.getAttribute("src")).toBe(
+      "/themes/noor-invitation/sealed.jpg",
+    );
+    expect(coverImg?.getAttribute("src")).toBe(
+      "/themes/noor-invitation/sealed.jpg",
+    );
+  });
+
+  it("pins the milestone arithmetic and the theme's openMs to it", () => {
+    const milestones = noorOpeningMilestones(false);
+    expect(milestones.flashAt).toBe(5700);
+    expect(milestones.quoteAt).toBe(6700);
+    expect(milestones.welcomeAt).toBe(11900);
+    expect(milestones.removeAt).toBe(12900);
+    // The parent unmounts the reveal at openMs; if this drifts from
+    // removeAt, guests lose either the quote or the settled fade.
+    expect(noorInvitation.motion.openMs).toBe(milestones.removeAt);
+  });
+
+  it("reduced-motion guests settle immediately, never waiting out the swing", () => {
+    vi.spyOn(window, "matchMedia").mockImplementation((query: string) => ({
+      matches: query.includes("prefers-reduced-motion"),
+      media: query,
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => false,
+    }));
+    try {
+      const { container } = render(
+        <NoorBookReveal {...baseProps(vi.fn(), true)} />,
+      );
+      expect(container.querySelector(".noor-cover")).toHaveAttribute(
+        "data-phase",
+        "settled",
+      );
+    } finally {
+      vi.restoreAllMocks();
+    }
+  });
+});
 
 describe("RevealStage dispatch", () => {
   it.each(MECHANICS)("renders the $reveal mechanic for reveal=$reveal", ({ reveal, rootClass }) => {
