@@ -443,6 +443,47 @@ describe("noorBook opening sequence", () => {
     );
   });
 
+  it("pins phone hero sizes and Noor's tightened names spacing", () => {
+    // On phones the shared ≤640px rule halved the hero names (76px
+    // desktop → 38px) and set family lines to 12px, so every theme's
+    // phone hero read small next to Lovable's 60px names — and Noor's
+    // names block also absorbed all free vertical space (margin auto),
+    // leaving a large empty middle between the welcome line and the
+    // names. Names go to Lovable's 60px, the & scales with them,
+    // and Noor's names block sits a fixed 24px under the
+    // welcome with the leftover space below it instead.
+    const css = readFileSync(
+      resolve(process.cwd(), "src", "styles.css"),
+      "utf8",
+    );
+    expect(css).not.toMatch(/calc\(38px \* var\(--names-scale, 1\)\)/);
+    expect(css).toMatch(/calc\(60px \* var\(--names-scale, 1\)\)/);
+    expect(css).toMatch(
+      /\[data-theme-id="noor-invitation"\]\s*\.invitation-names\s*\{[^}]*margin:\s*24px 0 auto/,
+    );
+    expect(css).toMatch(
+      /\[data-theme-id="noor-invitation"\]\s*\.invitation-names\s*\{[^}]*padding-top:\s*24px/,
+    );
+    // Editor hero inputs collapse to the inherited 16px because
+    // .editable-field-input sets `font: inherit` and no hero container
+    // sets a size — so the phone canvas gets the phone sizes back.
+    expect(css).toMatch(
+      /\.phone-screen\s+\.invitation-person-name\.editable-field-input\s*\{[^}]*font-size:\s*calc\(60px \* var\(--names-scale, 1\)\)/,
+    );
+    expect(css).toMatch(
+      /\.phone-screen\s+\.invitation-and\s*\{[^}]*font-size:\s*calc\(32px \* var\(--names-scale, 1\)\)/,
+    );
+    expect(css).toMatch(
+      /\.phone-screen\s+\.invitation-heading\s+\.editable-field-input\s*\{[^}]*font-size:\s*22px/,
+    );
+    expect(css).toMatch(
+      /\.phone-screen\s+\.invitation-blessing\s+\.editable-field-input\s*\{[^}]*font-size:\s*17px/,
+    );
+    expect(css).toMatch(
+      /\.phone-screen\s+\.invitation-welcome\.editable-field-input\s*\{[^}]*font-size:\s*15px/,
+    );
+  });
+
   it("pins the milestone arithmetic and the theme's openMs to it", () => {
     const milestones = noorOpeningMilestones(false);
     expect(milestones.flashAt).toBe(5700);

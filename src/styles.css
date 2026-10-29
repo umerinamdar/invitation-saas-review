@@ -1981,6 +1981,15 @@ a {
 [data-theme-id="noor-invitation"] .invitation-welcome {
   color: var(--paper-light);
 }
+/* The names block absorbs all free vertical space (margin auto), which
+ * leaves a large empty middle between the welcome line and the names
+ * whenever the hero content is shorter than the screen. A fixed 24px
+ * above the names (plus 24px padding) keeps the cluster tight; the
+ * leftover space goes below the names instead, above the date card. */
+[data-theme-id="noor-invitation"] .invitation-names {
+  margin: 24px 0 auto;
+  padding-top: 24px;
+}
 @keyframes noor-page-settle {
   0% {
     transform: rotateY(10deg) scale(1.03);
@@ -3039,11 +3048,11 @@ a {
     padding: 56px 0 18px;
   }
   .invitation-person-name {
-    font-size: calc(38px * var(--names-scale, 1));
+    font-size: calc(60px * var(--names-scale, 1));
     line-height: 1.15;
   }
   .invitation-and {
-    font-size: calc(22px * var(--names-scale, 1));
+    font-size: calc(32px * var(--names-scale, 1));
     margin: 4px 0;
   }
   .family-block p {
@@ -3273,6 +3282,28 @@ a {
   outline: 1px dashed color-mix(in oklch, currentColor 55%, transparent);
   outline-offset: 3px;
   border-radius: 2px;
+}
+
+/* In the editor the hero fields are real inputs, and
+ * .editable-field-input's `font: inherit` hands them their parent's
+ * size — no hero container sets one, so every hero line collapses to
+ * the inherited 16px inside the phone canvas, whatever the viewport.
+ * Restore the phone sizes here (the canvas is a phone, so these match
+ * what a guest sees on a real phone, not the desktop sizes). */
+.phone-screen .invitation-person-name.editable-field-input {
+  font-size: calc(60px * var(--names-scale, 1));
+}
+.phone-screen .invitation-and {
+  font-size: calc(32px * var(--names-scale, 1));
+}
+.phone-screen .invitation-heading .editable-field-input {
+  font-size: 22px;
+}
+.phone-screen .invitation-blessing .editable-field-input {
+  font-size: 17px;
+}
+.phone-screen .invitation-welcome.editable-field-input {
+  font-size: 15px;
 }
 
 /*
