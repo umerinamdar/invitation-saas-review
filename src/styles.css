@@ -1963,6 +1963,24 @@ a {
 [data-theme-id="noor-invitation"] .invitation-heading {
   color: var(--paper-light);
 }
+/* The hero's default ink must be light too. In the editor, hero fields
+ * render as real inputs: .editable-field-input sets color: inherit and
+ * comes later than the field classes, so an input takes its PARENT's
+ * colour, not its own class colour. The heading survives because its
+ * colour already lives on its container; the names, blessing and
+ * welcome inputs inherit the page's dark ink and vanish on the night
+ * hero. A light section colour fixes all three editor inputs at once,
+ * and their guest <p> colours are unchanged (same values on the
+ * elements themselves). */
+[data-theme-id="noor-invitation"] .skyline-invitation {
+  color: var(--paper-light);
+}
+/* The guest welcome line has no light rule of its own — the shared rule
+ * gives it the theme's dark muted ink, which is faint on the night hero
+ * in both the editor and the guest view. */
+[data-theme-id="noor-invitation"] .invitation-welcome {
+  color: var(--paper-light);
+}
 @keyframes noor-page-settle {
   0% {
     transform: rotateY(10deg) scale(1.03);

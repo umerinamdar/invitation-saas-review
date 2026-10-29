@@ -421,6 +421,28 @@ describe("noorBook opening sequence", () => {
     );
   });
 
+  it("pins Noor's light hero ink for the dark night courtyard", () => {
+    // In the editor, hero fields render as real inputs and
+    // .editable-field-input sets color: inherit (later than the field
+    // classes), so the names, blessing and welcome inputs take the
+    // section's colour, not their own class colour — and the section
+    // inherited the theme's dark ink, so all three vanished on the
+    // night hero while the heading (coloured on its container) stayed
+    // visible. The section rule fixes the editor inputs; the welcome
+    // rule fixes the guest line, which the shared rule colours with
+    // the theme's dark muted ink.
+    const css = readFileSync(
+      resolve(process.cwd(), "src", "styles.css"),
+      "utf8",
+    );
+    expect(css).toMatch(
+      /\[data-theme-id="noor-invitation"\]\s*\.skyline-invitation\s*\{[^}]*color:\s*var\(--paper-light\)/,
+    );
+    expect(css).toMatch(
+      /\[data-theme-id="noor-invitation"\]\s*\.invitation-welcome\s*\{[^}]*color:\s*var\(--paper-light\)/,
+    );
+  });
+
   it("pins the milestone arithmetic and the theme's openMs to it", () => {
     const milestones = noorOpeningMilestones(false);
     expect(milestones.flashAt).toBe(5700);
