@@ -726,23 +726,23 @@ const DEMO_OVERRIDES: Record<string, DemoOverride> = {
   },
 
   "noor-invitation": {
-    person1: "Aarav",
-    person2: "Anaya",
+    person1: "Rayyan",
+    person2: "Mariam",
     family1: {
       relation: "Son of",
-      parents: "Mr. Rehan & Mrs. Sana Kapoor",
+      parents: "Mr. Rehan & Mrs. Sana Sheikh",
       grandparents:
-        "Late Mr. Iqbal & Mrs. Zarina Kapoor · Mr. Farhan & Mrs. Noor Malik",
+        "Late Mr. Iqbal & Mrs. Zarina Sheikh · Mr. Farhan & Mrs. Noor Malik",
     },
     family2: {
       relation: "Daughter of",
-      parents: "Mr. Imran & Mrs. Ayesha Mehta",
+      parents: "Mr. Imran & Mrs. Ayesha Ansari",
       grandparents:
-        "Mr. Salim & Mrs. Rukhsana Mehta · Late Mr. Javed & Mrs. Shirin Khan",
+        "Mr. Salim & Mrs. Rukhsana Ansari · Late Mr. Javed & Mrs. Shirin Khan",
     },
     familyMembers: [
-      { name: "Zoya Kapoor", role: "Sister of the groom" },
-      { name: "Ayaan Mehta", role: "Brother of the bride" },
+      { name: "Zoya Sheikh", role: "Sister of the groom" },
+      { name: "Ayaan Ansari", role: "Brother of the bride" },
     ],
     event: {
       typeLabel: "Nikah",
@@ -781,12 +781,12 @@ const DEMO_OVERRIDES: Record<string, DemoOverride> = {
       transport:
         "Chhatrapati Shivaji Maharaj International Airport is 40 minutes away. Shuttles run from Terminal 2 on 12–15 February.",
       accommodation:
-        "A block of rooms is held at The Pavilion Residences. Mention “Aarav & Anaya” when booking before 10 January 2027.",
+        "A block of rooms is held at The Pavilion Residences. Mention “Rayyan & Mariam” when booking before 10 January 2027.",
       note: "Valet parking is available at the main gate. Please arrive 30 minutes before each ceremony.",
     },
     rsvpByDateText: "10 January 2027",
-    email: "aarav.anaya@example.com",
-    hashtag: "#AaravWedsAnaya",
+    email: "rayyan.mariam@example.com",
+    hashtag: "#RayyanWedsMariam",
     blessing: {
       text: "And among His signs is that He created for you spouses from among yourselves, that you may find tranquillity in them; and He placed between you affection and mercy.",
       attribution: "Surah Ar-Rum · 30:21",

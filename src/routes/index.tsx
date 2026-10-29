@@ -21,6 +21,7 @@ const SHOWCASE_IDS = [
   "makkah",
   "golden-temple",
   "noor-invitation",
+  "ivory-silk-pearls",
 ] as const;
 
 const TITLE = `${BRAND} — Digital wedding invitations you can share on WhatsApp`;
