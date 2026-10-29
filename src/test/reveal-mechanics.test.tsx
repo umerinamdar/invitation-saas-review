@@ -298,6 +298,50 @@ describe("noorBook opening sequence", () => {
     );
   });
 
+  it("uses the floor image when the theme supplies one, cover stays the backdrop", () => {
+    const { container } = render(
+      <NoorBookReveal
+        {...baseProps(vi.fn())}
+        backdrop="/themes/noor-invitation/sealed.jpg"
+        floor="/themes/noor-invitation/floor.jpg"
+      />,
+    );
+    const floor = container.querySelector(
+      ".noor-floor",
+    ) as HTMLImageElement | null;
+    const coverImg = container.querySelector(
+      ".noor-front img",
+    ) as HTMLImageElement | null;
+    expect(floor?.getAttribute("src")).toBe(
+      "/themes/noor-invitation/floor.jpg",
+    );
+    expect(coverImg?.getAttribute("src")).toBe(
+      "/themes/noor-invitation/sealed.jpg",
+    );
+  });
+
+  it("falls back to the backdrop if the floor image fails to load", () => {
+    const { container } = render(
+      <NoorBookReveal
+        {...baseProps(vi.fn())}
+        backdrop="/themes/noor-invitation/sealed.jpg"
+        floor="/themes/noor-invitation/floor.jpg"
+      />,
+    );
+    const floor = container.querySelector(
+      ".noor-floor",
+    ) as HTMLImageElement | null;
+    expect(floor).not.toBeNull();
+    fireEvent.error(floor!);
+    expect(floor?.getAttribute("src")).toContain("sealed.jpg");
+  });
+
+  it("pins the theme's floor backdrop to Lovable's book-setting placement", () => {
+    expect(noorInvitation.assets.floorBackdrop).toBe(
+      "/themes/noor-invitation/floor.jpg",
+    );
+  });
+
   it("pins the milestone arithmetic and the theme's openMs to it", () => {
     const milestones = noorOpeningMilestones(false);
     expect(milestones.flashAt).toBe(5700);

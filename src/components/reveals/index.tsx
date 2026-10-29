@@ -16,6 +16,14 @@ export type RevealProps = {
    * drawn on top of it, which would cover the doors someone painted.
    */
   backdrop?: string;
+  /**
+   * Floor scene the sealed book sits on during a painted opening.
+   * Omit it and the mechanic uses `backdrop` as the floor. When it
+   * differs from `backdrop` and fails to load, the floor falls back
+   * to `backdrop`, so the code is safe to ship before the file
+   * itself lands.
+   */
+  floor?: string;
   opening: boolean;
   onOpen: () => void;
 };
@@ -506,7 +514,7 @@ export function GoldenTempleDoorsReveal(props: RevealProps) {
  * phases, so they can never overlap.
  */
 export function NoorBookReveal(props: RevealProps) {
-  const { opening, onOpen, hosts, backdrop } = props;
+  const { opening, onOpen, hosts, backdrop, floor } = props;
   const [phase, setPhase] = useState<NoorOpeningPhase>("sealed");
 
   useEffect(() => {
@@ -531,6 +539,18 @@ export function NoorBookReveal(props: RevealProps) {
 
   const painted = Boolean(backdrop);
   const started = phase !== "sealed";
+  const floorSrc = floor ?? backdrop;
+  const floorDiffers = Boolean(floor && backdrop && floor !== backdrop);
+  const onFloorError = (event: React.SyntheticEvent<HTMLImageElement>) => {
+    // The floor file lands separately from this code (binary files
+    // cannot travel through the connector push). Until it does, fall
+    // back to the cover instead of a broken image.
+    const img = event.currentTarget;
+    if (backdrop && !img.dataset["floorFallback"]) {
+      img.dataset["floorFallback"] = "true";
+      img.src = backdrop;
+    }
+  };
 
   return (
     <div
@@ -545,14 +565,15 @@ export function NoorBookReveal(props: RevealProps) {
       }
       {...openTriggerProps(hosts, opening, onOpen)}
     >
-      {backdrop && (
+      {floorSrc && (
         <img
           className="noor-floor"
-          src={backdrop}
+          src={floorSrc}
           alt=""
           width={1536}
           height={1024}
           aria-hidden="true"
+          {...(floorDiffers ? { onError: onFloorError } : {})}
         />
       )}
       <div className="noor-stage">
@@ -569,7 +590,7 @@ export function NoorBookReveal(props: RevealProps) {
                 {backdrop ? (
                   <img
                     src={backdrop}
-                    alt="Emerald keepsake book with gold ornament"
+                    alt="Navy keepsake book with gold ornament"
                     width={1024}
                     height={1536}
                   />

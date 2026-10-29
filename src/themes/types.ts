@@ -140,6 +140,13 @@ export type Typography = {
 export type ThemeAssets = {
   /** Omit both backdrops to let `ornamentation` draw them instead. */
   sealedBackdrop?: string; // behind the closed envelope
+  /**
+   * Floor scene the sealed book sits on during a painted opening.
+   * Omit it and the reveal uses `sealedBackdrop` as the floor.
+   * Noor Invitation: Lovable's book-setting.jpg, placed as
+   * `floor.jpg` in the theme folder.
+   */
+  floorBackdrop?: string;
   revealedBackdrop?: string; // hero behind the names
   /**
    * Gallery card WebP: the card serves a `.webp` sibling of the hero

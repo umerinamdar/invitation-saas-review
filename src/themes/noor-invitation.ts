@@ -76,6 +76,11 @@ export const noorInvitation: Theme = {
 
   assets: {
     sealedBackdrop: "/themes/noor-invitation/sealed.jpg",
+    // Lovable's book-setting.jpg (the floor scene). The file lands
+    // separately from this code — binary files cannot travel through
+    // the connector push — and until it does, the reveal falls back
+    // to sealedBackdrop as the floor instead of a broken image.
+    floorBackdrop: "/themes/noor-invitation/floor.jpg",
     revealedBackdrop: "/themes/noor-invitation/hero.jpg",
     // No hero.webp sibling exists for this theme, so the gallery card
     // must use the JPEG directly — see hasWebpHero in types.ts.
