@@ -81,6 +81,11 @@ export const noorInvitation: Theme = {
     // the connector push — and until it does, the reveal falls back
     // to sealedBackdrop as the floor instead of a broken image.
     floorBackdrop: "/themes/noor-invitation/floor.jpg",
+    // Lovable's illuminated-ivory-page.jpg: the bordered inside-page
+    // art for both spread pages. Lands by web upload like floor.jpg;
+    // until it does, the reveal hides a missing image and the paper
+    // texture shows instead of a broken icon.
+    pageArtwork: "/themes/noor-invitation/page.jpg",
     revealedBackdrop: "/themes/noor-invitation/hero.jpg",
     // No hero.webp sibling exists for this theme, so the gallery card
     // must use the JPEG directly — see hasWebpHero in types.ts.

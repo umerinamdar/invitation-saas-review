@@ -24,6 +24,14 @@ export type RevealProps = {
    * itself lands.
    */
   floor?: string;
+  /**
+   * Illuminated inside-page art for a book opening, painted over the
+   * paper texture on both inside pages. Omit it and the pages stay
+   * paper-textured. When it fails to load, the image hides itself and
+   * the paper shows, so the code is safe to ship before the file
+   * itself lands.
+   */
+  pageArt?: string;
   opening: boolean;
   onOpen: () => void;
 };
@@ -514,7 +522,7 @@ export function GoldenTempleDoorsReveal(props: RevealProps) {
  * phases, so they can never overlap.
  */
 export function NoorBookReveal(props: RevealProps) {
-  const { opening, onOpen, hosts, backdrop, floor } = props;
+  const { opening, onOpen, hosts, backdrop, floor, pageArt } = props;
   const [phase, setPhase] = useState<NoorOpeningPhase>("sealed");
 
   useEffect(() => {
@@ -551,6 +559,13 @@ export function NoorBookReveal(props: RevealProps) {
       img.src = backdrop;
     }
   };
+  const onPageArtError = (event: React.SyntheticEvent<HTMLImageElement>) => {
+    // The page file lands separately from this code (binary files
+    // cannot travel through the connector push). Until it does, hide
+    // the image and let the paper texture underneath show instead of
+    // a broken-image icon.
+    event.currentTarget.style.display = "none";
+  };
 
   return (
     <div
@@ -581,6 +596,15 @@ export function NoorBookReveal(props: RevealProps) {
           <div className="noor-volume">
             <div className="noor-page noor-right">
               <div className="noor-paper-art" aria-hidden="true" />
+              {pageArt && (
+                <img
+                  className="noor-page-art"
+                  src={pageArt}
+                  alt=""
+                  aria-hidden="true"
+                  onError={onPageArtError}
+                />
+              )}
               <div className="noor-turn-shadow" />
             </div>
             <div className="noor-page-edges" aria-hidden="true" />
@@ -600,6 +624,15 @@ export function NoorBookReveal(props: RevealProps) {
               </div>
               <div className="noor-back">
                 <div className="noor-paper-art" aria-hidden="true" />
+                {pageArt && (
+                  <img
+                    className="noor-page-art"
+                    src={pageArt}
+                    alt=""
+                    aria-hidden="true"
+                    onError={onPageArtError}
+                  />
+                )}
               </div>
               <div className="noor-cover-edge" aria-hidden="true" />
             </div>

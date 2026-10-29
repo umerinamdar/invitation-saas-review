@@ -342,6 +342,85 @@ describe("noorBook opening sequence", () => {
     );
   });
 
+  it("paints the illuminated inside pages when the theme supplies page art", () => {
+    const { container } = render(
+      <NoorBookReveal
+        {...baseProps(vi.fn())}
+        backdrop="/themes/noor-invitation/sealed.jpg"
+        pageArt="/themes/noor-invitation/page.jpg"
+      />,
+    );
+    const pages = container.querySelectorAll(".noor-page-art");
+    expect(pages).toHaveLength(2);
+    expect(pages[0]?.getAttribute("src")).toBe(
+      "/themes/noor-invitation/page.jpg",
+    );
+    expect(pages[1]?.getAttribute("src")).toBe(
+      "/themes/noor-invitation/page.jpg",
+    );
+    expect(container.querySelector(".noor-right .noor-page-art")).not.toBeNull();
+    expect(container.querySelector(".noor-back .noor-page-art")).not.toBeNull();
+  });
+
+  it("keeps plain paper pages without page art", () => {
+    const { container } = render(
+      <NoorBookReveal
+        {...baseProps(vi.fn())}
+        backdrop="/themes/noor-invitation/sealed.jpg"
+      />,
+    );
+    expect(container.querySelector(".noor-page-art")).toBeNull();
+    expect(container.querySelectorAll(".noor-paper-art")).toHaveLength(2);
+  });
+
+  it("hides a missing page image and keeps the paper underneath", () => {
+    const { container } = render(
+      <NoorBookReveal
+        {...baseProps(vi.fn())}
+        backdrop="/themes/noor-invitation/sealed.jpg"
+        pageArt="/themes/noor-invitation/page.jpg"
+      />,
+    );
+    const art = container.querySelector(
+      ".noor-page-art",
+    ) as HTMLImageElement | null;
+    expect(art).not.toBeNull();
+    fireEvent.error(art!);
+    expect(art!.style.display).toBe("none");
+  });
+
+  it("pins the theme's page artwork to Lovable's illuminated page", () => {
+    expect(noorInvitation.assets.pageArtwork).toBe(
+      "/themes/noor-invitation/page.jpg",
+    );
+  });
+
+  it("pins the stage-relative sizing that keeps the editor phone honest", () => {
+    // The editor renders the invitation into a fixed 375px phone canvas
+    // inside a desktop viewport, while vw/dvh still resolve against
+    // that viewport: the old seal (11vw, capped 136px) and book
+    // (84vw/52dvh = 468px) both blew past the canvas, so the seal
+    // looked huge and the sealed cover looked zoomed and cropped.
+    // Both must size against their own stage, not the viewport.
+    const css = readFileSync(
+      resolve(process.cwd(), "src", "styles.css"),
+      "utf8",
+    );
+    expect(css).toMatch(/\.ctd-seal\s*\{[^}]*width:\s*min\(20%, 96px\)/);
+    expect(css).toMatch(/\.noor-cover\s*\{[^}]*container-type:\s*size/);
+    expect(css).toMatch(/--noor-page-width:\s*min\(84cqw, 52cqh, 680px\)/);
+    // The spread scale must come from a container query, not a viewport
+    // media query: the old @media (min-width: 900px) rule gave the
+    // editor's 375px canvas the desktop 0.88 scale, so the quote
+    // spread rendered 554px wide and cropped at both edges.
+    expect(css).not.toMatch(
+      /@media\s*\(min-width:\s*900px\)\s*\{[^}]*--noor-spread-scale/,
+    );
+    expect(css).toMatch(
+      /@container\s*\(min-width:\s*900px\)\s*\{[^}]*--noor-spread-scale:\s*0\.88/,
+    );
+  });
+
   it("pins the milestone arithmetic and the theme's openMs to it", () => {
     const milestones = noorOpeningMilestones(false);
     expect(milestones.flashAt).toBe(5700);

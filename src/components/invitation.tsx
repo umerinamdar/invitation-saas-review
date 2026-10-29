@@ -205,7 +205,7 @@ export function Invitation({
     return () => clearTimeout(id);
   }, [open]);
 
-  const { sealedBackdrop, revealedBackdrop, defaultMusic, floorBackdrop } =
+  const { sealedBackdrop, revealedBackdrop, defaultMusic, floorBackdrop, pageArtwork } =
     theme.assets;
   const { ornamentation } = theme;
   // Doors, curtains, books and boxes animate the painting itself rather
@@ -462,6 +462,7 @@ export function Invitation({
               ? { backdrop: sealedBackdrop }
               : {})}
             {...(floorBackdrop ? { floor: floorBackdrop } : {})}
+            {...(pageArtwork ? { pageArt: pageArtwork } : {})}
             opening={opening}
             onOpen={openEnvelope}
           />

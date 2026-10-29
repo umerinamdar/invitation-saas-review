@@ -147,6 +147,18 @@ export type ThemeAssets = {
    * `floor.jpg` in the theme folder.
    */
   floorBackdrop?: string;
+  /**
+   * Illuminated inside-page art for a book opening. Painted over the
+   * paper texture on both inside pages (the right page and the cover
+   * back), so the spread carries the design's border instead of plain
+   * paper. Omit it and the pages stay paper-textured. When it fails to
+   * load, the image hides itself and the paper shows, so the code is
+   * safe to ship before the file itself lands.
+   *
+   * Noor Invitation: Lovable's illuminated-ivory-page.jpg, placed as
+   * `page.jpg` in the theme folder.
+   */
+  pageArtwork?: string;
   revealedBackdrop?: string; // hero behind the names
   /**
    * Gallery card WebP: the card serves a `.webp` sibling of the hero

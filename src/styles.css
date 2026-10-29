@@ -1486,11 +1486,19 @@ a {
   --noor-book-scene: #eeeae3;
   --noor-book-shadow: #08182b;
   --noor-ease-weighted: cubic-bezier(0.65, 0, 0.2, 1);
-  --noor-page-width: min(84vw, 52dvh, 680px);
+  --noor-page-width: min(84cqw, 52cqh, 680px);
   --noor-spread-scale: 0.54;
   width: 100%;
   height: 100%;
   position: relative;
+  /* The cover is a fixed-size frame (100% of the sealed stage), so it
+   * can be a size container: the book then sizes against the stage,
+   * not the browser viewport. In the editor the stage is a 375px phone
+   * canvas inside a desktop viewport, where the old vw/dvh rule made
+   * the book 468px wide — wider than the phone, so the sealed cover
+   * looked zoomed and cropped. On the guest page the stage IS the
+   * viewport, so the numbers come out identical there. */
+  container-type: size;
   overflow: hidden;
   background: var(--noor-book-scene);
   color: var(--gold-light);
@@ -1561,6 +1569,17 @@ a {
   width: 100%;
   height: 100%;
   background: var(--paper-texture) center/400px var(--paper-light);
+  border-radius: inherit;
+}
+/* Lovable's illuminated page art, painted over the paper texture on
+ * both inside pages. Same 2/3 ratio as the page, so fill distorts
+ * nothing; the border and corner ornaments are in the artwork. */
+.noor-page-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
   border-radius: inherit;
 }
 .noor-right {
@@ -1843,8 +1862,15 @@ a {
     transform: scale(1.5);
   }
 }
-@media (min-width: 900px) {
-  .noor-cover {
+/* The spread scale follows the STAGE, not the viewport: the camera is a
+ * descendant of .noor-cover (the size container above), so this query
+ * reads the stage's width. The old viewport query gave the editor's
+ * 375px phone canvas the desktop 0.88 scale — the quote spread came
+ * out 554px wide and cropped at both edges — while the guest phone
+ * got 0.54. Wide stages (guest desktop) still get 0.88; narrow stages
+ * (guest phone, editor phone) get the 0.54 default. */
+@container (min-width: 900px) {
+  .noor-camera {
     --noor-spread-scale: 0.88;
   }
 }
@@ -2111,7 +2137,12 @@ a {
   left: 50%;
   top: 52%;
   transform: translate(-50%, -50%);
-  width: clamp(84px, 11vw, 136px);
+  /* Sized by % of the cover, not vw: inside the editor's fixed 375px
+   * phone canvas, vw still resolves against the real desktop viewport,
+   * so the old 11vw rule blew the seal up to its 136px cap there —
+   * over a third of the phone. 20% of the cover reads the same in the
+   * editor phone, the guest phone, and (capped) on desktop. */
+  width: min(20%, 96px);
   aspect-ratio: 1;
   z-index: 4;
   pointer-events: none;
