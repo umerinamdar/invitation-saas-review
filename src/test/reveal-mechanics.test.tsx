@@ -1,4 +1,6 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 
@@ -305,6 +307,25 @@ describe("noorBook opening sequence", () => {
     // The parent unmounts the reveal at openMs; if this drifts from
     // removeAt, guests lose either the quote or the settled fade.
     expect(noorInvitation.motion.openMs).toBe(milestones.removeAt);
+  });
+
+  it("pins the volume flat rule that keeps the English verse visible", () => {
+    // Site-only regression (caught 2026-10-29 by staged render):
+    // inside the site's sealed stage the verse's translateZ is
+    // flattened, so the cover-back — 3px proud of the cover plane
+    // after the swing — occludes the translation page and the
+    // English verse renders blank while the Arabic page shows. The
+    // volume must stay flat so its children paint in DOM order and
+    // the verse, which mounts last, lands on top. If this rule is
+    // removed, the English page goes blank again with no test
+    // failure anywhere else (jsdom cannot see 3D paint order).
+    const css = readFileSync(
+      resolve(process.cwd(), "src", "styles.css"),
+      "utf8",
+    );
+    expect(css).toMatch(
+      /\.noor-cover\s+\.noor-volume\s*\{[^}]*transform-style:\s*flat[^}]*\}/,
+    );
   });
 
   it("reduced-motion guests settle immediately, never waiting out the swing", () => {

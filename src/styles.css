@@ -1534,6 +1534,22 @@ a {
   height: 100%;
   transform-style: preserve-3d;
 }
+
+/*
+ * Site-only fix (not in Lovable): the verse must paint above the
+ * cover-back. Inside the site's sealed stage the verse's translateZ
+ * is flattened, so the cover-back — which sits 3px proud of the
+ * cover plane after the swing — occludes the translation page and
+ * the English verse renders blank (only the Arabic page shows, as
+ * nothing covers the right page). Flattening the volume makes its
+ * children paint in DOM order, and the verse mounts last, so it
+ * lands on top. The cover keeps its own preserve-3d, so the swing
+ * itself — front turning away, back turning toward — is untouched,
+ * and no Lovable geometry, timing or depth value changes.
+ */
+.noor-cover .noor-volume {
+  transform-style: flat;
+}
 .noor-page {
   position: absolute;
   inset: 0;
