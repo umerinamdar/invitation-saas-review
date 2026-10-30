@@ -265,7 +265,9 @@ a {
 .painted-stage .scroll-cover,
 .painted-stage .isp-cover,
 .painted-stage .rmd-cover,
-.painted-stage .gtd-cover {
+.painted-stage .gtd-cover,
+.painted-stage .ctd-cover,
+.painted-stage .noor-cover {
   width: 100%;
   height: 100%;
   max-width: none;
@@ -1374,17 +1376,19 @@ a {
  * was Ram Mandir's own outer-hinge swing. */
 .gtd-door-left {
   left: 0;
+  width: 51%;
   transform-origin: left center;
 }
 .gtd-door-right {
-  left: 50%;
+  left: 51%;
+  width: 49%;
   transform-origin: right center;
 }
 .gtd-glow {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 50%;
+  left: 51%;
   width: 8px;
   margin-left: -4px;
   opacity: 0;
@@ -1400,7 +1404,12 @@ a {
 }
 .gtd-cue {
   position: absolute;
-  inset-inline: 0;
+  /* Centred on the doors' own seam (51% of the cover, measured from
+   * sealed.jpg), not the screen centre — so the cue sits on exactly
+   * the same vertical axis the doors part on, on every viewport. */
+  left: 51%;
+  transform: translateX(-50%);
+  white-space: nowrap;
   bottom: 18%;
   margin: 0;
   text-align: center;
@@ -1417,7 +1426,11 @@ a {
  * other bespoke door mechanic, in its own face. */
 .gtd-invited {
   position: absolute;
-  inset-inline: 0;
+  /* Same seam axis as .gtd-cue above: the invited line and the cue
+   * share one vertical centre with the doors' parting line. */
+  left: 51%;
+  transform: translateX(-50%);
+  white-space: nowrap;
   bottom: 8%;
   margin: 0;
   font-family: "Cormorant Garamond", serif;
@@ -1455,6 +1468,789 @@ a {
     opacity 1s cubic-bezier(0.42, 0, 0.58, 1) 4.4s;
   transform: rotateY(-86deg);
   opacity: 0;
+}
+
+/*
+ * Noor Invitation's own book mechanic — a CONVERSION of the Lovable
+ * project "Noor Invitation" (054990d9), not a re-authoring. This
+ * block is Lovable's manuscript block (OpeningBook + styles.css),
+ * ported with only container adaptations: class names prefixed
+ * noor- (manuscript-* would collide in the shared stylesheet),
+ * Lovable's variables mapped onto the site's identical palette
+ * variables (--accent -> --gold, --accent-soft -> --gold-light,
+ * --highlight -> --ink-light; --paper, --paper-dark, --border,
+ * --scratch-ink, --paper-light already share names and values),
+ * fixed positioning -> absolute inside the site's sealed stage,
+ * and the Lovable-only tokens carried scoped on .noor-cover with
+ * Lovable's exact values (--book-navy #173563, --book-scene
+ * #eeeae3, --book-shadow #08182b, --ease-weighted
+ * cubic-bezier(0.65, 0, 0.2, 1)). Geometry, timings, breakpoints
+ * and keyframes are Lovable's unchanged: one rigid cover turns
+ * sideways into an ivory spread. The swing/flash durations come
+ * from --book-hold/--book-swing/--book-flash-duration, set inline
+ * by the component from NOOR_OPENING (lib/motion.ts) exactly as
+ * Lovable sets them from its OPENING constants. Transform and
+ * opacity only, like every other mechanic.
+ */
+.noor-cover {
+  --noor-book-navy: #173563;
+  --noor-book-scene: #eeeae3;
+  --noor-book-shadow: #08182b;
+  --noor-ease-weighted: cubic-bezier(0.65, 0, 0.2, 1);
+  --noor-page-width: min(84cqw, 52cqh, 680px);
+  --noor-spread-scale: 0.54;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  /* The cover is a fixed-size frame (100% of the sealed stage), so it
+   * can be a size container: the book then sizes against the stage,
+   * not the browser viewport. In the editor the stage is a 375px phone
+   * canvas inside a desktop viewport, where the old vw/dvh rule made
+   * the book 468px wide — wider than the phone, so the sealed cover
+   * looked zoomed and cropped. On the guest page the stage IS the
+   * viewport, so the numbers come out identical there. */
+  container-type: size;
+  overflow: hidden;
+  background: var(--noor-book-scene);
+  color: var(--gold-light);
+  transition: opacity 1s var(--noor-ease-weighted);
+}
+.noor-cover:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+.noor-cover.has-finished {
+  opacity: 0;
+  pointer-events: none;
+}
+.noor-floor {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.noor-stage {
+  position: absolute;
+  inset: 0;
+  perspective: 1800px;
+  perspective-origin: 50% 45%;
+}
+.noor-camera {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--noor-page-width);
+  aspect-ratio: 2 / 3;
+  margin-top: calc(var(--noor-page-width) * -0.75);
+  transform: translateX(-50%);
+  transform-origin: 0 50%;
+  transform-style: preserve-3d;
+}
+.noor-volume {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+/*
+ * Site-only fix (not in Lovable): the verse must paint above the
+ * cover-back. Inside the site's sealed stage the verse's translateZ
+ * is flattened, so the cover-back — which sits 3px proud of the
+ * cover plane after the swing — occludes the translation page and
+ * the English verse renders blank (only the Arabic page shows, as
+ * nothing covers the right page). Flattening the volume makes its
+ * children paint in DOM order, and the verse mounts last, so it
+ * lands on top. The cover keeps its own preserve-3d, so the swing
+ * itself — front turning away, back turning toward — is untouched,
+ * and no Lovable geometry, timing or depth value changes.
+ */
+.noor-cover .noor-volume {
+  transform-style: flat;
+}
+.noor-page {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px 7px 7px 2px;
+}
+.noor-paper-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--paper-texture) center/400px var(--paper-light);
+  border-radius: inherit;
+}
+/* Lovable's illuminated page art, painted over the paper texture on
+ * both inside pages. Same 2/3 ratio as the page, so fill distorts
+ * nothing; the border and corner ornaments are in the artwork. */
+.noor-page-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  border-radius: inherit;
+}
+.noor-right {
+  box-shadow:
+    inset 25px 0 35px -20px var(--scratch-ink),
+    6px 12px 0 -4px var(--paper-dark),
+    10px 18px 0 -5px var(--noor-book-navy),
+    0 35px 60px -20px var(--noor-book-shadow);
+}
+.noor-manuscript-cover {
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 50%;
+  transform-style: preserve-3d;
+  transform: rotateY(0deg);
+}
+.noor-front,
+.noor-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 4px;
+}
+.noor-front {
+  transform: translateZ(3px);
+  overflow: hidden;
+  box-shadow: 0 25px 65px -15px var(--noor-book-shadow);
+}
+.noor-front img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+.noor-front-fallback {
+  width: 100%;
+  height: 100%;
+  background: var(--noor-book-navy);
+}
+.noor-back {
+  transform: rotateY(180deg) translateZ(3px);
+  box-shadow:
+    inset -25px 0 35px -20px var(--scratch-ink),
+    -6px 12px 0 -4px var(--paper-dark),
+    -10px 18px 0 -5px var(--noor-book-navy);
+}
+.noor-spine {
+  position: absolute;
+  left: -5px;
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  transform: translateZ(1px);
+  background: linear-gradient(
+    90deg,
+    var(--noor-book-navy),
+    var(--gold),
+    var(--noor-book-navy)
+  );
+  border-radius: 4px;
+}
+.noor-page-edges {
+  position: absolute;
+  right: -7px;
+  top: 1%;
+  bottom: -6px;
+  width: 7px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--paper),
+    var(--paper) 1px,
+    var(--border) 1px,
+    var(--border) 2px
+  );
+}
+.noor-cover-edge {
+  position: absolute;
+  right: -3px;
+  top: 0;
+  width: 6px;
+  height: 100%;
+  transform: rotateY(90deg);
+  background: var(--noor-book-navy);
+}
+.noor-turn-shadow {
+  position: absolute;
+  inset: 0;
+  opacity: 0.65;
+  background: linear-gradient(90deg, transparent, var(--scratch-ink));
+}
+.noor-cover.has-started .noor-manuscript-cover {
+  animation: noor-turn var(--book-swing) var(--noor-ease-weighted)
+    var(--book-hold) forwards;
+}
+.noor-cover.has-started .noor-camera {
+  animation: noor-frame var(--book-swing) var(--noor-ease-weighted)
+    var(--book-hold) forwards;
+}
+.noor-cover.has-started .noor-turn-shadow {
+  animation: noor-shadow var(--book-swing) var(--noor-ease-weighted)
+    var(--book-hold) forwards;
+}
+@keyframes noor-turn {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(-180deg);
+  }
+}
+@keyframes noor-frame {
+  0% {
+    transform: translateX(-50%);
+  }
+  40%,
+  100% {
+    transform: translateX(0) scale(var(--noor-spread-scale));
+  }
+}
+@keyframes noor-shadow {
+  0% {
+    opacity: 0.65;
+    background-position: 0;
+  }
+  45% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.noor-controls {
+  position: absolute;
+  top: calc(50% + var(--noor-page-width) * 0.75 + 32px);
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.noor-controls p {
+  margin: 0;
+}
+.noor-open {
+  height: 44px;
+  padding: 0 28px;
+  border-radius: 4px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  background: var(--noor-book-navy);
+  /* Lovable's plate dressing on the open control: gold border and
+   * outline, soft-gold text, plate shadow. */
+  border: 1px solid var(--gold);
+  outline: 1px solid color-mix(in oklch, var(--gold) 40%, transparent);
+  outline-offset: 3px;
+  color: var(--gold-light);
+  box-shadow: 0 20px 50px -20px
+    color-mix(in oklab, var(--background) 80%, transparent);
+  display: flex;
+  align-items: center;
+}
+.noor-open:hover {
+  background: var(--noor-book-navy);
+  color: var(--ink-light);
+}
+.noor-invited {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 22px;
+  color: var(--noor-book-navy);
+}
+.noor-verse {
+  position: absolute;
+  left: -100%;
+  top: 0;
+  width: 200%;
+  height: 100%;
+  transform: translateZ(8px);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  color: var(--noor-book-navy);
+  text-align: center;
+  animation: noor-verse-in 0.8s ease-out both;
+}
+.noor-verse-page {
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 0;
+  padding: 8% 9%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+}
+.noor-verse-label {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--scratch-ink);
+  text-transform: uppercase;
+  margin: 0;
+}
+.noor-arabic-page .noor-verse-label {
+  font-family: Amiri, serif;
+  font-size: 23px;
+}
+.noor-arabic {
+  font-family: Amiri, serif;
+  font-size: 30px;
+  line-height: 1.85;
+  overflow-wrap: break-word;
+  margin: 0;
+}
+.noor-english {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  line-height: 1.5;
+  font-style: italic;
+  margin: 0;
+}
+.noor-verse .noor-gold-rule {
+  flex: 0 0 1px;
+  width: 140px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+@keyframes noor-verse-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.noor-flash {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  animation: noor-flash var(--book-flash-duration) ease-in-out both;
+}
+.noor-light {
+  position: absolute;
+  inset: -100%;
+  background: radial-gradient(
+    ellipse at center,
+    var(--paper-light) 0 18%,
+    var(--ink-light) 28%,
+    color-mix(in oklab, var(--gold) 80%, transparent) 40%,
+    transparent 65%
+  );
+  animation: noor-burst var(--book-flash-duration) ease-out both;
+}
+.noor-light-ray {
+  position: absolute;
+  width: 36%;
+  left: 32%;
+  bottom: 50%;
+  height: 70%;
+  background: linear-gradient(0deg, var(--ink-light), transparent);
+  clip-path: polygon(45% 100%, 0 0, 100% 0, 55% 100%);
+}
+@keyframes noor-flash {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  28%,
+  55% {
+    opacity: 1;
+  }
+}
+@keyframes noor-burst {
+  from {
+    transform: scale(0.02);
+  }
+  to {
+    transform: scale(1.5);
+  }
+}
+/* The spread scale follows the STAGE, not the viewport: the camera is a
+ * descendant of .noor-cover (the size container above), so this query
+ * reads the stage's width. The old viewport query gave the editor's
+ * 375px phone canvas the desktop 0.88 scale — the quote spread came
+ * out 554px wide and cropped at both edges — while the guest phone
+ * got 0.54. Wide stages (guest desktop) still get 0.88; narrow stages
+ * (guest phone, editor phone) get the 0.54 default. */
+@container (min-width: 900px) {
+  .noor-camera {
+    --noor-spread-scale: 0.88;
+  }
+}
+@media (max-width: 899px) {
+  .noor-verse-page {
+    padding: 7% 9%;
+    gap: 10px;
+  }
+  .noor-arabic {
+    font-size: 24px;
+    line-height: 1.65;
+  }
+  .noor-english {
+    font-size: 23px;
+    line-height: 1.35;
+  }
+  .noor-verse-label {
+    font-size: 13px;
+  }
+  .noor-arabic-page .noor-verse-label {
+    font-size: 18px;
+  }
+  .noor-verse .noor-gold-rule {
+    width: 70px;
+  }
+}
+@media (max-width: 359px), (max-height: 550px) {
+  .noor-english {
+    font-size: 19px;
+    line-height: 1.3;
+  }
+  .noor-arabic {
+    font-size: 21px;
+    line-height: 1.5;
+  }
+  .noor-verse-page {
+    gap: 6px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .noor-cover.has-started .noor-manuscript-cover {
+    animation-delay: 0ms;
+  }
+  .noor-cover.has-started .noor-camera {
+    animation-delay: 0ms;
+  }
+}
+/*
+ * Noor Invitation's own post-open beat (owner request, 2026-10-28):
+ * not a zoom like Ram Mandir's, not a dolly like Golden Temple's,
+ * not a bloom like Cathedral Light's — the hero settles like a page
+ * falling flat (a slight rightward tilt easing to flat), and the
+ * Quran verse illuminates in gold beneath it.
+ */
+[data-theme-id="noor-invitation"] .skyline-invitation {
+  perspective: 1600px;
+}
+[data-theme-id="noor-invitation"] .skyline-backdrop {
+  animation: noor-page-settle 2.8s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+[data-theme-id="noor-invitation"] .invitation-blessing {
+  animation: noor-verse-in 1.6s cubic-bezier(0.42, 0, 0.58, 1) 0.9s both;
+}
+[data-theme-id="noor-invitation"] .invitation-blessing::after {
+  content: "";
+  display: block;
+  width: 96px;
+  height: 1px;
+  margin: 18px auto 0;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  transform-origin: center;
+  animation: noor-rule-in 1.2s cubic-bezier(0.42, 0, 0.58, 1) 1.4s both;
+}
+[data-theme-id="noor-invitation"] .invitation-heading,
+[data-theme-id="noor-invitation"] .invitation-names {
+  /* Names rise after the blessing (0.9s) so they land last in the
+   * welcome, following the reveal's own flash-then-quote order. */
+  animation: noor-detail-rise 1.6s cubic-bezier(0.42, 0, 0.58, 1) 1.6s both;
+}
+/* The hero image is a dark night courtyard, so the hero's own text
+ * — verse, citation and section heading — must be light, not the
+ * theme's dark foreground ink (which is for the light page below).
+ * Names take the same light colour via the theme's namesColor. */
+[data-theme-id="noor-invitation"] .invitation-blessing p {
+  color: var(--paper-light);
+}
+[data-theme-id="noor-invitation"] .invitation-blessing cite {
+  color: var(--gold-light);
+}
+[data-theme-id="noor-invitation"] .invitation-heading {
+  color: var(--paper-light);
+}
+/* The hero's default ink must be light too. In the editor, hero fields
+ * render as real inputs: .editable-field-input sets color: inherit and
+ * comes later than the field classes, so an input takes its PARENT's
+ * colour, not its own class colour. The heading survives because its
+ * colour already lives on its container; the names, blessing and
+ * welcome inputs inherit the page's dark ink and vanish on the night
+ * hero. A light section colour fixes all three editor inputs at once,
+ * and their guest <p> colours are unchanged (same values on the
+ * elements themselves). */
+[data-theme-id="noor-invitation"] .skyline-invitation {
+  color: var(--paper-light);
+}
+/* The guest welcome line has no light rule of its own — the shared rule
+ * gives it the theme's dark muted ink, which is faint on the night hero
+ * in both the editor and the guest view. */
+[data-theme-id="noor-invitation"] .invitation-welcome {
+  color: var(--paper-light);
+}
+/* The names block absorbs all free vertical space (margin auto), which
+ * leaves a large empty middle between the welcome line and the names
+ * whenever the hero content is shorter than the screen. A fixed 24px
+ * above the names (plus 24px padding) keeps the cluster tight; the
+ * leftover space goes below the names instead, above the date card. */
+[data-theme-id="noor-invitation"] .invitation-names {
+  margin: 24px 0 auto;
+  padding-top: 24px;
+}
+@keyframes noor-page-settle {
+  0% {
+    transform: rotateY(10deg) scale(1.03);
+    filter: brightness(0.8);
+  }
+  to {
+    transform: rotateY(0) scale(1);
+    filter: brightness(1);
+  }
+}
+@keyframes noor-verse-in {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes noor-rule-in {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes noor-detail-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Noor's hero is a dark night courtyard, so the lineage lines under the
+ * names must be light gold, not the theme's dark foreground ink (the
+ * shared .family-block rule assumes a light hero) — dark-on-dark was
+ * unreadable and the wrong colour for the theme. The dark shadow replaces
+ * the shared light glow, which only works for dark text on light art. */
+[data-theme-id="noor-invitation"] .family-block p {
+  color: var(--gold-light);
+  text-shadow: 0 2px 10px rgb(0 0 0 / 0.65);
+}
+/* Noor's revealed date card: the shared frosted glass is pale (ink-light)
+ * with dark scratch-ink text — a washed-out pale box that fights the dark
+ * emerald/gold theme. Emerald-tinted glass with gold text instead; the
+ * blur and the gold hairlines stay. */
+[data-theme-id="noor-invitation"] .date-revealed .revealed-date {
+  /* NOTE: the palette's deep emerald is --powder, not --tint —
+   * paletteVariables maps tint -> --powder and defines no --tint, so a
+   * --tint reference here is dropped as invalid and the card goes
+   * transparent. */
+  background: color-mix(in oklch, var(--powder) 55%, transparent);
+  box-shadow: 0 16px 32px -20px rgb(0 0 0 / 0.55);
+}
+[data-theme-id="noor-invitation"] .date-revealed .revealed-date h2,
+[data-theme-id="noor-invitation"] .date-revealed .revealed-date h3 {
+  color: var(--gold-light);
+}
+[data-theme-id="noor-invitation"] .date-revealed .revealed-date p,
+[data-theme-id="noor-invitation"] .date-revealed .revealed-date span {
+  color: color-mix(in oklch, var(--paper-light) 80%, transparent);
+}
+/* Noor's hero must read Islamic at a glance, not just as a night photo:
+ * a moorish-arch gold frame around the hero, sitting above the photo veil
+ * and below the text (the invitation's own stacking is backdrop -3,
+ * veil -2, so -1 lands exactly there), with a gold-outlined emerald
+ * diamond keystone centred on the frame's top edge. */
+[data-theme-id="noor-invitation"] .skyline-invitation::before {
+  content: "";
+  position: absolute;
+  inset: clamp(14px, 3.5vw, 30px);
+  z-index: -1;
+  border: 1px solid color-mix(in oklch, var(--gold) 60%, transparent);
+  border-radius: 999px 999px 10px 10px / 260px 260px 10px 10px;
+  pointer-events: none;
+}
+[data-theme-id="noor-invitation"] .skyline-invitation::after {
+  content: "";
+  position: absolute;
+  top: clamp(14px, 3.5vw, 30px);
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  transform: translate(-50%, -50%) rotate(45deg);
+  /* --powder is the palette's deep emerald (--tint is not defined). */
+  background: var(--powder);
+  border: 1px solid var(--gold);
+  z-index: -1;
+  pointer-events: none;
+}
+/*
+ * Cathedral Light's own doors mechanic (rework, owner request,
+ * 2026-10-28): NOT a swing — the two panels glide apart sideways
+ * from the artwork's own middle line (50%: seam, arch apex and
+ * ring-handle midpoint all agree), opening exactly from that line
+ * while warm light spills from the widening gap, then a candlelight
+ * bloom after opening. Seal, cue and invited line all centre on that
+ * same axis, so the whole cover reads as one composed block on
+ * phone and desktop alike.
+ */
+.ctd-cover {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  perspective: 2200px;
+  cursor: pointer;
+  overflow: hidden;
+}
+.ctd-cover:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+.ctd-underlay {
+  position: absolute;
+  inset: 0;
+  /* Warm light spilling from the doorway: revealed progressively as
+   * the panels glide apart, so the gap itself glows before the hero
+   * blooms in. */
+  background: radial-gradient(
+    ellipse 90% 70% at 50% 45%,
+    #f7e3ac 0%,
+    var(--powder) 45%,
+    var(--paper-dark) 100%
+  );
+}
+.ctd-door {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+  box-shadow: inset 0 0 60px color-mix(in oklch, black 35%, transparent);
+}
+.ctd-door-left {
+  left: 0;
+  width: 50%;
+}
+.ctd-door-right {
+  left: 50%;
+  width: 50%;
+}
+.ctd-glow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 8px;
+  margin-left: -4px;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklch, var(--powder) 85%, transparent),
+    transparent
+  );
+  filter: blur(3px);
+  z-index: 3;
+}
+/* Wax seal, no letters (owner request, revised 2026-10-28): the
+ * first version's flat CSS blob read as a cheap sticker, so the seal
+ * is now drawn as inline SVG — blush scalloped wax, a gold lily
+ * wreath, and a single small lily in the middle where the Lovable
+ * cover's "A & A" initials sat. Still no image asset and no letters,
+ * and it stays crisp at every size. */
+.ctd-seal {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  transform: translate(-50%, -50%);
+  /* Sized by % of the cover, not vw: inside the editor's fixed 375px
+   * phone canvas, vw still resolves against the real desktop viewport,
+   * so the old 11vw rule blew the seal up to its 136px cap there —
+   * over a third of the phone. 20% of the cover reads the same in the
+   * editor phone, the guest phone, and (capped) on desktop. */
+  width: min(20%, 96px);
+  aspect-ratio: 1;
+  z-index: 4;
+  pointer-events: none;
+  filter: drop-shadow(0 8px 14px rgb(50 25 5 / 0.45));
+  transition: opacity 1.2s cubic-bezier(0.42, 0, 0.58, 1);
+}
+/* Larger Tap to open than the temple doors' small cue (owner
+ * request): a cream pill with a gold hairline, sitting above the
+ * invited line the way the Lovable cover stacked tap-then-names. */
+.ctd-cue {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  bottom: 14%;
+  margin: 0;
+  padding: 10px 24px;
+  font-size: clamp(15px, 4vw, 19px);
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--foreground);
+  background: var(--paper-light);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: 0 4px 16px color-mix(in oklch, black 25%, transparent);
+  z-index: 4;
+  transition: opacity 1.2s cubic-bezier(0.42, 0, 0.58, 1);
+}
+/* No couple names on the cover (owner request) — the invited line
+ * stands in their place, same convention as the temple doors. */
+.ctd-invited {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  bottom: 6%;
+  margin: 0;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: clamp(26px, 7vw, 34px);
+  color: var(--paper-light);
+  text-align: center;
+  text-shadow: 0 2px 6px color-mix(in oklch, black 55%, transparent);
+  z-index: 4;
+  pointer-events: none;
+  transition: opacity 1.2s cubic-bezier(0.42, 0, 0.58, 1);
+}
+.ctd-cover.is-opening .ctd-glow {
+  animation: rmd-glow-pulse 1.8s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+.ctd-cover.is-opening .ctd-seal,
+.ctd-cover.is-opening .ctd-invited,
+.ctd-cover.is-opening .ctd-cue {
+  opacity: 0;
+}
+/* Slow, majestic glide apart — 1.2s hold, then 5s on a gentle ease,
+ * so the heavy oak reads heavy instead of hurried. No rotation at
+ * all: the left panel translates exactly its own width left and the
+ * right panel exactly its own width right, so both panels end fully
+ * off the cover and the gap opens symmetrically about the middle
+ * line from the first frame — nothing like the temple doors' 3D
+ * swing. The JS unmount timer fires at 6.2s, exactly when the glide
+ * ends. */
+.ctd-cover.is-opening .ctd-door-left {
+  transition: transform 5s cubic-bezier(0.65, 0, 0.35, 1) 1.2s;
+  transform: translateX(-100%);
+}
+.ctd-cover.is-opening .ctd-door-right {
+  transition: transform 5s cubic-bezier(0.65, 0, 0.35, 1) 1.2s;
+  transform: translateX(100%);
 }
 
 /* Drawn decoration, used by templates that ship without photography. */
@@ -2263,11 +3059,11 @@ a {
     padding: 56px 0 18px;
   }
   .invitation-person-name {
-    font-size: calc(38px * var(--names-scale, 1));
+    font-size: calc(60px * var(--names-scale, 1));
     line-height: 1.15;
   }
   .invitation-and {
-    font-size: calc(22px * var(--names-scale, 1));
+    font-size: calc(32px * var(--names-scale, 1));
     margin: 4px 0;
   }
   .family-block p {
@@ -2497,6 +3293,28 @@ a {
   outline: 1px dashed color-mix(in oklch, currentColor 55%, transparent);
   outline-offset: 3px;
   border-radius: 2px;
+}
+
+/* In the editor the hero fields are real inputs, and
+ * .editable-field-input's `font: inherit` hands them their parent's
+ * size — no hero container sets one, so every hero line collapses to
+ * the inherited 16px inside the phone canvas, whatever the viewport.
+ * Restore the phone sizes here (the canvas is a phone, so these match
+ * what a guest sees on a real phone, not the desktop sizes). */
+.phone-screen .invitation-person-name.editable-field-input {
+  font-size: calc(60px * var(--names-scale, 1));
+}
+.phone-screen .invitation-and {
+  font-size: calc(32px * var(--names-scale, 1));
+}
+.phone-screen .invitation-heading .editable-field-input {
+  font-size: 22px;
+}
+.phone-screen .invitation-blessing .editable-field-input {
+  font-size: 17px;
+}
+.phone-screen .invitation-welcome.editable-field-input {
+  font-size: 15px;
 }
 
 /*

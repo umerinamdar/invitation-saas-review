@@ -20,6 +20,8 @@ const SHOWCASE_IDS = [
   "kanjeevaram",
   "makkah",
   "golden-temple",
+  "noor-invitation",
+  "ivory-silk-pearls",
 ] as const;
 
 const TITLE = `${BRAND} — Digital wedding invitations you can share on WhatsApp`;
@@ -79,14 +81,18 @@ const FAQ_KEYS = Array.from({ length: 11 }, (_, i) => i);
 const INCLUDED_KEYS = Array.from({ length: 6 }, (_, i) => i);
 
 function Landing() {
-  // Indices 0/3/5 pick three varied designs when the catalog is full size;
-  // wrapping with modulo (instead of the old themes[3] ?? themes[1] chain)
-  // keeps this safe down to a single registered theme too — the chain's
-  // last fallback, themes[2], was itself undefined during the catalog
-  // reset (2026-10-25, only 1-2 themes active), which crashed the
-  // homepage entirely rather than just repeating a design.
-  const pick = (i: number) => themes[i % themes.length]!;
-  const [a, b, c] = [pick(0), pick(3), pick(5)];
+  // The storefront stack, picked by id so a catalog reorder never
+  // silently swaps it: a is the front phone, b the left, c the right.
+  // Each falls back to the first registered theme if its id is ever
+  // unregistered, so the homepage cannot crash on a short catalog
+  // (the old index chain did exactly that during the 2026-10-25
+  // catalog reset, when its themes[2] fallback was itself undefined).
+  const fallback = themes[0]!;
+  const [a, b, c] = [
+    themesById.get("dubai-silk") ?? fallback,
+    themesById.get("noor-invitation") ?? fallback,
+    themesById.get("ram-mandir") ?? fallback,
+  ];
   const { t } = useLocale();
   return (
     <div className="site">

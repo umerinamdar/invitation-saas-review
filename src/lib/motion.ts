@@ -56,6 +56,47 @@ export const EASE = {
 /** Stagger step for grouped entrances (hero pieces, gallery cards). */
 export const STAGGER_MS = 70;
 
+/**
+ * Noor Invitation's opening timeline, converted exactly from the
+ * owner's Lovable project "Noor Invitation" (054990d9) and its
+ * opening-timeline.ts (same constants, same milestone arithmetic).
+ * The keepsake book is sealed, holds 1.2s
+ * after TAP TO OPEN, swings open horizontally over 4.5s into a flat
+ * two-page spread, then a 1.0s warm flash bursts from the centre on
+ * its own, then the Ar-Rum 30:21 quote sits readable on the spread
+ * for 5.2s, then a 1.0s fade carries the guest into the courtyard
+ * welcome. Total 12.9s — the theme's openMs must equal removeAt, so
+ * the parent's unmount timer fires exactly as the fade completes.
+ * Flash and quote are separate phases, never rendered together.
+ */
+export const NOOR_OPENING = {
+  /** Hold on the sealed cover after TAP TO OPEN. */
+  hold: 1200,
+  /** The horizontal book swing into the flat spread. */
+  swing: 4500,
+  /** The warm light burst from the centre of the open book. */
+  flash: 1000,
+  /** How long the quote sits readable on the spread. */
+  quote: 5200,
+  /** Fade from the spread into the courtyard welcome. */
+  exit: 1000,
+} as const;
+
+export type NoorOpeningPhase =
+  "sealed" | "opening" | "flash" | "quote" | "settled";
+
+export function noorOpeningMilestones(reduced = false) {
+  const flashAt = reduced ? 0 : NOOR_OPENING.hold + NOOR_OPENING.swing;
+  const quoteAt = reduced ? 100 : flashAt + NOOR_OPENING.flash;
+  const welcomeAt = quoteAt + NOOR_OPENING.quote;
+  return {
+    flashAt,
+    quoteAt,
+    welcomeAt,
+    removeAt: welcomeAt + (reduced ? 50 : NOOR_OPENING.exit),
+  };
+}
+
 export function prefersReducedMotion(): boolean {
   return (
     typeof window !== "undefined" &&

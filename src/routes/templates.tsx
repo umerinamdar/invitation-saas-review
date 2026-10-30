@@ -1,21 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
 import { BRAND, SiteFooter, SiteHeader } from "@/components/site/chrome";
 import { absoluteUrl } from "@/config/site";
 import { ThemeCard } from "@/components/site/theme-card";
-import { themes, type Religion, type Tradition } from "@/themes";
-
-type CategoryFilter = "all" | Religion | Tradition;
-
-const CATEGORIES: { id: CategoryFilter; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "traditional", label: "Traditional" },
-  { id: "modern", label: "Modern" },
-  { id: "hindu", label: "Hindu" },
-  { id: "muslim", label: "Muslim" },
-  { id: "sikh", label: "Sikh" },
-  { id: "christian", label: "Christian" },
-];
+import { themes } from "@/themes";
 
 const TITLE = `Wedding invitation designs — ${BRAND}`;
 const DESCRIPTION =
@@ -54,19 +41,6 @@ export const Route = createFileRoute("/templates")({
 });
 
 function Templates() {
-  const [category, setCategory] = useState<CategoryFilter>("all");
-  const filtered = useMemo(
-    () => {
-      if (category === "all") return themes;
-      if (category === "traditional" || category === "modern") {
-        return themes.filter((theme) => theme.tradition === category);
-      }
-      // Religion filter
-      return themes.filter((theme) => theme.religion === category);
-    },
-    [category],
-  );
-
   return (
     <div className="site">
       <SiteHeader />
@@ -82,25 +56,9 @@ function Templates() {
             — these are live invitations, not pictures of them.
           </p>
         </section>
-        <div className="category-filter" role="group" aria-label="Filter by tradition">
-          {CATEGORIES.map((c) => (
-            <button
-              key={c.id}
-              type="button"
-              className={`category-pill ${category === c.id ? "is-active" : ""}`}
-              aria-pressed={category === c.id}
-              onClick={() => setCategory(c.id)}
-            >
-              {c.label}
-            </button>
-          ))}
-        </div>
         <section className="designs">
-          {/* Keyed by category so a filter change remounts the grid and
-              the cards settle in with a stagger (see .card-in in
-              site.css) instead of swapping instantly. */}
-          <div className="theme-grid" key={category}>
-            {filtered.map((theme, i) => (
+          <div className="theme-grid">
+            {themes.map((theme, i) => (
               <div
                 key={theme.id}
                 className="card-in"
@@ -110,14 +68,6 @@ function Templates() {
               </div>
             ))}
           </div>
-          <p className="sr-only" role="status">
-            {`${filtered.length} ${filtered.length === 1 ? "design" : "designs"} shown`}
-          </p>
-          {filtered.length === 0 && (
-            <p className="category-empty">
-              No designs in this category yet — check back soon.
-            </p>
-          )}
         </section>
       </main>
       <SiteFooter />

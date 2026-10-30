@@ -153,6 +153,8 @@ type DemoOverride = {
   rsvpByDateText: string;
   email: string;
   hashtag: string;
+  /** A shloka, dua or verse the invitation opens with (renders first after entering). */
+  blessing?: Invite["blessing"];
 };
 
 /**
@@ -721,6 +723,74 @@ const DEMO_OVERRIDES: Record<string, DemoOverride> = {
     rsvpByDateText: "13 November 2027",
     email: "jonathan.rachel@example.com",
     hashtag: "#JonathanWedsRachel",
+  },
+
+  "noor-invitation": {
+    person1: "Rayyan",
+    person2: "Mariam",
+    family1: {
+      relation: "Son of",
+      parents: "Mr. Rehan & Mrs. Sana Sheikh",
+      grandparents:
+        "Late Mr. Iqbal & Mrs. Zarina Sheikh · Mr. Farhan & Mrs. Noor Malik",
+    },
+    family2: {
+      relation: "Daughter of",
+      parents: "Mr. Imran & Mrs. Ayesha Ansari",
+      grandparents:
+        "Mr. Salim & Mrs. Rukhsana Ansari · Late Mr. Javed & Mrs. Shirin Khan",
+    },
+    familyMembers: [
+      { name: "Zoya Sheikh", role: "Sister of the groom" },
+      { name: "Ayaan Ansari", role: "Brother of the bride" },
+    ],
+    event: {
+      typeLabel: "Nikah",
+      startIso: "2027-02-14T19:00:00+05:30",
+      dateText: "14 February 2027",
+      dayText: "Sunday",
+      timeText: "7:00 PM onwards",
+      venueName: "The Grand Pavilion, Marine Drive",
+      venueAddress: "Marine Drive, Mumbai, Maharashtra",
+      dressCode: "Ivory & gold, traditional formal",
+    },
+    subEvents: [
+      {
+        label: "Mehendi",
+        dateText: "12 February",
+        timeText: "4:00 PM onwards",
+        venueName: "The Rose Garden",
+        dressCode: "Emerald & marigold, festive casual",
+      },
+      {
+        label: "Walima",
+        dateText: "15 February",
+        timeText: "1:00 PM onwards",
+        venueName: "The Lantern Hall",
+        dressCode: "Pastels, elegant daywear",
+      },
+      {
+        label: "Reception",
+        dateText: "15 February",
+        timeText: "8:00 PM onwards",
+        venueName: "The Grand Pavilion",
+        dressCode: "Black tie, jewel tones",
+      },
+    ],
+    logistics: {
+      transport:
+        "Chhatrapati Shivaji Maharaj International Airport is 40 minutes away. Shuttles run from Terminal 2 on 12–15 February.",
+      accommodation:
+        "A block of rooms is held at The Pavilion Residences. Mention “Rayyan & Mariam” when booking before 10 January 2027.",
+      note: "Valet parking is available at the main gate. Please arrive 30 minutes before each ceremony.",
+    },
+    rsvpByDateText: "10 January 2027",
+    email: "rayyan.mariam@example.com",
+    hashtag: "#RayyanWedsMariam",
+    blessing: {
+      text: "And among His signs is that He created for you spouses from among yourselves, that you may find tranquillity in them; and He placed between you affection and mercy.",
+      attribution: "Surah Ar-Rum · 30:21",
+    },
   },
 
   "mughal-zamarrud": {
@@ -2127,6 +2197,7 @@ export function getDemoInvite(themeId: string): Invite {
       email: override.email,
     },
     hashtag: override.hashtag,
+    ...(override.blessing ? { blessing: override.blessing } : {}),
     meta: {
       title: `${person1} & ${person2} | Wedding Invitation`,
       description: demoWedding.meta.description,
