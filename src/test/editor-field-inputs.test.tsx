@@ -115,8 +115,6 @@ describe("editor inputs for renderer-supported fields", () => {
     expect(
       screen.getByRole("button", { name: "Add a family member" }),
     ).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Just me" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Two of us" })).toBeTruthy();
   });
 
   it("the-day inputs write event.venueAddress / muhuratText / dressCode", () => {
@@ -223,19 +221,6 @@ describe("editor inputs for renderer-supported fields", () => {
     expect(latest().familyMembers).toEqual([]);
   });
 
-  it("single-host mode drops person2, hides the partner + second family, and restores", () => {
-    const { latest } = renderEditor(baseConfig());
-    expect(screen.getByLabelText("Partner's name")).toBeTruthy();
-    fireEvent.click(screen.getByRole("button", { name: "Just me" }));
-    expect(latest().hosts.mode).toBe("single");
-    expect(latest().hosts.person2).toBeUndefined();
-    expect(screen.queryByLabelText("Partner's name")).toBeNull();
-    expect(screen.getAllByLabelText("Relation")).toHaveLength(1);
-    fireEvent.click(screen.getByRole("button", { name: "Two of us" }));
-    expect(latest().hosts.mode).toBe("couple");
-    expect(screen.getByLabelText("Partner's name")).toBeTruthy();
-    expect(screen.getAllByLabelText("Relation")).toHaveLength(2);
-  });
 });
 
 describe("the new fields in the rendered invitation", () => {

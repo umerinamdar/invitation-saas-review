@@ -4,6 +4,17 @@ import type { Theme } from "./types";
  * Ivory and warm stone, opening through carved oak doors into a cathedral
  * in late light. Artwork and palette generated in Lovable from
  * LOVABLE-BRIEF.md.
+ *
+ * Reworked 2026-10-28 (owner request, from the Lovable "Cathedral Light
+ * Invitations" cover): the generic fast doors (1.6s) are replaced by a
+ * bespoke cathedralDoors mechanic — a slow slide-apart (1.2s hold +
+ * 5s glide) opening exactly from the artwork's middle line, with
+ * warm light spilling from the gap, an SVG wax seal with no
+ * letters (blush wax, gold lily wreath, lily centre), no couple
+ * names on the cover, a larger Tap to open pill
+ * plus a You're Invited line, and a candlelight-bloom post-open
+ * transition. Deliberately not Ram Mandir's mechanic. The split
+ * follows this artwork's own middle line (~50%).
  */
 export const cathedralLight: Theme = {
   id: "cathedral-light",
@@ -52,8 +63,14 @@ export const cathedralLight: Theme = {
   },
 
   motion: {
-    reveal: "doors",
-    openMs: 1600,
+    // openMs matches exactly when the doors' own CSS choreography
+    // finishes (1.2s hold + 5s glide = 6.2s, panels sliding fully off
+    // the cover) — see the mechanic's CSS in styles.css. Like the
+    // temple doors, this mechanic doesn't scale with openMs; the number
+    // exists only so the JS unmount timer in invitation.tsx fires
+    // exactly when the CSS ends.
+    reveal: "cathedralDoors",
+    openMs: 6200,
     introSeconds: 6,
     musicFadeMs: 8000,
     maxVolume: 0.55,
@@ -63,7 +80,7 @@ export const cathedralLight: Theme = {
 
   kicker: "CARVED OAK DOORS",
   tagline:
-    "Ivory and warm stone invitation whose carved oak doors swing inward on a cathedral lit by its rose window and candles.",
+    "Ivory and warm stone invitation whose carved oak doors glide apart on a cathedral lit by its rose window and candles.",
   features: [
     "Carved Door Opening",
     "Rose Window Light",

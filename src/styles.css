@@ -222,13 +222,13 @@ a {
   justify-content: space-around;
   gap: 48px;
   transform: rotate(-28deg) scale(1.4);
-  opacity: 0.16;
+  opacity: 0.07;
 }
 .preview-watermark span {
   font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
   color: var(--ink, #1a1a1a);
   white-space: nowrap;
 }
@@ -256,7 +256,18 @@ a {
 .painted-stage .doors,
 .painted-stage .curtain,
 .painted-stage .book,
-.painted-stage .box {
+.painted-stage .box,
+.painted-stage .iris,
+.painted-stage .quadrant,
+.painted-stage .fan,
+.painted-stage .wrap,
+.painted-stage .blinds,
+.painted-stage .scroll-cover,
+.painted-stage .isp-cover,
+.painted-stage .rmd-cover,
+.painted-stage .gtd-cover,
+.painted-stage .ctd-cover,
+.painted-stage .noor-cover {
   width: 100%;
   height: 100%;
   max-width: none;
@@ -289,7 +300,13 @@ a {
 .doors:focus-visible,
 .curtain:focus-visible,
 .book:focus-visible,
-.box:focus-visible {
+.box:focus-visible,
+.iris:focus-visible,
+.quadrant:focus-visible,
+.fan:focus-visible,
+.wrap:focus-visible,
+.blinds:focus-visible,
+.scroll-cover:focus-visible {
   outline: 2px solid var(--gold);
   outline-offset: 4px;
 }
@@ -373,6 +390,41 @@ a {
   transform: translateY(-65px);
 }
 .is-opening .envelope-line {
+  opacity: 0;
+}
+/*
+ * Dubai Silk only: a real wax-seal image (owner's own design, made in a
+ * separate Lovable project — public/themes/dubai-silk/seal.png) plus a
+ * "You're Invited" script line, over the flap's point. The plain
+ * `envelope` mechanic above (EnvelopeReveal) is shared by any theme
+ * that picks it, so this lives on `[data-theme-id="dubai-silk"]`
+ * instead of in the shared component — `.envelope::after` already
+ * holds every envelope theme's inset border accent and stays
+ * untouched; this uses the otherwise-unused `::before` slot. One box,
+ * not two: the seal art is `background-image` positioned at the top
+ * of the box, with the real (generated) text content sitting below it
+ * via `padding-top`, so both move and fade together as one unit.
+ */
+[data-theme-id="dubai-silk"] .envelope::before {
+  content: "You're Invited";
+  position: absolute;
+  top: 54%;
+  left: 50%;
+  width: max-content;
+  transform: translate(-50%, -50%);
+  padding-top: 86px;
+  background: url("/themes/dubai-silk/seal.png") top center / 80px 80px
+    no-repeat;
+  font-family: "Great Vibes", cursive;
+  font-size: clamp(20px, 5.5vw, 26px);
+  color: var(--gold);
+  text-align: center;
+  white-space: nowrap;
+  z-index: 5;
+  pointer-events: none;
+  transition: opacity 0.6s;
+}
+[data-theme-id="dubai-silk"] .is-opening .envelope::before {
   opacity: 0;
 }
 /* Doors: two carved panels swing inward, the seal parting between them. */
@@ -606,6 +658,1601 @@ a {
   }
 }
 
+/*
+ * Six mechanics added for the Lovable-20 conversion (2026-10-25). Same
+ * contract as the five above: one moving-part transition keyed off
+ * var(--open-duration) with the shared cubic-bezier(0.42, 0, 0.58, 1)
+ * easing, triggered by the stage's own .is-opening class — nothing
+ * theme-specific lives here.
+ */
+
+/* Iris: a circular shutter dissolves open from the centre. */
+.iris {
+  width: min(480px, 100%);
+  aspect-ratio: 1;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  container-type: inline-size;
+  cursor: pointer;
+}
+.iris-shutter {
+  position: absolute;
+  inset: 0;
+  background: var(--paper-texture) center/400px var(--paper);
+  clip-path: circle(0% at 50% 50%);
+  transition: clip-path var(--open-duration, 1.4s)
+    cubic-bezier(0.42, 0, 0.58, 1);
+}
+.iris-ring {
+  position: absolute;
+  inset: 14px;
+  border: 1px solid
+    color-mix(in oklch, var(--gold-light) 65%, transparent);
+  border-radius: 999px;
+  pointer-events: none;
+}
+.iris.is-opening .iris-shutter {
+  clip-path: circle(85% at 50% 50%);
+}
+
+/* Quadrant: four quarter-panels slide away to their own corner. */
+.quadrant {
+  width: min(480px, 100%);
+  aspect-ratio: 1;
+  position: relative;
+  overflow: hidden;
+  container-type: inline-size;
+  cursor: pointer;
+}
+.quadrant-panel {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  background: var(--paper-texture) center/400px var(--paper);
+  border: 1px solid var(--paper-dark);
+  box-shadow: var(--shadow-envelope);
+  transition: transform var(--open-duration, 1.4s)
+    cubic-bezier(0.42, 0, 0.58, 1);
+}
+.quadrant-panel.tl {
+  top: 0;
+  left: 0;
+}
+.quadrant-panel.tr {
+  top: 0;
+  right: 0;
+}
+.quadrant-panel.bl {
+  bottom: 0;
+  left: 0;
+}
+.quadrant-panel.br {
+  bottom: 0;
+  right: 0;
+}
+.quadrant.is-opening .quadrant-panel.tl {
+  transform: translate(-105%, -105%);
+}
+.quadrant.is-opening .quadrant-panel.tr {
+  transform: translate(105%, -105%);
+}
+.quadrant.is-opening .quadrant-panel.bl {
+  transform: translate(-105%, 105%);
+}
+.quadrant.is-opening .quadrant-panel.br {
+  transform: translate(105%, 105%);
+}
+
+/* Fan: blades sharing one pivot, fanning open at staggered angles. */
+.fan {
+  width: min(480px, 100%);
+  aspect-ratio: 1.1;
+  position: relative;
+  overflow: hidden;
+  container-type: inline-size;
+  cursor: pointer;
+}
+.fan-blade {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 55%;
+  height: 100%;
+  transform-origin: bottom center;
+  transform: translateX(-50%);
+  background: var(--paper-texture) center/400px var(--paper);
+  border: 1px solid var(--paper-dark);
+  transition: transform var(--open-duration, 1.4s)
+    cubic-bezier(0.42, 0, 0.58, 1);
+}
+.fan.is-opening .fan-blade {
+  transform: translateX(-50%) rotate(var(--fan-angle, 0deg));
+}
+
+/* Wrap: top and bottom halves slide away, opposite directions. */
+.wrap {
+  width: min(530px, 100%);
+  aspect-ratio: 1.1;
+  position: relative;
+  overflow: hidden;
+  container-type: inline-size;
+  cursor: pointer;
+}
+.wrap-half {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 52%;
+  background: var(--paper-texture) center/400px var(--paper);
+  border: 1px solid var(--paper-dark);
+  box-shadow: var(--shadow-envelope);
+  transition: transform var(--open-duration, 1.4s)
+    cubic-bezier(0.42, 0, 0.58, 1);
+}
+.wrap-top {
+  top: 0;
+}
+.wrap-bottom {
+  bottom: 0;
+}
+.wrap.is-opening .wrap-top {
+  transform: translateY(-101%);
+}
+.wrap.is-opening .wrap-bottom {
+  transform: translateY(101%);
+}
+
+/* Blinds: horizontal slats flipping open in a staggered cascade. */
+.blinds {
+  width: min(530px, 100%);
+  aspect-ratio: 1.1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  perspective: 900px;
+  container-type: inline-size;
+  cursor: pointer;
+}
+.blind-slat {
+  flex: 1;
+  transform-origin: top;
+  background: var(--paper-texture) center/400px var(--paper);
+  border-bottom: 1px solid var(--paper-dark);
+  transition: transform var(--open-duration, 1.4s)
+    cubic-bezier(0.42, 0, 0.58, 1);
+}
+.blinds.is-opening .blind-slat {
+  transform: rotateX(86deg);
+}
+
+/* Scroll: the sheet rolls up and away past a decorative rod. */
+.scroll-cover {
+  width: min(430px, 100%);
+  aspect-ratio: 0.82;
+  position: relative;
+  overflow: hidden;
+  container-type: inline-size;
+  cursor: pointer;
+}
+.scroll-sheet {
+  position: absolute;
+  inset: 0;
+  background: var(--paper-texture) center/400px var(--paper-light);
+  border: 1px solid var(--paper-dark);
+  box-shadow: var(--shadow-paper);
+  transition: transform var(--open-duration, 1.5s)
+    cubic-bezier(0.42, 0, 0.58, 1);
+}
+.scroll-rod {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 14px;
+  background: linear-gradient(180deg, var(--gold-light), var(--gold));
+  border-radius: 999px;
+  box-shadow: 0 2px 7px color-mix(in oklch, var(--foreground) 30%, transparent);
+  transition: transform var(--open-duration, 1.5s)
+    cubic-bezier(0.42, 0, 0.58, 1);
+  z-index: 2;
+}
+.scroll-cover.is-opening .scroll-sheet,
+.scroll-cover.is-opening .scroll-rod {
+  transform: translateY(-100%);
+}
+@media (max-width: 640px) {
+  .fan,
+  .wrap,
+  .blinds {
+    aspect-ratio: 0.95;
+  }
+  .scroll-cover {
+    width: min(330px, 100%);
+  }
+}
+
+/* Painted-artwork variants: the image IS the scene, so drop the drawn
+ * paper styling (borders/shadows) the same way doors/curtain/book/box do. */
+.iris.is-painted .iris-shutter,
+.quadrant.is-painted .quadrant-panel,
+.fan.is-painted .fan-blade,
+.wrap.is-painted .wrap-half,
+.blinds.is-painted .blind-slat,
+.scroll-cover.is-painted .scroll-sheet {
+  border: none;
+  box-shadow: none;
+}
+.quadrant.is-painted .quadrant-panel,
+.wrap.is-painted .wrap-half,
+.blinds.is-painted .blind-slat {
+  background-color: transparent;
+}
+
+/*
+ * Ivory Silk & Pearls' own mechanic — a literal port of one theme's
+ * Lovable-built opening, not a shared gesture (docs/ops/
+ * OPENING-STUDY-ivory-silk-pearls.md has the full choreography this is
+ * read from). Unlike every mechanic above, these timings are hardcoded
+ * exactly as measured from the source build rather than derived from
+ * var(--open-duration) — porting means keeping its own numbers, not
+ * fitting it to the shared contract. One envelope texture is cut into
+ * four clipped pieces (flap, two wings, bottom pocket) by clip-path
+ * alone, same as the source: there is only ever one background image.
+ */
+.isp-cover {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  perspective: 2000px;
+  cursor: pointer;
+  overflow: hidden;
+}
+.isp-cover:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+.isp-underlay {
+  position: absolute;
+  inset: 0;
+  background: var(--paper-light);
+}
+.isp-shadow {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklch, var(--foreground) 35%, transparent),
+    transparent 65%
+  );
+}
+.isp-piece {
+  position: absolute;
+  inset: 0;
+  background-position: 50%;
+  background-size: cover;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+.isp-bottom {
+  clip-path: polygon(0 100%, 50% 50%, 100% 100%);
+  transform-origin: 50% 100%;
+}
+.isp-left {
+  clip-path: polygon(0 0, 50% 50%, 0 100%);
+  transform-origin: 0 50%;
+}
+.isp-right {
+  clip-path: polygon(100% 0, 100% 100%, 50% 50%);
+  transform-origin: 100% 50%;
+}
+.isp-flap {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 0;
+  transform-style: preserve-3d;
+  backface-visibility: visible;
+  will-change: transform, opacity;
+}
+.isp-flap-face {
+  clip-path: polygon(0 0, 100% 0, 50% 50%);
+}
+.isp-lining {
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(0 100%, 100% 100%, 50% 50%);
+  background: linear-gradient(180deg, var(--paper-dark), var(--highlight, var(--paper-light)));
+  backface-visibility: hidden;
+  transform: rotateX(180deg);
+}
+/* Owner request, 2026-10-26: both lines live near the bottom of the
+ * card, not centred — "Tap to open" above "You're Invited". */
+.isp-cue {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 18%;
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.8rem;
+  color: var(--muted-foreground);
+}
+/* No wax-seal graphic (owner request, 2026-10-26): a plain script line
+ * stands where the seal used to sit. Parisienne, not Great Vibes —
+ * each bespoke mechanic gets its own script face (owner request,
+ * 2026-10-26: "different fonts for different templates") rather than
+ * one script reused everywhere; Dubai Silk keeps Great Vibes since
+ * that was its own seal's original pairing. */
+.isp-invited {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 8%;
+  margin: 0;
+  font-family: "Parisienne", cursive;
+  font-size: clamp(24px, 6.5vw, 30px);
+  color: var(--gold);
+  text-align: center;
+  will-change: transform, opacity;
+}
+.isp-cover.is-opening .isp-invited,
+.isp-cover.is-opening .isp-cue {
+  transition:
+    transform 2.1s cubic-bezier(0.42, 0, 0.58, 1),
+    opacity 2.1s cubic-bezier(0.42, 0, 0.58, 1);
+  opacity: 0;
+  transform: translateY(-6px) scale(1.02);
+}
+.isp-cover.is-opening .isp-underlay {
+  transition: opacity 1.2s cubic-bezier(0.42, 0, 0.58, 1) 1.4s;
+  opacity: 0;
+}
+.isp-cover.is-opening .isp-flap {
+  transition:
+    transform 5s cubic-bezier(0.42, 0, 0.58, 1) 1.4s,
+    opacity 1s cubic-bezier(0.42, 0, 0.58, 1) 5.4s;
+  opacity: 0;
+  transform: rotateX(-172deg);
+}
+.isp-cover.is-opening .isp-shadow {
+  animation: isp-shadow-sweep 5s cubic-bezier(0.42, 0, 0.58, 1) 1.4s both;
+}
+.isp-cover.is-opening .isp-left {
+  transition:
+    transform 2.8s cubic-bezier(0.42, 0, 0.58, 1) 3.4s,
+    opacity 2.8s cubic-bezier(0.42, 0, 0.58, 1) 3.4s;
+  opacity: 0;
+  transform: rotateY(115deg);
+}
+.isp-cover.is-opening .isp-right {
+  transition:
+    transform 2.8s cubic-bezier(0.42, 0, 0.58, 1) 3.4s,
+    opacity 2.8s cubic-bezier(0.42, 0, 0.58, 1) 3.4s;
+  opacity: 0;
+  transform: rotateY(-115deg);
+}
+.isp-cover.is-opening .isp-bottom {
+  transition:
+    transform 2.8s cubic-bezier(0.42, 0, 0.58, 1) 3.4s,
+    opacity 2.8s cubic-bezier(0.42, 0, 0.58, 1) 3.4s;
+  opacity: 0;
+  transform: rotateX(115deg);
+}
+@keyframes isp-shadow-sweep {
+  0% {
+    opacity: 0;
+    transform: translateY(-30%);
+  }
+  50% {
+    opacity: 0.6;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(40%);
+  }
+}
+
+/*
+ * Ivory Silk & Pearls' post-open "emerge into focus" — also ported
+ * literally and scoped to this one theme only via [data-theme-id], not
+ * folded into the shared CinematicInvite every other theme uses.
+ */
+[data-theme-id="ivory-silk-pearls"] .skyline-backdrop {
+  animation: isp-backdrop-focus 3.6s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+[data-theme-id="ivory-silk-pearls"] .skyline-invitation {
+  animation: isp-slow-zoom-blend 3.6s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+[data-theme-id="ivory-silk-pearls"] .invitation-heading,
+[data-theme-id="ivory-silk-pearls"] .invitation-names {
+  animation: isp-detail-fade 1.4s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+/*
+ * Ram Mandir's own post-open "emerge into focus" — same shared
+ * blur/zoom keyframes as Ivory Silk & Pearls above (they aren't
+ * actually specific to that theme despite the isp- prefix), just a
+ * slightly shorter settle to suit a punchier door-opening beat.
+ */
+[data-theme-id="ram-mandir"] .skyline-backdrop {
+  animation: isp-backdrop-focus 3.2s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+[data-theme-id="ram-mandir"] .skyline-invitation {
+  animation: isp-slow-zoom-blend 3.2s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+[data-theme-id="ram-mandir"] .invitation-heading,
+[data-theme-id="ram-mandir"] .invitation-names {
+  animation: isp-detail-fade 1.2s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+/*
+ * Golden Temple's own post-open beat (owner request, 2026-10-27): not
+ * a blur/zoom settle like the two above, but a forward dolly — as if
+ * the camera is walking through the doorway it just watched open, into
+ * the courtyard beyond. Same idea as isp-backdrop-focus/
+ * isp-slow-zoom-blend (the backdrop and the card animate separately so
+ * the card's own fade-in reads against an already-moving backdrop) but
+ * starting from a much bigger scale and a longer, unhurried duration,
+ * since the whole point here is the sense of forward travel, not a
+ * quick refocus.
+ */
+[data-theme-id="golden-temple"] .skyline-backdrop {
+  animation: gtd-dolly-in 4.2s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+[data-theme-id="golden-temple"] .skyline-invitation {
+  animation: gtd-dolly-in-blend 4.2s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+[data-theme-id="golden-temple"] .invitation-heading,
+[data-theme-id="golden-temple"] .invitation-names {
+  animation: isp-detail-fade 1.2s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+@keyframes gtd-dolly-in {
+  0% {
+    filter: blur(22px);
+    transform: scale(1.4);
+  }
+  60% {
+    filter: blur(5px);
+  }
+  to {
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+@keyframes gtd-dolly-in-blend {
+  0% {
+    opacity: 0;
+    filter: blur(12px);
+    transform: scale(0.78);
+  }
+  50% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+@keyframes isp-backdrop-focus {
+  0% {
+    filter: blur(18px);
+    transform: scale(1.08);
+  }
+  to {
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+@keyframes isp-slow-zoom-blend {
+  0% {
+    opacity: 0;
+    filter: blur(8px);
+    transform: scale(0.92);
+  }
+  55% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+@keyframes isp-detail-fade {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*
+ * Ram Mandir's own mechanic — built directly in this engine, not
+ * ported (no Lovable component existed for it; see the Reveal comment
+ * in themes/types.ts). Same choreography discipline as Ivory Silk &
+ * Pearls: a held beat first, then one continuous motion with the
+ * content card never moving, text last. The sealedBackdrop photo
+ * itself — carved doors under marigold garlands — is split into two
+ * halves by background-position alone (one image, same technique the
+ * shared DoorsReveal above already uses), each hinged on its own outer
+ * edge rather than the centre, matching how real temple doors open.
+ */
+.rmd-cover {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  perspective: 2200px;
+  cursor: pointer;
+  overflow: hidden;
+}
+.rmd-cover:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+.rmd-underlay {
+  position: absolute;
+  inset: 0;
+  /* NOT var(--background) — that token is a near-black brown used for
+   * page chrome elsewhere, and showed through as a jarring dark void
+   * while the doors swing open (nothing is mounted behind them yet, by
+   * the same "card isn't there to move" discipline as Ivory Silk &
+   * Pearls). A warm gold matching the temple's own golden-hour light
+   * keeps the swing feeling like doors opening onto something lit,
+   * not a hole. */
+  background: var(--powder);
+}
+.rmd-door {
+  position: absolute;
+  inset: 0;
+  width: 50%;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+  box-shadow: inset 0 0 60px color-mix(in oklch, black 35%, transparent);
+}
+.rmd-door-left {
+  left: 0;
+  transform-origin: left center;
+}
+.rmd-door-right {
+  left: 50%;
+  transform-origin: right center;
+}
+/* Narrow and soft on purpose (owner feedback, 2026-10-26: a wider,
+ * brighter bar here read as the doors stuck open rather than a seam
+ * of light building before the swing) — a thin glint, not a visible
+ * gap. */
+.rmd-glow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 8px;
+  margin-left: -4px;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklch, var(--powder) 85%, transparent),
+    transparent
+  );
+  filter: blur(3px);
+  z-index: 3;
+}
+/* Owner request, 2026-10-26: both lines live near the bottom of the
+ * doors, not centred — "Tap to open" above "You're Invited". */
+.rmd-cue {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 18%;
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.8rem;
+  color: var(--paper-light);
+  text-shadow: 0 1px 4px color-mix(in oklch, black 60%, transparent);
+  z-index: 4;
+  transition: opacity 1.4s cubic-bezier(0.42, 0, 0.58, 1);
+}
+/* No wax-seal graphic (owner request, 2026-10-26): a plain script line
+ * stands where the seal used to sit. Yesteryear, not Great Vibes —
+ * each bespoke mechanic gets its own script face (owner request,
+ * 2026-10-26: "different fonts for different templates") rather than
+ * one script reused everywhere; Dubai Silk keeps Great Vibes since
+ * that was its own seal's original pairing. */
+.rmd-invited {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 8%;
+  margin: 0;
+  font-family: "Yesteryear", cursive;
+  font-size: clamp(24px, 6.5vw, 30px);
+  color: var(--paper-light);
+  text-align: center;
+  text-shadow: 0 2px 6px color-mix(in oklch, black 55%, transparent);
+  z-index: 4;
+  pointer-events: none;
+  transition: opacity 1.4s cubic-bezier(0.42, 0, 0.58, 1);
+}
+/* Beat 1 (0–1.8s): a warm glow rises at the seam, held before anything
+ * moves — temple-bell-at-dusk stillness rather than an instant snap. */
+.rmd-cover.is-opening .rmd-glow {
+  animation: rmd-glow-pulse 1.8s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+.rmd-cover.is-opening .rmd-invited,
+.rmd-cover.is-opening .rmd-cue {
+  opacity: 0;
+}
+/* Beat 2 (1.4s–5.4s): the doors swing open on their own outer hinges,
+ * fading only in the final second — the content behind has no CSS
+ * here at all, so it cannot move during this beat (same discipline as
+ * Ivory Silk & Pearls' card: nothing to move because it isn't mounted
+ * yet). The underlay itself stays fully visible the whole time — fading
+ * IT out mid-swing was the actual cause of the dark-void bug: it let the
+ * page's own near-black background show through behind the gold the
+ * moment the underlay's opacity dropped, which is the opposite of what
+ * it exists for. No shadow-sweep overlay here either (unlike Ivory
+ * Silk's wide-open cover) — owner feedback, 2026-10-26: with only a
+ * narrow centre gap exposed between the two doors, that overlay's dark
+ * top-to-bottom gradient read as a solid dark bar rather than a soft
+ * shadow, making the opening look broken. */
+/* The rotation signs below were backwards for two prior revisions —
+ * both leaves swung the wrong way — confirmed by Lovable's own geometry
+ * check (2026-10-26): for a CSS rotateY, a point's z-offset relative to
+ * its hinge is -sin(angle) * x. The LEFT leaf's free (inner) edge sits
+ * at positive x relative to its left-edge hinge, so it needs a POSITIVE
+ * angle to move away (negative z); the RIGHT leaf's free edge sits at
+ * negative x relative to its right-edge hinge, so it needs a NEGATIVE
+ * angle for the same away motion. 86deg, not 108deg, so backface
+ * culling never abruptly hides a leaf before its own opacity fade
+ * finishes — the remaining sliver fades out instead of popping away. */
+.rmd-cover.is-opening .rmd-door-left {
+  transition:
+    transform 4s cubic-bezier(0.42, 0, 0.58, 1) 1.4s,
+    opacity 1s cubic-bezier(0.42, 0, 0.58, 1) 4.4s;
+  transform: rotateY(86deg);
+  opacity: 0;
+}
+.rmd-cover.is-opening .rmd-door-right {
+  transition:
+    transform 4s cubic-bezier(0.42, 0, 0.58, 1) 1.4s,
+    opacity 1s cubic-bezier(0.42, 0, 0.58, 1) 4.4s;
+  transform: rotateY(-86deg);
+  opacity: 0;
+}
+@keyframes rmd-glow-pulse {
+  0% {
+    opacity: 0;
+  }
+  55% {
+    opacity: 0.55;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/*
+ * Golden Temple's own mechanic — same carved-doors contract as Ram
+ * Mandir above (see RamMandirDoorsReveal's comment in reveals/index.tsx),
+ * reusing rmd-glow-pulse rather than redeclaring an identical keyframe.
+ * The only real difference is what happens once the doors clear: see
+ * .gtd-dolly-in further down, scoped to [data-theme-id="golden-temple"].
+ */
+.gtd-cover {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  perspective: 2200px;
+  cursor: pointer;
+  overflow: hidden;
+}
+.gtd-cover:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+.gtd-underlay {
+  position: absolute;
+  inset: 0;
+  background: var(--powder);
+}
+.gtd-door {
+  position: absolute;
+  inset: 0;
+  width: 50%;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+  box-shadow: inset 0 0 60px color-mix(in oklch, black 35%, transparent);
+}
+/* Hinged at the outer frame, same as ramMandirDoors — owner correction,
+ * 2026-10-27: a centre hinge ("opens from the marking") read as a
+ * bi-fold door ("why its folding"); what was actually wanted all along
+ * was Ram Mandir's own outer-hinge swing. */
+.gtd-door-left {
+  left: 0;
+  width: 51%;
+  transform-origin: left center;
+}
+.gtd-door-right {
+  left: 51%;
+  width: 49%;
+  transform-origin: right center;
+}
+.gtd-glow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 51%;
+  width: 8px;
+  margin-left: -4px;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklch, var(--powder) 85%, transparent),
+    transparent
+  );
+  filter: blur(3px);
+  z-index: 3;
+}
+.gtd-cue {
+  position: absolute;
+  /* Centred on the doors' own seam (51% of the cover, measured from
+   * sealed.jpg), not the screen centre — so the cue sits on exactly
+   * the same vertical axis the doors part on, on every viewport. */
+  left: 51%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  bottom: 18%;
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.8rem;
+  color: var(--paper-light);
+  text-shadow: 0 1px 4px color-mix(in oklch, black 60%, transparent);
+  z-index: 4;
+  transition: opacity 1.4s cubic-bezier(0.42, 0, 0.58, 1);
+}
+/* No wax-seal graphic (owner request, 2026-10-27: "don't use seal,
+ * doors are fine") — the same plain script-line convention as every
+ * other bespoke door mechanic, in its own face. */
+.gtd-invited {
+  position: absolute;
+  /* Same seam axis as .gtd-cue above: the invited line and the cue
+   * share one vertical centre with the doors' parting line. */
+  left: 51%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  bottom: 8%;
+  margin: 0;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: clamp(24px, 6.5vw, 30px);
+  color: var(--paper-light);
+  text-align: center;
+  text-shadow: 0 2px 6px color-mix(in oklch, black 55%, transparent);
+  z-index: 4;
+  pointer-events: none;
+  transition: opacity 1.4s cubic-bezier(0.42, 0, 0.58, 1);
+}
+.gtd-cover.is-opening .gtd-glow {
+  animation: rmd-glow-pulse 1.8s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+.gtd-cover.is-opening .gtd-invited,
+.gtd-cover.is-opening .gtd-cue {
+  opacity: 0;
+}
+/* Same outer-hinge swing as ramMandirDoors (owner correction, 2026-10-27
+ * — after trying a slide-apart push and a centre hinge, both rejected
+ * in turn, what was actually wanted all along was Ram Mandir's own
+ * mechanic exactly). Same angles, same signs, same reasoning: see the
+ * rotation-sign comment above .rmd-cover.is-opening .rmd-door-left. */
+.gtd-cover.is-opening .gtd-door-left {
+  transition:
+    transform 4s cubic-bezier(0.42, 0, 0.58, 1) 1.4s,
+    opacity 1s cubic-bezier(0.42, 0, 0.58, 1) 4.4s;
+  transform: rotateY(86deg);
+  opacity: 0;
+}
+.gtd-cover.is-opening .gtd-door-right {
+  transition:
+    transform 4s cubic-bezier(0.42, 0, 0.58, 1) 1.4s,
+    opacity 1s cubic-bezier(0.42, 0, 0.58, 1) 4.4s;
+  transform: rotateY(-86deg);
+  opacity: 0;
+}
+
+/*
+ * Noor Invitation's own book mechanic — a CONVERSION of the Lovable
+ * project "Noor Invitation" (054990d9), not a re-authoring. This
+ * block is Lovable's manuscript block (OpeningBook + styles.css),
+ * ported with only container adaptations: class names prefixed
+ * noor- (manuscript-* would collide in the shared stylesheet),
+ * Lovable's variables mapped onto the site's identical palette
+ * variables (--accent -> --gold, --accent-soft -> --gold-light,
+ * --highlight -> --ink-light; --paper, --paper-dark, --border,
+ * --scratch-ink, --paper-light already share names and values),
+ * fixed positioning -> absolute inside the site's sealed stage,
+ * and the Lovable-only tokens carried scoped on .noor-cover with
+ * Lovable's exact values (--book-navy #173563, --book-scene
+ * #eeeae3, --book-shadow #08182b, --ease-weighted
+ * cubic-bezier(0.65, 0, 0.2, 1)). Geometry, timings, breakpoints
+ * and keyframes are Lovable's unchanged: one rigid cover turns
+ * sideways into an ivory spread. The swing/flash durations come
+ * from --book-hold/--book-swing/--book-flash-duration, set inline
+ * by the component from NOOR_OPENING (lib/motion.ts) exactly as
+ * Lovable sets them from its OPENING constants. Transform and
+ * opacity only, like every other mechanic.
+ */
+.noor-cover {
+  --noor-book-navy: #173563;
+  --noor-book-scene: #eeeae3;
+  --noor-book-shadow: #08182b;
+  --noor-ease-weighted: cubic-bezier(0.65, 0, 0.2, 1);
+  --noor-page-width: min(84cqw, 52cqh, 680px);
+  --noor-spread-scale: 0.54;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  /* The cover is a fixed-size frame (100% of the sealed stage), so it
+   * can be a size container: the book then sizes against the stage,
+   * not the browser viewport. In the editor the stage is a 375px phone
+   * canvas inside a desktop viewport, where the old vw/dvh rule made
+   * the book 468px wide — wider than the phone, so the sealed cover
+   * looked zoomed and cropped. On the guest page the stage IS the
+   * viewport, so the numbers come out identical there. */
+  container-type: size;
+  overflow: hidden;
+  background: var(--noor-book-scene);
+  color: var(--gold-light);
+  transition: opacity 1s var(--noor-ease-weighted);
+}
+.noor-cover:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+.noor-cover.has-finished {
+  opacity: 0;
+  pointer-events: none;
+}
+.noor-floor {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.noor-stage {
+  position: absolute;
+  inset: 0;
+  perspective: 1800px;
+  perspective-origin: 50% 45%;
+}
+.noor-camera {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--noor-page-width);
+  aspect-ratio: 2 / 3;
+  margin-top: calc(var(--noor-page-width) * -0.75);
+  transform: translateX(-50%);
+  transform-origin: 0 50%;
+  transform-style: preserve-3d;
+}
+.noor-volume {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+/*
+ * Site-only fix (not in Lovable): the verse must paint above the
+ * cover-back. Inside the site's sealed stage the verse's translateZ
+ * is flattened, so the cover-back — which sits 3px proud of the
+ * cover plane after the swing — occludes the translation page and
+ * the English verse renders blank (only the Arabic page shows, as
+ * nothing covers the right page). Flattening the volume makes its
+ * children paint in DOM order, and the verse mounts last, so it
+ * lands on top. The cover keeps its own preserve-3d, so the swing
+ * itself — front turning away, back turning toward — is untouched,
+ * and no Lovable geometry, timing or depth value changes.
+ */
+.noor-cover .noor-volume {
+  transform-style: flat;
+}
+.noor-page {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px 7px 7px 2px;
+}
+.noor-paper-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--paper-texture) center/400px var(--paper-light);
+  border-radius: inherit;
+}
+/* Lovable's illuminated page art, painted over the paper texture on
+ * both inside pages. Same 2/3 ratio as the page, so fill distorts
+ * nothing; the border and corner ornaments are in the artwork. */
+.noor-page-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  border-radius: inherit;
+}
+.noor-right {
+  box-shadow:
+    inset 25px 0 35px -20px var(--scratch-ink),
+    6px 12px 0 -4px var(--paper-dark),
+    10px 18px 0 -5px var(--noor-book-navy),
+    0 35px 60px -20px var(--noor-book-shadow);
+}
+.noor-manuscript-cover {
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 50%;
+  transform-style: preserve-3d;
+  transform: rotateY(0deg);
+}
+.noor-front,
+.noor-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 4px;
+}
+.noor-front {
+  transform: translateZ(3px);
+  overflow: hidden;
+  box-shadow: 0 25px 65px -15px var(--noor-book-shadow);
+}
+.noor-front img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+.noor-front-fallback {
+  width: 100%;
+  height: 100%;
+  background: var(--noor-book-navy);
+}
+.noor-back {
+  transform: rotateY(180deg) translateZ(3px);
+  box-shadow:
+    inset -25px 0 35px -20px var(--scratch-ink),
+    -6px 12px 0 -4px var(--paper-dark),
+    -10px 18px 0 -5px var(--noor-book-navy);
+}
+.noor-spine {
+  position: absolute;
+  left: -5px;
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  transform: translateZ(1px);
+  background: linear-gradient(
+    90deg,
+    var(--noor-book-navy),
+    var(--gold),
+    var(--noor-book-navy)
+  );
+  border-radius: 4px;
+}
+.noor-page-edges {
+  position: absolute;
+  right: -7px;
+  top: 1%;
+  bottom: -6px;
+  width: 7px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--paper),
+    var(--paper) 1px,
+    var(--border) 1px,
+    var(--border) 2px
+  );
+}
+.noor-cover-edge {
+  position: absolute;
+  right: -3px;
+  top: 0;
+  width: 6px;
+  height: 100%;
+  transform: rotateY(90deg);
+  background: var(--noor-book-navy);
+}
+.noor-turn-shadow {
+  position: absolute;
+  inset: 0;
+  opacity: 0.65;
+  background: linear-gradient(90deg, transparent, var(--scratch-ink));
+}
+.noor-cover.has-started .noor-manuscript-cover {
+  animation: noor-turn var(--book-swing) var(--noor-ease-weighted)
+    var(--book-hold) forwards;
+}
+.noor-cover.has-started .noor-camera {
+  animation: noor-frame var(--book-swing) var(--noor-ease-weighted)
+    var(--book-hold) forwards;
+}
+.noor-cover.has-started .noor-turn-shadow {
+  animation: noor-shadow var(--book-swing) var(--noor-ease-weighted)
+    var(--book-hold) forwards;
+}
+@keyframes noor-turn {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(-180deg);
+  }
+}
+@keyframes noor-frame {
+  0% {
+    transform: translateX(-50%);
+  }
+  40%,
+  100% {
+    transform: translateX(0) scale(var(--noor-spread-scale));
+  }
+}
+@keyframes noor-shadow {
+  0% {
+    opacity: 0.65;
+    background-position: 0;
+  }
+  45% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.noor-controls {
+  position: absolute;
+  top: calc(50% + var(--noor-page-width) * 0.75 + 32px);
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.noor-controls p {
+  margin: 0;
+}
+.noor-open {
+  height: 44px;
+  padding: 0 28px;
+  border-radius: 4px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  background: var(--noor-book-navy);
+  /* Lovable's plate dressing on the open control: gold border and
+   * outline, soft-gold text, plate shadow. */
+  border: 1px solid var(--gold);
+  outline: 1px solid color-mix(in oklch, var(--gold) 40%, transparent);
+  outline-offset: 3px;
+  color: var(--gold-light);
+  box-shadow: 0 20px 50px -20px
+    color-mix(in oklab, var(--background) 80%, transparent);
+  display: flex;
+  align-items: center;
+}
+.noor-open:hover {
+  background: var(--noor-book-navy);
+  color: var(--ink-light);
+}
+.noor-invited {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 22px;
+  color: var(--noor-book-navy);
+}
+.noor-verse {
+  position: absolute;
+  left: -100%;
+  top: 0;
+  width: 200%;
+  height: 100%;
+  transform: translateZ(8px);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  color: var(--noor-book-navy);
+  text-align: center;
+  animation: noor-verse-in 0.8s ease-out both;
+}
+.noor-verse-page {
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 0;
+  padding: 8% 9%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+}
+.noor-verse-label {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--scratch-ink);
+  text-transform: uppercase;
+  margin: 0;
+}
+.noor-arabic-page .noor-verse-label {
+  font-family: Amiri, serif;
+  font-size: 23px;
+}
+.noor-arabic {
+  font-family: Amiri, serif;
+  font-size: 30px;
+  line-height: 1.85;
+  overflow-wrap: break-word;
+  margin: 0;
+}
+.noor-english {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  line-height: 1.5;
+  font-style: italic;
+  margin: 0;
+}
+.noor-verse .noor-gold-rule {
+  flex: 0 0 1px;
+  width: 140px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+@keyframes noor-verse-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.noor-flash {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  animation: noor-flash var(--book-flash-duration) ease-in-out both;
+}
+.noor-light {
+  position: absolute;
+  inset: -100%;
+  background: radial-gradient(
+    ellipse at center,
+    var(--paper-light) 0 18%,
+    var(--ink-light) 28%,
+    color-mix(in oklab, var(--gold) 80%, transparent) 40%,
+    transparent 65%
+  );
+  animation: noor-burst var(--book-flash-duration) ease-out both;
+}
+.noor-light-ray {
+  position: absolute;
+  width: 36%;
+  left: 32%;
+  bottom: 50%;
+  height: 70%;
+  background: linear-gradient(0deg, var(--ink-light), transparent);
+  clip-path: polygon(45% 100%, 0 0, 100% 0, 55% 100%);
+}
+@keyframes noor-flash {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  28%,
+  55% {
+    opacity: 1;
+  }
+}
+@keyframes noor-burst {
+  from {
+    transform: scale(0.02);
+  }
+  to {
+    transform: scale(1.5);
+  }
+}
+/* The spread scale follows the STAGE, not the viewport: the camera is a
+ * descendant of .noor-cover (the size container above), so this query
+ * reads the stage's width. The old viewport query gave the editor's
+ * 375px phone canvas the desktop 0.88 scale — the quote spread came
+ * out 554px wide and cropped at both edges — while the guest phone
+ * got 0.54. Wide stages (guest desktop) still get 0.88; narrow stages
+ * (guest phone, editor phone) get the 0.54 default. */
+@container (min-width: 900px) {
+  .noor-camera {
+    --noor-spread-scale: 0.88;
+  }
+}
+@media (max-width: 899px) {
+  .noor-verse-page {
+    padding: 7% 9%;
+    gap: 10px;
+  }
+  .noor-arabic {
+    font-size: 24px;
+    line-height: 1.65;
+  }
+  .noor-english {
+    font-size: 23px;
+    line-height: 1.35;
+  }
+  .noor-verse-label {
+    font-size: 13px;
+  }
+  .noor-arabic-page .noor-verse-label {
+    font-size: 18px;
+  }
+  .noor-verse .noor-gold-rule {
+    width: 70px;
+  }
+}
+@media (max-width: 359px), (max-height: 550px) {
+  .noor-english {
+    font-size: 19px;
+    line-height: 1.3;
+  }
+  .noor-arabic {
+    font-size: 21px;
+    line-height: 1.5;
+  }
+  .noor-verse-page {
+    gap: 6px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .noor-cover.has-started .noor-manuscript-cover {
+    animation-delay: 0ms;
+  }
+  .noor-cover.has-started .noor-camera {
+    animation-delay: 0ms;
+  }
+}
+/*
+ * Noor Invitation's own post-open beat (owner request, 2026-10-28):
+ * not a zoom like Ram Mandir's, not a dolly like Golden Temple's,
+ * not a bloom like Cathedral Light's — the hero settles like a page
+ * falling flat (a slight rightward tilt easing to flat), and the
+ * Quran verse illuminates in gold beneath it.
+ */
+[data-theme-id="noor-invitation"] .skyline-invitation {
+  perspective: 1600px;
+}
+[data-theme-id="noor-invitation"] .skyline-backdrop {
+  animation: noor-page-settle 2.8s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+[data-theme-id="noor-invitation"] .invitation-blessing {
+  animation: noor-verse-in 1.6s cubic-bezier(0.42, 0, 0.58, 1) 0.9s both;
+}
+[data-theme-id="noor-invitation"] .invitation-blessing::after {
+  content: "";
+  display: block;
+  width: 96px;
+  height: 1px;
+  margin: 18px auto 0;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  transform-origin: center;
+  animation: noor-rule-in 1.2s cubic-bezier(0.42, 0, 0.58, 1) 1.4s both;
+}
+[data-theme-id="noor-invitation"] .invitation-heading,
+[data-theme-id="noor-invitation"] .invitation-names {
+  /* Names rise after the blessing (0.9s) so they land last in the
+   * welcome, following the reveal's own flash-then-quote order. */
+  animation: noor-detail-rise 1.6s cubic-bezier(0.42, 0, 0.58, 1) 1.6s both;
+}
+/* The hero image is a dark night courtyard, so the hero's own text
+ * — verse, citation and section heading — must be light, not the
+ * theme's dark foreground ink (which is for the light page below).
+ * Names take the same light colour via the theme's namesColor. */
+[data-theme-id="noor-invitation"] .invitation-blessing p {
+  color: var(--paper-light);
+}
+[data-theme-id="noor-invitation"] .invitation-blessing cite {
+  color: var(--gold-light);
+}
+[data-theme-id="noor-invitation"] .invitation-heading {
+  color: var(--paper-light);
+}
+/* The hero's default ink must be light too. In the editor, hero fields
+ * render as real inputs: .editable-field-input sets color: inherit and
+ * comes later than the field classes, so an input takes its PARENT's
+ * colour, not its own class colour. The heading survives because its
+ * colour already lives on its container; the names, blessing and
+ * welcome inputs inherit the page's dark ink and vanish on the night
+ * hero. A light section colour fixes all three editor inputs at once,
+ * and their guest <p> colours are unchanged (same values on the
+ * elements themselves). */
+[data-theme-id="noor-invitation"] .skyline-invitation {
+  color: var(--paper-light);
+}
+/* The guest welcome line has no light rule of its own — the shared rule
+ * gives it the theme's dark muted ink, which is faint on the night hero
+ * in both the editor and the guest view. */
+[data-theme-id="noor-invitation"] .invitation-welcome {
+  color: var(--paper-light);
+}
+/* The names block absorbs all free vertical space (margin auto), which
+ * leaves a large empty middle between the welcome line and the names
+ * whenever the hero content is shorter than the screen. A fixed 24px
+ * above the names (plus 24px padding) keeps the cluster tight; the
+ * leftover space goes below the names instead, above the date card. */
+[data-theme-id="noor-invitation"] .invitation-names {
+  margin: 24px 0 auto;
+  padding-top: 24px;
+}
+@keyframes noor-page-settle {
+  0% {
+    transform: rotateY(10deg) scale(1.03);
+    filter: brightness(0.8);
+  }
+  to {
+    transform: rotateY(0) scale(1);
+    filter: brightness(1);
+  }
+}
+@keyframes noor-verse-in {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes noor-rule-in {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes noor-detail-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Noor's hero is a dark night courtyard, so the lineage lines under the
+ * names must be light gold, not the theme's dark foreground ink (the
+ * shared .family-block rule assumes a light hero) — dark-on-dark was
+ * unreadable and the wrong colour for the theme. The dark shadow replaces
+ * the shared light glow, which only works for dark text on light art. */
+[data-theme-id="noor-invitation"] .family-block p {
+  color: var(--gold-light);
+  text-shadow: 0 2px 10px rgb(0 0 0 / 0.65);
+}
+/* Noor's revealed date card: the shared frosted glass is pale (ink-light)
+ * with dark scratch-ink text — a washed-out pale box that fights the dark
+ * emerald/gold theme. Emerald-tinted glass with gold text instead; the
+ * blur and the gold hairlines stay. */
+[data-theme-id="noor-invitation"] .date-revealed .revealed-date {
+  /* NOTE: the palette's deep emerald is --powder, not --tint —
+   * paletteVariables maps tint -> --powder and defines no --tint, so a
+   * --tint reference here is dropped as invalid and the card goes
+   * transparent. */
+  background: color-mix(in oklch, var(--powder) 55%, transparent);
+  box-shadow: 0 16px 32px -20px rgb(0 0 0 / 0.55);
+}
+[data-theme-id="noor-invitation"] .date-revealed .revealed-date h2,
+[data-theme-id="noor-invitation"] .date-revealed .revealed-date h3 {
+  color: var(--gold-light);
+}
+[data-theme-id="noor-invitation"] .date-revealed .revealed-date p,
+[data-theme-id="noor-invitation"] .date-revealed .revealed-date span {
+  color: color-mix(in oklch, var(--paper-light) 80%, transparent);
+}
+/* Noor's hero must read Islamic at a glance, not just as a night photo:
+ * a moorish-arch gold frame around the hero, sitting above the photo veil
+ * and below the text (the invitation's own stacking is backdrop -3,
+ * veil -2, so -1 lands exactly there), with a gold-outlined emerald
+ * diamond keystone centred on the frame's top edge. */
+[data-theme-id="noor-invitation"] .skyline-invitation::before {
+  content: "";
+  position: absolute;
+  inset: clamp(14px, 3.5vw, 30px);
+  z-index: -1;
+  border: 1px solid color-mix(in oklch, var(--gold) 60%, transparent);
+  border-radius: 999px 999px 10px 10px / 260px 260px 10px 10px;
+  pointer-events: none;
+}
+[data-theme-id="noor-invitation"] .skyline-invitation::after {
+  content: "";
+  position: absolute;
+  top: clamp(14px, 3.5vw, 30px);
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  transform: translate(-50%, -50%) rotate(45deg);
+  /* --powder is the palette's deep emerald (--tint is not defined). */
+  background: var(--powder);
+  border: 1px solid var(--gold);
+  z-index: -1;
+  pointer-events: none;
+}
+/*
+ * Cathedral Light's own doors mechanic (rework, owner request,
+ * 2026-10-28): NOT a swing — the two panels glide apart sideways
+ * from the artwork's own middle line (50%: seam, arch apex and
+ * ring-handle midpoint all agree), opening exactly from that line
+ * while warm light spills from the widening gap, then a candlelight
+ * bloom after opening. Seal, cue and invited line all centre on that
+ * same axis, so the whole cover reads as one composed block on
+ * phone and desktop alike.
+ */
+.ctd-cover {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  perspective: 2200px;
+  cursor: pointer;
+  overflow: hidden;
+}
+.ctd-cover:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+.ctd-underlay {
+  position: absolute;
+  inset: 0;
+  /* Warm light spilling from the doorway: revealed progressively as
+   * the panels glide apart, so the gap itself glows before the hero
+   * blooms in. */
+  background: radial-gradient(
+    ellipse 90% 70% at 50% 45%,
+    #f7e3ac 0%,
+    var(--powder) 45%,
+    var(--paper-dark) 100%
+  );
+}
+.ctd-door {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+  box-shadow: inset 0 0 60px color-mix(in oklch, black 35%, transparent);
+}
+.ctd-door-left {
+  left: 0;
+  width: 50%;
+}
+.ctd-door-right {
+  left: 50%;
+  width: 50%;
+}
+.ctd-glow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 8px;
+  margin-left: -4px;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklch, var(--powder) 85%, transparent),
+    transparent
+  );
+  filter: blur(3px);
+  z-index: 3;
+}
+/* Wax seal, no letters (owner request, revised 2026-10-28): the
+ * first version's flat CSS blob read as a cheap sticker, so the seal
+ * is now drawn as inline SVG — blush scalloped wax, a gold lily
+ * wreath, and a single small lily in the middle where the Lovable
+ * cover's "A & A" initials sat. Still no image asset and no letters,
+ * and it stays crisp at every size. */
+.ctd-seal {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  transform: translate(-50%, -50%);
+  /* Sized by % of the cover, not vw: inside the editor's fixed 375px
+   * phone canvas, vw still resolves against the real desktop viewport,
+   * so the old 11vw rule blew the seal up to its 136px cap there —
+   * over a third of the phone. 20% of the cover reads the same in the
+   * editor phone, the guest phone, and (capped) on desktop. */
+  width: min(20%, 96px);
+  aspect-ratio: 1;
+  z-index: 4;
+  pointer-events: none;
+  filter: drop-shadow(0 8px 14px rgb(50 25 5 / 0.45));
+  transition: opacity 1.2s cubic-bezier(0.42, 0, 0.58, 1);
+}
+/* Larger Tap to open than the temple doors' small cue (owner
+ * request): a cream pill with a gold hairline, sitting above the
+ * invited line the way the Lovable cover stacked tap-then-names. */
+.ctd-cue {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  bottom: 14%;
+  margin: 0;
+  padding: 10px 24px;
+  font-size: clamp(15px, 4vw, 19px);
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--foreground);
+  background: var(--paper-light);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: 0 4px 16px color-mix(in oklch, black 25%, transparent);
+  z-index: 4;
+  transition: opacity 1.2s cubic-bezier(0.42, 0, 0.58, 1);
+}
+/* No couple names on the cover (owner request) — the invited line
+ * stands in their place, same convention as the temple doors. */
+.ctd-invited {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  bottom: 6%;
+  margin: 0;
+  font-family: "Cormorant Garamond", serif;
+  font-style: italic;
+  font-size: clamp(26px, 7vw, 34px);
+  color: var(--paper-light);
+  text-align: center;
+  text-shadow: 0 2px 6px color-mix(in oklch, black 55%, transparent);
+  z-index: 4;
+  pointer-events: none;
+  transition: opacity 1.2s cubic-bezier(0.42, 0, 0.58, 1);
+}
+.ctd-cover.is-opening .ctd-glow {
+  animation: rmd-glow-pulse 1.8s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+.ctd-cover.is-opening .ctd-seal,
+.ctd-cover.is-opening .ctd-invited,
+.ctd-cover.is-opening .ctd-cue {
+  opacity: 0;
+}
+/* Slow, majestic glide apart — 1.2s hold, then 5s on a gentle ease,
+ * so the heavy oak reads heavy instead of hurried. No rotation at
+ * all: the left panel translates exactly its own width left and the
+ * right panel exactly its own width right, so both panels end fully
+ * off the cover and the gap opens symmetrically about the middle
+ * line from the first frame — nothing like the temple doors' 3D
+ * swing. The JS unmount timer fires at 6.2s, exactly when the glide
+ * ends. */
+.ctd-cover.is-opening .ctd-door-left {
+  transition: transform 5s cubic-bezier(0.65, 0, 0.35, 1) 1.2s;
+  transform: translateX(-100%);
+}
+.ctd-cover.is-opening .ctd-door-right {
+  transition: transform 5s cubic-bezier(0.65, 0, 0.35, 1) 1.2s;
+  transform: translateX(100%);
+}
+
 /* Drawn decoration, used by templates that ship without photography. */
 .pattern-backdrop {
   position: absolute;
@@ -743,11 +2390,25 @@ a {
   margin: auto 0;
   padding: 70px 0 35px;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   transition:
     opacity 1.3s,
     transform 1.3s;
 }
-.invitation-names h1 {
+/* Each host gets their own name directly over their own family lines,
+ * with "&" standing alone between the two groups — not one shared
+ * heading with both names inline and the families in a separate row
+ * (owner request, 2026-10-25: the old layout read as disconnected from
+ * who belonged to which family). */
+.invitation-person {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.invitation-person-name {
+  margin: 0;
   font-size: calc(76px * var(--names-scale, 1));
   line-height: 1.1;
   font-weight: 500;
@@ -755,11 +2416,13 @@ a {
   text-shadow: 0 1px 15px var(--paper-light);
   text-wrap: balance;
 }
-.invitation-names em {
-  font-size: calc(55px * var(--names-scale, 1));
+.invitation-and {
+  display: block;
+  font-size: calc(40px * var(--names-scale, 1));
+  font-style: italic;
   font-weight: 400;
   color: var(--gold);
-  padding: 0 12px;
+  margin: 10px 0;
 }
 .invitation-date {
   width: min(460px, 100%);
@@ -1109,10 +2772,28 @@ a {
   width: 44px;
   height: 44px;
   border-radius: 999px;
-  color: var(--ink-light);
+  /* Was var(--ink-light) — a near-white "glow" token, not a text/icon
+   * colour. The dock's own background always tracks var(--background),
+   * so matching that with var(--foreground) (its designed AA-contrast
+   * partner, same pairing .music-error already relies on below) keeps
+   * the icons visible on every theme; --ink-light only read correctly
+   * by coincidence on themes with a dark --background, and went
+   * invisible on light ones (Dubai Silk among them — caught during
+   * the Ivory Silk & Pearls review, but not specific to either theme). */
+  color: var(--foreground);
 }
 .music-dock button:hover {
   background: color-mix(in oklch, var(--gold) 22%, transparent);
+}
+/* Ram Mandir only, 2026-10-26: --foreground/--background are NOT an
+ * AA-contrast pair on this theme the way the comment above assumes —
+ * --foreground here is the on-paper body-text colour (dark, for the
+ * cream/paper sections elsewhere in the invitation), while --background
+ * is a separate, also-dark page-chrome colour the dock tracks. Dark
+ * icon on a dark dock was invisible; --paper-light actually contrasts
+ * with this theme's --background. */
+[data-theme-id="ram-mandir"] .music-dock button {
+  color: var(--paper-light);
 }
 .music-dock svg {
   width: 17px;
@@ -1400,17 +3081,13 @@ a {
   .invitation-names {
     padding: 56px 0 18px;
   }
-  .invitation-names h1 {
-    font-size: calc(38px * var(--names-scale, 1));
+  .invitation-person-name {
+    font-size: calc(60px * var(--names-scale, 1));
     line-height: 1.15;
   }
-  .invitation-names em {
-    font-size: calc(24px * var(--names-scale, 1));
-    padding: 0 6px;
-  }
-  .invitation-families {
-    gap: 14px;
-    margin-top: 16px;
+  .invitation-and {
+    font-size: calc(32px * var(--names-scale, 1));
+    margin: 4px 0;
   }
   .family-block p {
     font-size: calc(12px * var(--family-scale, 1));
@@ -1455,7 +3132,7 @@ a {
     padding-left: 14px;
     padding-right: 14px;
   }
-  .invitation-names h1 {
+  .invitation-person-name {
     font-size: calc(33px * var(--names-scale, 1));
   }
   .revealed-date h2 {
@@ -1535,6 +3212,31 @@ a {
     no-repeat,
     no-repeat;
 }
+/*
+ * Ivory Silk & Pearls only: its section backdrop is the reused hero
+ * photo (a sharp, busy watercolour, not a purpose-built soft section
+ * asset — see the comment on sectionBackdrop in themes/ivory-silk-
+ * pearls.ts), so the shared 20%-opacity tint above isn't enough to
+ * keep plain foreground-coloured text (venue name, countdown, sub-
+ * event labels) legible against it — bright sky and dark foliage both
+ * land directly behind the same text. Scoped stronger tint, this theme
+ * only, rather than raising the shared 20% for every theme with a
+ * dedicated, already-soft section image.
+ */
+[data-theme-id="ivory-silk-pearls"]
+  .opened-invitation
+  > section:not(.skyline-invitation):not(.ring-section)::before {
+  background-image:
+    radial-gradient(
+      90% 60% at 50% 0%,
+      color-mix(in oklch, var(--gold) 9%, transparent),
+      transparent 70%
+    ),
+    linear-gradient(
+      color-mix(in oklch, var(--invitation-surface) 62%, transparent),
+      color-mix(in oklch, var(--invitation-surface) 62%, transparent)
+    );
+}
 
 /* A hairline between sections, centred and fading at the ends. */
 .opened-invitation > section + section::after {
@@ -1586,46 +3288,85 @@ a {
   color: var(--muted-foreground);
 }
 
-/* Parents and grandparents under each name. */
-.invitation-families {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr));
-  gap: 26px;
-  margin: 26px auto 0;
-  width: min(760px, 100%);
-}
 /*
- * Text-shadow alone can't reliably hold contrast against an arbitrary
- * photo — a golden-hour sky, a dark doorway, a bright marble floor, all in
- * the same backdrop. A dark edge plus a light glow (the previous approach)
- * reads fine on a mid-toned patch but washes into a bright one and muddies
- * into a dark one. A translucent scrim behind the block is not
- * backdrop-dependent: it sits a fixed amount darker than whatever's behind
- * it, so legibility holds everywhere the text can land.
+ * Editor-only (see EditableField in invitation.tsx): the editable fields
+ * it swaps in are real inputs/textareas so typing in the preview behaves
+ * exactly like typing in the sidebar form, but they need to look like
+ * the plain text they replace rather than like form controls — `all:
+ * unset` strips the browser chrome, then `font`/`color`/`text-align`
+ * inherit from whatever class this same element would otherwise carry
+ * (e.g. `.invitation-welcome`, `.invitation-person-name`), since
+ * EditableField passes that class straight through.
  */
-.family-block {
-  /* Fixed dark, NOT var(--background) — several themes (Cathedral Light,
-   * Dubai Silk, Monochrome Vow, Phulkari Anand) have a light background,
-   * which would make this scrim light too and defeat the point of the
-   * light text below. This is a legibility utility, not a themed panel, so
-   * it stays dark on every theme regardless of the theme's own palette. */
-  background: rgba(20, 14, 8, 0.42);
-  backdrop-filter: blur(5px) saturate(1.1);
-  -webkit-backdrop-filter: blur(5px) saturate(1.1);
-  border-radius: 10px;
-  padding: 8px 14px;
+.editable-field-input {
+  all: unset;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  cursor: text;
+  resize: none;
 }
+.editable-field-input:focus,
+.editable-field-input:hover {
+  outline: 1px dashed color-mix(in oklch, currentColor 55%, transparent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* In the editor the hero fields are real inputs, and
+ * .editable-field-input's `font: inherit` hands them their parent's
+ * size — no hero container sets one, so every hero line collapses to
+ * the inherited 16px inside the phone canvas, whatever the viewport.
+ * Restore the phone sizes here (the canvas is a phone, so these match
+ * what a guest sees on a real phone, not the desktop sizes). */
+.phone-screen .invitation-person-name.editable-field-input {
+  font-size: calc(60px * var(--names-scale, 1));
+}
+.phone-screen .invitation-and {
+  font-size: calc(32px * var(--names-scale, 1));
+}
+.phone-screen .invitation-heading .editable-field-input {
+  font-size: 22px;
+}
+.phone-screen .invitation-blessing .editable-field-input {
+  font-size: 17px;
+}
+.phone-screen .invitation-welcome.editable-field-input {
+  font-size: 15px;
+}
+
+/*
+ * Parents and grandparents directly under each name (2026-10-25: no
+ * panel, anywhere — the owner rejected the scrim outright, even warmed,
+ * after seeing it on real artwork). Previously a dark scrim sat behind
+ * light text, which held contrast against ANY photo tone but read as a
+ * harsh black box on the catalog's lighter, painterly hero images. The
+ * light-glow technique `.invitation-person-name` already uses below
+ * (a pale text-shadow halo around dark text) replaces it: every theme
+ * currently registered (Dubai Silk, Ivory Silk & Pearls) has an
+ * overall light-to-mid hero, where this holds up fine. A theme with a
+ * genuinely dark hero coming back into the catalog later may need its
+ * own look here — not solved pre-emptively, per the one-theme-at-a-
+ * time rework this catalog is going through.
+ */
 .family-block p {
   font-family: var(--font-sans);
   font-size: calc(13.5px * var(--family-scale, 1));
   line-height: 1.6;
-  color: var(--family-color, var(--paper-light));
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  margin: 2px 0;
+  color: var(--family-color, var(--foreground));
+  text-shadow:
+    0 0 10px var(--paper-light),
+    0 0 20px var(--paper-light),
+    0 0 2px var(--paper-light);
 }
 .family-block .family-credentials {
   font-style: italic;
-  color: var(--family-color, var(--tint));
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 .family-block .family-grandparents {
   opacity: 0.85;

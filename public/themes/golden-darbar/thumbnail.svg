@@ -1,0 +1,5 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="oklch(0.95 0.025 80)" />
+  <rect x="8" y="8" width="184" height="184" fill="none" stroke="oklch(0.76 0.13 80)" stroke-width="1.5" opacity="0.7" />
+  <g fill="none" stroke="oklch(0.76 0.13 80)" stroke-width="1.6" opacity="0.8"><path d="M74 144 C43 120 50 73 83 60 C117 47 143 70 133 97 C127 117 100 120 93 103 C88 90 105 80 114 88"/></g>
+</svg>

@@ -1,7 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Check, ChevronDown, X } from "lucide-react";
 import { BRAND, SiteFooter, SiteHeader } from "@/components/site/chrome";
-import { absoluteUrl, PUBLISH_PRICE_LABEL } from "@/config/site";
+import {
+  absoluteUrl,
+  PUBLISH_DISCOUNT_PERCENT,
+  PUBLISH_ORIGINAL_PRICE_LABEL,
+  PUBLISH_PRICE_LABEL,
+} from "@/config/site";
 import { ThemeCard, ThemePhone } from "@/components/site/theme-card";
 import { Reveal } from "@/components/site/reveal";
 import { themes, themesById } from "@/themes";
@@ -15,6 +20,8 @@ const SHOWCASE_IDS = [
   "kanjeevaram",
   "makkah",
   "golden-temple",
+  "noor-invitation",
+  "ivory-silk-pearls",
 ] as const;
 
 const TITLE = `${BRAND} — Digital wedding invitations you can share on WhatsApp`;
@@ -74,10 +81,17 @@ const FAQ_KEYS = Array.from({ length: 11 }, (_, i) => i);
 const INCLUDED_KEYS = Array.from({ length: 6 }, (_, i) => i);
 
 function Landing() {
+  // The storefront stack, picked by id so a catalog reorder never
+  // silently swaps it: a is the front phone, b the left, c the right.
+  // Each falls back to the first registered theme if its id is ever
+  // unregistered, so the homepage cannot crash on a short catalog
+  // (the old index chain did exactly that during the 2026-10-25
+  // catalog reset, when its themes[2] fallback was itself undefined).
+  const fallback = themes[0]!;
   const [a, b, c] = [
-    themes[0]!,
-    themes[3] ?? themes[1]!,
-    themes[5] ?? themes[2]!,
+    themesById.get("dubai-silk") ?? fallback,
+    themesById.get("noor-invitation") ?? fallback,
+    themesById.get("ram-mandir") ?? fallback,
   ];
   const { t } = useLocale();
   return (
@@ -231,11 +245,24 @@ function Landing() {
               <p>{t("pricing.body")}</p>
             </div>
             <div className="price-card">
-              <p className="eyebrow">{t("pricing.theInvitation")}</p>
+              <div className="price-card-top">
+                <p className="eyebrow">{t("pricing.theInvitation")}</p>
+                <span className="price-offer-badge">
+                  {t("pricing.limitedOffer")}
+                </span>
+              </div>
               <div className="price-amount">
+                <span className="price-was">
+                  {PUBLISH_ORIGINAL_PRICE_LABEL}
+                </span>
                 <strong>{PUBLISH_PRICE_LABEL}</strong>
                 <span>{t("pricing.oneTime")}</span>
               </div>
+              <p className="price-discount">
+                {t("pricing.discountOff", {
+                  percent: PUBLISH_DISCOUNT_PERCENT,
+                })}
+              </p>
               <div className="gold-rule" />
               <ul className="price-list">
                 {INCLUDED_KEYS.map((i) => (

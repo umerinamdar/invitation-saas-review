@@ -26,8 +26,73 @@ export type PetalStyle = "white-blossom" | "marigold" | "rose" | "none";
  * How the invitation opens. Each mechanic is written once in the engine and
  * reused by every theme, so the catalog grows faster than the artwork does:
  * one artwork set carries three templates by varying this alone.
+ *
+ * iris/quadrant/fan/wrap/blinds/scroll added for the Lovable-20 conversion
+ * (2026-10-25) — six genuinely new opening gestures the batch needed,
+ * built as shared mechanics here rather than per-theme special cases.
+ *
+ * ivorySilkEnvelope added 2026-10-25 for the one-by-one template rework
+ * (see docs/ops/OPENING-STUDY-ivory-silk-pearls.md): a faithful, literal
+ * port of one theme's own Lovable-built mechanic, not a reusable gesture
+ * for the catalog — it carries its own hardcoded CSS timings rather than
+ * the shared var(--open-duration) contract the mechanics above use.
+ *
+ * ramMandirDoors added 2026-10-26, same one-off contract as
+ * ivorySilkEnvelope: Ram Mandir's own carved temple doors (the
+ * sealedBackdrop photo itself, split down the centre seam) swinging
+ * open on their own hinges, built directly in this engine (no Lovable
+ * component existed to port) with hardcoded ceremonial timings.
+ *
+ * goldenTempleDoors added 2026-10-27, same split-in-two markup and
+ * outer-hinge swing as ramMandirDoors (after two rejected variants —
+ * a slide-apart push, then a centre hinge — the owner's final word was
+ * to make it exactly like Ram Mandir's own doors). The one real
+ * difference: once the doors clear, the revealed hero scene doesn't
+ * just blur-focus in place, it dollies forward, as if the camera is
+ * walking through the doorway into the courtyard beyond.
+ *
+ * noorBook added 2026-10-28 (Noor Invitation, owner request),
+ * reworked 2026-10-29 as a CONVERSION of the fixed Lovable
+ * opening (project 054990d9): Lovable's OpeningBook preserved
+ * exactly inside the site's container — centred portrait book,
+ * 1.2s hold, 4.5s left-hinged swing with the camera reframing
+ * into the flat two-page spread, 1.0s warm flash from the centre
+ * on its own, Ar-Rum 30:21 readable on the spread for 5.2s, 1.0s
+ * settled fade (openMs 12900) — with no seal and no names on the
+ * cover. The old right-hinged panel swing was removed, not
+ * stacked on top. The generic `book` mechanic is a small portrait
+ * card with different geometry, so it could not carry this. The
+ * inside animation is its own page-settle + verse illumination,
+ * not a zoom, dolly or bloom.
+ *
+ * cathedralDoors added 2026-10-28 (Cathedral Light rework, owner
+ * request): the same split-in-two markup, but deliberately NOT Ram
+ * Mandir's mechanic — no swing at all: a slow slide-apart (1.2s hold
+ * + 5s glide) opening exactly from the artwork's middle line, with
+ * warm light spilling from the gap, its own SVG wax seal (gold lily
+ * wreath, lily centre, no letters), no names
+ * on the cover, and a candlelight-bloom post-open transition
+ * instead of a zoom or a dolly. The split follows this artwork's
+ * own middle line (seam, arch apex and handle midpoint all ~50% of
+ * sealed.jpg; an early 46.5% split was a plank-gap misread).
  */
-export type Reveal = "envelope" | "doors" | "curtain" | "book" | "box";
+export type Reveal =
+  | "envelope"
+  | "doors"
+  | "curtain"
+  | "book"
+  | "box"
+  | "iris"
+  | "quadrant"
+  | "fan"
+  | "wrap"
+  | "blinds"
+  | "scroll"
+  | "ivorySilkEnvelope"
+  | "ramMandirDoors"
+  | "goldenTempleDoors"
+  | "noorBook"
+  | "cathedralDoors";
 
 /**
  * Drawn decoration used instead of photography. A theme naming one of these
@@ -75,7 +140,37 @@ export type Typography = {
 export type ThemeAssets = {
   /** Omit both backdrops to let `ornamentation` draw them instead. */
   sealedBackdrop?: string; // behind the closed envelope
+  /**
+   * Floor scene the sealed book sits on during a painted opening.
+   * Omit it and the reveal uses `sealedBackdrop` as the floor.
+   * Noor Invitation: Lovable's book-setting.jpg, placed as
+   * `floor.jpg` in the theme folder.
+   */
+  floorBackdrop?: string;
+  /**
+   * Illuminated inside-page art for a book opening. Painted over the
+   * paper texture on both inside pages (the right page and the cover
+   * back), so the spread carries the design's border instead of plain
+   * paper. Omit it and the pages stay paper-textured. When it fails to
+   * load, the image hides itself and the paper shows, so the code is
+   * safe to ship before the file itself lands.
+   *
+   * Noor Invitation: Lovable's illuminated-ivory-page.jpg, placed as
+   * `page.jpg` in the theme folder.
+   */
+  pageArtwork?: string;
   revealedBackdrop?: string; // hero behind the names
+  /**
+   * Gallery card WebP: the card serves a `.webp` sibling of the hero
+   * (same directory, same basename) first, because it weighs roughly
+   * a third of the JPEG. A theme WITHOUT that sibling must set this
+   * false — otherwise the card picks the missing file, gets a 404,
+   * and shows blank instead of falling back to the JPEG (caught on
+   * Noor Invitation, 2026-10-28: its hero.webp was never generated,
+   * and the <picture> fallback never fired). Omit (or true) for
+   * every theme that ships the sibling.
+   */
+  hasWebpHero?: boolean;
   /**
    * A tall (1080×3600) image, purpose-built to repeat seamlessly top-to-
    * bottom, that continues the hero's own motif and colour story behind

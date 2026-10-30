@@ -16,13 +16,72 @@ function webpVariant(src: string): string {
   return src.replace(/\.(?:jpe?g|png)$/i, ".webp");
 }
 
-/** A miniature of the real invitation, drawn from the theme's own palette. */
-export function ThemePhoneScreen({ theme }: { theme: Theme }) {
-  const { revealedBackdrop } = theme.assets;
+/**
+ * Not every theme's hero image has had a .webp sibling generated for it
+ * yet (caught on Ivory Silk & Pearls, 2026-10-25 — its venue.jpg has
+ * none, so the <picture> below picked the non-existent .webp source and
+ * never fell back, leaving the gallery card blank). <picture> only
+ * falls back to the <img> when no <source> matches syntactically, not
+ * when a matched source's file 404s.
+ *
+ * The fix has to be React state, not a raw DOM mutation on the <img>:
+ * an earlier version removed the failing <source> node directly via
+ * `.previousElementSibling.remove()`, which worked for one render but
+ * fought React's own reconciliation — any later re-render of this
+ * component put the <source> right back, since React's virtual DOM had
+ * no idea the real node had been removed out from under it. Tracking
+ * "this theme's webp failed" in state and conditionally rendering the
+ * <source> lets React own the DOM, so the fix survives re-renders.
+ *
+ * That alone still wasn't enough (caught again, same Ivory Silk card):
+ * removing the <source> doesn't change the <img>'s own src attribute,
+ * since it was always the JPEG path, never the WebP one. An unchanged
+ * attribute never makes the browser refetch it, so the broken image
+ * stayed put. The key prop below forces React to unmount and remount
+ * the <img> as a brand-new element once the WebP fails, which does
+ * force a fresh request for its src.
+ *
+ * And even that cannot rescue a theme with no .webp sibling at all:
+ * a 404 on the chosen <source> leaves the <img> complete-but-broken
+ * without firing its error handler, so the state above never flips
+ * (caught on Noor Invitation, 2026-10-28 — its hero.webp was never
+ * generated, and the card stayed blank). Such a theme opts out via
+ * hasWebpHero: false, which skips the <source> entirely so the JPEG
+ * loads directly.
+ */
+function HeroImage({ src, alt, webp }: { src: string; alt: string; webp: boolean }) {
+  const [webpFailed, setWebpFailed] = useState(false);
   // Blur-up: the card art starts transparent over the card's palette
   // background and cross-fades in on load (or on error, so a broken
   // file still shows its alt text). The ref check covers cached files.
-  const [backdropLoaded, setBackdropLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <picture>
+      {webp && !webpFailed && (
+        <source type="image/webp" srcSet={webpVariant(src)} />
+      )}
+      <img
+        key={webpFailed ? "jpg" : "webp-or-jpg"}
+        src={src}
+        alt={alt}
+        loading="lazy"
+        className={`blur-up${loaded ? " is-loaded" : ""}`}
+        ref={(el) => {
+          if (el && el.complete && el.naturalWidth > 0) setLoaded(true);
+        }}
+        onLoad={() => setLoaded(true)}
+        onError={() => {
+          setWebpFailed(true);
+          setLoaded(true);
+        }}
+      />
+    </picture>
+  );
+}
+
+/** A miniature of the real invitation, drawn from the theme's own palette. */
+export function ThemePhoneScreen({ theme }: { theme: Theme }) {
+  const { revealedBackdrop, hasWebpHero } = theme.assets;
   // The card shows the same demo couple and date as this theme's full
   // preview, so the gallery doesn't promise one wedding and open another.
   const demo = getDemoInvite(theme.id);
@@ -31,21 +90,7 @@ export function ThemePhoneScreen({ theme }: { theme: Theme }) {
     <span className="theme-phone-screen">
       {revealedBackdrop ? (
         <>
-          <picture>
-            <source type="image/webp" srcSet={webpVariant(revealedBackdrop)} />
-            <img
-              src={revealedBackdrop}
-              alt=""
-              loading="lazy"
-              className={`blur-up${backdropLoaded ? " is-loaded" : ""}`}
-              ref={(el) => {
-                if (el && el.complete && el.naturalWidth > 0)
-                  setBackdropLoaded(true);
-              }}
-              onLoad={() => setBackdropLoaded(true)}
-              onError={() => setBackdropLoaded(true)}
-            />
-          </picture>
+          <HeroImage src={revealedBackdrop} alt="" webp={hasWebpHero !== false} />
           <span className="theme-card-veil" />
         </>
       ) : (
@@ -104,8 +149,6 @@ export function ThemeCard({ theme }: { theme: Theme }) {
   return (
     <article className="theme-card">
       <div className="theme-card-top">
-        <span className="theme-kicker">{theme.kicker}</span>
-        <span className="theme-card-reveal">{theme.motion.reveal}</span>
         <Link
           to="/preview/$themeId"
           params={{ themeId: theme.id }}
@@ -122,24 +165,7 @@ export function ThemeCard({ theme }: { theme: Theme }) {
       <div className="theme-card-body">
         <div className="theme-card-head">
           <h2>{theme.name}</h2>
-          <span className="swatches" aria-hidden="true">
-            <i style={{ background: theme.palette.background }} />
-            <i style={{ background: theme.palette.accent }} />
-            <i style={{ background: theme.palette.paper }} />
-          </span>
         </div>
-        <p className="theme-tagline">{theme.tagline}</p>
-
-        {/* The four things this design does that another doesn't —
-            the data has always been in the theme (see themes/types.ts)
-            but was never rendered, so shoppers compared 14 near-
-            identical phones on tagline alone. */}
-        <ul className="feature-pills">
-          {theme.features.map((feature) => (
-            <li key={feature}>{feature}</li>
-          ))}
-        </ul>
-
         <div className="theme-card-actions">
           <Link
             to="/create"
