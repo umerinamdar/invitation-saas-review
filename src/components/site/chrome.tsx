@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useLocale } from "@/i18n/locale-context";
 import { signOut, useAuth } from "@/lib/auth";
 import { LanguageSwitcher } from "./language-switcher";
+import { Logo } from "./logo";
 
 export const BRAND = "EasyInviteMaker";
 
@@ -65,7 +66,7 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
       className={`site-header ${overlay ? "is-overlay" : ""} ${scrolled ? "is-scrolled" : ""}`}
     >
       <Link to="/" className="brand">
-        {BRAND}
+        <Logo tone={overlay ? "dark" : "light"} />
       </Link>
       <nav aria-label={t("nav.primaryLabel")}>
         {NAV_LINKS.map((link) =>
@@ -164,7 +165,9 @@ export function SiteFooter() {
   return (
     <footer className="site-footer">
       <div className="footer-brand">
-        <p className="brand">{BRAND}</p>
+        <p className="brand">
+          <Logo tone="dark" size={32} />
+        </p>
         <p className="footer-note">{t("footer.tagline")}</p>
       </div>
       <nav aria-label={t("footer.explore")}>

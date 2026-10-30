@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Check, LoaderCircle } from "lucide-react";
 import { BRAND } from "@/components/site/chrome";
+import { Logo } from "@/components/site/logo";
 import { InviteEditor } from "@/components/editor/invite-editor";
 import { absoluteUrl, PUBLISH_PRICE_LABEL } from "@/config/site";
 import { blankConfig, type InviteConfig } from "@/lib/invites-api";
@@ -144,7 +145,7 @@ function Create() {
           <h1 className="sr-only">Create your invitation</h1>
           <header className="editor-bar">
             <Link to="/" className="brand">
-              {BRAND}
+              <Logo tone="light" />
             </Link>
             <span className="save-state">
               {saved ? (

@@ -4,6 +4,60 @@
  * neutrals read as unfinished next to the invitations, which are all warm.
  */
 
+/* Brand ("The Monogram", 2026-10-30 package) — self-hosted Bodoni Moda for
+ * the wordmark. Three static weights only (no variable-font axis), matching
+ * the three weights the wordmark actually uses (Easy 400, Invite 600,
+ * Maker 400). */
+@font-face {
+  font-family: "Bodoni Moda Brand";
+  src: url("/fonts/brand/BodoniModa-400.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Bodoni Moda Brand";
+  src: url("/fonts/brand/BodoniModa-500.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Bodoni Moda Brand";
+  src: url("/fonts/brand/BodoniModa-600.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Brand tokens — kept separate from the warm gold-foil system below on
+ * purpose: this is phase one (token layer + Logo component) of the
+ * Monogram identity, with the full page reskin a deliberate later phase
+ * pending sign-off. Nothing here is consumed by existing site/editor rules
+ * yet except the new Logo component. */
+:root {
+  --blush: #f4ece4;
+  --burgundy: #5b1a2b;
+  --champagne: #c8a97e;
+  --merlot: #2a0c14;
+}
+
+/* Logo (src/components/site/logo.tsx) — layout only; colour is set inline
+ * per `tone` by the component itself, not here. */
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  vertical-align: middle;
+}
+.brand-logo-stacked {
+  flex-direction: column;
+  gap: 6px;
+}
+.brand-logo-icon {
+  display: inline-flex;
+}
+
 .site,
 .editor {
   --ink: oklch(0.2 0.02 35);
@@ -276,21 +330,7 @@
 }
 .brand {
   display: inline-flex;
-  align-items: baseline;
-  gap: 6px;
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: 26px;
-  font-weight: 500;
-  font-style: italic;
-  letter-spacing: -0.01em;
-  color: inherit;
-}
-.brand::after {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-  background: var(--gold);
+  align-items: center;
 }
 .site-header nav {
   display: flex;
@@ -1148,10 +1188,6 @@
     grid-template-columns: 1.5fr 1fr 1fr;
   }
 }
-.site-footer .brand {
-  font-size: 32px;
-  color: var(--ink-foreground);
-}
 .footer-note {
   margin-top: 14px;
   max-width: 320px;
@@ -1179,9 +1215,6 @@
   .site-header {
     gap: 12px;
     padding-inline: 14px;
-  }
-  .brand {
-    font-size: 21px;
   }
   .site-header .btn-sm {
     padding: 9px 14px;
@@ -1679,9 +1712,6 @@ a.contact-card {
   top: 0;
   z-index: 30;
 }
-.editor-bar .brand {
-  font-size: 23px;
-}
 .editor-bar .btn {
   margin-left: auto;
 }
@@ -1711,9 +1741,6 @@ a.contact-card {
      * go but to spill over the "Start new" button — wrapping instead
      * guarantees the row never overlaps, it just grows a second line. */
     flex-wrap: wrap;
-  }
-  .editor-bar .brand {
-    font-size: 19px;
   }
   .save-state {
     /* No room for this label too once wrapping would otherwise trigger

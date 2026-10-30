@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Check, LoaderCircle } from "lucide-react";
 import { BRAND } from "@/components/site/chrome";
+import { Logo } from "@/components/site/logo";
 import { absoluteUrl, PUBLISH_PRICE_LABEL } from "@/config/site";
 import { InviteEditor } from "@/components/editor/invite-editor";
 import { useAuth } from "@/lib/auth";
@@ -421,7 +422,7 @@ function Editor() {
           <h1 className="sr-only">Edit your invitation</h1>
           <header className="editor-bar">
           <Link to="/dashboard" className="brand">
-            {BRAND}
+            <Logo tone="light" />
           </Link>
           <span className={`save-state save-${save}`}>
             {save === "saving" && (

@@ -21,12 +21,12 @@ import { LocaleProvider } from "../i18n/locale-context";
 /** Absolute URL of the default share image — null until the owner has
  * configured the canonical origin (VITE_SITE_URL), so link unfurls never
  * point at a guessed or localhost URL. */
-const OG_IMAGE = absoluteUrl("/og-default.jpg");
+const OG_IMAGE = absoluteUrl("/og-image.png");
 
 /** The site's own absolute URL and logo, for the Organization schema —
  * null under the same configured-origin guard as OG_IMAGE. */
 const SITE_ROOT_URL = absoluteUrl("/");
-const OG_LOGO = absoluteUrl("/favicon.svg");
+const OG_LOGO = absoluteUrl("/favicon-512.png");
 
 /**
  * Minimal Organization JSON-LD. Built only from site config, and only
@@ -147,7 +147,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           href: appCss,
         },
         { rel: "stylesheet", href: siteCss },
-        { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+        // The Monogram brand package (2026-10-30) — favicon.ico covers
+        // older browsers, the PNG sizes cover modern ones and Android,
+        // apple-touch-icon covers iOS home-screen bookmarks.
+        { rel: "icon", href: "/favicon.ico", sizes: "any" },
+        { rel: "icon", href: "/favicon-16.png", type: "image/png", sizes: "16x16" },
+        { rel: "icon", href: "/favicon-32.png", type: "image/png", sizes: "32x32" },
+        { rel: "icon", href: "/favicon-48.png", type: "image/png", sizes: "48x48" },
+        { rel: "icon", href: "/favicon-512.png", type: "image/png", sizes: "512x512" },
+        { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
       ],
     }),
     shellComponent: RootShell,
