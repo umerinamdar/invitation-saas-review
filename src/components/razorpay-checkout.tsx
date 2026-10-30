@@ -144,6 +144,13 @@ export function RazorpayCheckout({
         // Flat ₹599 for every design (src/config/site.ts) — the tier is
         // design metadata only and must not be described as a price tier.
         description: "Invitation publication",
+        // Brand the checkout modal: the Monogram icon in place of the
+        // generic "E" avatar, and Burgundy (#5B1A2B, the brand's ink
+        // colour) in place of Razorpay's default indigo for the top
+        // panel and primary actions. An absolute URL, since Razorpay
+        // loads it from its own origin, not the page's.
+        image: `${window.location.origin}/favicon-512.png`,
+        theme: { color: "#5B1A2B" },
         handler: function () {
           // Client-side callback is UX only — real confirmation comes
           // from the webhook. The gateway's own payment/signature
@@ -194,6 +201,8 @@ declare global {
       order_id: string;
       name: string;
       description: string;
+      image?: string;
+      theme?: { color?: string };
       handler: (response: {
         razorpay_payment_id: string;
         razorpay_order_id: string;
