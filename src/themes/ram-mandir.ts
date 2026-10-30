@@ -1,10 +1,17 @@
 import type { Theme } from "./types";
 
 /**
- * Saffron and cream, opening like a lifted temple casket onto the Ram
- * Mandir's carved sandstone shikharas at golden hour. Artwork and palette
- * generated in Lovable, matching the Nagara-style architecture the backdrop
- * was composed around.
+ * Saffron and cream, its carved temple doors swinging open on their own
+ * hinges onto the Ram Mandir's sandstone shikharas at golden hour.
+ * Artwork and palette generated in Lovable, matching the Nagara-style
+ * architecture the backdrop was composed around.
+ *
+ * Reworked 2026-10-26 (owner request) from the original lifting-casket
+ * ("box") opening to a bespoke doors mechanic — ramMandirDoors in
+ * reveals/index.tsx — built directly in this engine to the same
+ * ceremonial choreography standard as Ivory Silk & Pearls (see
+ * docs/ops/OPENING-STUDY-ivory-silk-pearls.md), since no Lovable
+ * component existed for this one to port.
  */
 export const ramMandir: Theme = {
   id: "ram-mandir",
@@ -22,7 +29,14 @@ export const ramMandir: Theme = {
     paper: "#f7e8c9",
     paperLight: "#fdf6e6",
     paperDark: "#e8c98f",
-    highlight: "#e0a23c",
+    // Was #e0a23c (a mid-tone gold) — Palette's own doc comment on
+    // `highlight` says "near-white inner glow", which this wasn't,
+    // leaving the date-reveal card (styles.css's frosted-glass
+    // .revealed-date, built from var(--ink-light)) a muddy amber-brown
+    // instead of a clean glass card (owner report, 2026-10-27: "this
+    // font box colour can be changed"). Near-white, matching the
+    // documented contract every other theme already follows.
+    highlight: "oklch(0.985 0.012 85)",
     surface: "#fffaef",
     scratchFoil: "#d9a23b",
     scratchInk: "#5c2a0d",
@@ -36,7 +50,7 @@ export const ramMandir: Theme = {
     serif: "Cormorant Garamond",
     sans: "Jost",
     fontsHref:
-      "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap",
+      "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Yesteryear&family=Jost:wght@300;400;500&display=swap",
   },
 
   ornamentation: "none",
@@ -55,8 +69,13 @@ export const ramMandir: Theme = {
   },
 
   motion: {
-    reveal: "box",
-    openMs: 1500,
+    // openMs matches exactly when the doors' own CSS choreography
+    // finishes (1.4s hold + 4s swing = 5.4s) — see the mechanic's CSS
+    // in styles.css. Like Ivory Silk & Pearls' envelope, this mechanic
+    // doesn't scale with openMs; the number exists only so the JS
+    // unmount timer in invitation.tsx fires exactly when the CSS ends.
+    reveal: "ramMandirDoors",
+    openMs: 5400,
     introSeconds: 6,
     musicFadeMs: 8000,
     maxVolume: 0.6,
@@ -64,11 +83,11 @@ export const ramMandir: Theme = {
     petals: "marigold",
   },
 
-  kicker: "TEMPLE CASKET",
+  kicker: "TEMPLE DOORS",
   tagline:
-    "Saffron and cream invitation whose carved casket lifts open onto the Ram Mandir's sandstone shikharas at golden hour, strung with marigold garlands.",
+    "Saffron and cream invitation whose carved temple doors swing open on their own hinges onto the Ram Mandir's sandstone shikharas at golden hour, strung with marigold garlands.",
   features: [
-    "Lifting Casket Opening",
+    "Ceremonial Temple-Door Opening",
     "Golden-Hour Temple Hero",
     "Scratch-to-Reveal Muhurat",
     "Marigold Petal Shower",

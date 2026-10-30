@@ -113,7 +113,7 @@ export function ScratchInvitation({ theme, event, onReveal }: Props) {
       ctx.stroke();
       ctx.globalAlpha = 1;
       ctx.textAlign = "center";
-      ctx.font = `italic 30px ${token("--font-serif")}`;
+      ctx.font = `italic 26px ${token("--font-serif")}`;
       ctx.fillText(scratchTitle, bounds.width / 2, bounds.height / 2 - 4);
       ctx.font = `500 11px ${token("--font-sans")}`;
       ctx.fillText(scratchHint, bounds.width / 2, bounds.height / 2 + 25);

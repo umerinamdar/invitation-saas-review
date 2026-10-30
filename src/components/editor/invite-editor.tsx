@@ -225,10 +225,47 @@ export function InviteEditor({
     });
   const patchMeta = (next: Partial<InviteConfig["meta"]>) =>
     onChange({ ...config, meta: { ...config.meta, ...next } });
-  // A single host celebrates without a partner: the renderer already
-  // prints one name when person2 is absent, so the mode only has to
-  // drop person2 (the families fieldset below follows the same flag).
-  const singleHost = config.hosts.mode === "single";
+
+  // Lets the preview edit a handful of its own plain-text fields in
+  // place (see EditableField in invitation.tsx) — each case here mirrors
+  // the matching sidebar input's own onChange above, and each matching
+  // input carries `id={"field-" + this field name}` so clicking the
+  // field in the preview can scroll straight to it.
+  const commitField = (field: string, value: string) => {
+    switch (field) {
+      case "event.typeLabel":
+        patchEvent({ typeLabel: value });
+        return;
+      case "event.venueName":
+        patchEvent({ venueName: value });
+        return;
+      case "hosts.person1":
+        patchHosts({ person1: value });
+        return;
+      case "hosts.person2":
+        patchHosts({ person2: value });
+        return;
+      case "welcome":
+        patch(
+          value
+            ? { welcome: value }
+            : (() => {
+                const { welcome: _drop, ...rest } = config;
+                return rest;
+              })(),
+        );
+        return;
+      case "blessing.text":
+        patch({ blessing: { ...config.blessing, text: value } });
+        return;
+      case "story.quote":
+        patch({ story: { ...config.story, quote: value } });
+        return;
+      case "hashtag":
+        patch({ hashtag: value });
+        return;
+    }
+  };
 
   return (
     <div className="editor">
@@ -280,46 +317,24 @@ export function InviteEditor({
 
           <fieldset>
             <legend>{t("editor.yourNames")}</legend>
-            <div className="theme-choices">
-              <button
-                type="button"
-                className={`theme-choice ${singleHost ? "" : "is-active"}`}
-                onClick={() => patchHosts({ mode: "couple" })}
-              >
-                {t("editor.hostCouple")}
-              </button>
-              <button
-                type="button"
-                className={`theme-choice ${singleHost ? "is-active" : ""}`}
-                onClick={() => {
-                  const { person2: _drop, ...hosts } = config.hosts;
-                  onChange({
-                    ...config,
-                    hosts: { ...hosts, mode: "single" },
-                  });
-                }}
-              >
-                {t("editor.hostSingle")}
-              </button>
-            </div>
             <label>
               {t("editor.name")}
               <input
+                id="field-hosts.person1"
                 value={config.hosts.person1}
                 onChange={(e) => patchHosts({ person1: e.target.value })}
                 placeholder="Aarav"
               />
             </label>
-            {!singleHost && (
-              <label>
-                {t("editor.partnersName")}
-                <input
-                  value={config.hosts.person2 ?? ""}
-                  onChange={(e) => patchHosts({ person2: e.target.value })}
-                  placeholder="Diya"
-                />
-              </label>
-            )}
+            <label>
+              {t("editor.partnersName")}
+              <input
+                id="field-hosts.person2"
+                value={config.hosts.person2 ?? ""}
+                onChange={(e) => patchHosts({ person2: e.target.value })}
+                placeholder="Diya"
+              />
+            </label>
           </fieldset>
 
           <fieldset>
@@ -345,7 +360,6 @@ export function InviteEditor({
                 ],
               ] as const
             )
-              .filter(([key]) => !singleHost || key === "family1")
               .map(
                 ([
                   key,
@@ -408,6 +422,7 @@ export function InviteEditor({
             <label>
               {t("editor.welcomeLine")}
               <textarea
+                id="field-welcome"
                 rows={2}
                 value={config.welcome ?? ""}
                 onChange={(e) =>
@@ -426,6 +441,7 @@ export function InviteEditor({
             <label>
               {t("editor.blessingOrVerse")}
               <textarea
+                id="field-blessing.text"
                 rows={2}
                 value={config.blessing?.text ?? ""}
                 onChange={(e) => {
@@ -465,6 +481,7 @@ export function InviteEditor({
             <label>
               {t("editor.occasion")}
               <input
+                id="field-event.typeLabel"
                 value={config.event.typeLabel}
                 onChange={(e) => patchEvent({ typeLabel: e.target.value })}
                 placeholder="Wedding Ceremony"
@@ -484,6 +501,7 @@ export function InviteEditor({
             <label>
               {t("editor.venue")}
               <input
+                id="field-event.venueName"
                 value={config.event.venueName}
                 onChange={(e) => patchEvent({ venueName: e.target.value })}
                 placeholder="The Grand Pavilion"
@@ -782,6 +800,7 @@ export function InviteEditor({
             <label>
               {t("editor.yourHashtag")}
               <input
+                id="field-hashtag"
                 value={config.hashtag ?? ""}
                 onChange={(e) => patch({ hashtag: e.target.value })}
                 placeholder="#AaravWedsDiya"
@@ -870,6 +889,7 @@ export function InviteEditor({
             <label>
               {t("editor.lineForGuests")}
               <textarea
+                id="field-story.quote"
                 rows={2}
                 value={config.story?.quote ?? ""}
                 onChange={(e) =>
@@ -929,6 +949,7 @@ export function InviteEditor({
                 invite={preview}
                 mediaUrlMap={mediaUrlMap}
                 watermark={watermark}
+                editing={{ onCommit: commitField }}
               />
             </div>
           </div>

@@ -137,6 +137,8 @@ export type TranslationKey =
   | "pricing.body"
   | "pricing.theInvitation"
   | "pricing.oneTime"
+  | "pricing.limitedOffer"
+  | "pricing.discountOff"
   | "pricing.startCustomising"
   | "included.0"
   | "included.1"
@@ -311,6 +313,8 @@ const en: Dictionary = {
     "Design and preview for as long as you like at no cost. Pay only when you're ready to share it with the world.",
   "pricing.theInvitation": "The invitation",
   "pricing.oneTime": "one-time",
+  "pricing.limitedOffer": "Limited-time offer",
+  "pricing.discountOff": "{percent}% off",
   "pricing.startCustomising": "Start customising — free",
   "included.0": "Any of our {count} animated designs",
   "included.1": "Unlimited functions — mehendi to reception",
@@ -495,6 +499,8 @@ const hi: Dictionary = {
     "जितना चाहें उतना डिज़ाइन और पूर्वावलोकन करें, बिना किसी लागत के। भुगतान तभी करें जब आप इसे दुनिया के साथ साझा करने के लिए तैयार हों।",
   "pricing.theInvitation": "निमंत्रण",
   "pricing.oneTime": "एक बार",
+  "pricing.limitedOffer": "सीमित समय का ऑफ़र",
+  "pricing.discountOff": "{percent}% छूट",
   "pricing.startCustomising": "मुफ़्त में कस्टमाइज़ करना शुरू करें",
   "included.0": "हमारे {count} एनिमेटेड डिज़ाइनों में से कोई भी",
   "included.1": "असीमित कार्यक्रम — हल्दी से रिसेप्शन तक",
@@ -679,6 +685,8 @@ const ar: Dictionary = {
     "صمّم وعاين بقدر ما تشاء دون أي تكلفة. ادفع فقط عندما تكون جاهزًا لمشاركتها مع العالم.",
   "pricing.theInvitation": "الدعوة",
   "pricing.oneTime": "مرة واحدة",
+  "pricing.limitedOffer": "عرض لفترة محدودة",
+  "pricing.discountOff": "خصم {percent}%",
   "pricing.startCustomising": "ابدأ التخصيص مجانًا",
   "included.0": "أي من تصاميمنا المتحركة الـ{count}",
   "included.1": "فعاليات غير محدودة — من الحناء إلى الاستقبال",
@@ -880,6 +888,8 @@ const mr: Partial<Dictionary> = {
     "\u0939\u0935\u0947 \u0924\u093f\u0924\u0915\u0947 \u092e\u094b\u092b\u0924 \u0921\u093f\u091d\u093e\u0907\u0928 \u0935 \u092a\u0942\u0930\u094d\u0935\u093e\u0935\u0932\u094b\u0915\u0928 \u0915\u0930\u093e. \u091c\u0917\u093e\u0938\u094b\u092c\u0924 \u0936\u0947\u0905\u0930 \u0915\u0930\u0923\u094d\u092f\u093e\u0938 \u0924\u092f\u093e\u0930 \u0905\u0938\u093e\u0932 \u0924\u0947\u0935\u094d\u0939\u093e\u091a \u092a\u0948\u0938\u0947 \u0926\u094d\u092f\u093e.",
   "pricing.theInvitation": "\u0928\u093f\u092e\u0902\u0924\u094d\u0930\u0923",
   "pricing.oneTime": "\u090f\u0915\u0926\u093e\u091a",
+  "pricing.limitedOffer": "\u092e\u0930\u094d\u092f\u093e\u0926\u093f\u0924 \u0915\u093e\u0933\u093e\u0938\u093e\u0920\u0940 \u0911\u092b\u0930",
+  "pricing.discountOff": "{percent}% \u0938\u0942\u091f",
   "pricing.startCustomising":
     "\u092e\u094b\u092b\u0924 \u0915\u0938\u094d\u091f\u092e\u093e\u0907\u091d \u0915\u0930\u0923\u0947 \u0938\u0941\u0930\u0942 \u0915\u0930\u093e",
   "included.0":
@@ -1101,6 +1111,8 @@ const gu: Partial<Dictionary> = {
     "\u0a95\u0acb\u0a88 \u0a96\u0ab0\u0acd\u0a9a \u0ab5\u0abf\u0aa8\u0abe \u0a9c\u0ac7\u0a9f\u0ab2\u0acb \u0ab8\u0aae\u0aaf \u0a87\u0a9a\u0acd\u0a9b\u0acb \u0aa4\u0ac7\u0a9f\u0ab2\u0acb \u0aa1\u0abf\u0a9d\u0abe\u0a87\u0aa8 \u0a85\u0aa8\u0ac7 \u0aaa\u0ac2\u0ab0\u0acd\u0ab5\u0abe\u0ab5\u0ab2\u0acb\u0a95\u0aa8 \u0a95\u0ab0\u0acb. \u0aa6\u0ac1\u0aa8\u0abf\u0aaf\u0abe \u0ab8\u0abe\u0aa5\u0ac7 \u0ab6\u0ac7\u0ab0 \u0a95\u0ab0\u0ab5\u0abe \u0aa4\u0ac8\u0aaf\u0abe\u0ab0 \u0ab9\u0acb \u0aa4\u0acd\u0aaf\u0abe\u0ab0\u0ac7 \u0a9c \u0a9a\u0ac2\u0a95\u0ab5\u0acb.",
   "pricing.theInvitation": "\u0a86\u0aae\u0a82\u0aa4\u0acd\u0ab0\u0aa3",
   "pricing.oneTime": "\u0a8f\u0a95 \u0ab5\u0a96\u0aa4",
+  "pricing.limitedOffer": "\u0aae\u0ab0\u0acd\u0aaf\u0abe\u0aa6\u0abf\u0aa4 \u0ab8\u0aae\u0aaf \u0aae\u0abe\u0a9f\u0ac7\u0aa8\u0ac0 \u0a91\u0aab\u0ab0",
+  "pricing.discountOff": "{percent}% \u0a9b\u0ac2\u0a9f",
   "pricing.startCustomising":
     "\u0aae\u0aab\u0aa4\u0aae\u0abe\u0a82 \u0a95\u0ab8\u0acd\u0a9f\u0aae\u0abe\u0a87\u0a9d \u0a95\u0ab0\u0ab5\u0abe\u0aa8\u0ac1\u0a82 \u0ab6\u0ab0\u0ac2 \u0a95\u0ab0\u0acb",
   "included.0":
@@ -1324,6 +1336,8 @@ const bn: Partial<Dictionary> = {
   "pricing.theInvitation":
     "\u0986\u09ae\u09a8\u09cd\u09a4\u09cd\u09b0\u09a3\u09aa\u09a4\u09cd\u09b0",
   "pricing.oneTime": "\u098f\u0995\u09ac\u09be\u09b0",
+  "pricing.limitedOffer": "\u09b8\u09c0\u09ae\u09bf\u09a4 \u09b8\u09ae\u09df\u09c7\u09b0 \u0985\u09ab\u09be\u09b0",
+  "pricing.discountOff": "{percent}% \u099b\u09be\u09dc",
   "pricing.startCustomising":
     "\u09ac\u09bf\u09a8\u09be\u09ae\u09c2\u09b2\u09cd\u09af\u09c7 \u0995\u09be\u09b8\u09cd\u099f\u09ae\u09be\u0987\u099c \u0995\u09b0\u09be \u09b6\u09c1\u09b0\u09c1 \u0995\u09b0\u09c1\u09a8",
   "included.0":
@@ -1545,6 +1559,8 @@ const pa: Partial<Dictionary> = {
     "\u0a2c\u0a3f\u0a28\u0a3e\u0a02 \u0a15\u0a3f\u0a38\u0a47 \u0a32\u0a3e\u0a17\u0a24 \u0a26\u0a47 \u0a1c\u0a3f\u0a70\u0a28\u0a3e \u0a1a\u0a3f\u0a30 \u0a1a\u0a3e\u0a39\u0a4b \u0a21\u0a3f\u0a1c\u0a3c\u0a3e\u0a08\u0a28 \u0a05\u0a24\u0a47 \u0a1d\u0a32\u0a15 \u0a35\u0a47\u0a16\u0a4b\u0964 \u0a26\u0a41\u0a28\u0a40\u0a06 \u0a28\u0a3e\u0a32 \u0a38\u0a3e\u0a02\u0a1d\u0a3e \u0a15\u0a30\u0a28 \u0a32\u0a08 \u0a24\u0a3f\u0a06\u0a30 \u0a39\u0a4b\u0a35\u0a4b \u0a24\u0a3e\u0a02 \u0a39\u0a40 \u0a2d\u0a41\u0a17\u0a24\u0a3e\u0a28 \u0a15\u0a30\u0a4b\u0964",
   "pricing.theInvitation": "\u0a38\u0a71\u0a26\u0a3e",
   "pricing.oneTime": "\u0a07\u0a71\u0a15 \u0a35\u0a3e\u0a30",
+  "pricing.limitedOffer": "\u0a38\u0a40\u0a2e\u0a24 \u0a38\u0a2e\u0a47\u0a02 \u0a26\u0a40 \u0a2a\u0a47\u0a38\u0a3c\u0a15\u0a38\u0a3c",
+  "pricing.discountOff": "{percent}% \u0a1b\u0a42\u0a1f",
   "pricing.startCustomising":
     "\u0a2e\u0a41\u0a2b\u0a3c\u0a24 \u0a35\u0a3f\u0a71\u0a1a \u0a15\u0a38\u0a1f\u0a2e\u0a3e\u0a08\u0a1c\u0a3c \u0a15\u0a30\u0a28\u0a3e \u0a38\u0a3c\u0a41\u0a30\u0a42 \u0a15\u0a30\u0a4b",
   "included.0":
@@ -1765,6 +1781,8 @@ const ur: Partial<Dictionary> = {
     "\u0628\u063a\u06cc\u0631 \u06a9\u0633\u06cc \u0644\u0627\u06af\u062a \u06a9\u06d2 \u062c\u062a\u0646\u0627 \u0686\u0627\u06c1\u06cc\u06ba \u0688\u06cc\u0632\u0627\u0626\u0646 \u0627\u0648\u0631 \u067e\u06cc\u0634 \u0645\u0646\u0638\u0631 \u062f\u06cc\u06a9\u06be\u06cc\u06ba\u06d4 \u062f\u0646\u06cc\u0627 \u06a9\u06d2 \u0633\u0627\u062a\u06be \u0634\u06cc\u0626\u0631 \u06a9\u0631\u0646\u06d2 \u06a9\u06d2 \u0644\u06cc\u06d2 \u062a\u06cc\u0627\u0631 \u06c1\u0648\u06ba \u062a\u0628 \u06c1\u06cc \u0627\u062f\u0627\u0626\u06cc\u06af\u06cc \u06a9\u0631\u06cc\u06ba\u06d4",
   "pricing.theInvitation": "\u062f\u0639\u0648\u062a \u0646\u0627\u0645\u06c1",
   "pricing.oneTime": "\u0627\u06cc\u06a9 \u0628\u0627\u0631",
+  "pricing.limitedOffer": "\u0645\u062d\u062f\u0648\u062f \u0648\u0642\u062a \u06a9\u06cc \u067e\u06cc\u0634\u06a9\u0634",
+  "pricing.discountOff": "{percent}% \u0631\u0639\u0627\u06cc\u062a",
   "pricing.startCustomising":
     "\u0645\u0641\u062a \u0645\u06cc\u06ba \u062a\u062e\u0635\u06cc\u0635 \u06a9\u0631\u0646\u0627 \u0634\u0631\u0648\u0639 \u06a9\u0631\u06cc\u06ba",
   "included.0":
@@ -1967,6 +1985,8 @@ const fr: Partial<Dictionary> = {
     "Concevez et pr\u00e9visualisez aussi longtemps que vous le souhaitez, sans frais. Payez seulement quand vous \u00eates pr\u00eat \u00e0 la partager avec le monde.",
   "pricing.theInvitation": "L'invitation",
   "pricing.oneTime": "paiement unique",
+  "pricing.limitedOffer": "Offre à durée limitée",
+  "pricing.discountOff": "{percent}% de réduction",
   "pricing.startCustomising": "Commencer \u00e0 personnaliser \u2014 gratuit",
   "included.0": "N'importe lequel de nos {count} designs anim\u00e9s",
   "included.1":
@@ -2155,6 +2175,8 @@ const de: Partial<Dictionary> = {
     "Gestalten und schauen Sie sich die Vorschau an, so lange Sie m\u00f6chten, kostenlos. Zahlen Sie erst, wenn Sie bereit sind, sie mit der Welt zu teilen.",
   "pricing.theInvitation": "Die Einladung",
   "pricing.oneTime": "einmalig",
+  "pricing.limitedOffer": "Zeitlich begrenztes Angebot",
+  "pricing.discountOff": "{percent}% Rabatt",
   "pricing.startCustomising": "Kostenlos anpassen beginnen",
   "included.0": "Eines unserer {count} animierten Designs",
   "included.1": "Unbegrenzte Feiern \u2014 von Haldi bis zum Empfang",
@@ -2342,6 +2364,8 @@ const es: Partial<Dictionary> = {
     "Dise\u00f1a y previsualiza todo el tiempo que quieras sin costo. Paga solo cuando est\u00e9s listo para compartirla con el mundo.",
   "pricing.theInvitation": "La invitaci\u00f3n",
   "pricing.oneTime": "pago \u00fanico",
+  "pricing.limitedOffer": "Oferta por tiempo limitado",
+  "pricing.discountOff": "{percent}% de descuento",
   "pricing.startCustomising": "Empieza a personalizar \u2014 gratis",
   "included.0": "Cualquiera de nuestros {count} dise\u00f1os animados",
   "included.1": "Eventos ilimitados \u2014 del haldi a la recepci\u00f3n",
@@ -2530,6 +2554,8 @@ const pt: Partial<Dictionary> = {
     "Crie e visualize pelo tempo que quiser, sem custo. Pague apenas quando estiver pronto para compartilhar com o mundo.",
   "pricing.theInvitation": "O convite",
   "pricing.oneTime": "pagamento \u00fanico",
+  "pricing.limitedOffer": "Oferta por tempo limitado",
+  "pricing.discountOff": "{percent}% de desconto",
   "pricing.startCustomising": "Comece a personalizar \u2014 gr\u00e1tis",
   "included.0": "Qualquer um dos nossos {count} designs animados",
   "included.1": "Eventos ilimitados \u2014 do haldi \u00e0 recep\u00e7\u00e3o",
@@ -2747,6 +2773,8 @@ const ru: Partial<Dictionary> = {
   "pricing.theInvitation":
     "\u041f\u0440\u0438\u0433\u043b\u0430\u0448\u0435\u043d\u0438\u0435",
   "pricing.oneTime": "\u0435\u0434\u0438\u043d\u043e\u0440\u0430\u0437\u043e\u0432\u043e",
+  "pricing.limitedOffer": "\u041f\u0440\u0435\u0434\u043b\u043e\u0436\u0435\u043d\u0438\u0435 \u043e\u0433\u0440\u0430\u043d\u0438\u0447\u0435\u043d\u043e \u043f\u043e \u0432\u0440\u0435\u043c\u0435\u043d\u0438",
+  "pricing.discountOff": "\u0421\u043a\u0438\u0434\u043a\u0430 {percent}%",
   "pricing.startCustomising":
     "\u041d\u0430\u0447\u0430\u0442\u044c \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0443 \u2014 \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e",
   "included.0":

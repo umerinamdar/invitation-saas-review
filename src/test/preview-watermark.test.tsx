@@ -52,8 +52,9 @@ describe("Invitation preview watermark", () => {
     const overlay = container.querySelector(".preview-watermark");
     expect(overlay).not.toBeNull();
     expect(overlay?.getAttribute("aria-hidden")).toBe("true");
-    expect(screen.getAllByText(/preview.*not yet published/i).length)
-      .toBeGreaterThan(0);
+    expect(screen.getAllByText(/easyinvitemaker\.com/i).length).toBeGreaterThan(
+      0,
+    );
   });
 
   it("renders no watermark when the prop is omitted (the guest page's case)", () => {
