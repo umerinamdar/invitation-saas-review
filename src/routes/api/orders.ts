@@ -4,6 +4,7 @@ import { supabaseServer } from "@/lib/supabase-server";
 import { decideOrderUser } from "@/lib/orders-auth";
 import { getStoredInviteIssues } from "@/lib/draft-validation";
 import { clientIpFromRequest, createRateLimiter } from "@/lib/rate-limit";
+import { createRazorpayOrder } from "@/lib/orders-server";
 import { PUBLISH_PRICE_PAISE } from "@/config/site";
 
 // Batch 2 / Task 5: per-isolate rate-limit backstop for order creation
@@ -13,7 +14,7 @@ import { PUBLISH_PRICE_PAISE } from "@/config/site";
 // The real control is the owner's Cloudflare WAF rate-limiting rule.
 const ordersRateLimiter = createRateLimiter({ limit: 10, windowMs: 60_000 });
 
-// Batch 2 / Task 4: this handler and src/components/youpi-checkout.tsx
+// Batch 2 / Task 4: this handler and src/components/razorpay-checkout.tsx
 // are ONE contract — the checkout sends the caller's session access
 // token and this handler requires it. Ship them together; roll back
 // together (restore both files to their priority-round state, remove
@@ -161,12 +162,14 @@ export async function POST(request: Request) {
     // generic 500: no insert, no checkout, no DB detail in the
     // response.
     const lookupActiveOrder = async (): Promise<
-      { kind: "paid" } | { kind: "created"; orderId: string } | { kind: "none" }
+      | { kind: "paid" }
+      | { kind: "created"; orderId: string; gatewayOrderId: string | null }
+      | { kind: "none" }
     > => {
       const { data: activeRows, error: activeLookupError } =
         await supabaseServer
           .from("orders")
-          .select("id, status")
+          .select("id, status, gateway_order_id")
           .eq("invite_id", inviteId)
           .in("status", ["created", "paid"])
           .order("created_at", { ascending: false });
@@ -176,13 +179,18 @@ export async function POST(request: Request) {
       const rows = (activeRows ?? []) as Array<{
         id: string;
         status: string;
+        gateway_order_id: string | null;
       }>;
       if (rows.some((row) => row.status === "paid")) {
         return { kind: "paid" };
       }
       const created = rows.find((row) => row.status === "created");
       if (created) {
-        return { kind: "created", orderId: created.id };
+        return {
+          kind: "created",
+          orderId: created.id,
+          gatewayOrderId: created.gateway_order_id,
+        };
       }
       return { kind: "none" };
     };
@@ -219,9 +227,34 @@ export async function POST(request: Request) {
         inviteId,
       });
       return json(
-        { order_id: active.orderId, status: "created" },
+        {
+          order_id: active.orderId,
+          gateway_order_id: active.gatewayOrderId,
+          status: "created",
+        },
         { status: 201 },
       );
+    }
+
+    // Create the Razorpay order BEFORE inserting our row, so an orders
+    // row never exists without a valid gateway order behind it — the
+    // alternative (insert first, then create at the gateway) risks a
+    // "created" row with a null gateway_order_id that blocks every
+    // future attempt (the active-order guard above) with nothing the
+    // customer can actually pay. A failed gateway call here leaves
+    // nothing in our database at all; the client's error path lets
+    // the customer retry.
+    const gatewayOrder = await createRazorpayOrder(
+      amountMinor,
+      "INR",
+      inviteId,
+    );
+    if (!gatewayOrder.ok) {
+      console.error("Razorpay order creation failed", {
+        reason: gatewayOrder.reason,
+        inviteId,
+      });
+      return json({ error: "gateway_unavailable" }, { status: 502 });
     }
 
     const { data: order, error } = await supabaseServer
@@ -232,7 +265,8 @@ export async function POST(request: Request) {
         tier,
         amount_minor: amountMinor,
         currency: "INR",
-        gateway: "youpi",
+        gateway: "razorpay",
+        gateway_order_id: gatewayOrder.order.id,
         status: "created",
       })
       .select()
@@ -247,7 +281,11 @@ export async function POST(request: Request) {
       // have (a dedicated log line keeps these translations
       // countable in production logs; ids only, nothing sensitive).
       // If the re-lookup finds nothing the state is unresolvable —
-      // fall through to the generic 500 rather than guessing.
+      // fall through to the generic 500 rather than guessing. The
+      // Razorpay order just created above is simply left unused —
+      // Razorpay orders carry no charge until a payment is made
+      // against them, so an orphaned one costs nothing and needs no
+      // cleanup call.
       if (error.code === "23505") {
         console.log(
           "Order insert conflicted with the invite's active order; resolving from it",
@@ -259,14 +297,25 @@ export async function POST(request: Request) {
         }
         if (raced.kind === "created") {
           return json(
-            { order_id: raced.orderId, status: "created" },
+            {
+              order_id: raced.orderId,
+              gateway_order_id: raced.gatewayOrderId,
+              status: "created",
+            },
             { status: 201 },
           );
         }
       }
       throw error;
     }
-    return json({ order_id: order.id, status: "created" }, { status: 201 });
+    return json(
+      {
+        order_id: order.id,
+        gateway_order_id: order.gateway_order_id,
+        status: "created",
+      },
+      { status: 201 },
+    );
   } catch (err) {
     // Log the error class only (NF-7): the raw object can carry
     // Supabase internals into server logs. The webhook handler follows

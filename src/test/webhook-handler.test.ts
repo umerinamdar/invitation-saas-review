@@ -1,13 +1,27 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import crypto from "node:crypto";
 
-// Handler-level tests for POST /api/webhooks/youpi (Round 2, §5.12
-// resilience matrix). The plan-level seam is covered by
-// webhook-fulfilment.test.ts; this file drives the REAL handler with a
-// stateful fake Supabase and a stubbed gateway fetch, pinning the
-// behaviours that only exist in the route: status codes, the
-// delivery-id pre-check, record-after-fulfilment ordering, and
-// recovery across redeliveries.
+// Handler-level tests for POST /api/webhooks/razorpay (ported from the
+// project's earlier YouPI integration's §5.12 resilience matrix). The
+// plan-level seam is covered by webhook-fulfilment.test.ts; this file
+// drives the REAL handler with a stateful fake Supabase and a stubbed
+// gateway fetch, pinning the behaviours that only exist in the route:
+// status codes, the delivery-id pre-check, record-after-fulfilment
+// ordering, and recovery across redeliveries.
+//
+// Razorpay has no delivery-id header of its own (unlike YouPI's
+// x-gateway-delivery-id) — the idempotency key the handler uses is the
+// payment id inside the signed payload itself (payload.payment.entity.id),
+// which is stable across genuine redeliveries of the same event and
+// distinct across different payment attempts. Tests that previously
+// modelled "the same webhook redelivered under a fresh delivery id"
+// (an artifact of YouPI's own id scheme) are adapted to what can
+// actually happen with Razorpay: a true redelivery carries the SAME
+// payment id (covered by the duplicate-delivery scenarios below); two
+// DIFFERENT payment ids racing the same order models a genuinely
+// different case — two separate payment attempts against one order —
+// and is kept where the original intent was to prove the atomic
+// status-predicate protects even when id-based dedup does not apply.
 //
 // The fake enforces webhook_deliveries.delivery_id UNIQUE exactly as
 // migration 0002 does — that constraint is the last line of defence
@@ -26,7 +40,7 @@ const mockState = vi.hoisted(() => ({
   // Round 3.5: when set, the fake flips the stored order's status to
   // this value immediately AFTER a select-read has taken its snapshot
   // — modelling a concurrent write that lands between the handler's
-  // getOrderById read and its subsequent update. Fires once.
+  // order read and its subsequent update. Fires once.
   flipStatusAfterRead: null as string | null,
   // Round 3.6: when set, the Nth orders-table select (1-based,
   // counted across the whole request) fails with a DB error — used
@@ -176,8 +190,18 @@ vi.mock("@/lib/supabase-server", () => {
               error: { message: "database unavailable" },
             };
           }
+          // The handler looks orders up by gateway_order_id (the
+          // Razorpay order id in the webhook payload), never by the
+          // internal primary key — mirror whichever column the real
+          // query used.
+          const idPair = ctx.eqPairs.find(([col]) => col === "id");
+          const gwPair = ctx.eqPairs.find(
+            ([col]) => col === "gateway_order_id",
+          );
+          const matchField = idPair ? "id" : "gateway_order_id";
+          const matchValue = idPair ? idPair[1] : gwPair?.[1];
           const found =
-            mockState.order && mockState.order["id"] === ctx.eqValue
+            mockState.order && mockState.order[matchField] === matchValue
               ? { ...mockState.order }
               : null;
           // Round 3.5 race interleave: the snapshot above is what
@@ -334,43 +358,60 @@ vi.mock("@/lib/supabase-server", () => {
   };
 });
 
-import { POST } from "@/routes/api/webhooks/youpi";
+import { POST } from "@/routes/api/webhooks/razorpay";
 
 const SECRET = "test-webhook-secret";
 
+/** Razorpay's scheme: a raw hex HMAC-SHA256 digest, no prefix. */
 function sign(body: string, secret: string = SECRET): string {
-  return (
-    "sha256=" + crypto.createHmac("sha256", secret).update(body).digest("hex")
-  );
+  return crypto.createHmac("sha256", secret).update(body).digest("hex");
 }
 
-const successBody = {
-  event: "SUCCESS",
+interface PayloadOverrides {
+  event?: string;
+  orderId?: string;
+  paymentId?: string;
+  amount?: number;
+  currency?: string;
+}
+
+const defaults: Required<PayloadOverrides> = {
+  event: "payment.captured",
   orderId: "order-1",
-  amount: "599.00",
-  amountPaise: 59900,
-  utr: "UTR9988776655",
   paymentId: "pay-1",
+  amount: 59900,
+  currency: "INR",
 };
 
-function webhookRequest(
-  bodyObj: unknown,
-  opts: {
-    deliveryId?: string;
-    secret?: string;
-    signature?: string;
-    timestamp?: string | null;
-  } = {},
-): Request {
-  const body = JSON.stringify(bodyObj);
-  const headers: Record<string, string> = {
-    "x-gateway-signature": opts.signature ?? sign(body, opts.secret ?? SECRET),
-    "x-gateway-delivery-id": opts.deliveryId ?? "delivery-1",
+/** Builds Razorpay's actual nested webhook payload shape. */
+function razorpayBody(overrides: PayloadOverrides = {}): unknown {
+  const merged = { ...defaults, ...overrides };
+  return {
+    event: merged.event,
+    payload: {
+      payment: {
+        entity: {
+          id: merged.paymentId,
+          order_id: merged.orderId,
+          amount: merged.amount,
+          currency: merged.currency,
+          status: merged.event === "payment.failed" ? "failed" : "captured",
+        },
+      },
+    },
   };
-  if (opts.timestamp !== null) {
-    headers["x-gateway-timestamp"] = opts.timestamp ?? new Date().toISOString();
-  }
-  return new Request("http://localhost/api/webhooks/youpi", {
+}
+
+function webhookRequest(
+  overrides: PayloadOverrides = {},
+  opts: { secret?: string; signature?: string } = {},
+): Request {
+  const body = JSON.stringify(razorpayBody(overrides));
+  const headers: Record<string, string> = {
+    "x-razorpay-signature":
+      opts.signature ?? sign(body, opts.secret ?? SECRET),
+  };
+  return new Request("http://localhost/api/webhooks/razorpay", {
     method: "POST",
     headers,
     body,
@@ -385,8 +426,8 @@ beforeEach(() => {
     tier: "royal",
     amount_minor: 59900,
     currency: "INR",
-    gateway: "youpi",
-    gateway_order_id: null,
+    gateway: "razorpay",
+    gateway_order_id: "order-1",
     gateway_payment_id: null,
     status: "created",
     created_at: "2026-10-21T00:00:00Z",
@@ -408,15 +449,16 @@ beforeEach(() => {
   mockState.siblingOrder = null;
   mockState.gatewayMode = "ok";
   mockState.gatewayRecord = {
-    paymentId: "pay-1",
-    orderId: "order-1",
-    amountPaise: 59900,
+    id: "pay-1",
+    order_id: "order-1",
+    amount: 59900,
     currency: "INR",
-    status: "SUCCESS",
+    status: "captured",
   };
 
-  process.env["YOUPI_WEBHOOK_SECRET"] = SECRET;
-  process.env["YOUPI_API_BASE_URL"] = "https://pay.example.test";
+  process.env["RAZORPAY_WEBHOOK_SECRET"] = SECRET;
+  process.env["VITE_RAZORPAY_KEY_ID"] = "rzp_test_key";
+  process.env["RAZORPAY_KEY_SECRET"] = "test-key-secret";
 
   vi.stubGlobal("fetch", (async () => {
     if (mockState.gatewayMode === "network_error") {
@@ -440,13 +482,14 @@ beforeEach(() => {
 afterEach(() => {
   vi.unstubAllGlobals();
   vi.restoreAllMocks();
-  delete process.env["YOUPI_WEBHOOK_SECRET"];
-  delete process.env["YOUPI_API_BASE_URL"];
+  delete process.env["RAZORPAY_WEBHOOK_SECRET"];
+  delete process.env["VITE_RAZORPAY_KEY_ID"];
+  delete process.env["RAZORPAY_KEY_SECRET"];
 });
 
-describe("POST /api/webhooks/youpi — handler-level resilience matrix", () => {
-  it("scenario 1: a valid SUCCESS fulfils end to end (paid, published, delivery recorded)", async () => {
-    const res = await POST(webhookRequest(successBody));
+describe("POST /api/webhooks/razorpay — handler-level resilience matrix", () => {
+  it("scenario 1: a valid payment.captured fulfils end to end (paid, published, delivery recorded)", async () => {
+    const res = await POST(webhookRequest());
 
     expect(res.status).toBe(200);
     const data = (await res.json()) as { status: string };
@@ -456,13 +499,11 @@ describe("POST /api/webhooks/youpi — handler-level resilience matrix", () => {
     expect(mockState.orderWrites[0]?.["gateway_payment_id"]).toBe("pay-1");
     expect(mockState.inviteWrites).toHaveLength(1);
     expect(mockState.inviteStatus).toBe("published");
-    expect(mockState.deliveries.has("delivery-1")).toBe(true);
+    expect(mockState.deliveries.has("pay-1")).toBe(true);
   });
 
   it("scenario 2: an invalid signature is rejected 401 and touches nothing", async () => {
-    const res = await POST(
-      webhookRequest(successBody, { secret: "attacker-secret" }),
-    );
+    const res = await POST(webhookRequest({}, { secret: "attacker-secret" }));
 
     expect(res.status).toBe(401);
     expect(mockState.orderWrites).toHaveLength(0);
@@ -471,37 +512,20 @@ describe("POST /api/webhooks/youpi — handler-level resilience matrix", () => {
     expect(mockState.order?.["status"]).toBe("created");
   });
 
-  it("scenario 2b: a missing or stale timestamp is rejected 401 (replay window)", async () => {
-    const missing = await POST(
-      webhookRequest(successBody, { timestamp: null }),
-    );
-    expect(missing.status).toBe(401);
-
-    const stale = await POST(
-      webhookRequest(successBody, {
-        timestamp: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
-      }),
-    );
-    expect(stale.status).toBe(401);
-    expect(mockState.orderWrites).toHaveLength(0);
-    expect(mockState.deliveries.size).toBe(0);
-  });
-
-  it("scenario 5: an unknown order id is answered 404 and touches nothing", async () => {
-    const res = await POST(
-      webhookRequest({ ...successBody, orderId: "order-999" }),
-    );
+  it("scenario 5: an unknown gateway order id is answered 404 and touches nothing", async () => {
+    const res = await POST(webhookRequest({ orderId: "order-999" }));
 
     expect(res.status).toBe(404);
     expect(mockState.orderWrites).toHaveLength(0);
     expect(mockState.deliveries.size).toBe(0);
   });
 
-  it("scenario 8: a duplicate delivery id is acknowledged without re-fulfilling", async () => {
-    const first = await POST(webhookRequest(successBody));
+  it("scenario 8: a duplicate delivery of the same payment is acknowledged without re-fulfilling", async () => {
+    const payload = { paymentId: "pay-dup" };
+    const first = await POST(webhookRequest(payload));
     expect(first.status).toBe(200);
 
-    const second = await POST(webhookRequest(successBody));
+    const second = await POST(webhookRequest(payload));
     expect(second.status).toBe(200);
     const data = (await second.json()) as { status: string };
     expect(data.status).toBe("already_processed");
@@ -510,46 +534,25 @@ describe("POST /api/webhooks/youpi — handler-level resilience matrix", () => {
     expect(mockState.deliveries.size).toBe(1);
   });
 
-  it("scenario 9: a replay with a new delivery id after fulfilment is a no-op success", async () => {
-    const first = await POST(
-      webhookRequest(successBody, { deliveryId: "delivery-1" }),
-    );
-    expect(first.status).toBe(200);
-
-    const replay = await POST(
-      webhookRequest(successBody, { deliveryId: "delivery-2" }),
-    );
-    expect(replay.status).toBe(200);
-    const data = (await replay.json()) as { status: string };
-    expect(data.status).toBe("success");
-    // The order is marked paid exactly once across both deliveries.
-    expect(mockState.orderWrites).toHaveLength(1);
-    expect(mockState.inviteWrites).toHaveLength(1);
-    expect(mockState.deliveries.size).toBe(2);
-  });
-
   it("scenario 12: a gateway outage defers fulfilment (500, nothing recorded) and a later redelivery succeeds", async () => {
     mockState.gatewayMode = "network_error";
-    const down = await POST(
-      webhookRequest(successBody, { deliveryId: "delivery-1" }),
-    );
+    const down = await POST(webhookRequest());
     expect(down.status).toBe(500);
     expect(mockState.orderWrites).toHaveLength(0);
     expect(mockState.deliveries.size).toBe(0);
     expect(mockState.order?.["status"]).toBe("created");
 
     mockState.gatewayMode = "ok";
-    const retried = await POST(
-      webhookRequest(successBody, { deliveryId: "delivery-2" }),
-    );
+    // A real redelivery of the SAME event carries the SAME payment id.
+    const retried = await POST(webhookRequest());
     expect(retried.status).toBe(200);
     expect(mockState.order?.["status"]).toBe("paid");
     expect(mockState.inviteStatus).toBe("published");
   });
 
-  it("scenario 13: a database failure while marking paid records no delivery, and the same delivery id can be retried", async () => {
+  it("scenario 13: a database failure while marking paid records no delivery, and the same delivery can be retried", async () => {
     mockState.failOrderUpdate = { message: "database unavailable" };
-    const failed = await POST(webhookRequest(successBody));
+    const failed = await POST(webhookRequest());
     expect(failed.status).toBe(500);
     // The delivery must NOT be recorded — recording it would brick the
     // payment behind an already_processed response on redelivery.
@@ -557,53 +560,40 @@ describe("POST /api/webhooks/youpi — handler-level resilience matrix", () => {
     expect(mockState.order?.["status"]).toBe("created");
 
     mockState.failOrderUpdate = null;
-    const retried = await POST(webhookRequest(successBody));
+    const retried = await POST(webhookRequest());
     expect(retried.status).toBe(200);
     expect(mockState.order?.["status"]).toBe("paid");
-    expect(mockState.deliveries.has("delivery-1")).toBe(true);
+    expect(mockState.deliveries.has("pay-1")).toBe(true);
   });
 
   it("scenario 14: a settlement failure is atomic — redelivery completes fulfilment exactly once", async () => {
-    // Round 3.7 staging note: this scenario originally staged the
-    // partial failure the old two-statement flow could produce
-    // (order marked paid, publish failed, delivery unrecorded —
-    // recovered by publish_only on redelivery). Settlement is now a
-    // single RPC transaction, so that residue can no longer be
-    // produced by this path: a publish failure inside the
-    // transaction rolls the mark-paid back with it. What the
-    // scenario still pins is the invariant that matters: the failed
-    // attempt records NOTHING, and the redelivery completes the
-    // fulfilment exactly once. (publish_only itself is still
-    // covered for residue created by older deployments — see the
-    // Round-3.7 publish_only test and the ws2 recovery test.)
+    // Settlement is a single RPC transaction, so a publish failure
+    // inside it rolls the mark-paid back with it. What this pins is
+    // the invariant that matters: the failed attempt records NOTHING,
+    // and the redelivery completes the fulfilment exactly once.
     mockState.failInviteUpdate = { message: "invites update failed" };
-    const first = await POST(
-      webhookRequest(successBody, { deliveryId: "delivery-1" }),
-    );
+    const first = await POST(webhookRequest());
     expect(first.status).toBe(500);
     // Atomic rollback: the order was NOT left marked paid.
     expect(mockState.order?.["status"]).toBe("created");
     expect(mockState.inviteStatus).toBe("draft");
     expect(mockState.deliveries.size).toBe(0);
 
-    // Redelivery (new delivery id, as the gateway issues) settles
-    // and publishes — exactly one paid marking, one publish.
     mockState.failInviteUpdate = null;
-    const second = await POST(
-      webhookRequest(successBody, { deliveryId: "delivery-2" }),
-    );
+    const second = await POST(webhookRequest());
     expect(second.status).toBe(200);
     const data = (await second.json()) as { status: string };
     expect(data.status).toBe("success");
     expect(mockState.inviteStatus).toBe("published");
     expect(mockState.inviteWrites).toHaveLength(1);
     expect(mockState.orderWrites).toHaveLength(1);
-    expect(mockState.deliveries.has("delivery-2")).toBe(true);
+    expect(mockState.deliveries.has("pay-1")).toBe(true);
   });
 
-  it("scenario 11: two concurrent deliveries of the same id settle exactly once", async () => {
-    const reqA = webhookRequest(successBody, { deliveryId: "delivery-race" });
-    const reqB = webhookRequest(successBody, { deliveryId: "delivery-race" });
+  it("scenario 11: two concurrent deliveries of the same payment settle exactly once", async () => {
+    const payload = { paymentId: "pay-race" };
+    const reqA = webhookRequest(payload);
+    const reqB = webhookRequest(payload);
 
     const [resA, resB] = await Promise.all([POST(reqA), POST(reqB)]);
     const statuses = [resA.status, resB.status];
@@ -618,9 +608,7 @@ describe("POST /api/webhooks/youpi — handler-level resilience matrix", () => {
     expect(mockState.order?.["status"]).toBe("paid");
     expect(mockState.inviteStatus).toBe("published");
 
-    const after = await POST(
-      webhookRequest(successBody, { deliveryId: "delivery-race" }),
-    );
+    const after = await POST(webhookRequest(payload));
     expect(after.status).toBe(200);
     const data = (await after.json()) as { status: string };
     expect(data.status).toBe("already_processed");
@@ -635,10 +623,10 @@ describe("POST /api/webhooks/youpi — handler-level resilience matrix", () => {
   // gateway accepts (200, no retries), and reconciliation can find it.
   // ------------------------------------------------------------------
 
-  it("round3-ws2: a verified SUCCESS for an archived invite marks the order paid but never publishes, and answers conflict", async () => {
+  it("round3-ws2: a verified payment.captured for an archived invite marks the order paid but never publishes, and answers conflict", async () => {
     mockState.inviteStatus = "archived";
 
-    const res = await POST(webhookRequest(successBody));
+    const res = await POST(webhookRequest());
     expect(res.status).toBe(200);
     const data = (await res.json()) as { status: string; reason?: string };
     expect(data.status).toBe("conflict");
@@ -651,9 +639,9 @@ describe("POST /api/webhooks/youpi — handler-level resilience matrix", () => {
     expect(mockState.inviteWrites).toHaveLength(0);
     // The delivery IS recorded — the outcome is deliberate and final,
     // so a redelivery short-circuits instead of re-processing.
-    expect(mockState.deliveries.has("delivery-1")).toBe(true);
+    expect(mockState.deliveries.has("pay-1")).toBe(true);
 
-    const redelivery = await POST(webhookRequest(successBody));
+    const redelivery = await POST(webhookRequest());
     expect(redelivery.status).toBe(200);
     const again = (await redelivery.json()) as { status: string };
     expect(again.status).toBe("already_processed");
@@ -672,9 +660,7 @@ describe("POST /api/webhooks/youpi — handler-level resilience matrix", () => {
     };
     mockState.inviteStatus = "archived";
 
-    const res = await POST(
-      webhookRequest(successBody, { deliveryId: "delivery-recovery" }),
-    );
+    const res = await POST(webhookRequest({ paymentId: "pay-recovery" }));
     expect(res.status).toBe(200);
     const data = (await res.json()) as { status: string; reason?: string };
     expect(data.status).toBe("conflict");
@@ -683,7 +669,7 @@ describe("POST /api/webhooks/youpi — handler-level resilience matrix", () => {
     expect(mockState.inviteWrites).toHaveLength(0);
     // The order is not re-marked either.
     expect(mockState.orderWrites).toHaveLength(0);
-    expect(mockState.deliveries.has("delivery-recovery")).toBe(true);
+    expect(mockState.deliveries.has("pay-recovery")).toBe(true);
   });
 
   it("round3-ws2: a paid order whose invite is published stays an idempotent success no-op", async () => {
@@ -695,9 +681,7 @@ describe("POST /api/webhooks/youpi — handler-level resilience matrix", () => {
     };
     mockState.inviteStatus = "published";
 
-    const res = await POST(
-      webhookRequest(successBody, { deliveryId: "delivery-replay" }),
-    );
+    const res = await POST(webhookRequest({ paymentId: "pay-replay" }));
     expect(res.status).toBe(200);
     const data = (await res.json()) as { status: string };
     expect(data.status).toBe("success");
@@ -706,14 +690,13 @@ describe("POST /api/webhooks/youpi — handler-level resilience matrix", () => {
   });
 
   // ------------------------------------------------------------------
-  // Round 3 / WS3: two DIFFERENT delivery ids racing the same order.
-  // The same-id race (scenario 11) is stopped by the delivery
-  // pre-check + UNIQUE constraint; different ids both pass those, so
-  // only the atomic conditional mark-paid (status predicate on the
-  // update) can guarantee exactly one paid transition, and only the
-  // winner publishes. The fake models the predicate semantics (see
-  // makeChain): a conditional update against a row that already left
-  // the fulfillable states matches nothing.
+  // Round 3 / WS3: two DIFFERENT payment attempts racing the same
+  // order. The same-payment race (scenario 11) is stopped by the
+  // delivery pre-check + UNIQUE constraint; two distinct payment ids
+  // both pass that, so only the atomic conditional mark-paid (status
+  // predicate on the update, enforced inside settle_and_publish) can
+  // guarantee exactly one paid transition, and only the winner
+  // publishes.
   //
   // What this does NOT prove: live Postgres row-lock timing. The fake
   // applies each chain atomically at await-points; a real database
@@ -723,9 +706,9 @@ describe("POST /api/webhooks/youpi — handler-level resilience matrix", () => {
   // only a live-DB test can demonstrate end to end (owner-side).
   // ------------------------------------------------------------------
 
-  it("round3-ws3: concurrent deliveries with different ids settle exactly once (one paid transition, one publish)", async () => {
-    const reqA = webhookRequest(successBody, { deliveryId: "delivery-A" });
-    const reqB = webhookRequest(successBody, { deliveryId: "delivery-B" });
+  it("round3-ws3: two different payment attempts against the same order settle exactly once (one paid transition, one publish)", async () => {
+    const reqA = webhookRequest({ paymentId: "pay-A" });
+    const reqB = webhookRequest({ paymentId: "pay-B" });
 
     const [resA, resB] = await Promise.all([POST(reqA), POST(reqB)]);
 
@@ -741,31 +724,29 @@ describe("POST /api/webhooks/youpi — handler-level resilience matrix", () => {
     // Both deliveries were processed and recorded; neither was lost.
     expect(mockState.deliveries.size).toBe(2);
   });
-  it("round3-consolidation: a FAILED delivery for a refunded order never overwrites the refund", async () => {
+
+  it("round3-consolidation: a payment.failed delivery for a refunded order never overwrites the refund", async () => {
     // "refunded" is terminal (0001 CHECK; markOrderPaid's predicate
     // already excludes it). A late FAILED must not flip the order to
     // "failed" via the unconditional markOrderFailed update.
     mockState.order = { ...mockState.order, status: "refunded" };
 
     const res = await POST(
-      webhookRequest(
-        { ...successBody, event: "FAILED" },
-        { deliveryId: "delivery-refunded" },
-      ),
+      webhookRequest({ event: "payment.failed", paymentId: "pay-refunded" }),
     );
     expect(res.status).toBe(200);
     const data = (await res.json()) as { status: string };
     expect(data.status).toBe("refunded");
     expect(mockState.order?.["status"]).toBe("refunded");
     expect(mockState.orderWrites).toHaveLength(0);
-    expect(mockState.deliveries.has("delivery-refunded")).toBe(true);
+    expect(mockState.deliveries.has("pay-refunded")).toBe(true);
   });
 });
 
 // --------------------------------------------------------------------
 // Round 3.5: markOrderFailed must be a conditional transition, like
 // markOrderPaid. The plan no-ops orders it READS as paid/refunded,
-// but the read is a snapshot: between getOrderById and the update, a
+// but the read is a snapshot: between the order read and the update, a
 // concurrent process can settle the order (paid) or refund it. The
 // pre-fix update matched by id alone, so the stale FAILED write
 // landed on top of the terminal state. The fake's
@@ -773,12 +754,10 @@ describe("POST /api/webhooks/youpi — handler-level resilience matrix", () => {
 // handler reads "created", the stored row becomes refunded/paid,
 // and the update is then evaluated against the new state.
 // --------------------------------------------------------------------
-describe("POST /api/webhooks/youpi — mark_failed transition boundary (Round 3.5)", () => {
-  const failedBody = { ...successBody, event: "FAILED" };
-
-  it("a FAILED delivery transitions a created order to failed (normal path preserved)", async () => {
+describe("POST /api/webhooks/razorpay — mark_failed transition boundary (Round 3.5)", () => {
+  it("a payment.failed delivery transitions a created order to failed (normal path preserved)", async () => {
     const res = await POST(
-      webhookRequest(failedBody, { deliveryId: "delivery-f1" }),
+      webhookRequest({ event: "payment.failed", paymentId: "pay-f1" }),
     );
     expect(res.status).toBe(200);
     const data = (await res.json()) as { status: string };
@@ -788,14 +767,17 @@ describe("POST /api/webhooks/youpi — mark_failed transition boundary (Round 3.
       (w) => w["status"] === "failed",
     );
     expect(failedWrites).toHaveLength(1);
-    expect(mockState.deliveries.has("delivery-f1")).toBe(true);
+    expect(mockState.deliveries.has("pay-f1")).toBe(true);
   });
 
   it("the refund race: the order becomes refunded after the read — the FAILED write must not land", async () => {
     mockState.flipStatusAfterRead = "refunded";
 
     const res = await POST(
-      webhookRequest(failedBody, { deliveryId: "delivery-race-refund" }),
+      webhookRequest({
+        event: "payment.failed",
+        paymentId: "pay-race-refund",
+      }),
     );
     expect(res.status).toBe(200);
     const data = (await res.json()) as { status: string };
@@ -807,14 +789,14 @@ describe("POST /api/webhooks/youpi — mark_failed transition boundary (Round 3.
     expect(
       mockState.orderWrites.filter((w) => w["status"] === "failed"),
     ).toHaveLength(0);
-    expect(mockState.deliveries.has("delivery-race-refund")).toBe(true);
+    expect(mockState.deliveries.has("pay-race-refund")).toBe(true);
   });
 
   it("the settle race: the order becomes paid after the read — a late FAILED must not downgrade it", async () => {
     mockState.flipStatusAfterRead = "paid";
 
     const res = await POST(
-      webhookRequest(failedBody, { deliveryId: "delivery-race-paid" }),
+      webhookRequest({ event: "payment.failed", paymentId: "pay-race-paid" }),
     );
     expect(res.status).toBe(200);
     const data = (await res.json()) as { status: string };
@@ -825,26 +807,24 @@ describe("POST /api/webhooks/youpi — mark_failed transition boundary (Round 3.
     expect(
       mockState.orderWrites.filter((w) => w["status"] === "failed"),
     ).toHaveLength(0);
-    expect(mockState.deliveries.has("delivery-race-paid")).toBe(true);
+    expect(mockState.deliveries.has("pay-race-paid")).toBe(true);
   });
 
   it("a gateway-record FAILED against an already-failed order stays harmlessly failed", async () => {
-    // The lookup path to mark_failed: payload says SUCCESS, the
-    // order is in "failed" (an earlier timeout), and the gateway's
-    // own record says the payment FAILED. The conditional update
-    // includes "failed" in its eligible set, so this re-marking is
-    // idempotent rather than an error.
+    // The lookup path to mark_failed: the webhook says captured, the
+    // order is in "failed" (an earlier timeout), and Razorpay's own
+    // record says the payment failed. The conditional update includes
+    // "failed" in its eligible set, so this re-marking is idempotent
+    // rather than an error.
     mockState.order = { ...mockState.order, status: "failed" };
-    mockState.gatewayRecord = { ...mockState.gatewayRecord, status: "FAILED" };
+    mockState.gatewayRecord = { ...mockState.gatewayRecord, status: "failed" };
 
-    const res = await POST(
-      webhookRequest(successBody, { deliveryId: "delivery-refailed" }),
-    );
+    const res = await POST(webhookRequest({ paymentId: "pay-refailed" }));
     expect(res.status).toBe(200);
     const data = (await res.json()) as { status: string };
     expect(data.status).toBe("failed");
     expect(mockState.order?.["status"]).toBe("failed");
-    expect(mockState.deliveries.has("delivery-refailed")).toBe(true);
+    expect(mockState.deliveries.has("pay-refailed")).toBe(true);
   });
 });
 
@@ -863,11 +843,11 @@ describe("POST /api/webhooks/youpi — mark_failed transition boundary (Round 3.
 // interleaves deterministically (read snapshot → concurrent flip →
 // update evaluated against the new state at write time).
 // --------------------------------------------------------------------
-describe("POST /api/webhooks/youpi — mark-paid transition boundary (Round 3.6)", () => {
-  it("test A: SUCCESS races a refund — a zero-row paid transition is answered as refunded, never success", async () => {
+describe("POST /api/webhooks/razorpay — mark-paid transition boundary (Round 3.6)", () => {
+  it("test A: payment.captured races a refund — a zero-row paid transition is answered as refunded, never success", async () => {
     mockState.flipStatusAfterRead = "refunded";
 
-    const res = await POST(webhookRequest(successBody));
+    const res = await POST(webhookRequest());
     expect(res.status).toBe(200);
     const data = (await res.json()) as { status: string };
     // The truthful terminal outcome — the same response the plan
@@ -883,14 +863,14 @@ describe("POST /api/webhooks/youpi — mark-paid transition boundary (Round 3.6)
     expect(mockState.inviteStatus).toBe("draft");
     // Terminal state → the delivery is recorded exactly once, so
     // the gateway stops redelivering it.
-    expect(mockState.deliveries.has("delivery-1")).toBe(true);
+    expect(mockState.deliveries.has("pay-1")).toBe(true);
     expect(mockState.deliveries.size).toBe(1);
   });
 
-  it("test B: SUCCESS races a concurrent settlement — no duplicate transition, the outstanding publish completes once", async () => {
+  it("test B: payment.captured races a concurrent settlement — no duplicate transition, the outstanding publish completes once", async () => {
     mockState.flipStatusAfterRead = "paid";
 
-    const res = await POST(webhookRequest(successBody));
+    const res = await POST(webhookRequest());
     expect(res.status).toBe(200);
     const data = (await res.json()) as { status: string };
     expect(data.status).toBe("success");
@@ -905,7 +885,7 @@ describe("POST /api/webhooks/youpi — mark-paid transition boundary (Round 3.6)
     // through the conditional publish.
     expect(mockState.inviteWrites).toHaveLength(1);
     expect(mockState.inviteStatus).toBe("published");
-    expect(mockState.deliveries.has("delivery-1")).toBe(true);
+    expect(mockState.deliveries.has("pay-1")).toBe(true);
     expect(mockState.deliveries.size).toBe(1);
   });
 
@@ -913,7 +893,7 @@ describe("POST /api/webhooks/youpi — mark-paid transition boundary (Round 3.6)
     mockState.inviteStatus = "archived";
     mockState.flipStatusAfterRead = "refunded";
 
-    const res = await POST(webhookRequest(successBody));
+    const res = await POST(webhookRequest());
     expect(res.status).toBe(200);
     const data = (await res.json()) as { status: string; reason?: string };
     // The refund won, so the truthful outcome is the refunded one —
@@ -927,7 +907,7 @@ describe("POST /api/webhooks/youpi — mark-paid transition boundary (Round 3.6)
     // No publication, no reactivation.
     expect(mockState.inviteWrites).toHaveLength(0);
     expect(mockState.inviteStatus).toBe("archived");
-    expect(mockState.deliveries.has("delivery-1")).toBe(true);
+    expect(mockState.deliveries.has("pay-1")).toBe(true);
   });
 
   it("test C2 (pin): the conflict stays genuine when a concurrent delivery recorded the payment first", async () => {
@@ -940,7 +920,7 @@ describe("POST /api/webhooks/youpi — mark-paid transition boundary (Round 3.6)
     mockState.inviteStatus = "archived";
     mockState.flipStatusAfterRead = "paid";
 
-    const res = await POST(webhookRequest(successBody));
+    const res = await POST(webhookRequest());
     expect(res.status).toBe(200);
     const data = (await res.json()) as { status: string; reason?: string };
     expect(data.status).toBe("conflict");
@@ -948,7 +928,7 @@ describe("POST /api/webhooks/youpi — mark-paid transition boundary (Round 3.6)
     expect(mockState.order?.["status"]).toBe("paid");
     expect(mockState.inviteWrites).toHaveLength(0);
     expect(mockState.inviteStatus).toBe("archived");
-    expect(mockState.deliveries.has("delivery-1")).toBe(true);
+    expect(mockState.deliveries.has("pay-1")).toBe(true);
   });
 
   it("test D: a failing settlement call claims nothing and stays retryable", async () => {
@@ -960,7 +940,7 @@ describe("POST /api/webhooks/youpi — mark-paid transition boundary (Round 3.6)
     mockState.flipStatusAfterRead = "refunded";
     mockState.failRpc = { message: "database unavailable" };
 
-    const res = await POST(webhookRequest(successBody));
+    const res = await POST(webhookRequest());
     // No success is claimed and — critically — the delivery is NOT
     // recorded, so the gateway's redelivery can settle the order
     // once the database answers again.
@@ -985,16 +965,14 @@ describe("POST /api/webhooks/youpi — mark-paid transition boundary (Round 3.6)
     };
     mockState.flipStatusAfterRead = "refunded";
 
-    const res = await POST(
-      webhookRequest(successBody, { deliveryId: "delivery-recovery-race" }),
-    );
+    const res = await POST(webhookRequest({ paymentId: "pay-recovery-race" }));
     expect(res.status).toBe(200);
     const data = (await res.json()) as { status: string };
     expect(data.status).toBe("refunded");
     expect(mockState.order?.["status"]).toBe("refunded");
     expect(mockState.inviteWrites).toHaveLength(0);
     expect(mockState.inviteStatus).toBe("draft");
-    expect(mockState.deliveries.has("delivery-recovery-race")).toBe(true);
+    expect(mockState.deliveries.has("pay-recovery-race")).toBe(true);
   });
 
   it("delivery recording: a record failure after fulfilment is not acknowledged — redelivery completes it idempotently", async () => {
@@ -1004,23 +982,20 @@ describe("POST /api/webhooks/youpi — mark-paid transition boundary (Round 3.6)
     // and a redelivery must then complete the recording without
     // repeating any side effect.
     mockState.failDeliveryInsert = { message: "database unavailable" };
-    const first = await POST(
-      webhookRequest(successBody, { deliveryId: "delivery-record-fail" }),
-    );
+    const first = await POST(webhookRequest({ paymentId: "pay-record-fail" }));
     expect(first.status).toBe(500);
     expect(mockState.order?.["status"]).toBe("paid");
     expect(mockState.inviteStatus).toBe("published");
     expect(mockState.deliveries.size).toBe(0);
 
-    const second = await POST(
-      webhookRequest(successBody, { deliveryId: "delivery-record-retry" }),
-    );
+    // A real redelivery of the same event carries the same payment id.
+    const second = await POST(webhookRequest({ paymentId: "pay-record-fail" }));
     expect(second.status).toBe(200);
     const data = (await second.json()) as { status: string };
     expect(data.status).toBe("success");
     expect(mockState.orderWrites).toHaveLength(1);
     expect(mockState.inviteWrites).toHaveLength(1);
-    expect(mockState.deliveries.has("delivery-record-retry")).toBe(true);
+    expect(mockState.deliveries.has("pay-record-fail")).toBe(true);
     expect(mockState.deliveries.size).toBe(1);
   });
 });
@@ -1045,11 +1020,11 @@ describe("POST /api/webhooks/youpi — mark-paid transition boundary (Round 3.6)
 // paths through the settle_and_publish RPC (migration 0004), which
 // holds the order row lock from status check to publish commit.
 // --------------------------------------------------------------------
-describe("POST /api/webhooks/youpi — pre-read errors + the settle window (Round 3.7)", () => {
+describe("POST /api/webhooks/razorpay — pre-read errors + the settle window (Round 3.7)", () => {
   it("fix 2: a failing invite pre-read fails closed — 500, nothing recorded, nothing published", async () => {
     mockState.failInviteSelect = { message: "invites read failed" };
 
-    const res = await POST(webhookRequest(successBody));
+    const res = await POST(webhookRequest());
     expect(res.status).toBe(500);
     expect(mockState.deliveries.size).toBe(0);
     expect(mockState.orderWrites).toHaveLength(0);
@@ -1077,14 +1052,14 @@ describe("POST /api/webhooks/youpi — pre-read errors + the settle window (Roun
     // detects; no publish-side code can prevent it).
     mockState.flipStatusAfterRead = "refunded";
 
-    const res = await POST(webhookRequest(successBody));
+    const res = await POST(webhookRequest());
     expect(res.status).toBe(200);
     const data = (await res.json()) as { status: string };
     expect(data.status).toBe("refunded");
     expect(mockState.order?.["status"]).toBe("refunded");
     expect(mockState.inviteWrites).toHaveLength(0);
     expect(mockState.inviteStatus).toBe("draft");
-    expect(mockState.deliveries.has("delivery-1")).toBe(true);
+    expect(mockState.deliveries.has("pay-1")).toBe(true);
     // Settlement was attempted exactly once, through the RPC.
     expect(mockState.rpcCalls).toHaveLength(1);
     expect(mockState.rpcCalls[0]?.name).toBe("settle_and_publish");
@@ -1102,9 +1077,7 @@ describe("POST /api/webhooks/youpi — pre-read errors + the settle window (Roun
       gateway_payment_id: "pay-1",
     };
 
-    const res = await POST(
-      webhookRequest(successBody, { deliveryId: "delivery-recovery-ok" }),
-    );
+    const res = await POST(webhookRequest({ paymentId: "pay-recovery-ok" }));
     expect(res.status).toBe(200);
     const data = (await res.json()) as { status: string };
     expect(data.status).toBe("success");
@@ -1115,13 +1088,13 @@ describe("POST /api/webhooks/youpi — pre-read errors + the settle window (Roun
     expect(mockState.orderWrites).toHaveLength(0);
     expect(mockState.rpcCalls).toHaveLength(1);
     expect(mockState.rpcCalls[0]?.args["p_gateway_payment_id"]).toBeNull();
-    expect(mockState.deliveries.has("delivery-recovery-ok")).toBe(true);
+    expect(mockState.deliveries.has("pay-recovery-ok")).toBe(true);
   });
 
   it("an error on the handler's initial order read fails closed — 500, nothing recorded", async () => {
     mockState.failOrderSelectAt = 1;
 
-    const res = await POST(webhookRequest(successBody));
+    const res = await POST(webhookRequest());
     expect(res.status).toBe(500);
     expect(mockState.deliveries.size).toBe(0);
     expect(mockState.orderWrites).toHaveLength(0);
@@ -1146,11 +1119,11 @@ describe("POST /api/webhooks/youpi — pre-read errors + the settle window (Roun
 // never a retry loop. The fake's rpc stub models the 0005
 // predicate via mockState.siblingOrder (see the stub comment).
 // --------------------------------------------------------------------
-describe("POST /api/webhooks/youpi — 0005 late-settlement conflict (Round 3.7 review)", () => {
+describe("POST /api/webhooks/razorpay — 0005 late-settlement conflict (Round 3.7 review)", () => {
   it("a late-settling failed order with an active successor is a recorded conflict, not a 500 loop", async () => {
     // Order A was marked failed (gateway timeout); the customer
     // retried and order B now holds the invite's active slot. A's
-    // payment then genuinely settles and its SUCCESS arrives,
+    // payment then genuinely settles and its captured event arrives,
     // corroborated by the gateway lookup.
     mockState.order = { ...mockState.order, status: "failed" };
     mockState.siblingOrder = {
@@ -1159,9 +1132,7 @@ describe("POST /api/webhooks/youpi — 0005 late-settlement conflict (Round 3.7 
       status: "created",
     };
 
-    const res = await POST(
-      webhookRequest(successBody, { deliveryId: "delivery-late-1" }),
-    );
+    const res = await POST(webhookRequest({ paymentId: "pay-late-1" }));
     expect(res.status).toBe(200);
     const data = (await res.json()) as { status: string; reason?: string };
     expect(data.status).toBe("conflict");
@@ -1175,14 +1146,12 @@ describe("POST /api/webhooks/youpi — 0005 late-settlement conflict (Round 3.7 
     expect(mockState.inviteStatus).toBe("draft");
     // The delivery IS recorded exactly once — the outcome is
     // terminal for this delivery, so the gateway stops redelivering.
-    expect(mockState.deliveries.has("delivery-late-1")).toBe(true);
+    expect(mockState.deliveries.has("pay-late-1")).toBe(true);
     expect(mockState.deliveries.size).toBe(1);
 
-    // A redelivery under a FRESH delivery id produces the same
+    // A SEPARATE payment attempt for the same order produces the same
     // truthful conflict — not a 500 loop and no state change.
-    const redelivery = await POST(
-      webhookRequest(successBody, { deliveryId: "delivery-late-2" }),
-    );
+    const redelivery = await POST(webhookRequest({ paymentId: "pay-late-2" }));
     expect(redelivery.status).toBe(200);
     const again = (await redelivery.json()) as {
       status: string;
@@ -1193,7 +1162,7 @@ describe("POST /api/webhooks/youpi — 0005 late-settlement conflict (Round 3.7 
     expect(mockState.order?.["status"]).toBe("failed");
     expect(mockState.orderWrites).toHaveLength(0);
     expect(mockState.inviteWrites).toHaveLength(0);
-    expect(mockState.deliveries.has("delivery-late-2")).toBe(true);
+    expect(mockState.deliveries.has("pay-late-2")).toBe(true);
     expect(mockState.deliveries.size).toBe(2);
   });
 
@@ -1210,9 +1179,7 @@ describe("POST /api/webhooks/youpi — 0005 late-settlement conflict (Round 3.7 
     };
     mockState.inviteStatus = "published";
 
-    const res = await POST(
-      webhookRequest(successBody, { deliveryId: "delivery-late-paid" }),
-    );
+    const res = await POST(webhookRequest({ paymentId: "pay-late-paid" }));
     expect(res.status).toBe(200);
     const data = (await res.json()) as { status: string; reason?: string };
     expect(data.status).toBe("conflict");
@@ -1220,18 +1187,16 @@ describe("POST /api/webhooks/youpi — 0005 late-settlement conflict (Round 3.7 
     expect(mockState.order?.["status"]).toBe("failed");
     expect(mockState.orderWrites).toHaveLength(0);
     expect(mockState.inviteWrites).toHaveLength(0);
-    expect(mockState.deliveries.has("delivery-late-paid")).toBe(true);
+    expect(mockState.deliveries.has("pay-late-paid")).toBe(true);
   });
 
   it("control: a late-settling failed order with NO active successor still settles and publishes", async () => {
     // The 0005 caveat must not swallow the designed late-settlement
     // path: with no sibling occupying the active slot, a failed
-    // order's corroborated late SUCCESS fulfils normally.
+    // order's corroborated late captured event fulfils normally.
     mockState.order = { ...mockState.order, status: "failed" };
 
-    const res = await POST(
-      webhookRequest(successBody, { deliveryId: "delivery-late-ok" }),
-    );
+    const res = await POST(webhookRequest({ paymentId: "pay-late-ok" }));
     expect(res.status).toBe(200);
     const data = (await res.json()) as { status: string };
     expect(data.status).toBe("success");
@@ -1239,6 +1204,6 @@ describe("POST /api/webhooks/youpi — 0005 late-settlement conflict (Round 3.7 
     expect(mockState.orderWrites).toHaveLength(1);
     expect(mockState.inviteStatus).toBe("published");
     expect(mockState.inviteWrites).toHaveLength(1);
-    expect(mockState.deliveries.has("delivery-late-ok")).toBe(true);
+    expect(mockState.deliveries.has("pay-late-ok")).toBe(true);
   });
 });

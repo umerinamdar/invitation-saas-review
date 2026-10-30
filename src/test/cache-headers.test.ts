@@ -53,7 +53,7 @@ describe("cacheControlForPath", () => {
 
   it("leaves API routes and self-managed routes alone", () => {
     expect(cacheControlForPath("/api/orders")).toBeNull();
-    expect(cacheControlForPath("/api/webhooks/youpi")).toBeNull();
+    expect(cacheControlForPath("/api/webhooks/razorpay")).toBeNull();
     // /api/health sets its own no-store; the sitemap sets its own TTL.
     expect(cacheControlForPath("/api/health")).toBeNull();
     expect(cacheControlForPath("/sitemap.xml")).toBeNull();

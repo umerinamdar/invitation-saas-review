@@ -13,7 +13,7 @@ import { readDraft, setDraftInviteId } from "@/lib/local-draft";
 import { getTheme } from "@/themes";
 import { hostNames } from "@/invites/types";
 import type { LocalDraft } from "@/lib/local-draft";
-import { YouPiCheckout } from "@/components/youpi-checkout";
+import { RazorpayCheckout } from "@/components/razorpay-checkout";
 import { useAuth } from "@/lib/auth";
 import {
   createInvite,
@@ -451,7 +451,7 @@ function Publish() {
         {error && <div className="error-message">{error}</div>}
 
         {inviteId && user && issues.length === 0 ? (
-          <YouPiCheckout
+          <RazorpayCheckout
             inviteId={inviteId}
             userId={user.id}
             tier={tier}
@@ -484,7 +484,7 @@ function Publish() {
             ? "Fix the items above in the editor, then come back to publish."
             : !user
               ? "Sign in to publish your invitation."
-              : "Your design is saved. Payment is secured by YouPI PG."}
+              : "Your design is saved. Payment is secured by Razorpay."}
         </p>
 
         <p className="auth-back">

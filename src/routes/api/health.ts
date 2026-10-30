@@ -4,8 +4,8 @@ import { json } from "@tanstack/react-start";
 // Liveness probe for uptime monitoring and the release checklist.
 //
 // Deliberately LIVENESS, not readiness: this handler makes no database
-// or gateway call. A transient Supabase or YouPI outage must not fail
-// the probe — if it did, the host would restart healthy instances
+// or gateway call. A transient Supabase or Razorpay outage must not
+// fail the probe — if it did, the host would restart healthy instances
 // during exactly the incidents where restarts help least, and the
 // monitor would cry wolf about the app instead of the dependency.
 // Dependency trouble already surfaces in the orders/webhook logs; this
@@ -31,8 +31,9 @@ export function GET(_request: Request) {
       config: {
         supabaseUrl: present("VITE_SUPABASE_URL"),
         serviceRole: present("SUPABASE_SERVICE_ROLE_KEY"),
-        youpiWebhook: present("YOUPI_WEBHOOK_SECRET"),
-        youpiApiBase: present("YOUPI_API_BASE_URL"),
+        razorpayKeyId: present("VITE_RAZORPAY_KEY_ID"),
+        razorpayKeySecret: present("RAZORPAY_KEY_SECRET"),
+        razorpayWebhook: present("RAZORPAY_WEBHOOK_SECRET"),
       },
     },
     { headers: { "Cache-Control": "no-store" } },

@@ -14,8 +14,9 @@ describe("serverEnvStatus", () => {
     expect([...REQUIRED_SERVER_ENV]).toEqual([
       "VITE_SUPABASE_URL",
       "SUPABASE_SERVICE_ROLE_KEY",
-      "YOUPI_WEBHOOK_SECRET",
-      "YOUPI_API_BASE_URL",
+      "VITE_RAZORPAY_KEY_ID",
+      "RAZORPAY_KEY_SECRET",
+      "RAZORPAY_WEBHOOK_SECRET",
     ]);
   });
 
@@ -27,13 +28,14 @@ describe("serverEnvStatus", () => {
 
   it("lists exactly the missing names, in canonical order", () => {
     const status = serverEnvStatus({
-      YOUPI_API_BASE_URL: "set",
+      RAZORPAY_KEY_SECRET: "set",
       VITE_SUPABASE_URL: "set",
     });
     expect(status.ok).toBe(false);
     expect(status.missing).toEqual([
       "SUPABASE_SERVICE_ROLE_KEY",
-      "YOUPI_WEBHOOK_SECRET",
+      "VITE_RAZORPAY_KEY_ID",
+      "RAZORPAY_WEBHOOK_SECRET",
     ]);
   });
 
@@ -41,12 +43,12 @@ describe("serverEnvStatus", () => {
     const status = serverEnvStatus({
       ...fullEnv,
       SUPABASE_SERVICE_ROLE_KEY: "",
-      YOUPI_WEBHOOK_SECRET: "   ",
+      RAZORPAY_WEBHOOK_SECRET: "   ",
     });
     expect(status.ok).toBe(false);
     expect(status.missing).toEqual([
       "SUPABASE_SERVICE_ROLE_KEY",
-      "YOUPI_WEBHOOK_SECRET",
+      "RAZORPAY_WEBHOOK_SECRET",
     ]);
   });
 
@@ -59,8 +61,9 @@ describe("serverEnvStatus", () => {
     expect(JSON.stringify(status)).not.toContain(sentinel);
     // Missing entries are bare names, nothing else.
     expect(status.missing).toEqual([
-      "YOUPI_WEBHOOK_SECRET",
-      "YOUPI_API_BASE_URL",
+      "VITE_RAZORPAY_KEY_ID",
+      "RAZORPAY_KEY_SECRET",
+      "RAZORPAY_WEBHOOK_SECRET",
     ]);
     for (const name of status.missing) {
       expect(REQUIRED_SERVER_ENV).toContain(name);
@@ -81,10 +84,10 @@ describe("serverEnvStatus", () => {
       for (const name of REQUIRED_SERVER_ENV) {
         process.env[name] = "set";
       }
-      delete process.env["YOUPI_WEBHOOK_SECRET"];
+      delete process.env["RAZORPAY_WEBHOOK_SECRET"];
       const status = serverEnvStatus();
       expect(status.ok).toBe(false);
-      expect(status.missing).toEqual(["YOUPI_WEBHOOK_SECRET"]);
+      expect(status.missing).toEqual(["RAZORPAY_WEBHOOK_SECRET"]);
     });
   });
 });

@@ -52,8 +52,8 @@ vi.mock("@/lib/invites-api", async (importOriginal) => {
   };
 });
 
-vi.mock("@/components/youpi-checkout", () => ({
-  YouPiCheckout: ({ inviteId }: { inviteId: string }) => (
+vi.mock("@/components/razorpay-checkout", () => ({
+  RazorpayCheckout: ({ inviteId }: { inviteId: string }) => (
     <div data-testid="checkout" data-invite={inviteId} />
   ),
 }));

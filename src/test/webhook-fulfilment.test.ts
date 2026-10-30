@@ -33,22 +33,21 @@ import type { OrderRow } from "@/lib/orders-api";
 //   secret / malformed), because it is a pure function of
 //   (raw body, signature header, secret).
 // - NOT covered here, because they live in the route handler, which
-//   binds env and headers: the header names read, that the raw body is
-//   read before JSON parsing, the 5-minute timestamp window, the
-//   HTTP status chosen per plan, and the delivery-row insert ORDER
-//   (it sits after the fulfilment awaits in the handler — verified by
-//   inspection). The plan-level property that makes a retry possible
-//   after a failed fulfilment IS tested below: a failed attempt leaves
-//   the order untouched, so a redelivery re-plans to fulfilment.
-// - Live YouPI behaviour (real payload shape, redelivery policy) is
+//   binds env and headers: the header name read (X-Razorpay-Signature),
+//   that the raw body is read before JSON parsing, the HTTP status
+//   chosen per plan, and the delivery-row insert ORDER (it sits after
+//   the fulfilment awaits in the handler — verified by inspection).
+//   The plan-level property that makes a retry possible after a failed
+//   fulfilment IS tested below: a failed attempt leaves the order
+//   untouched, so a redelivery re-plans to fulfilment.
+// - Live Razorpay behaviour (real payload shape, redelivery policy) is
 //   not testable in this environment and remains an open assumption.
 
 const SECRET = "test-webhook-secret";
 
+/** Razorpay's scheme: a raw hex HMAC-SHA256 digest, no "sha256=" prefix. */
 function sign(body: string, secret: string = SECRET): string {
-  return (
-    "sha256=" + crypto.createHmac("sha256", secret).update(body).digest("hex")
-  );
+  return crypto.createHmac("sha256", secret).update(body).digest("hex");
 }
 
 function order(status: OrderRow["status"]): OrderRow {
@@ -59,7 +58,7 @@ function order(status: OrderRow["status"]): OrderRow {
     tier: "royal",
     amount_minor: 59900,
     currency: "INR",
-    gateway: "youpi",
+    gateway: "razorpay",
     gateway_order_id: null,
     gateway_payment_id: null,
     status,
@@ -118,10 +117,14 @@ describe("verifyWebhookSignature", () => {
     ).toBe(false);
   });
 
-  it("rejects malformed, unprefixed or empty signatures", () => {
-    const hex = crypto.createHmac("sha256", SECRET).update(body).digest("hex");
-    expect(verifyWebhookSignature(body, hex, SECRET)).toBe(false);
-    expect(verifyWebhookSignature(body, "sha256=deadbeef", SECRET)).toBe(false);
+  it("rejects malformed, prefixed or empty signatures", () => {
+    // A YouPI-style "sha256=" prefixed signature — the scheme this
+    // project's earlier gateway used — must NOT validate against
+    // Razorpay's raw-hex-digest scheme.
+    const prefixed =
+      "sha256=" + crypto.createHmac("sha256", SECRET).update(body).digest("hex");
+    expect(verifyWebhookSignature(body, prefixed, SECRET)).toBe(false);
+    expect(verifyWebhookSignature(body, "deadbeef", SECRET)).toBe(false);
     expect(verifyWebhookSignature(body, "", SECRET)).toBe(false);
   });
 });
@@ -544,9 +547,9 @@ describe("fulfilmentPlan — FAILED and unknown events", () => {
 });
 
 describe("fetchGatewayPayment", () => {
-  const base = { baseUrl: "https://pay.example.test", secret: SECRET };
+  const base = { keyId: "rzp_test_key", keySecret: SECRET };
 
-  it("returns the gateway record and sends the merchant key header", async () => {
+  it("returns the gateway record, normalised to SUCCESS, with Basic Auth", async () => {
     const calls: Array<{ url: string; init: RequestInit | undefined }> = [];
     const fetchImpl = (async (url: string, init?: RequestInit) => {
       calls.push({ url, init });
@@ -554,11 +557,11 @@ describe("fetchGatewayPayment", () => {
         ok: true,
         status: 200,
         json: async () => ({
-          paymentId: "pay-1",
-          orderId: "order-1",
-          amountPaise: 59900,
+          id: "pay-1",
+          order_id: "order-1",
+          amount: 59900,
           currency: "INR",
-          status: "SUCCESS",
+          status: "captured",
         }),
       };
     }) as unknown as typeof fetch;
@@ -567,28 +570,31 @@ describe("fetchGatewayPayment", () => {
 
     expect(result).toEqual({ ok: true, payment: gatewayPayment() });
     expect(calls).toHaveLength(1);
-    expect(calls[0]?.url).toBe(
-      "https://pay.example.test/api/v1/payments/pay-1",
-    );
+    expect(calls[0]?.url).toBe("https://api.razorpay.com/v1/payments/pay-1");
     const headers = (calls[0]?.init?.headers ?? {}) as Record<string, string>;
-    expect(headers["X-Merchant-Key"]).toBe(SECRET);
+    expect(headers["Authorization"]).toBe(
+      "Basic " + Buffer.from(`${base.keyId}:${base.keySecret}`).toString("base64"),
+    );
   });
 
-  it("normalises a string amountPaise from the gateway to a number", async () => {
+  it("normalises a Razorpay 'failed' status to FAILED", async () => {
     const fetchImpl = (async () => ({
       ok: true,
       status: 200,
       json: async () => ({
-        paymentId: "pay-1",
-        orderId: "order-1",
-        amountPaise: "59900",
+        id: "pay-1",
+        order_id: "order-1",
+        amount: 59900,
         currency: "INR",
-        status: "SUCCESS",
+        status: "failed",
       }),
     })) as unknown as typeof fetch;
 
     const result = await fetchGatewayPayment("pay-1", { ...base, fetchImpl });
-    expect(result).toEqual({ ok: true, payment: gatewayPayment() });
+    expect(result).toEqual({
+      ok: true,
+      payment: gatewayPayment({ status: "FAILED" }),
+    });
   });
 
   it("fails closed when the gateway returns a non-200 response", async () => {
@@ -619,7 +625,7 @@ describe("fetchGatewayPayment", () => {
     const fetchImpl = (async () => ({
       ok: true,
       status: 200,
-      json: async () => ({ paymentId: "pay-1", status: "SUCCESS" }),
+      json: async () => ({ id: "pay-1", status: "captured" }),
     })) as unknown as typeof fetch;
 
     expect(await fetchGatewayPayment("pay-1", { ...base, fetchImpl })).toEqual({
@@ -628,22 +634,22 @@ describe("fetchGatewayPayment", () => {
     });
   });
 
-  it("fails closed when the API base URL or secret is not configured", async () => {
+  it("fails closed when the key id or secret is not configured", async () => {
     const fetchImpl = (async () => {
       throw new Error("fetch must not be called when unconfigured");
     }) as unknown as typeof fetch;
 
     expect(
       await fetchGatewayPayment("pay-1", {
-        baseUrl: "",
-        secret: SECRET,
+        keyId: "",
+        keySecret: SECRET,
         fetchImpl,
       }),
     ).toEqual({ ok: false, reason: "not_configured" });
     expect(
       await fetchGatewayPayment("pay-1", {
-        baseUrl: base.baseUrl,
-        secret: "",
+        keyId: base.keyId,
+        keySecret: "",
         fetchImpl,
       }),
     ).toEqual({ ok: false, reason: "not_configured" });

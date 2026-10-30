@@ -168,6 +168,22 @@ vi.mock("@/lib/supabase-server", () => {
   };
 });
 
+// /api/orders now creates a Razorpay order (a real network call) before
+// inserting the row — stub it so these tests stay offline and
+// deterministic, like the rest of the fake gateway surface here. Every
+// other export (the pure decision seam, signature verification, etc.)
+// is untouched.
+vi.mock("@/lib/orders-server", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/orders-server")>();
+  return {
+    ...actual,
+    createRazorpayOrder: vi.fn(async () => ({
+      ok: true as const,
+      order: { id: "rzp_order_fake", amount: 59900, currency: "INR" },
+    })),
+  };
+});
+
 import { decideOrderUser } from "@/lib/orders-auth";
 import { PUBLISH_PRICE_PAISE } from "@/config/site";
 import { POST } from "@/routes/api/orders";

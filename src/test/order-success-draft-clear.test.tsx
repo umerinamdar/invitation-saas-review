@@ -65,7 +65,7 @@ function paidOrder(inviteId: string) {
     tier: "royal",
     amount_minor: 59900,
     currency: "INR",
-    gateway: "youpi",
+    gateway: "razorpay",
     gateway_order_id: null,
     gateway_payment_id: "pay_123",
     status: "paid",

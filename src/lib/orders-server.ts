@@ -4,7 +4,7 @@ import { supabaseServer } from "./supabase-server";
 import type { OrderRow, PaymentFields } from "./orders-api";
 
 /**
- * Server-side order operations for the YouPI webhook.
+ * Server-side order operations for the Razorpay webhook.
  *
  * These mirror the functions in ./orders-api but run on the service-role
  * client (supabaseServer). The browser client in orders-api can never
@@ -34,6 +34,25 @@ export async function getOrderById(orderId: string): Promise<OrderRow | null> {
     .from("orders")
     .select("*")
     .eq("id", orderId)
+    .maybeSingle();
+
+  if (error) throw error;
+  return data as OrderRow | null;
+}
+
+/**
+ * Retrieve a single order by its Razorpay gateway order id. The
+ * webhook payload identifies the order by Razorpay's own id
+ * (order.entity.id, e.g. "order_xxx"), never by our internal primary
+ * key — this is the lookup that bridges the two.
+ */
+export async function getOrderByGatewayOrderId(
+  gatewayOrderId: string,
+): Promise<OrderRow | null> {
+  const { data, error } = await supabaseServer
+    .from("orders")
+    .select("*")
+    .eq("gateway_order_id", gatewayOrderId)
     .maybeSingle();
 
   if (error) throw error;
@@ -335,9 +354,11 @@ export async function recordWebhookDelivery(
 // ---------------------------------------------------------------------------
 
 /**
- * Verify a YouPI webhook signature: "sha256=" + HMAC-SHA256(secret,
- * rawBody), compared in constant time. Returns false for any mismatch,
- * malformed signature or empty secret — callers fail closed.
+ * Verify a Razorpay webhook signature: HMAC-SHA256(secret, rawBody) as
+ * a raw hex digest — no "sha256=" prefix, unlike some other gateways'
+ * schemes (see https://razorpay.com/docs/webhooks/validate-test/).
+ * Compared in constant time. Returns false for any mismatch, malformed
+ * signature or empty secret — callers fail closed.
  */
 export function verifyWebhookSignature(
   rawBody: string,
@@ -346,20 +367,118 @@ export function verifyWebhookSignature(
 ): boolean {
   if (!secret || !signature) return false;
 
-  const expected =
-    "sha256=" +
-    crypto.createHmac("sha256", secret).update(rawBody).digest("hex");
+  const expected = crypto
+    .createHmac("sha256", secret)
+    .update(rawBody)
+    .digest("hex");
 
   if (signature.length !== expected.length) return false;
   return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
 }
 
 // ---------------------------------------------------------------------------
-// Gateway lookup — verify the payment against YouPI's own record
-// (mission/currency-investigation.md: GET /api/v1/payments/{id} returns
-// status, amountPaise and currency, authenticated by the merchant webhook
-// secret sent as X-Merchant-Key)
+// Gateway order creation + lookup — Razorpay Orders/Payments API
+// (https://razorpay.com/docs/api/orders/, .../api/payments/fetch-a-payment/),
+// authenticated with HTTP Basic Auth (key_id:key_secret).
 // ---------------------------------------------------------------------------
+
+function razorpayAuthHeader(keyId: string, keySecret: string): string {
+  return "Basic " + Buffer.from(`${keyId}:${keySecret}`).toString("base64");
+}
+
+export interface CreateRazorpayOrderOptions {
+  /** Defaults to process.env.VITE_RAZORPAY_KEY_ID — the public key id, read server-side too (same dual-purpose pattern as VITE_SUPABASE_URL). */
+  keyId?: string;
+  /** Defaults to process.env.RAZORPAY_KEY_SECRET. Never logged. */
+  keySecret?: string;
+  /** Injectable for tests; defaults to the global fetch. */
+  fetchImpl?: typeof fetch;
+}
+
+export interface RazorpayOrder {
+  id: string;
+  amount: number;
+  currency: string;
+}
+
+export type CreateOrderFailureReason =
+  "not_configured" | "http_error" | "network_error" | "invalid_response";
+
+export type CreateOrderResult =
+  | { ok: true; order: RazorpayOrder }
+  | { ok: false; reason: CreateOrderFailureReason };
+
+/**
+ * Create a Razorpay order for a given amount (integer paise) — the
+ * order id this returns is what Checkout.js is opened with on the
+ * client, and what the webhook's payload.order_id is matched against
+ * (via getOrderByGatewayOrderId). `receipt` is our own invite id, so
+ * the gateway-side record is traceable back to the invitation without
+ * exposing anything beyond an opaque id.
+ */
+export async function createRazorpayOrder(
+  amountPaise: number,
+  currency: string,
+  receipt: string,
+  options: CreateRazorpayOrderOptions = {},
+): Promise<CreateOrderResult> {
+  const keyId = options.keyId ?? process.env["VITE_RAZORPAY_KEY_ID"];
+  const keySecret = options.keySecret ?? process.env["RAZORPAY_KEY_SECRET"];
+  if (!keyId || !keySecret) {
+    return { ok: false, reason: "not_configured" };
+  }
+
+  const fetchImpl = options.fetchImpl ?? fetch;
+  let response: Response;
+  try {
+    const init: RequestInit = {
+      method: "POST",
+      headers: {
+        Authorization: razorpayAuthHeader(keyId, keySecret),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ amount: amountPaise, currency, receipt }),
+    };
+    if (typeof AbortSignal !== "undefined" && "timeout" in AbortSignal) {
+      init.signal = AbortSignal.timeout(10_000);
+    }
+    response = await fetchImpl("https://api.razorpay.com/v1/orders", init);
+  } catch {
+    return { ok: false, reason: "network_error" };
+  }
+
+  if (!response.ok) {
+    return { ok: false, reason: "http_error" };
+  }
+
+  let body: unknown;
+  try {
+    body = await response.json();
+  } catch {
+    return { ok: false, reason: "invalid_response" };
+  }
+
+  if (typeof body !== "object" || body === null) {
+    return { ok: false, reason: "invalid_response" };
+  }
+  const record = body as Record<string, unknown>;
+  if (
+    typeof record["id"] !== "string" ||
+    typeof record["amount"] !== "number" ||
+    typeof record["currency"] !== "string"
+  ) {
+    return { ok: false, reason: "invalid_response" };
+  }
+
+  return {
+    ok: true,
+    order: {
+      id: record["id"],
+      amount: record["amount"],
+      currency: record["currency"],
+    },
+  };
+}
 
 export interface GatewayPayment {
   paymentId: string;
@@ -377,16 +496,33 @@ export type GatewayLookupResult =
   | { ok: false; reason: GatewayLookupFailureReason };
 
 export interface GatewayLookupOptions {
-  /** Defaults to process.env.YOUPI_API_BASE_URL (server-only). */
-  baseUrl?: string;
-  /** Defaults to process.env.YOUPI_WEBHOOK_SECRET. Never logged. */
-  secret?: string;
+  /** Defaults to process.env.VITE_RAZORPAY_KEY_ID — the public key id, read server-side too (same dual-purpose pattern as VITE_SUPABASE_URL). */
+  keyId?: string;
+  /** Defaults to process.env.RAZORPAY_KEY_SECRET. Never logged. */
+  keySecret?: string;
   /** Injectable for tests; defaults to the global fetch. */
   fetchImpl?: typeof fetch;
 }
 
 /**
- * Fetch the gateway's own record for a payment. Any failure — missing
+ * Razorpay's own payment statuses this lookup normalizes into the
+ * internal SUCCESS/FAILED vocabulary fulfilmentPlan reasons about.
+ * "captured" is the only state money has definitely settled in;
+ * "authorized" (card auth held but not captured — not used by this
+ * flow, which captures automatically), "created", "refunded" and
+ * anything else map through unchanged and fail the
+ * lookup_status_mismatch check rather than being guessed into either
+ * bucket.
+ */
+function normalizeRazorpayStatus(status: string): string {
+  if (status === "captured") return "SUCCESS";
+  if (status === "failed") return "FAILED";
+  return status;
+}
+
+/**
+ * Fetch Razorpay's own record for a payment (GET /v1/payments/{id},
+ * Basic Auth with key_id:key_secret). Any failure — missing
  * configuration, network error, non-200, malformed body — returns
  * { ok: false } so callers fail closed and never fulfil on an
  * unverifiable payment.
@@ -395,20 +531,20 @@ export async function fetchGatewayPayment(
   paymentId: string,
   options: GatewayLookupOptions = {},
 ): Promise<GatewayLookupResult> {
-  const baseUrl = options.baseUrl ?? process.env["YOUPI_API_BASE_URL"];
-  const secret = options.secret ?? process.env["YOUPI_WEBHOOK_SECRET"];
-  if (!baseUrl || !secret) {
+  const keyId = options.keyId ?? process.env["VITE_RAZORPAY_KEY_ID"];
+  const keySecret = options.keySecret ?? process.env["RAZORPAY_KEY_SECRET"];
+  if (!keyId || !keySecret) {
     return { ok: false, reason: "not_configured" };
   }
 
   const fetchImpl = options.fetchImpl ?? fetch;
-  const url = `${baseUrl.replace(/\/+$/, "")}/api/v1/payments/${encodeURIComponent(paymentId)}`;
+  const url = `https://api.razorpay.com/v1/payments/${encodeURIComponent(paymentId)}`;
 
   let response: Response;
   try {
     const init: RequestInit = {
       method: "GET",
-      headers: { "X-Merchant-Key": secret },
+      headers: { Authorization: razorpayAuthHeader(keyId, keySecret) },
     };
     if (typeof AbortSignal !== "undefined" && "timeout" in AbortSignal) {
       init.signal = AbortSignal.timeout(10_000);
@@ -434,10 +570,10 @@ export async function fetchGatewayPayment(
   }
 
   const record = body as Record<string, unknown>;
-  const amountPaise = Number(record["amountPaise"]);
+  const amountPaise = Number(record["amount"]);
   if (
-    typeof record["paymentId"] !== "string" ||
-    typeof record["orderId"] !== "string" ||
+    typeof record["id"] !== "string" ||
+    typeof record["order_id"] !== "string" ||
     typeof record["currency"] !== "string" ||
     typeof record["status"] !== "string" ||
     !Number.isFinite(amountPaise)
@@ -448,11 +584,11 @@ export async function fetchGatewayPayment(
   return {
     ok: true,
     payment: {
-      paymentId: record["paymentId"],
-      orderId: record["orderId"],
+      paymentId: record["id"],
+      orderId: record["order_id"],
       amountPaise,
       currency: record["currency"],
-      status: record["status"],
+      status: normalizeRazorpayStatus(record["status"]),
     },
   };
 }
@@ -513,10 +649,11 @@ export function amountMatches(
 }
 
 /**
- * YouPI's docs disagree on whether the webhook payload carries a
- * currency field. When one is present it must equal the order's stored
- * currency; when absent this check passes and the gateway lookup is the
- * authoritative currency source.
+ * Razorpay's payment entity always carries its own currency field; the
+ * webhook handler threads it through as payload.currency. When one is
+ * present it must equal the order's stored currency; when absent this
+ * check passes and the gateway lookup is the authoritative currency
+ * source.
  */
 export function payloadCurrencyMismatch(
   payload: FulfilmentPayloadInput,

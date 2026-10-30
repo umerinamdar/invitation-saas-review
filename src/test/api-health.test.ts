@@ -8,15 +8,17 @@ import { GET, Route } from "@/routes/api/health";
 const ENV_KEYS = [
   "VITE_SUPABASE_URL",
   "SUPABASE_SERVICE_ROLE_KEY",
-  "YOUPI_WEBHOOK_SECRET",
-  "YOUPI_API_BASE_URL",
+  "VITE_RAZORPAY_KEY_ID",
+  "RAZORPAY_KEY_SECRET",
+  "RAZORPAY_WEBHOOK_SECRET",
 ] as const;
 
 const SENTINELS: Record<(typeof ENV_KEYS)[number], string> = {
   VITE_SUPABASE_URL: "https://sentinel-supabase-url.invalid",
   SUPABASE_SERVICE_ROLE_KEY: "sentinel-service-role-value",
-  YOUPI_WEBHOOK_SECRET: "sentinel-webhook-secret-value",
-  YOUPI_API_BASE_URL: "https://sentinel-youpi-api.invalid",
+  VITE_RAZORPAY_KEY_ID: "sentinel-razorpay-key-id",
+  RAZORPAY_KEY_SECRET: "sentinel-razorpay-key-secret",
+  RAZORPAY_WEBHOOK_SECRET: "sentinel-webhook-secret-value",
 };
 
 let savedEnv: Record<string, string | undefined>;
@@ -50,8 +52,9 @@ describe("GET /api/health", () => {
       config: {
         supabaseUrl: false,
         serviceRole: false,
-        youpiWebhook: false,
-        youpiApiBase: false,
+        razorpayKeyId: false,
+        razorpayKeySecret: false,
+        razorpayWebhook: false,
       },
     });
   });
@@ -66,22 +69,24 @@ describe("GET /api/health", () => {
     expect(body.config).toEqual({
       supabaseUrl: true,
       serviceRole: true,
-      youpiWebhook: true,
-      youpiApiBase: true,
+      razorpayKeyId: true,
+      razorpayKeySecret: true,
+      razorpayWebhook: true,
     });
   });
 
   it("reflects a partial configuration per-variable", async () => {
     process.env["VITE_SUPABASE_URL"] = SENTINELS.VITE_SUPABASE_URL;
-    process.env["YOUPI_WEBHOOK_SECRET"] = SENTINELS.YOUPI_WEBHOOK_SECRET;
+    process.env["RAZORPAY_WEBHOOK_SECRET"] = SENTINELS.RAZORPAY_WEBHOOK_SECRET;
     const body = (await (await GET(healthRequest())).json()) as {
       config: Record<string, boolean>;
     };
     expect(body.config).toEqual({
       supabaseUrl: true,
       serviceRole: false,
-      youpiWebhook: true,
-      youpiApiBase: false,
+      razorpayKeyId: false,
+      razorpayKeySecret: false,
+      razorpayWebhook: true,
     });
   });
 

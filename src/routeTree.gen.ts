@@ -29,7 +29,7 @@ import { Route as ApiOrdersRouteImport } from './routes/api/orders'
 import { Route as EditorIdRouteImport } from './routes/editor.$id'
 import { Route as ISlugRouteImport } from './routes/i.$slug'
 import { Route as PreviewThemeIdRouteImport } from './routes/preview.$themeId'
-import { Route as ApiWebhooksYoupiRouteImport } from './routes/api/webhooks/youpi'
+import { Route as ApiWebhooksRazorpayRouteImport } from './routes/api/webhooks/razorpay'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -131,9 +131,9 @@ const PreviewThemeIdRoute = PreviewThemeIdRouteImport.update({
   path: '/preview/$themeId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiWebhooksYoupiRoute = ApiWebhooksYoupiRouteImport.update({
-  id: '/api/webhooks/youpi',
-  path: '/api/webhooks/youpi',
+const ApiWebhooksRazorpayRoute = ApiWebhooksRazorpayRouteImport.update({
+  id: '/api/webhooks/razorpay',
+  path: '/api/webhooks/razorpay',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -158,7 +158,7 @@ export interface FileRoutesByFullPath {
   '/editor/$id': typeof EditorIdRoute
   '/i/$slug': typeof ISlugRoute
   '/preview/$themeId': typeof PreviewThemeIdRoute
-  '/api/webhooks/youpi': typeof ApiWebhooksYoupiRoute
+  '/api/webhooks/razorpay': typeof ApiWebhooksRazorpayRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -181,7 +181,7 @@ export interface FileRoutesByTo {
   '/editor/$id': typeof EditorIdRoute
   '/i/$slug': typeof ISlugRoute
   '/preview/$themeId': typeof PreviewThemeIdRoute
-  '/api/webhooks/youpi': typeof ApiWebhooksYoupiRoute
+  '/api/webhooks/razorpay': typeof ApiWebhooksRazorpayRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -205,7 +205,7 @@ export interface FileRoutesById {
   '/editor/$id': typeof EditorIdRoute
   '/i/$slug': typeof ISlugRoute
   '/preview/$themeId': typeof PreviewThemeIdRoute
-  '/api/webhooks/youpi': typeof ApiWebhooksYoupiRoute
+  '/api/webhooks/razorpay': typeof ApiWebhooksRazorpayRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -230,7 +230,7 @@ export interface FileRouteTypes {
     | '/editor/$id'
     | '/i/$slug'
     | '/preview/$themeId'
-    | '/api/webhooks/youpi'
+    | '/api/webhooks/razorpay'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -253,7 +253,7 @@ export interface FileRouteTypes {
     | '/editor/$id'
     | '/i/$slug'
     | '/preview/$themeId'
-    | '/api/webhooks/youpi'
+    | '/api/webhooks/razorpay'
   id:
     | '__root__'
     | '/'
@@ -276,7 +276,7 @@ export interface FileRouteTypes {
     | '/editor/$id'
     | '/i/$slug'
     | '/preview/$themeId'
-    | '/api/webhooks/youpi'
+    | '/api/webhooks/razorpay'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -300,7 +300,7 @@ export interface RootRouteChildren {
   EditorIdRoute: typeof EditorIdRoute
   ISlugRoute: typeof ISlugRoute
   PreviewThemeIdRoute: typeof PreviewThemeIdRoute
-  ApiWebhooksYoupiRoute: typeof ApiWebhooksYoupiRoute
+  ApiWebhooksRazorpayRoute: typeof ApiWebhooksRazorpayRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -445,11 +445,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PreviewThemeIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/webhooks/youpi': {
-      id: '/api/webhooks/youpi'
-      path: '/api/webhooks/youpi'
-      fullPath: '/api/webhooks/youpi'
-      preLoaderRoute: typeof ApiWebhooksYoupiRouteImport
+    '/api/webhooks/razorpay': {
+      id: '/api/webhooks/razorpay'
+      path: '/api/webhooks/razorpay'
+      fullPath: '/api/webhooks/razorpay'
+      preLoaderRoute: typeof ApiWebhooksRazorpayRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -476,7 +476,7 @@ const rootRouteChildren: RootRouteChildren = {
   EditorIdRoute: EditorIdRoute,
   ISlugRoute: ISlugRoute,
   PreviewThemeIdRoute: PreviewThemeIdRoute,
-  ApiWebhooksYoupiRoute: ApiWebhooksYoupiRoute,
+  ApiWebhooksRazorpayRoute: ApiWebhooksRazorpayRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

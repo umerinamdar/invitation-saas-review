@@ -24,15 +24,23 @@
  * Every server-side env var read in `src/` (grep-verified):
  * - VITE_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY: supabase-server.ts
  *   (module throws at import when either is absent).
- * - YOUPI_WEBHOOK_SECRET: webhook signature verification + gateway
- *   lookup merchant key (orders-server.ts, api/webhooks/youpi.ts).
- * - YOUPI_API_BASE_URL: gateway payment lookup base (orders-server.ts).
+ * - VITE_RAZORPAY_KEY_ID + RAZORPAY_KEY_SECRET: order creation + gateway
+ *   payment lookup, Basic Auth (orders-server.ts, api/orders.ts). The
+ *   key id is VITE_-prefixed and read server-side too — the same
+ *   dual-purpose pattern as VITE_SUPABASE_URL: it is also baked into
+ *   the browser bundle for Checkout.js, and it is the PUBLIC half of
+ *   the key pair, safe to expose.
+ * - RAZORPAY_WEBHOOK_SECRET: webhook signature verification
+ *   (orders-server.ts, api/webhooks/razorpay.ts) — a separate value
+ *   from the key secret, set when the webhook is configured in the
+ *   Razorpay dashboard.
  */
 export const REQUIRED_SERVER_ENV = [
   "VITE_SUPABASE_URL",
   "SUPABASE_SERVICE_ROLE_KEY",
-  "YOUPI_WEBHOOK_SECRET",
-  "YOUPI_API_BASE_URL",
+  "VITE_RAZORPAY_KEY_ID",
+  "RAZORPAY_KEY_SECRET",
+  "RAZORPAY_WEBHOOK_SECRET",
 ] as const;
 
 export interface ServerEnvStatus {
