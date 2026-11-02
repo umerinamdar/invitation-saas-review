@@ -1,0 +1,60 @@
+{
+  "run": "2026-11-02 run #3 COMPLETE",
+  "site": "https://easyinvitemaker.com",
+  "confirmed_live_2026_11_02": {
+    "homepage": "200, title 'EasyInviteMaker \u2014 Digital wedding invitations you can share on WhatsApp', 6 designs shown",
+    "templates": "200, title 'Wedding invitation designs \u2014 EasyInviteMaker'",
+    "contact": "200, title 'Contact \u2014 EasyInviteMaker', email hello@easyinvitemaker.com",
+    "robots_txt": "Allow /, disallows /api/, /create, /dashboard, /editor/, /login, /order-failed, /order-success, /preview/, /publish \u2014 matches policy; private routes excluded",
+    "sitemap_xml": "serves 6 URLs: /, /templates, /contact, /privacy, /terms, /refund \u2014 matches src/lib/sitemap.ts SITEMAP_PATHS; published /i/ links intentionally excluded",
+    "pricing_route": "404 \u2014 no separate /pricing page; pricing is a homepage section, so this is not a broken internal link unless a page links to /pricing (none seen in homepage/templates/contact text)"
+  },
+  "confirmed_code_2026_11_02_github_main": {
+    "sitemap": "src/lib/sitemap.ts unchanged from policy, 6 paths",
+    "robots": "public/robots.txt matches live robots.txt",
+    "canonical_og_jsonld": "src/routes/__root.tsx has Organization JSON-LD (name, url, logo) and OG image guard; index/templates/contact emit canonical + og:url only when VITE_SITE_URL is set \u2014 live presence still to be confirmed by browser head check",
+    "contact_meta": "src/routes/contact.tsx has meta description: 'Contact EasyInviteMaker by email with questions about a design, a payment, or your published invitation.' \u2014 the SEO-batch 'missing contact meta' item is resolved in code",
+    "catalog": "src/themes/index.ts still 6 active themes: Ram Mandir, Dubai Silk, Ivory Silk & Pearls, Golden Temple, Noor Invitation, Cathedral Light \u2014 occasions per runbook \u00a76: wedding, engagement, reception, haldi, mehendi; sangeet and save-the-date still have zero active templates, so no landing page for either"
+  },
+  "blocked_or_not_run": {
+    "octopuson": "NOT RUN \u2014 no cargo/rust toolchain in this workspace, and OctopusOn CLIs (crawler/serp/keywords/index) are source-built via cargo per octopusOn/octopusOnPageSEO README; only octopuson-log is listed as a release archive. Building a 1-star, 2026-10-13 project from source was not justified for run #1; honest subset used instead",
+    "lighthouse": "BLOCKED \u2014 direct Lighthouse from this VM hit a Chrome interstitial (CHROME_INTERSTITIAL_ERROR, finalUrl chrome-error://chromewebdata) on Playwright Chromium, and the Meta Chromium binary refuses Lighthouse launches (WebGL domain policy). Not a site performance verdict \u2014 the site loads fine via the browser service",
+    "gsc": "NOT PULLED \u2014 no Google Search Console connector in Muse; GSC property easyinvitemaker.com was verified 2026-11-02 (DNS TXT, owner umerinamdar14@gmail.com) but data was expected to take ~1 day, and sitemap registration was unconfirmed after 3 attempts \u2014 needs owner to re-check in GSC",
+    "serp_track": "NOT RUN \u2014 depends on OctopusOn SERP browser mode (attended Chrome, 30s/query, CAPTCHA fails the check) and on the cargo build above",
+    "keyword_research": "NOT RUN \u2014 same OctopusOn dependency; no paid APIs per zero-cost constraint",
+    "index_checker_log_analyser": "NOT RUN \u2014 no server logs accessible to Muse; skip per runbook"
+  },
+  "browser_head_check_2026_11_02": {
+    "verified": {
+      "homepage_title": "EasyInviteMaker \u2014 Digital wedding invitations you can share on WhatsApp",
+      "homepage_h1": "An invitation they'll open twice.",
+      "templates_title": "Wedding invitation designs \u2014 EasyInviteMaker",
+      "templates_h1": "6 ways to say save the date",
+      "contact_title": "Contact \u2014 EasyInviteMaker",
+      "contact_h1": "Contact EasyInviteMaker",
+      "load": "All three pages rendered fully with expected content, no sign-in wall, bot check or error page in the live browser"
+    },
+    "not_verified_live": "meta description, canonical href, og:title/og:description/og:url/og:image, and application/ld+json could NOT be verified from the live browser \u2014 its observation tools expose rendered content, not head elements, and view-source routes failed. Presence in code is confirmed (see confirmed_code), presence in the served HTML is still unproven. Do not claim live canonical/OG/JSON-LD until a raw-HTML fetch confirms them."
+  },
+  "run2_2026_11_02": {
+    "main_tip": "ff4d7da9 (Merge PR #13)",
+    "pr12": "MERGED a97f6b54 2026-11-02 09:40 UTC, head cab9c8ed (CI trigger commit after PR #11 merged)",
+    "pr13": "MERGED ff4d7da9 2026-11-02 10:23 UTC, 1 file +7/-2, flaky order-success-draft-clear test with explicit waitFor; user reports real CI passed",
+    "ci_on_main": true,
+    "live_templates_lede": "verified in served text: occasions + \u20b9599 one-time",
+    "live_homepage_head": "NOT Muse-verified (head elements not exposed by browser text tools); user-verified per owner message",
+    "robots_sitemap": "unchanged, policy-correct, 6 URLs",
+    "catalog": "still 6 themes",
+    "gsc": "user-reported: sitemap 'URL unknown to Google' (new property, zero crawl history), priority indexing requested via URL Inspection and confirmed queued; Performance data NOT pulled by Muse (no GSC connector)"
+  },
+  "not_verified_live": "see run #1 Run #2: homepage head still unverified by Muse; templates visible wording now verified live.",
+  "run3_2026_11_02": {
+    "main_tip": "c490df77 (unchanged since run #2)",
+    "quick_tier": "home/templates/contact healthy, templates occasions+\u20b9599 line live, robots + 6-URL sitemap policy-correct",
+    "gsc_checked_directly": "2026-11-02 14:49 Dubai, sc-domain:easyinvitemaker.com, account umerinamdar14@gmail.com, read-only, no settings changed",
+    "gsc_performance": "NO DATA for any window \u2014 'Processing data, please check again in a day or so', all metrics blank, no queries/pages/countries/device rows",
+    "gsc_sitemap": "0 submitted sitemaps in Sitemaps report \u2014 no sitemap registered, no discovered/indexed counts; distinct from a URL Inspection queue",
+    "gsc_not_submitted_in_run3": "browser deliberately did not add/resubmit sitemap or request indexing (read-only instruction)",
+    "strategy": "NOT done \u2014 no GSC ground truth yet, so no keyword/content conclusion drawn"
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "open": [
+    {
+      "id": "SEO-2026-11-02-01",
+      "title": "Confirm live canonical / OG / JSON-LD presence (browser head check pending)",
+      "why": "Code emits them only when VITE_SITE_URL is set; live head must be verified, not assumed from code",
+      "allowlist": "read-only check, no code change",
+      "status": "Still open: homepage head unverified by Muse (templates visible wording verified live in runs #2-#3)"
+    },
+    {
+      "id": "SEO-2026-11-02-02",
+      "title": "Re-check GSC sitemap registration for https://easyinvitemaker.com/sitemap.xml",
+      "why": "Submitted 2026-11-02 but did not confirm as registered after 3 attempts, likely post-verification lag",
+      "needs_owner": "owner opens Google Search Console (property easyinvitemaker.com) and confirms / resubmits; Muse has no GSC connector",
+      "status": "RUN #3 UPDATE: GSC Sitemaps report shows 0 submitted sitemaps (2026-11-02 14:49 Dubai). Needs a submission in GSC \u2014 owner action, or authorise Muse browser to submit in a future run (not done in run #3, read-only check)."
+    },
+    {
+      "id": "SEO-2026-11-02-03",
+      "title": "Decide on OctopusOn: build from source on a machine with Rust, or drop it from the runbook",
+      "why": "Runbook assumes downloadable OctopusOn CLIs; in practice crawler/serp/keywords/index are cargo-run from source and no Rust toolchain is in this workspace",
+      "needs_owner": "decision, not a code change"
+    }
+  ],
+  "proposed_this_run": {
+    "id": "SEO-2026-11-02-P1",
+    "title": "Improve the existing homepage/templates copy for the one evidenced gap: price + occasions, not a new page",
+    "detail": "Competitors found in public search charge \u20b91,499\u2013\u20b92,999 for comparable animated WhatsApp invitations; EasyInviteMaker is \u20b9599 for every design, and its homepage already says so in the pricing section but the /templates page does not surface price or the covered occasions (wedding, engagement, reception, haldi, mehendi). Strengthen existing pages with that already-true price/occasion wording rather than adding a sangeet or save-the-date page, which the catalog does not support. No fabricated features, no new page.",
+    "status": "DONE as PR #12, NOT merged, NOT deployed \u2014 https://github.com/umerinamdar/invitation-saas-review/pull/12"
+  },
+  "delivered": [
+    {
+      "id": "SEO-2026-11-02-PR12",
+      "title": "PR #12: SEO wording \u20b9599 + occasions, homepage + templates",
+      "branch": "muse-seo-wording-2026-11-02",
+      "tip": "12685fb9b1c295e68fce93ab4cd8092db83ae0ba",
+      "base": "main @ 45229f4c7cc2537d54de6b380836e09dd7b01caf",
+      "files": [
+        "src/routes/index.tsx",
+        "src/routes/templates.tsx"
+      ],
+      "diff": "+7/-3, 1 commit, 2 files",
+      "local_gates": "npx tsc --noEmit exit 0; npm test 591/591 (57 files) with CI placeholder Supabase env; npm run build green \u2014 run on exact branch checkout",
+      "github_ci": "NOT present for this PR: .github/workflows/ci.yml is not on main yet, only on open PR #11 \u2014 absence of a check is NOT green",
+      "merged": false,
+      "deployed": false
+    },
+    {
+      "id": "SEO-2026-11-02-PR13",
+      "title": "PR #13 merged: flaky test fix, main @ ff4d7da9, CI workflow now on main"
+    }
+  ],
+  "standing_decisions_2026_11_02": {
+    "seo_ops_branch": "seo-ops-state",
+    "meaning": "Future seo-ops state commits go to branch 'seo-ops-state' in umerinamdar/invitation-saas-review, NOT only to Muse's workspace. Branch did NOT exist as of 2026-11-02 14:41 Dubai (404 on GitHub) \u2014 it will be created at the next state commit, not created in this relay step.",
+    "docs_committed": "PR #14 merged, main @ c490df77: docs/ops/muse-seo-runbook.md now in repo (SHA bd8b4759), plus both plan reviews per commit 23b596b4.",
+    "stack": "GSC + Lighthouse + Playwright only. No new tool to install \u2014 OctopusOn is NOT to be pursued as a new install (run #1 OctopusOn open item is parked by this owner decision, not by Muse).",
+    "run3_timing": "Deferred until GSC data actually accumulates. No rush; ~1 day since verification + just-requested indexing is too early for a useful strategy run.",
+    "run3_requirement": "Run #3 MUST check the GSC Performance report itself (or owner hands Muse the numbers) \u2014 that is the one piece missing from runs #1-#2 and what content/keyword strategy depends on.",
+    "no_action_now": "Nothing else needs action right now per owner 2026-11-02 14:41 message. No run #3 triggered, no state commit made in this step.",
+    "branch_commit_run3": "State for runs #1-#3 committed to branch seo-ops-state in this run (branch only, not merged to main, no deploy). See branch commit SHA in run #3 report/branch read-back."
+  }
+}
