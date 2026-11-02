@@ -118,6 +118,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           content: "width=device-width, initial-scale=1, viewport-fit=cover",
         },
         { name: "theme-color", content: "#f4ede1" },
+        // Pinterest domain verification (HTML tag method) for easyinvitemaker.com.
+        // Public by design; required for the Pinterest claim to verify after deploy.
+        {
+          name: "p:domain_verify",
+          content: "50013ecebd5a984559dbcd46002dfb79",
+        },
         { title: `${BRAND} — Digital wedding invitations` },
         {
           name: "description",
