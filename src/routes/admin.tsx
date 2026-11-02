@@ -13,6 +13,14 @@ import {
   type AdminOverview,
 } from "@/lib/admin-api";
 import { checkPageStatuses, type PageStatus } from "@/lib/site-health";
+import type { Ga4StatsResult } from "@/lib/ga4-server";
+
+const GA4_FAILURE_LABELS: Record<string, string> = {
+  not_configured: "not set up yet",
+  auth_error: "service account rejected — check its GA4 access",
+  api_error: "Google Analytics API error",
+  network_error: "could not reach Google Analytics",
+};
 
 type ConfigFlags = Record<string, boolean>;
 
@@ -77,6 +85,7 @@ function Admin() {
   const [error, setError] = useState("");
   const [config, setConfig] = useState<ConfigFlags | null>(null);
   const [pageStatuses, setPageStatuses] = useState<PageStatus[] | null>(null);
+  const [analytics, setAnalytics] = useState<Ga4StatsResult | null>(null);
 
   // Same signed-out gate as the dashboard.
   useEffect(() => {
@@ -145,6 +154,28 @@ function Admin() {
       active = false;
     };
   }, [isAdmin]);
+
+  // Visitor counts: a separate fetch from the one above because this
+  // one needs the caller's own access token (the route re-checks
+  // is_admin itself — see analytics.ts) and calls Google, not /api/health.
+  useEffect(() => {
+    if (!isAdmin || !session) return;
+    let active = true;
+    void fetch("/api/admin/analytics", {
+      headers: { Authorization: `Bearer ${session.access_token}` },
+      cache: "no-store",
+    })
+      .then((res) => res.json() as Promise<Ga4StatsResult>)
+      .then((data) => {
+        if (active) setAnalytics(data);
+      })
+      .catch(() => {
+        if (active) setAnalytics({ ok: false, reason: "network_error" });
+      });
+    return () => {
+      active = false;
+    };
+  }, [isAdmin, session]);
 
   if (loading || !session || !isAdmin) {
     return (
@@ -265,6 +296,45 @@ function Admin() {
                 Search Console
               </a>
             </p>
+          </section>
+
+          <section>
+            <h2>Visitors (Google Analytics)</h2>
+            {!analytics && <LoaderCircle className="loading-spinner" />}
+            {analytics && !analytics.ok && (
+              <p>
+                Visitor data unavailable —{" "}
+                {GA4_FAILURE_LABELS[analytics.reason] ?? analytics.reason}.
+              </p>
+            )}
+            {analytics && analytics.ok && (
+              <ul className="dash-list">
+                <li>
+                  <div>
+                    <h3>{analytics.last7Days.activeUsers}</h3>
+                    <p>Visitors — last 7 days</p>
+                  </div>
+                </li>
+                <li>
+                  <div>
+                    <h3>{analytics.last30Days.activeUsers}</h3>
+                    <p>Visitors — last 30 days</p>
+                  </div>
+                </li>
+                <li>
+                  <div>
+                    <h3>{analytics.last7Days.pageViews}</h3>
+                    <p>Page views — last 7 days</p>
+                  </div>
+                </li>
+                <li>
+                  <div>
+                    <h3>{analytics.last30Days.pageViews}</h3>
+                    <p>Page views — last 30 days</p>
+                  </div>
+                </li>
+              </ul>
+            )}
           </section>
 
           {error && (
