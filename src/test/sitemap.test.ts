@@ -14,6 +14,7 @@ describe("sitemap", () => {
       "/christian-wedding-invitations",
       "/wedding-invitation-wording",
       "/engagement-invitation-wording",
+      "/haldi-invitation-wording",
       "/contact",
       "/privacy",
       "/terms",
