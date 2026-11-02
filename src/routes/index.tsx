@@ -26,7 +26,7 @@ const SHOWCASE_IDS = [
 
 const TITLE = `${BRAND} — Digital wedding invitations you can share on WhatsApp`;
 const DESCRIPTION =
-  "Choose a design, add your names and dates, and share a link your guests open on their phone. One payment, no subscription.";
+  `For weddings, engagements, receptions, haldi and mehendi — choose a design, add your names and dates, and share a link your guests open on their phone. Publish for ${PUBLISH_PRICE_LABEL} one-time, no subscription.`;
 
 /** og:url for this page — null until the canonical origin is set. */
 const OG_URL = absoluteUrl("/");
