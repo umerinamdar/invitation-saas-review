@@ -3,6 +3,7 @@ import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocale } from "@/i18n/locale-context";
 import { signOut, useAuth } from "@/lib/auth";
+import { supabase } from "@/lib/supabase";
 import { LanguageSwitcher } from "./language-switcher";
 import { Logo } from "./logo";
 
@@ -28,6 +29,11 @@ function useNavLinks() {
 export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  // Email verification is optional, never blocking — a signed-in user
+  // with an unconfirmed address can already use the whole site. This
+  // link just makes verifying easy to find, and resending easy to
+  // retry once per click.
+  const [verifySent, setVerifySent] = useState(false);
   const { t } = useLocale();
   const NAV_LINKS = useNavLinks();
   // Release Fix 1 (D1): the header is the only chrome every page
@@ -42,6 +48,15 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
     await signOut();
     setOpen(false);
     void navigate({ to: "/" });
+  }
+
+  async function handleResendVerification(email: string) {
+    setVerifySent(true);
+    // Best-effort, same "never reveal account existence" posture as
+    // the password-reset flow in login.tsx — a failure here isn't
+    // shown differently, since this is optional and the user can just
+    // try again.
+    await supabase.auth.resend({ type: "signup", email }).catch(() => {});
   }
 
   // Escape closes the sheet, matching how any other dismissible menu works.
@@ -85,6 +100,18 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
       {!authLoading &&
         (session ? (
           <span className="nav-auth">
+            {!session.user.email_confirmed_at && session.user.email && (
+              <button
+                type="button"
+                className="nav-verify-email"
+                disabled={verifySent}
+                onClick={() =>
+                  void handleResendVerification(session.user.email!)
+                }
+              >
+                {verifySent ? "Check your inbox" : "Verify your email"}
+              </button>
+            )}
             <Link to="/dashboard">{t("nav.dashboard")}</Link>
             <button type="button" onClick={() => void handleSignOut()}>
               {t("nav.signOut")}
