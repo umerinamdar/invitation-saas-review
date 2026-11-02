@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Release Fix 3 (Agent A, D3), order-success half: clearDraft() had
@@ -102,7 +102,12 @@ describe("order-success clears the completed draft (Fix 3 / D3)", () => {
       </LocaleProvider>,
     );
     expect(await screen.findByText(/payment received/i)).toBeTruthy();
-    expect(readDraft()).toBeNull();
+    // clearDraft() runs in a separate passive effect after the one that
+    // resolves the order/invite data and renders this heading — wait for
+    // it explicitly instead of racing it, which is what made this test
+    // intermittently fail in CI (the heading can commit a tick before
+    // the second effect flushes).
+    await waitFor(() => expect(readDraft()).toBeNull());
   });
 
   it("a published order for a DIFFERENT invite leaves the draft alone", async () => {
