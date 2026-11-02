@@ -10,6 +10,10 @@
 export const SITEMAP_PATHS = [
   "/",
   "/templates",
+  "/hindu-wedding-invitations",
+  "/sikh-wedding-invitations",
+  "/muslim-wedding-invitations",
+  "/christian-wedding-invitations",
   "/contact",
   "/privacy",
   "/terms",

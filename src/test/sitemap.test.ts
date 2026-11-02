@@ -8,6 +8,10 @@ describe("sitemap", () => {
     expect(SITEMAP_PATHS).toEqual([
       "/",
       "/templates",
+      "/hindu-wedding-invitations",
+      "/sikh-wedding-invitations",
+      "/muslim-wedding-invitations",
+      "/christian-wedding-invitations",
       "/contact",
       "/privacy",
       "/terms",

@@ -11,16 +11,20 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as ChristianWeddingInvitationsRouteImport } from './routes/christian-wedding-invitations'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CreateRouteImport } from './routes/create'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as HinduWeddingInvitationsRouteImport } from './routes/hindu-wedding-invitations'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as MuslimWeddingInvitationsRouteImport } from './routes/muslim-wedding-invitations'
 import { Route as OrderFailedRouteImport } from './routes/order-failed'
 import { Route as OrderSuccessRouteImport } from './routes/order-success'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PublishRouteImport } from './routes/publish'
 import { Route as RefundRouteImport } from './routes/refund'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SikhWeddingInvitationsRouteImport } from './routes/sikh-wedding-invitations'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TemplatesRouteImport } from './routes/templates'
 import { Route as TermsRouteImport } from './routes/terms'
@@ -41,6 +45,12 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChristianWeddingInvitationsRoute =
+  ChristianWeddingInvitationsRouteImport.update({
+    id: '/christian-wedding-invitations',
+    path: '/christian-wedding-invitations',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
@@ -56,11 +66,22 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HinduWeddingInvitationsRoute = HinduWeddingInvitationsRouteImport.update({
+  id: '/hindu-wedding-invitations',
+  path: '/hindu-wedding-invitations',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MuslimWeddingInvitationsRoute =
+  MuslimWeddingInvitationsRouteImport.update({
+    id: '/muslim-wedding-invitations',
+    path: '/muslim-wedding-invitations',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const OrderFailedRoute = OrderFailedRouteImport.update({
   id: '/order-failed',
   path: '/order-failed',
@@ -89,6 +110,11 @@ const RefundRoute = RefundRouteImport.update({
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SikhWeddingInvitationsRoute = SikhWeddingInvitationsRouteImport.update({
+  id: '/sikh-wedding-invitations',
+  path: '/sikh-wedding-invitations',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -140,16 +166,20 @@ const ApiWebhooksRazorpayRoute = ApiWebhooksRazorpayRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/christian-wedding-invitations': typeof ChristianWeddingInvitationsRoute
   '/contact': typeof ContactRoute
   '/create': typeof CreateRoute
   '/dashboard': typeof DashboardRoute
+  '/hindu-wedding-invitations': typeof HinduWeddingInvitationsRoute
   '/login': typeof LoginRoute
+  '/muslim-wedding-invitations': typeof MuslimWeddingInvitationsRoute
   '/order-failed': typeof OrderFailedRoute
   '/order-success': typeof OrderSuccessRoute
   '/privacy': typeof PrivacyRoute
   '/publish': typeof PublishRoute
   '/refund': typeof RefundRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sikh-wedding-invitations': typeof SikhWeddingInvitationsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/templates': typeof TemplatesRoute
   '/terms': typeof TermsRoute
@@ -163,16 +193,20 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/christian-wedding-invitations': typeof ChristianWeddingInvitationsRoute
   '/contact': typeof ContactRoute
   '/create': typeof CreateRoute
   '/dashboard': typeof DashboardRoute
+  '/hindu-wedding-invitations': typeof HinduWeddingInvitationsRoute
   '/login': typeof LoginRoute
+  '/muslim-wedding-invitations': typeof MuslimWeddingInvitationsRoute
   '/order-failed': typeof OrderFailedRoute
   '/order-success': typeof OrderSuccessRoute
   '/privacy': typeof PrivacyRoute
   '/publish': typeof PublishRoute
   '/refund': typeof RefundRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sikh-wedding-invitations': typeof SikhWeddingInvitationsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/templates': typeof TemplatesRoute
   '/terms': typeof TermsRoute
@@ -187,16 +221,20 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/christian-wedding-invitations': typeof ChristianWeddingInvitationsRoute
   '/contact': typeof ContactRoute
   '/create': typeof CreateRoute
   '/dashboard': typeof DashboardRoute
+  '/hindu-wedding-invitations': typeof HinduWeddingInvitationsRoute
   '/login': typeof LoginRoute
+  '/muslim-wedding-invitations': typeof MuslimWeddingInvitationsRoute
   '/order-failed': typeof OrderFailedRoute
   '/order-success': typeof OrderSuccessRoute
   '/privacy': typeof PrivacyRoute
   '/publish': typeof PublishRoute
   '/refund': typeof RefundRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sikh-wedding-invitations': typeof SikhWeddingInvitationsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/templates': typeof TemplatesRoute
   '/terms': typeof TermsRoute
@@ -212,16 +250,20 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/christian-wedding-invitations'
     | '/contact'
     | '/create'
     | '/dashboard'
+    | '/hindu-wedding-invitations'
     | '/login'
+    | '/muslim-wedding-invitations'
     | '/order-failed'
     | '/order-success'
     | '/privacy'
     | '/publish'
     | '/refund'
     | '/reset-password'
+    | '/sikh-wedding-invitations'
     | '/sitemap.xml'
     | '/templates'
     | '/terms'
@@ -235,16 +277,20 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
+    | '/christian-wedding-invitations'
     | '/contact'
     | '/create'
     | '/dashboard'
+    | '/hindu-wedding-invitations'
     | '/login'
+    | '/muslim-wedding-invitations'
     | '/order-failed'
     | '/order-success'
     | '/privacy'
     | '/publish'
     | '/refund'
     | '/reset-password'
+    | '/sikh-wedding-invitations'
     | '/sitemap.xml'
     | '/templates'
     | '/terms'
@@ -258,16 +304,20 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/christian-wedding-invitations'
     | '/contact'
     | '/create'
     | '/dashboard'
+    | '/hindu-wedding-invitations'
     | '/login'
+    | '/muslim-wedding-invitations'
     | '/order-failed'
     | '/order-success'
     | '/privacy'
     | '/publish'
     | '/refund'
     | '/reset-password'
+    | '/sikh-wedding-invitations'
     | '/sitemap.xml'
     | '/templates'
     | '/terms'
@@ -282,16 +332,20 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
+  ChristianWeddingInvitationsRoute: typeof ChristianWeddingInvitationsRoute
   ContactRoute: typeof ContactRoute
   CreateRoute: typeof CreateRoute
   DashboardRoute: typeof DashboardRoute
+  HinduWeddingInvitationsRoute: typeof HinduWeddingInvitationsRoute
   LoginRoute: typeof LoginRoute
+  MuslimWeddingInvitationsRoute: typeof MuslimWeddingInvitationsRoute
   OrderFailedRoute: typeof OrderFailedRoute
   OrderSuccessRoute: typeof OrderSuccessRoute
   PrivacyRoute: typeof PrivacyRoute
   PublishRoute: typeof PublishRoute
   RefundRoute: typeof RefundRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SikhWeddingInvitationsRoute: typeof SikhWeddingInvitationsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TemplatesRoute: typeof TemplatesRoute
   TermsRoute: typeof TermsRoute
@@ -319,6 +373,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/christian-wedding-invitations': {
+      id: '/christian-wedding-invitations'
+      path: '/christian-wedding-invitations'
+      fullPath: '/christian-wedding-invitations'
+      preLoaderRoute: typeof ChristianWeddingInvitationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
@@ -340,11 +401,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/hindu-wedding-invitations': {
+      id: '/hindu-wedding-invitations'
+      path: '/hindu-wedding-invitations'
+      fullPath: '/hindu-wedding-invitations'
+      preLoaderRoute: typeof HinduWeddingInvitationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/muslim-wedding-invitations': {
+      id: '/muslim-wedding-invitations'
+      path: '/muslim-wedding-invitations'
+      fullPath: '/muslim-wedding-invitations'
+      preLoaderRoute: typeof MuslimWeddingInvitationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/order-failed': {
@@ -387,6 +462,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sikh-wedding-invitations': {
+      id: '/sikh-wedding-invitations'
+      path: '/sikh-wedding-invitations'
+      fullPath: '/sikh-wedding-invitations'
+      preLoaderRoute: typeof SikhWeddingInvitationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -458,16 +540,20 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
+  ChristianWeddingInvitationsRoute: ChristianWeddingInvitationsRoute,
   ContactRoute: ContactRoute,
   CreateRoute: CreateRoute,
   DashboardRoute: DashboardRoute,
+  HinduWeddingInvitationsRoute: HinduWeddingInvitationsRoute,
   LoginRoute: LoginRoute,
+  MuslimWeddingInvitationsRoute: MuslimWeddingInvitationsRoute,
   OrderFailedRoute: OrderFailedRoute,
   OrderSuccessRoute: OrderSuccessRoute,
   PrivacyRoute: PrivacyRoute,
   PublishRoute: PublishRoute,
   RefundRoute: RefundRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  SikhWeddingInvitationsRoute: SikhWeddingInvitationsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TemplatesRoute: TemplatesRoute,
   TermsRoute: TermsRoute,
