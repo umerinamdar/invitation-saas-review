@@ -29,6 +29,16 @@ const SITE_ROOT_URL = absoluteUrl("/");
 const OG_LOGO = absoluteUrl("/favicon-512.png");
 
 /**
+ * Google Analytics (GA4) Measurement ID — optional. Page-view/traffic
+ * tracking only: the default gtag config below sends no custom events,
+ * so it never carries invitation content, customer names, emails, or
+ * venue details. Omitted entirely when unset, same guard pattern as
+ * the Organization JSON-LD above.
+ */
+const GA_MEASUREMENT_ID =
+  (import.meta.env["VITE_GA_MEASUREMENT_ID"] as string | undefined) ?? "";
+
+/**
  * Minimal Organization JSON-LD. Built only from site config, and only
  * when the canonical origin is configured — omitted entirely otherwise.
  * No `sameAs`: the brand has no social profiles to point at.
@@ -137,6 +147,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
               {
                 type: "application/ld+json",
                 children: ORGANIZATION_JSON_LD,
+              },
+            ]
+          : []),
+        ...(GA_MEASUREMENT_ID
+          ? [
+              {
+                src: `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`,
+                async: true,
+              },
+              {
+                children:
+                  `window.dataLayer = window.dataLayer || [];\n` +
+                  `function gtag(){dataLayer.push(arguments);}\n` +
+                  `gtag('js', new Date());\n` +
+                  `gtag('config', '${GA_MEASUREMENT_ID}');`,
               },
             ]
           : []),
