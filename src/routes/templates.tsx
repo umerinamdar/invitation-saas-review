@@ -1,13 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { BRAND, SiteFooter, SiteHeader } from "@/components/site/chrome";
-import { absoluteUrl } from "@/config/site";
+import { absoluteUrl, PUBLISH_PRICE_LABEL } from "@/config/site";
 import { ThemeCard } from "@/components/site/theme-card";
 import { themes } from "@/themes";
 
 const TITLE = `Wedding invitation designs — ${BRAND}`;
 const DESCRIPTION =
-  "Every design opens differently: an envelope to unseal, doors to part, curtains to draw, a card to turn.";
+  `Every design opens differently: an envelope to unseal, doors to part, curtains to draw, a card to turn. For weddings, engagements, receptions, haldi and mehendi — every design is ${PUBLISH_PRICE_LABEL} one-time, no subscription.`;
 
 /** Each card draws itself in the theme's own typeface, so load them all. */
 const fontHrefs = [...new Set(themes.map((t) => t.typography.fontsHref))];
@@ -75,6 +75,10 @@ function Templates() {
           <p className="lede">
             Each one opens differently. Tap any design to open the real thing
             — these are live invitations, not pictures of them.
+          </p>
+          <p className="lede">
+            For weddings, engagements, receptions, haldi and mehendi — every
+            design is {PUBLISH_PRICE_LABEL} one-time, no subscription.
           </p>
         </section>
         <section className="designs">
