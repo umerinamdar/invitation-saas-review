@@ -19,6 +19,7 @@ import { Route as EngagementInvitationWordingRouteImport } from './routes/engage
 import { Route as HaldiInvitationWordingRouteImport } from './routes/haldi-invitation-wording'
 import { Route as HinduWeddingInvitationsRouteImport } from './routes/hindu-wedding-invitations'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as MehendiInvitationWordingRouteImport } from './routes/mehendi-invitation-wording'
 import { Route as MuslimWeddingInvitationsRouteImport } from './routes/muslim-wedding-invitations'
 import { Route as OrderFailedRouteImport } from './routes/order-failed'
 import { Route as OrderSuccessRouteImport } from './routes/order-success'
@@ -92,6 +93,12 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MehendiInvitationWordingRoute =
+  MehendiInvitationWordingRouteImport.update({
+    id: '/mehendi-invitation-wording',
+    path: '/mehendi-invitation-wording',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const MuslimWeddingInvitationsRoute =
   MuslimWeddingInvitationsRouteImport.update({
     id: '/muslim-wedding-invitations',
@@ -206,6 +213,7 @@ export interface FileRoutesByFullPath {
   '/haldi-invitation-wording': typeof HaldiInvitationWordingRoute
   '/hindu-wedding-invitations': typeof HinduWeddingInvitationsRoute
   '/login': typeof LoginRoute
+  '/mehendi-invitation-wording': typeof MehendiInvitationWordingRoute
   '/muslim-wedding-invitations': typeof MuslimWeddingInvitationsRoute
   '/order-failed': typeof OrderFailedRoute
   '/order-success': typeof OrderSuccessRoute
@@ -238,6 +246,7 @@ export interface FileRoutesByTo {
   '/haldi-invitation-wording': typeof HaldiInvitationWordingRoute
   '/hindu-wedding-invitations': typeof HinduWeddingInvitationsRoute
   '/login': typeof LoginRoute
+  '/mehendi-invitation-wording': typeof MehendiInvitationWordingRoute
   '/muslim-wedding-invitations': typeof MuslimWeddingInvitationsRoute
   '/order-failed': typeof OrderFailedRoute
   '/order-success': typeof OrderSuccessRoute
@@ -271,6 +280,7 @@ export interface FileRoutesById {
   '/haldi-invitation-wording': typeof HaldiInvitationWordingRoute
   '/hindu-wedding-invitations': typeof HinduWeddingInvitationsRoute
   '/login': typeof LoginRoute
+  '/mehendi-invitation-wording': typeof MehendiInvitationWordingRoute
   '/muslim-wedding-invitations': typeof MuslimWeddingInvitationsRoute
   '/order-failed': typeof OrderFailedRoute
   '/order-success': typeof OrderSuccessRoute
@@ -305,6 +315,7 @@ export interface FileRouteTypes {
     | '/haldi-invitation-wording'
     | '/hindu-wedding-invitations'
     | '/login'
+    | '/mehendi-invitation-wording'
     | '/muslim-wedding-invitations'
     | '/order-failed'
     | '/order-success'
@@ -337,6 +348,7 @@ export interface FileRouteTypes {
     | '/haldi-invitation-wording'
     | '/hindu-wedding-invitations'
     | '/login'
+    | '/mehendi-invitation-wording'
     | '/muslim-wedding-invitations'
     | '/order-failed'
     | '/order-success'
@@ -369,6 +381,7 @@ export interface FileRouteTypes {
     | '/haldi-invitation-wording'
     | '/hindu-wedding-invitations'
     | '/login'
+    | '/mehendi-invitation-wording'
     | '/muslim-wedding-invitations'
     | '/order-failed'
     | '/order-success'
@@ -402,6 +415,7 @@ export interface RootRouteChildren {
   HaldiInvitationWordingRoute: typeof HaldiInvitationWordingRoute
   HinduWeddingInvitationsRoute: typeof HinduWeddingInvitationsRoute
   LoginRoute: typeof LoginRoute
+  MehendiInvitationWordingRoute: typeof MehendiInvitationWordingRoute
   MuslimWeddingInvitationsRoute: typeof MuslimWeddingInvitationsRoute
   OrderFailedRoute: typeof OrderFailedRoute
   OrderSuccessRoute: typeof OrderSuccessRoute
@@ -494,6 +508,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mehendi-invitation-wording': {
+      id: '/mehendi-invitation-wording'
+      path: '/mehendi-invitation-wording'
+      fullPath: '/mehendi-invitation-wording'
+      preLoaderRoute: typeof MehendiInvitationWordingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/muslim-wedding-invitations': {
@@ -650,6 +671,7 @@ const rootRouteChildren: RootRouteChildren = {
   HaldiInvitationWordingRoute: HaldiInvitationWordingRoute,
   HinduWeddingInvitationsRoute: HinduWeddingInvitationsRoute,
   LoginRoute: LoginRoute,
+  MehendiInvitationWordingRoute: MehendiInvitationWordingRoute,
   MuslimWeddingInvitationsRoute: MuslimWeddingInvitationsRoute,
   OrderFailedRoute: OrderFailedRoute,
   OrderSuccessRoute: OrderSuccessRoute,
