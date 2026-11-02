@@ -1579,6 +1579,24 @@ a.contact-card {
     border-color var(--dur-fast) var(--ease-out),
     outline-color var(--dur-fast) var(--ease-out);
 }
+/* Quick-pick suggestion selects (Occasion / Welcome line / Blessing)
+   — a lightweight shortcut sitting under the real field, never the
+   primary input. Always resets to its placeholder after firing. */
+.editor-form .field-preset-picker {
+  margin-top: 6px;
+  padding: 7px 10px;
+  font-family: "Jost", sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--ink-soft);
+  background: var(--paper, transparent);
+  border: 1px dashed var(--line);
+  border-radius: 1px;
+  width: 100%;
+  cursor: pointer;
+}
 .auth-form input:focus,
 .auth-form select:focus,
 .editor-form input:focus,

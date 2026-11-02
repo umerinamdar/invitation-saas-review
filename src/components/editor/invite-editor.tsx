@@ -17,6 +17,11 @@ import {
 } from "@/lib/draft-validation";
 import type { GalleryImage } from "@/invites/types";
 import { themeDefaultLabel } from "@/lib/music";
+import {
+  BLESSING_PRESETS,
+  OCCASION_PRESETS,
+  WELCOME_PRESETS,
+} from "@/lib/editor-presets";
 import { useLocale } from "@/i18n/locale-context";
 import { useUser } from "@/lib/auth";
 import type { MediaUploadScope } from "@/lib/media-upload";
@@ -359,61 +364,60 @@ export function InviteEditor({
                   "MA, PhD",
                 ],
               ] as const
-            )
-              .map(
-                ([
-                  key,
-                  who,
-                  relationPlaceholder,
-                  parentsPlaceholder,
-                  grandparentsPlaceholder,
-                  credentialsPlaceholder,
-                ]) => (
-                  <div key={key} className="family-fields">
-                    <p className="family-fields-who">{who}</p>
-                    <label>
-                      {t("editor.relation")}
-                      <input
-                        value={config.hosts[key]?.relation ?? ""}
-                        onChange={(e) =>
-                          patchFamily(key, { relation: e.target.value })
-                        }
-                        placeholder={relationPlaceholder}
-                      />
-                    </label>
-                    <label>
-                      {t("editor.parents")}
-                      <input
-                        value={config.hosts[key]?.parents ?? ""}
-                        onChange={(e) =>
-                          patchFamily(key, { parents: e.target.value })
-                        }
-                        placeholder={parentsPlaceholder}
-                      />
-                    </label>
-                    <label>
-                      {t("editor.grandparents")}
-                      <input
-                        value={config.hosts[key]?.grandparents ?? ""}
-                        onChange={(e) =>
-                          patchFamily(key, { grandparents: e.target.value })
-                        }
-                        placeholder={grandparentsPlaceholder}
-                      />
-                    </label>
-                    <label>
-                      {t("editor.qualifications")}
-                      <input
-                        value={config.hosts[key]?.credentials ?? ""}
-                        onChange={(e) =>
-                          patchFamily(key, { credentials: e.target.value })
-                        }
-                        placeholder={credentialsPlaceholder}
-                      />
-                    </label>
-                  </div>
-                ),
-              )}
+            ).map(
+              ([
+                key,
+                who,
+                relationPlaceholder,
+                parentsPlaceholder,
+                grandparentsPlaceholder,
+                credentialsPlaceholder,
+              ]) => (
+                <div key={key} className="family-fields">
+                  <p className="family-fields-who">{who}</p>
+                  <label>
+                    {t("editor.relation")}
+                    <input
+                      value={config.hosts[key]?.relation ?? ""}
+                      onChange={(e) =>
+                        patchFamily(key, { relation: e.target.value })
+                      }
+                      placeholder={relationPlaceholder}
+                    />
+                  </label>
+                  <label>
+                    {t("editor.parents")}
+                    <input
+                      value={config.hosts[key]?.parents ?? ""}
+                      onChange={(e) =>
+                        patchFamily(key, { parents: e.target.value })
+                      }
+                      placeholder={parentsPlaceholder}
+                    />
+                  </label>
+                  <label>
+                    {t("editor.grandparents")}
+                    <input
+                      value={config.hosts[key]?.grandparents ?? ""}
+                      onChange={(e) =>
+                        patchFamily(key, { grandparents: e.target.value })
+                      }
+                      placeholder={grandparentsPlaceholder}
+                    />
+                  </label>
+                  <label>
+                    {t("editor.qualifications")}
+                    <input
+                      value={config.hosts[key]?.credentials ?? ""}
+                      onChange={(e) =>
+                        patchFamily(key, { credentials: e.target.value })
+                      }
+                      placeholder={credentialsPlaceholder}
+                    />
+                  </label>
+                </div>
+              ),
+            )}
           </fieldset>
 
           <fieldset>
@@ -437,6 +441,21 @@ export function InviteEditor({
                 }
                 placeholder="With the blessings of our families, we invite you to share in the joy of our wedding."
               />
+              <select
+                className="field-preset-picker"
+                aria-label={t("editor.examplePicker")}
+                value=""
+                onChange={(e) => {
+                  if (e.target.value) patch({ welcome: e.target.value });
+                }}
+              >
+                <option value="">{t("editor.examplePicker")}</option>
+                {WELCOME_PRESETS.map((preset) => (
+                  <option key={preset} value={preset}>
+                    {preset.length > 60 ? `${preset.slice(0, 60)}…` : preset}
+                  </option>
+                ))}
+              </select>
             </label>
             <label>
               {t("editor.blessingOrVerse")}
@@ -456,6 +475,40 @@ export function InviteEditor({
                 }}
                 placeholder="May this union be blessed with harmony, understanding and a lifetime of shared joy."
               />
+              <select
+                className="field-preset-picker"
+                aria-label={t("editor.examplePicker")}
+                value=""
+                onChange={(e) => {
+                  const chosen = BLESSING_PRESETS.find(
+                    (p) => p.label === e.target.value,
+                  );
+                  if (chosen) {
+                    patch({
+                      blessing: {
+                        ...config.blessing,
+                        text: chosen.text,
+                        attribution: chosen.attribution,
+                      },
+                    });
+                  }
+                }}
+              >
+                <option value="">{t("editor.examplePicker")}</option>
+                {["Hindu", "Muslim", "Christian", "Sikh", "General"].map(
+                  (group) => (
+                    <optgroup key={group} label={group}>
+                      {BLESSING_PRESETS.filter((p) => p.group === group).map(
+                        (preset) => (
+                          <option key={preset.label} value={preset.label}>
+                            {preset.label}
+                          </option>
+                        ),
+                      )}
+                    </optgroup>
+                  ),
+                )}
+              </select>
             </label>
             {config.blessing?.text && (
               <label>
@@ -486,6 +539,21 @@ export function InviteEditor({
                 onChange={(e) => patchEvent({ typeLabel: e.target.value })}
                 placeholder="Wedding Ceremony"
               />
+              <select
+                className="field-preset-picker"
+                aria-label={t("editor.occasionPicker")}
+                value=""
+                onChange={(e) => {
+                  if (e.target.value) patchEvent({ typeLabel: e.target.value });
+                }}
+              >
+                <option value="">{t("editor.occasionPicker")}</option>
+                {OCCASION_PRESETS.map((preset) => (
+                  <option key={preset} value={preset}>
+                    {preset}
+                  </option>
+                ))}
+              </select>
             </label>
             <label>
               {t("editor.dateAndTime")}
