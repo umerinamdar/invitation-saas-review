@@ -12,6 +12,7 @@ describe("sitemap", () => {
       "/sikh-wedding-invitations",
       "/muslim-wedding-invitations",
       "/christian-wedding-invitations",
+      "/wedding-invitation-wording",
       "/contact",
       "/privacy",
       "/terms",
