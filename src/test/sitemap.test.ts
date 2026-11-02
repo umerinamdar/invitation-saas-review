@@ -15,6 +15,7 @@ describe("sitemap", () => {
       "/wedding-invitation-wording",
       "/engagement-invitation-wording",
       "/haldi-invitation-wording",
+      "/mehendi-invitation-wording",
       "/contact",
       "/privacy",
       "/terms",
