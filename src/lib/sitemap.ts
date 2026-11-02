@@ -15,6 +15,7 @@ export const SITEMAP_PATHS = [
   "/muslim-wedding-invitations",
   "/christian-wedding-invitations",
   "/wedding-invitation-wording",
+  "/engagement-invitation-wording",
   "/contact",
   "/privacy",
   "/terms",
