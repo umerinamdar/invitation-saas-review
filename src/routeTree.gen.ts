@@ -28,6 +28,7 @@ import { Route as SikhWeddingInvitationsRouteImport } from './routes/sikh-weddin
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TemplatesRouteImport } from './routes/templates'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as WeddingInvitationWordingRouteImport } from './routes/wedding-invitation-wording'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as ApiOrdersRouteImport } from './routes/api/orders'
 import { Route as EditorIdRouteImport } from './routes/editor.$id'
@@ -132,6 +133,12 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WeddingInvitationWordingRoute =
+  WeddingInvitationWordingRouteImport.update({
+    id: '/wedding-invitation-wording',
+    path: '/wedding-invitation-wording',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiHealthRoute = ApiHealthRouteImport.update({
   id: '/api/health',
   path: '/api/health',
@@ -183,6 +190,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/templates': typeof TemplatesRoute
   '/terms': typeof TermsRoute
+  '/wedding-invitation-wording': typeof WeddingInvitationWordingRoute
   '/api/health': typeof ApiHealthRoute
   '/api/orders': typeof ApiOrdersRoute
   '/editor/$id': typeof EditorIdRoute
@@ -210,6 +218,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/templates': typeof TemplatesRoute
   '/terms': typeof TermsRoute
+  '/wedding-invitation-wording': typeof WeddingInvitationWordingRoute
   '/api/health': typeof ApiHealthRoute
   '/api/orders': typeof ApiOrdersRoute
   '/editor/$id': typeof EditorIdRoute
@@ -238,6 +247,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/templates': typeof TemplatesRoute
   '/terms': typeof TermsRoute
+  '/wedding-invitation-wording': typeof WeddingInvitationWordingRoute
   '/api/health': typeof ApiHealthRoute
   '/api/orders': typeof ApiOrdersRoute
   '/editor/$id': typeof EditorIdRoute
@@ -267,6 +277,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/templates'
     | '/terms'
+    | '/wedding-invitation-wording'
     | '/api/health'
     | '/api/orders'
     | '/editor/$id'
@@ -294,6 +305,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/templates'
     | '/terms'
+    | '/wedding-invitation-wording'
     | '/api/health'
     | '/api/orders'
     | '/editor/$id'
@@ -321,6 +333,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/templates'
     | '/terms'
+    | '/wedding-invitation-wording'
     | '/api/health'
     | '/api/orders'
     | '/editor/$id'
@@ -349,6 +362,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TemplatesRoute: typeof TemplatesRoute
   TermsRoute: typeof TermsRoute
+  WeddingInvitationWordingRoute: typeof WeddingInvitationWordingRoute
   ApiHealthRoute: typeof ApiHealthRoute
   ApiOrdersRoute: typeof ApiOrdersRoute
   EditorIdRoute: typeof EditorIdRoute
@@ -492,6 +506,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/wedding-invitation-wording': {
+      id: '/wedding-invitation-wording'
+      path: '/wedding-invitation-wording'
+      fullPath: '/wedding-invitation-wording'
+      preLoaderRoute: typeof WeddingInvitationWordingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/health': {
       id: '/api/health'
       path: '/api/health'
@@ -557,6 +578,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TemplatesRoute: TemplatesRoute,
   TermsRoute: TermsRoute,
+  WeddingInvitationWordingRoute: WeddingInvitationWordingRoute,
   ApiHealthRoute: ApiHealthRoute,
   ApiOrdersRoute: ApiOrdersRoute,
   EditorIdRoute: EditorIdRoute,
