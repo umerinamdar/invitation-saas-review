@@ -8,16 +8,23 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 // auth-aware header: state shown per session, and Sign out actually
 // invoking the auth module's signOut and returning the user home.
 const hoisted = vi.hoisted(() => ({
-  session: null as null | { user: { id: string; email: string } },
+  session: null as null | {
+    user: { id: string; email: string; email_confirmed_at?: string };
+  },
   loading: false,
   signOut: vi.fn(async () => {}),
   navigate: vi.fn(async () => {}),
+  resend: vi.fn(async () => ({ error: null })),
 }));
 
 vi.mock("@/lib/auth", () => ({
   useAuth: () => ({ session: hoisted.session, loading: hoisted.loading }),
   useUser: () => hoisted.session?.user ?? null,
   signOut: hoisted.signOut,
+}));
+
+vi.mock("@/lib/supabase", () => ({
+  supabase: { auth: { resend: hoisted.resend } },
 }));
 
 vi.mock("@tanstack/react-router", () => ({
@@ -53,6 +60,7 @@ describe("SiteHeader auth controls (Fix 1 / D1)", () => {
     hoisted.loading = false;
     hoisted.signOut.mockClear();
     hoisted.navigate.mockClear();
+    hoisted.resend.mockClear();
   });
 
   it("signed-out: offers Sign in (→ /login) and no account controls", () => {
@@ -64,7 +72,13 @@ describe("SiteHeader auth controls (Fix 1 / D1)", () => {
   });
 
   it("signed-in: offers Dashboard (→ /dashboard) and Sign out, no Sign in", () => {
-    hoisted.session = { user: { id: "user-1", email: "a@example.com" } };
+    hoisted.session = {
+      user: {
+        id: "user-1",
+        email: "a@example.com",
+        email_confirmed_at: "2026-01-01T00:00:00Z",
+      },
+    };
     renderHeader();
     const dash = screen.getByRole("link", { name: "Dashboard" });
     expect(dash).toHaveAttribute("href", "/dashboard");
@@ -73,7 +87,13 @@ describe("SiteHeader auth controls (Fix 1 / D1)", () => {
   });
 
   it("Sign out calls the auth signOut and navigates home", async () => {
-    hoisted.session = { user: { id: "user-1", email: "a@example.com" } };
+    hoisted.session = {
+      user: {
+        id: "user-1",
+        email: "a@example.com",
+        email_confirmed_at: "2026-01-01T00:00:00Z",
+      },
+    };
     renderHeader();
     fireEvent.click(screen.getByRole("button", { name: "Sign out" }));
     await waitFor(() => expect(hoisted.signOut).toHaveBeenCalledTimes(1));
@@ -87,5 +107,42 @@ describe("SiteHeader auth controls (Fix 1 / D1)", () => {
     renderHeader();
     expect(screen.queryByRole("link", { name: "Sign in" })).toBeNull();
     expect(screen.queryByRole("button", { name: "Sign out" })).toBeNull();
+  });
+
+  it("signed-in with an unconfirmed email: offers a Verify your email link", () => {
+    hoisted.session = { user: { id: "user-1", email: "a@example.com" } };
+    renderHeader();
+    expect(
+      screen.getByRole("button", { name: "Verify your email" }),
+    ).toBeTruthy();
+  });
+
+  it("signed-in with a confirmed email: shows no verify link", () => {
+    hoisted.session = {
+      user: {
+        id: "user-1",
+        email: "a@example.com",
+        email_confirmed_at: "2026-01-01T00:00:00Z",
+      },
+    };
+    renderHeader();
+    expect(
+      screen.queryByRole("button", { name: "Verify your email" }),
+    ).toBeNull();
+  });
+
+  it("clicking Verify your email resends the confirmation and updates the label", async () => {
+    hoisted.session = { user: { id: "user-1", email: "a@example.com" } };
+    renderHeader();
+    fireEvent.click(screen.getByRole("button", { name: "Verify your email" }));
+    await waitFor(() =>
+      expect(hoisted.resend).toHaveBeenCalledWith({
+        type: "signup",
+        email: "a@example.com",
+      }),
+    );
+    expect(
+      screen.getByRole("button", { name: "Check your inbox" }),
+    ).toBeTruthy();
   });
 });
