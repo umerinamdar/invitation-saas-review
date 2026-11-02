@@ -86,6 +86,10 @@ function Admin() {
   const [config, setConfig] = useState<ConfigFlags | null>(null);
   const [pageStatuses, setPageStatuses] = useState<PageStatus[] | null>(null);
   const [analytics, setAnalytics] = useState<Ga4StatsResult | null>(null);
+  const [customerEmails, setCustomerEmails] = useState<Record<
+    string,
+    string
+  > | null>(null);
 
   // Same signed-out gate as the dashboard.
   useEffect(() => {
@@ -171,6 +175,32 @@ function Admin() {
       })
       .catch(() => {
         if (active) setAnalytics({ ok: false, reason: "network_error" });
+      });
+    return () => {
+      active = false;
+    };
+  }, [isAdmin, session]);
+
+  // Customer emails: id -> email, so the tables below can show who an
+  // invite/order actually belongs to instead of a truncated uuid.
+  // Email lives in auth.users, unreachable from the browser client
+  // (RLS has nothing to grant there) — see customers.ts.
+  useEffect(() => {
+    if (!isAdmin || !session) return;
+    let active = true;
+    void fetch("/api/admin/customers", {
+      headers: { Authorization: `Bearer ${session.access_token}` },
+      cache: "no-store",
+    })
+      .then((res) => res.json() as Promise<{ id: string; email: string }[]>)
+      .then((rows) => {
+        if (!active || !Array.isArray(rows)) return;
+        const map: Record<string, string> = {};
+        for (const row of rows) map[row.id] = row.email;
+        setCustomerEmails(map);
+      })
+      .catch(() => {
+        if (active) setCustomerEmails({});
       });
     return () => {
       active = false;
@@ -434,24 +464,35 @@ function Admin() {
                 <thead>
                   <tr>
                     <th>Date</th>
-                    <th>Slug</th>
+                    <th>Invitation URL</th>
                     <th>Theme</th>
                     <th>Status</th>
-                    <th>Customer</th>
+                    <th>Customer email</th>
                   </tr>
                 </thead>
                 <tbody>
                   {invites.map((invite) => (
                     <tr key={invite.id}>
                       <td>{formatDate(invite.created_at)}</td>
-                      <td>{invite.slug}</td>
+                      <td>
+                        <a
+                          href={`/i/${invite.slug}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          /i/{invite.slug}
+                        </a>
+                      </td>
                       <td>{invite.theme_id}</td>
                       <td>
                         <span className={`status status-${invite.status}`}>
                           {invite.status}
                         </span>
                       </td>
-                      <td>{shortId(invite.user_id)}</td>
+                      <td>
+                        {customerEmails?.[invite.user_id] ??
+                          shortId(invite.user_id)}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
