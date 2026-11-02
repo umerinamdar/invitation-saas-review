@@ -34,16 +34,21 @@ function Contact() {
           <p className="eyebrow">Get in touch</p>
           <h1>Contact {BRAND}</h1>
           <p className="lede">
-            Questions about a design, a payment, or your published invitation
-            — we're happy to help.
+            Questions about a design, a payment, or your published invitation —
+            we're happy to help.
           </p>
 
           <div className="contact-cards">
-            <a className="contact-card" href="mailto:hello@easyinvitemaker.com">
+            <a
+              className="contact-card"
+              href="mailto:support@easyinvitemaker.com"
+            >
               <Mail size={20} />
               <div>
                 <p className="contact-card-label">Email</p>
-                <p className="contact-card-value">hello@easyinvitemaker.com</p>
+                <p className="contact-card-value">
+                  support@easyinvitemaker.com
+                </p>
               </div>
             </a>
           </div>
