@@ -140,6 +140,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
               },
             ]
           : []),
+        // GA4 — property "EasyInviteMaker" (ID 561905502), created
+        // 2026-11-02. The measurement ID is public by design (it ships
+        // in the page source by nature of the tag). No env var, no secret.
+        {
+          src: "https://www.googletagmanager.com/gtag/js?id=G-PKMVEE5DVG",
+          async: true,
+        },
+        {
+          children: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-PKMVEE5DVG');`,
+        },
       ],
       links: [
         {
