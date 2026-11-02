@@ -148,7 +148,7 @@ describe("/admin route gates", () => {
     expect(await screen.findByText("₹1,198")).toBeTruthy();
     expect(screen.getByText(/2 paid/)).toBeTruthy();
     // Recent rows from BOTH fixture users render.
-    expect(screen.getByText("aisha-rohan-live")).toBeTruthy();
+    expect(screen.getByText("/i/aisha-rohan-live")).toBeTruthy();
     expect(screen.getByText("₹599")).toBeTruthy();
     // No bounce happened on the way in.
     expect(hoisted.navigate).not.toHaveBeenCalledWith({
