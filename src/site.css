@@ -1682,6 +1682,32 @@ a.contact-card {
   margin: 0 auto;
   padding: 0 clamp(18px, 5vw, 64px) clamp(64px, 9vw, 112px);
 }
+/* Admin dashboard (/admin): direct-child sections only — the customer
+ * dashboard (/dashboard) reuses .dash but has no nested <section>, so
+ * this never touches it. Each becomes its own card: same page
+ * background as the rest of the site, separated by a border + soft
+ * shadow rather than a color shift, so nested elements (.dash-list,
+ * .table-scroll) that already carry their own border read as content
+ * inside the card, not a second box fighting it for attention. */
+.dash > section {
+  background: var(--sheet);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--shadow-soft);
+  padding: clamp(20px, 3vw, 32px);
+  margin-bottom: 24px;
+}
+.dash > section h2 {
+  font-size: clamp(19px, 2.2vw, 24px);
+  margin-bottom: 18px;
+}
+.dash > section .dash-list {
+  margin-bottom: 0;
+}
+.dash-health-links {
+  margin-top: 16px;
+  font-size: 13.5px;
+}
 .dash-empty {
   text-align: center;
   padding: clamp(56px, 8vw, 96px) 22px;
@@ -1745,6 +1771,44 @@ a.contact-card {
   flex-basis: 100%;
   font-size: 13px;
   color: oklch(0.5 0.14 25);
+}
+/* Admin dashboard tables (/admin's Recent orders / Recent invitations)
+ * — a real <table>, unlike the public compare-table's div/grid rows,
+ * so it needs its own cell rules. .table-scroll lets a narrow phone
+ * scroll the table sideways instead of squeezing every column (or
+ * wrapping cell text across lines) until it's unreadable, which is
+ * what a bare <table> does with no explicit width/wrap handling. */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.admin-table {
+  width: 100%;
+  min-width: 640px;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+.admin-table th,
+.admin-table td {
+  padding: 12px 16px;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--line-soft);
+}
+.admin-table thead th {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  background: color-mix(in oklch, var(--gold-soft) 14%, var(--sheet));
+}
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.admin-table tbody tr:hover {
+  background: var(--sheet-warm);
 }
 .status {
   font-size: 9px;
