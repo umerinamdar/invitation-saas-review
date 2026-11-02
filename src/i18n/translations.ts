@@ -66,6 +66,8 @@ export type TranslationKey =
   | "editor.attribution"
   | "editor.theDay"
   | "editor.occasion"
+  | "editor.occasionPicker"
+  | "editor.examplePicker"
   | "editor.dateAndTime"
   | "editor.venue"
   | "editor.venueAddress"
@@ -235,6 +237,8 @@ const en: Dictionary = {
   "editor.attribution": "Attribution",
   "editor.theDay": "The day",
   "editor.occasion": "Occasion",
+  "editor.occasionPicker": "Common options",
+  "editor.examplePicker": "Insert an example",
   "editor.dateAndTime": "Date and time",
   "editor.venue": "Venue",
   "editor.venueAddress": "Venue address",
@@ -421,6 +425,8 @@ const hi: Dictionary = {
   "editor.attribution": "श्रेय",
   "editor.theDay": "दिन",
   "editor.occasion": "अवसर",
+  "editor.occasionPicker": "सामान्य विकल्प",
+  "editor.examplePicker": "एक उदाहरण डालें",
   "editor.dateAndTime": "तारीख़ और समय",
   "editor.venue": "स्थान",
   "editor.venueAddress": "स्थल का पता",
@@ -607,6 +613,8 @@ const ar: Dictionary = {
   "editor.attribution": "نُسب إلى",
   "editor.theDay": "اليوم",
   "editor.occasion": "المناسبة",
+  "editor.occasionPicker": "خيارات شائعة",
+  "editor.examplePicker": "إدراج مثال",
   "editor.dateAndTime": "التاريخ والوقت",
   "editor.venue": "المكان",
   "editor.venueAddress": "عنوان المكان",
@@ -793,6 +801,8 @@ const mr: Partial<Dictionary> = {
   "editor.attribution": "श्रेय",
   "editor.theDay": "दिवस",
   "editor.occasion": "प्रसंग",
+  "editor.occasionPicker": "सामान्य पर्याय",
+  "editor.examplePicker": "उदाहरण घाला",
   "editor.dateAndTime": "तारीख आणि वेळ",
   "editor.venue": "ठिकाण",
   "editor.venueAddress": "स्थळाचा पत्ता",
@@ -829,7 +839,8 @@ const mr: Partial<Dictionary> = {
   "collection.eyebrow": "\u0938\u0902\u0917\u094d\u0930\u0939",
   "collection.heading":
     "{count} \u092e\u093e\u0930\u094d\u0917 \u0938\u093e\u0902\u0917\u0923\u094d\u092f\u093e\u091a\u0947",
-  "collection.headingEm": "\u0938\u0947\u0935\u094d\u0939 \u0926 \u0921\u0947\u091f",
+  "collection.headingEm":
+    "\u0938\u0947\u0935\u094d\u0939 \u0926 \u0921\u0947\u091f",
   "collection.sub":
     "\u092a\u094d\u0930\u0924\u094d\u092f\u0947\u0915 \u0921\u093f\u091d\u093e\u0907\u0928 \u0939\u093e \u092a\u0939\u093f\u0932\u094d\u092f\u093e \u0938\u094d\u092a\u0930\u094d\u0936\u093e\u092a\u093e\u0938\u0942\u0928 \u0905\u0916\u0947\u0930\u091a\u094d\u092f\u093e \u0915\u093e\u0909\u0902\u091f\u0921\u093e\u0909\u0928\u092a\u0930\u094d\u092f\u0902\u0924\u091a\u093e \u0938\u0902\u092a\u0942\u0930\u094d\u0923 \u0905\u0945\u0928\u093f\u092e\u0947\u091f\u0947\u0921 \u0905\u0928\u0941\u092d\u0935 \u0906\u0939\u0947.",
   "collection.seeAll":
@@ -839,7 +850,8 @@ const mr: Partial<Dictionary> = {
   "how.heading":
     "\u090f\u0915\u093e \u0938\u0902\u0927\u094d\u092f\u093e\u0915\u093e\u0933\u0940\u0924",
   "how.headingEm": "\u0924\u092f\u093e\u0930",
-  "steps.1.title": "\u0921\u093f\u091d\u093e\u0907\u0928 \u0928\u093f\u0935\u0921\u093e",
+  "steps.1.title":
+    "\u0921\u093f\u091d\u093e\u0907\u0928 \u0928\u093f\u0935\u0921\u093e",
   "steps.1.body":
     "{count} \u0905\u0945\u0928\u093f\u092e\u0947\u091f\u0947\u0921 \u0928\u093f\u092e\u0902\u0924\u094d\u0930\u0923\u0947 \u092a\u093e\u0939\u093e \u2014 \u0936\u093e\u0939\u0940, \u0906\u0927\u0941\u0928\u093f\u0915, \u092b\u0941\u0932\u093e\u0902\u091a\u0940, \u0921\u0947\u0938\u094d\u091f\u093f\u0928\u0947\u0936\u0928. \u092a\u094d\u0930\u0924\u094d\u092f\u0947\u0915 \u090f\u0915 \u0924\u0941\u092e\u091a\u094d\u092f\u093e \u092a\u093e\u0939\u0941\u0923\u094d\u092f\u093e\u0902\u0928\u093e \u0926\u093f\u0938\u0947\u0932 \u0924\u0938\u0947\u091a \u092a\u0942\u0930\u094d\u0935\u093e\u0935\u0932\u094b\u0915\u0928 \u0915\u0930\u093e.",
   "steps.2.title":
@@ -855,14 +867,16 @@ const mr: Partial<Dictionary> = {
   "compare.heading": "\u0915\u093e\u0917\u0926",
   "compare.headingEm": "\u0935\u093f\u0930\u0941\u0926\u094d\u0927",
   "compare.headingSuffix": "\u0921\u093f\u091c\u093f\u091f\u0932",
-  "compare.colFeature": "\u0935\u0948\u0936\u093f\u0937\u094d\u091f\u094d\u092f",
+  "compare.colFeature":
+    "\u0935\u0948\u0936\u093f\u0937\u094d\u091f\u094d\u092f",
   "compare.colPaper": "\u0915\u093e\u0917\u0926",
   "compare.colDigital": "\u0921\u093f\u091c\u093f\u091f\u0932",
   "compare.row.cost.feature": "\u0915\u093f\u0902\u092e\u0924",
   "compare.row.cost.paper":
     "\u20b9150\u2013\u20b9500+ \u092a\u094d\u0930\u0924\u093f \u0915\u093e\u0930\u094d\u0921, \u0936\u093f\u0935\u093e\u092f \u091b\u092a\u093e\u0908",
   "compare.row.cost.digital": "\u20b9599 \u090f\u0915\u0926\u093e\u091a",
-  "compare.row.delivery.feature": "\u0935\u093f\u0924\u0930\u0923 \u0935\u0947\u0933",
+  "compare.row.delivery.feature":
+    "\u0935\u093f\u0924\u0930\u0923 \u0935\u0947\u0933",
   "compare.row.delivery.paper":
     "\u091b\u092a\u093e\u0908 \u0935 \u0915\u0941\u0930\u093f\u0905\u0930\u0938\u093e\u0920\u0940 1\u20132 \u0906\u0920\u0935\u0921\u0947",
   "compare.row.delivery.digital": "\u0924\u094d\u0935\u0930\u093f\u0924",
@@ -888,7 +902,8 @@ const mr: Partial<Dictionary> = {
     "\u0939\u0935\u0947 \u0924\u093f\u0924\u0915\u0947 \u092e\u094b\u092b\u0924 \u0921\u093f\u091d\u093e\u0907\u0928 \u0935 \u092a\u0942\u0930\u094d\u0935\u093e\u0935\u0932\u094b\u0915\u0928 \u0915\u0930\u093e. \u091c\u0917\u093e\u0938\u094b\u092c\u0924 \u0936\u0947\u0905\u0930 \u0915\u0930\u0923\u094d\u092f\u093e\u0938 \u0924\u092f\u093e\u0930 \u0905\u0938\u093e\u0932 \u0924\u0947\u0935\u094d\u0939\u093e\u091a \u092a\u0948\u0938\u0947 \u0926\u094d\u092f\u093e.",
   "pricing.theInvitation": "\u0928\u093f\u092e\u0902\u0924\u094d\u0930\u0923",
   "pricing.oneTime": "\u090f\u0915\u0926\u093e\u091a",
-  "pricing.limitedOffer": "\u092e\u0930\u094d\u092f\u093e\u0926\u093f\u0924 \u0915\u093e\u0933\u093e\u0938\u093e\u0920\u0940 \u0911\u092b\u0930",
+  "pricing.limitedOffer":
+    "\u092e\u0930\u094d\u092f\u093e\u0926\u093f\u0924 \u0915\u093e\u0933\u093e\u0938\u093e\u0920\u0940 \u0911\u092b\u0930",
   "pricing.discountOff": "{percent}% \u0938\u0942\u091f",
   "pricing.startCustomising":
     "\u092e\u094b\u092b\u0924 \u0915\u0938\u094d\u091f\u092e\u093e\u0907\u091d \u0915\u0930\u0923\u0947 \u0938\u0941\u0930\u0942 \u0915\u0930\u093e",
@@ -905,7 +920,8 @@ const mr: Partial<Dictionary> = {
   "included.5":
     "\u092a\u094d\u0930\u0915\u093e\u0936\u093f\u0924 \u0915\u0947\u0932\u094d\u092f\u093e\u0928\u0902\u0924\u0930 \u0915\u0927\u0940\u0939\u0940 \u0924\u092a\u0936\u0940\u0932 \u092c\u0926\u0932\u093e",
   "faq.eyebrow": "\u092a\u094d\u0930\u0936\u094d\u0928",
-  "faq.heading": "\u0938\u0941\u0930\u0942 \u0915\u0930\u0923\u094d\u092f\u093e",
+  "faq.heading":
+    "\u0938\u0941\u0930\u0942 \u0915\u0930\u0923\u094d\u092f\u093e",
   "faq.headingEm": "\u0906\u0927\u0940",
   "faq.q0":
     "\u0921\u093f\u091d\u093e\u0907\u0928 \u0915\u0930\u0923\u0947 \u0916\u0930\u0902\u091a \u092e\u094b\u092b\u0924 \u0906\u0939\u0947 \u0915\u093e?",
@@ -1015,6 +1031,8 @@ const gu: Partial<Dictionary> = {
   "editor.attribution": "શ્રેય",
   "editor.theDay": "દિવસ",
   "editor.occasion": "પ્રસંગ",
+  "editor.occasionPicker": "સામાન્ય વિકલ્પો",
+  "editor.examplePicker": "ઉદાહરણ દાખલ કરો",
   "editor.dateAndTime": "તારીખ અને સમય",
   "editor.venue": "સ્થળ",
   "editor.venueAddress": "સ્થળનું સરનામું",
@@ -1111,7 +1129,8 @@ const gu: Partial<Dictionary> = {
     "\u0a95\u0acb\u0a88 \u0a96\u0ab0\u0acd\u0a9a \u0ab5\u0abf\u0aa8\u0abe \u0a9c\u0ac7\u0a9f\u0ab2\u0acb \u0ab8\u0aae\u0aaf \u0a87\u0a9a\u0acd\u0a9b\u0acb \u0aa4\u0ac7\u0a9f\u0ab2\u0acb \u0aa1\u0abf\u0a9d\u0abe\u0a87\u0aa8 \u0a85\u0aa8\u0ac7 \u0aaa\u0ac2\u0ab0\u0acd\u0ab5\u0abe\u0ab5\u0ab2\u0acb\u0a95\u0aa8 \u0a95\u0ab0\u0acb. \u0aa6\u0ac1\u0aa8\u0abf\u0aaf\u0abe \u0ab8\u0abe\u0aa5\u0ac7 \u0ab6\u0ac7\u0ab0 \u0a95\u0ab0\u0ab5\u0abe \u0aa4\u0ac8\u0aaf\u0abe\u0ab0 \u0ab9\u0acb \u0aa4\u0acd\u0aaf\u0abe\u0ab0\u0ac7 \u0a9c \u0a9a\u0ac2\u0a95\u0ab5\u0acb.",
   "pricing.theInvitation": "\u0a86\u0aae\u0a82\u0aa4\u0acd\u0ab0\u0aa3",
   "pricing.oneTime": "\u0a8f\u0a95 \u0ab5\u0a96\u0aa4",
-  "pricing.limitedOffer": "\u0aae\u0ab0\u0acd\u0aaf\u0abe\u0aa6\u0abf\u0aa4 \u0ab8\u0aae\u0aaf \u0aae\u0abe\u0a9f\u0ac7\u0aa8\u0ac0 \u0a91\u0aab\u0ab0",
+  "pricing.limitedOffer":
+    "\u0aae\u0ab0\u0acd\u0aaf\u0abe\u0aa6\u0abf\u0aa4 \u0ab8\u0aae\u0aaf \u0aae\u0abe\u0a9f\u0ac7\u0aa8\u0ac0 \u0a91\u0aab\u0ab0",
   "pricing.discountOff": "{percent}% \u0a9b\u0ac2\u0a9f",
   "pricing.startCustomising":
     "\u0aae\u0aab\u0aa4\u0aae\u0abe\u0a82 \u0a95\u0ab8\u0acd\u0a9f\u0aae\u0abe\u0a87\u0a9d \u0a95\u0ab0\u0ab5\u0abe\u0aa8\u0ac1\u0a82 \u0ab6\u0ab0\u0ac2 \u0a95\u0ab0\u0acb",
@@ -1238,6 +1257,8 @@ const bn: Partial<Dictionary> = {
   "editor.attribution": "কৃতিত্ব",
   "editor.theDay": "দিন",
   "editor.occasion": "উপলক্ষ",
+  "editor.occasionPicker": "সাধারণ বিকল্প",
+  "editor.examplePicker": "একটি উদাহরণ যোগ করুন",
   "editor.dateAndTime": "তারিখ ও সময়",
   "editor.venue": "স্থান",
   "editor.venueAddress": "অনুষ্ঠানস্থলের ঠিকানা",
@@ -1274,14 +1295,16 @@ const bn: Partial<Dictionary> = {
   "collection.eyebrow": "\u09b8\u0982\u0997\u09cd\u09b0\u09b9",
   "collection.heading":
     "{count}\u099f\u09bf \u0989\u09aa\u09be\u09af\u09bc \u09ac\u09b2\u09be\u09b0",
-  "collection.headingEm": "\u09b8\u09c7\u09ad \u09a6\u09cd\u09af \u09a1\u09c7\u099f",
+  "collection.headingEm":
+    "\u09b8\u09c7\u09ad \u09a6\u09cd\u09af \u09a1\u09c7\u099f",
   "collection.sub":
     "\u09aa\u09cd\u09b0\u09a4\u09bf\u099f\u09bf \u09a1\u09bf\u099c\u09be\u0987\u09a8 \u09aa\u09cd\u09b0\u09a5\u09ae \u099f\u09cd\u09af\u09be\u09aa \u09a5\u09c7\u0995\u09c7 \u09b6\u09c7\u09b7 \u0995\u09be\u0989\u09a8\u09cd\u099f\u09a1\u09be\u0989\u09a8 \u09aa\u09b0\u09cd\u09af\u09a8\u09cd\u09a4 \u098f\u0995\u099f\u09bf \u09b8\u09ae\u09cd\u09aa\u09c2\u09b0\u09cd\u09a3 \u0985\u09cd\u09af\u09be\u09a8\u09bf\u09ae\u09c7\u099f\u09c7\u09a1 \u0985\u09ad\u09bf\u099c\u09cd\u099e\u09a4\u09be\u0964",
   "collection.seeAll":
     "\u09b8\u09ac {count}\u099f\u09bf \u09a1\u09bf\u099c\u09be\u0987\u09a8 \u09a6\u09c7\u0996\u09c1\u09a8",
   "how.eyebrow":
     "\u098f\u099f\u09bf \u0995\u09c0\u09ad\u09be\u09ac\u09c7 \u0995\u09be\u099c \u0995\u09b0\u09c7",
-  "how.heading": "\u098f\u0995 \u09b8\u09a8\u09cd\u09a7\u09cd\u09af\u09be\u09af\u09bc",
+  "how.heading":
+    "\u098f\u0995 \u09b8\u09a8\u09cd\u09a7\u09cd\u09af\u09be\u09af\u09bc",
   "how.headingEm": "\u09aa\u09cd\u09b0\u09b8\u09cd\u09a4\u09c1\u09a4",
   "steps.1.title":
     "\u098f\u0995\u099f\u09bf \u09a1\u09bf\u099c\u09be\u0987\u09a8 \u09ac\u09c7\u099b\u09c7 \u09a8\u09bf\u09a8",
@@ -1300,7 +1323,8 @@ const bn: Partial<Dictionary> = {
   "compare.heading": "\u0995\u09be\u0997\u099c",
   "compare.headingEm": "\u09ac\u09a8\u09be\u09ae",
   "compare.headingSuffix": "\u09a1\u09bf\u099c\u09bf\u099f\u09be\u09b2",
-  "compare.colFeature": "\u09ac\u09c8\u09b6\u09bf\u09b7\u09cd\u099f\u09cd\u09af",
+  "compare.colFeature":
+    "\u09ac\u09c8\u09b6\u09bf\u09b7\u09cd\u099f\u09cd\u09af",
   "compare.colPaper": "\u0995\u09be\u0997\u099c",
   "compare.colDigital": "\u09a1\u09bf\u099c\u09bf\u099f\u09be\u09b2",
   "compare.row.cost.feature": "\u0996\u09b0\u099a",
@@ -1328,7 +1352,8 @@ const bn: Partial<Dictionary> = {
   "compare.row.whatsapp.feature":
     "\u09b9\u09cb\u09af\u09bc\u09be\u099f\u09b8\u0985\u09cd\u09af\u09be\u09aa\u09c7 \u09b6\u09c7\u09af\u09bc\u09be\u09b0\u09af\u09cb\u0997\u09cd\u09af",
   "pricing.eyebrow": "\u09ae\u09c2\u09b2\u09cd\u09af",
-  "pricing.heading1": "\u098f\u0995\u099f\u09bf \u09ae\u09c2\u09b2\u09cd\u09af\u0964",
+  "pricing.heading1":
+    "\u098f\u0995\u099f\u09bf \u09ae\u09c2\u09b2\u09cd\u09af\u0964",
   "pricing.heading2":
     "\u0995\u09cb\u09a8\u09cb \u09b8\u09be\u09ac\u09b8\u09cd\u0995\u09cd\u09b0\u09bf\u09aa\u09b6\u09a8 \u09a8\u09c7\u0987\u0964",
   "pricing.body":
@@ -1336,7 +1361,8 @@ const bn: Partial<Dictionary> = {
   "pricing.theInvitation":
     "\u0986\u09ae\u09a8\u09cd\u09a4\u09cd\u09b0\u09a3\u09aa\u09a4\u09cd\u09b0",
   "pricing.oneTime": "\u098f\u0995\u09ac\u09be\u09b0",
-  "pricing.limitedOffer": "\u09b8\u09c0\u09ae\u09bf\u09a4 \u09b8\u09ae\u09df\u09c7\u09b0 \u0985\u09ab\u09be\u09b0",
+  "pricing.limitedOffer":
+    "\u09b8\u09c0\u09ae\u09bf\u09a4 \u09b8\u09ae\u09df\u09c7\u09b0 \u0985\u09ab\u09be\u09b0",
   "pricing.discountOff": "{percent}% \u099b\u09be\u09dc",
   "pricing.startCustomising":
     "\u09ac\u09bf\u09a8\u09be\u09ae\u09c2\u09b2\u09cd\u09af\u09c7 \u0995\u09be\u09b8\u09cd\u099f\u09ae\u09be\u0987\u099c \u0995\u09b0\u09be \u09b6\u09c1\u09b0\u09c1 \u0995\u09b0\u09c1\u09a8",
@@ -1463,6 +1489,8 @@ const pa: Partial<Dictionary> = {
   "editor.attribution": "ਸਿਹਰਾ",
   "editor.theDay": "ਦਿਨ",
   "editor.occasion": "ਮੌਕਾ",
+  "editor.occasionPicker": "ਆਮ ਵਿਕਲਪ",
+  "editor.examplePicker": "ਇੱਕ ਉਦਾਹਰਣ ਸ਼ਾਮਲ ਕਰੋ",
   "editor.dateAndTime": "ਤਾਰੀਖ ਅਤੇ ਸਮਾਂ",
   "editor.venue": "ਸਥਾਨ",
   "editor.venueAddress": "ਸਥਾਨ ਦਾ ਪਤਾ",
@@ -1506,7 +1534,8 @@ const pa: Partial<Dictionary> = {
     "\u0a38\u0a3e\u0a30\u0a47 {count} \u0a21\u0a3f\u0a1c\u0a3c\u0a3e\u0a08\u0a28 \u0a35\u0a47\u0a16\u0a4b",
   "how.eyebrow":
     "\u0a07\u0a39 \u0a15\u0a3f\u0a35\u0a47\u0a02 \u0a15\u0a70\u0a2e \u0a15\u0a30\u0a26\u0a3e \u0a39\u0a48",
-  "how.heading": "\u0a07\u0a71\u0a15 \u0a38\u0a3c\u0a3e\u0a2e \u0a35\u0a3f\u0a71\u0a1a",
+  "how.heading":
+    "\u0a07\u0a71\u0a15 \u0a38\u0a3c\u0a3e\u0a2e \u0a35\u0a3f\u0a71\u0a1a",
   "how.headingEm": "\u0a24\u0a3f\u0a06\u0a30",
   "steps.1.title":
     "\u0a07\u0a71\u0a15 \u0a21\u0a3f\u0a1c\u0a3c\u0a3e\u0a08\u0a28 \u0a1a\u0a41\u0a23\u0a4b",
@@ -1525,7 +1554,8 @@ const pa: Partial<Dictionary> = {
   "compare.heading": "\u0a15\u0a3e\u0a17\u0a1c\u0a3c",
   "compare.headingEm": "\u0a2c\u0a28\u0a3e\u0a2e",
   "compare.headingSuffix": "\u0a21\u0a3f\u0a1c\u0a40\u0a1f\u0a32",
-  "compare.colFeature": "\u0a35\u0a3f\u0a38\u0a3c\u0a47\u0a38\u0a3c\u0a24\u0a3e",
+  "compare.colFeature":
+    "\u0a35\u0a3f\u0a38\u0a3c\u0a47\u0a38\u0a3c\u0a24\u0a3e",
   "compare.colPaper": "\u0a15\u0a3e\u0a17\u0a1c\u0a3c",
   "compare.colDigital": "\u0a21\u0a3f\u0a1c\u0a40\u0a1f\u0a32",
   "compare.row.cost.feature": "\u0a32\u0a3e\u0a17\u0a24",
@@ -1559,7 +1589,8 @@ const pa: Partial<Dictionary> = {
     "\u0a2c\u0a3f\u0a28\u0a3e\u0a02 \u0a15\u0a3f\u0a38\u0a47 \u0a32\u0a3e\u0a17\u0a24 \u0a26\u0a47 \u0a1c\u0a3f\u0a70\u0a28\u0a3e \u0a1a\u0a3f\u0a30 \u0a1a\u0a3e\u0a39\u0a4b \u0a21\u0a3f\u0a1c\u0a3c\u0a3e\u0a08\u0a28 \u0a05\u0a24\u0a47 \u0a1d\u0a32\u0a15 \u0a35\u0a47\u0a16\u0a4b\u0964 \u0a26\u0a41\u0a28\u0a40\u0a06 \u0a28\u0a3e\u0a32 \u0a38\u0a3e\u0a02\u0a1d\u0a3e \u0a15\u0a30\u0a28 \u0a32\u0a08 \u0a24\u0a3f\u0a06\u0a30 \u0a39\u0a4b\u0a35\u0a4b \u0a24\u0a3e\u0a02 \u0a39\u0a40 \u0a2d\u0a41\u0a17\u0a24\u0a3e\u0a28 \u0a15\u0a30\u0a4b\u0964",
   "pricing.theInvitation": "\u0a38\u0a71\u0a26\u0a3e",
   "pricing.oneTime": "\u0a07\u0a71\u0a15 \u0a35\u0a3e\u0a30",
-  "pricing.limitedOffer": "\u0a38\u0a40\u0a2e\u0a24 \u0a38\u0a2e\u0a47\u0a02 \u0a26\u0a40 \u0a2a\u0a47\u0a38\u0a3c\u0a15\u0a38\u0a3c",
+  "pricing.limitedOffer":
+    "\u0a38\u0a40\u0a2e\u0a24 \u0a38\u0a2e\u0a47\u0a02 \u0a26\u0a40 \u0a2a\u0a47\u0a38\u0a3c\u0a15\u0a38\u0a3c",
   "pricing.discountOff": "{percent}% \u0a1b\u0a42\u0a1f",
   "pricing.startCustomising":
     "\u0a2e\u0a41\u0a2b\u0a3c\u0a24 \u0a35\u0a3f\u0a71\u0a1a \u0a15\u0a38\u0a1f\u0a2e\u0a3e\u0a08\u0a1c\u0a3c \u0a15\u0a30\u0a28\u0a3e \u0a38\u0a3c\u0a41\u0a30\u0a42 \u0a15\u0a30\u0a4b",
@@ -1576,7 +1607,8 @@ const pa: Partial<Dictionary> = {
   "included.5":
     "\u0a2a\u0a4d\u0a30\u0a15\u0a3e\u0a38\u0a3c\u0a3f\u0a24 \u0a15\u0a30\u0a28 \u0a24\u0a4b\u0a02 \u0a2c\u0a3e\u0a05\u0a26 \u0a15\u0a3f\u0a38\u0a47 \u0a35\u0a40 \u0a38\u0a2e\u0a47\u0a02 \u0a35\u0a47\u0a30\u0a35\u0a47 \u0a2c\u0a26\u0a32\u0a4b",
   "faq.eyebrow": "\u0a38\u0a35\u0a3e\u0a32",
-  "faq.heading": "\u0a38\u0a3c\u0a41\u0a30\u0a42 \u0a15\u0a30\u0a28 \u0a24\u0a4b\u0a02",
+  "faq.heading":
+    "\u0a38\u0a3c\u0a41\u0a30\u0a42 \u0a15\u0a30\u0a28 \u0a24\u0a4b\u0a02",
   "faq.headingEm": "\u0a2a\u0a39\u0a3f\u0a32\u0a3e\u0a02",
   "faq.q0":
     "\u0a15\u0a40 \u0a21\u0a3f\u0a1c\u0a3c\u0a3e\u0a08\u0a28 \u0a15\u0a30\u0a28\u0a3e \u0a38\u0a71\u0a1a\u0a2e\u0a41\u0a71\u0a1a \u0a2e\u0a41\u0a2b\u0a3c\u0a24 \u0a39\u0a48?",
@@ -1685,6 +1717,8 @@ const ur: Partial<Dictionary> = {
   "editor.attribution": "منسوب",
   "editor.theDay": "دن",
   "editor.occasion": "موقع",
+  "editor.occasionPicker": "عام اختیارات",
+  "editor.examplePicker": "ایک مثال شامل کریں",
   "editor.dateAndTime": "تاریخ اور وقت",
   "editor.venue": "مقام",
   "editor.venueAddress": "مقام کا پتہ",
@@ -1781,7 +1815,8 @@ const ur: Partial<Dictionary> = {
     "\u0628\u063a\u06cc\u0631 \u06a9\u0633\u06cc \u0644\u0627\u06af\u062a \u06a9\u06d2 \u062c\u062a\u0646\u0627 \u0686\u0627\u06c1\u06cc\u06ba \u0688\u06cc\u0632\u0627\u0626\u0646 \u0627\u0648\u0631 \u067e\u06cc\u0634 \u0645\u0646\u0638\u0631 \u062f\u06cc\u06a9\u06be\u06cc\u06ba\u06d4 \u062f\u0646\u06cc\u0627 \u06a9\u06d2 \u0633\u0627\u062a\u06be \u0634\u06cc\u0626\u0631 \u06a9\u0631\u0646\u06d2 \u06a9\u06d2 \u0644\u06cc\u06d2 \u062a\u06cc\u0627\u0631 \u06c1\u0648\u06ba \u062a\u0628 \u06c1\u06cc \u0627\u062f\u0627\u0626\u06cc\u06af\u06cc \u06a9\u0631\u06cc\u06ba\u06d4",
   "pricing.theInvitation": "\u062f\u0639\u0648\u062a \u0646\u0627\u0645\u06c1",
   "pricing.oneTime": "\u0627\u06cc\u06a9 \u0628\u0627\u0631",
-  "pricing.limitedOffer": "\u0645\u062d\u062f\u0648\u062f \u0648\u0642\u062a \u06a9\u06cc \u067e\u06cc\u0634\u06a9\u0634",
+  "pricing.limitedOffer":
+    "\u0645\u062d\u062f\u0648\u062f \u0648\u0642\u062a \u06a9\u06cc \u067e\u06cc\u0634\u06a9\u0634",
   "pricing.discountOff": "{percent}% \u0631\u0639\u0627\u06cc\u062a",
   "pricing.startCustomising":
     "\u0645\u0641\u062a \u0645\u06cc\u06ba \u062a\u062e\u0635\u06cc\u0635 \u06a9\u0631\u0646\u0627 \u0634\u0631\u0648\u0639 \u06a9\u0631\u06cc\u06ba",
@@ -1848,7 +1883,8 @@ const ur: Partial<Dictionary> = {
   "closing.headingEm": "\u062e\u0648\u0628\u0635\u0648\u0631\u062a",
   "closing.headingSuffix":
     "\u0633\u0644\u0627\u0645 \u0633\u06d2 \u0622\u063a\u0627\u0632 \u06a9\u0631\u06cc\u06ba\u06d4",
-  "closing.createYours": "\u0627\u067e\u0646\u0627 \u0628\u0646\u0627\u0626\u06cc\u06ba",
+  "closing.createYours":
+    "\u0627\u067e\u0646\u0627 \u0628\u0646\u0627\u0626\u06cc\u06ba",
 };
 
 const fr: Partial<Dictionary> = {
@@ -1907,6 +1943,8 @@ const fr: Partial<Dictionary> = {
   "editor.attribution": "Attribution",
   "editor.theDay": "Le jour",
   "editor.occasion": "Occasion",
+  "editor.occasionPicker": "Options courantes",
+  "editor.examplePicker": "Insérer un exemple",
   "editor.dateAndTime": "Date et heure",
   "editor.venue": "Lieu",
   "editor.venueAddress": "Adresse du lieu",
@@ -1966,10 +2004,12 @@ const fr: Partial<Dictionary> = {
   "compare.colPaper": "Papier",
   "compare.colDigital": "Num\u00e9rique",
   "compare.row.cost.feature": "Co\u00fbt",
-  "compare.row.cost.paper": "\u20b9150\u2013\u20b9500+ par carte, plus l'impression",
+  "compare.row.cost.paper":
+    "\u20b9150\u2013\u20b9500+ par carte, plus l'impression",
   "compare.row.cost.digital": "\u20b9599 une fois",
   "compare.row.delivery.feature": "D\u00e9lai de livraison",
-  "compare.row.delivery.paper": "1\u20132 semaines d'impression et de livraison",
+  "compare.row.delivery.paper":
+    "1\u20132 semaines d'impression et de livraison",
   "compare.row.delivery.digital": "Instantan\u00e9",
   "compare.row.animation.feature": "Animation d'ouverture",
   "compare.row.music.feature": "Musique de fond",
@@ -1994,7 +2034,8 @@ const fr: Partial<Dictionary> = {
   "included.2": "Galerie photo, musique et compte \u00e0 rebours en direct",
   "included.3": "Itin\u00e9raire Google Maps pour chaque lieu",
   "included.4": "Invit\u00e9s illimit\u00e9s, partages illimit\u00e9s",
-  "included.5": "Modifiez les d\u00e9tails \u00e0 tout moment apr\u00e8s la publication",
+  "included.5":
+    "Modifiez les d\u00e9tails \u00e0 tout moment apr\u00e8s la publication",
   "faq.eyebrow": "Questions",
   "faq.heading": "Avant de",
   "faq.headingEm": "commencer",
@@ -2008,10 +2049,12 @@ const fr: Partial<Dictionary> = {
     "Puis-je ajouter la c\u00e9r\u00e9monie du henn\u00e9, le sangeet et la r\u00e9ception s\u00e9par\u00e9ment ?",
   "faq.a2":
     "Oui \u2014 ajoutez autant d'\u00e9v\u00e9nements que vous le souhaitez, chacun avec sa propre date, heure, lieu et code vestimentaire, le tout dans un seul lien d'invitation.",
-  "faq.q3": "Cela fonctionnera-t-il pour les invit\u00e9s qui ne sont pas sur WhatsApp ?",
+  "faq.q3":
+    "Cela fonctionnera-t-il pour les invit\u00e9s qui ne sont pas sur WhatsApp ?",
   "faq.a3":
     "Le lien est une page web normale, donc il s'ouvre de la m\u00eame fa\u00e7on par SMS, Instagram, e-mail ou toute autre application \u2014 WhatsApp n'est que le moyen le plus simple de l'envoyer.",
-  "faq.q4": "Puis-je modifier les d\u00e9tails apr\u00e8s avoir partag\u00e9 le lien ?",
+  "faq.q4":
+    "Puis-je modifier les d\u00e9tails apr\u00e8s avoir partag\u00e9 le lien ?",
   "faq.a4":
     "Oui. Modifiez les noms, dates, lieux ou photos \u00e0 tout moment avant votre \u00e9v\u00e9nement \u2014 le lien reste le m\u00eame, donc les invit\u00e9s voient toujours la derni\u00e8re version.",
   "faq.q5": "Pourquoi \u20b9599 ?",
@@ -2024,7 +2067,8 @@ const fr: Partial<Dictionary> = {
     "Y a-t-il une limite au nombre d'invit\u00e9s ou au nombre de fois o\u00f9 le lien est ouvert ?",
   "faq.a7":
     "Non. Partagez votre lien avec autant d'invit\u00e9s que vous le souhaitez, sur n'importe quel nombre de groupes \u2014 il n'y a pas de limite d'invit\u00e9s ni de limite de vues.",
-  "faq.q8": "Les invit\u00e9s doivent-ils installer quelque chose ou s'inscrire ?",
+  "faq.q8":
+    "Les invit\u00e9s doivent-ils installer quelque chose ou s'inscrire ?",
   "faq.a8":
     "Non. Le lien s'ouvre directement dans le navigateur de leur t\u00e9l\u00e9phone \u2014 pas d'application, pas de compte, rien \u00e0 installer.",
   "faq.q9":
@@ -2097,6 +2141,8 @@ const de: Partial<Dictionary> = {
   "editor.attribution": "Zuschreibung",
   "editor.theDay": "Der Tag",
   "editor.occasion": "Anlass",
+  "editor.occasionPicker": "Gängige Optionen",
+  "editor.examplePicker": "Beispiel einfügen",
   "editor.dateAndTime": "Datum und Uhrzeit",
   "editor.venue": "Ort",
   "editor.venueAddress": "Adresse der Location",
@@ -2156,7 +2202,8 @@ const de: Partial<Dictionary> = {
   "compare.colPaper": "Papier",
   "compare.colDigital": "Digital",
   "compare.row.cost.feature": "Kosten",
-  "compare.row.cost.paper": "\u20b9150\u2013\u20b9500+ pro Karte, zuz\u00fcglich Druck",
+  "compare.row.cost.paper":
+    "\u20b9150\u2013\u20b9500+ pro Karte, zuz\u00fcglich Druck",
   "compare.row.cost.digital": "\u20b9599 einmalig",
   "compare.row.delivery.feature": "Lieferzeit",
   "compare.row.delivery.paper": "1\u20132 Wochen Druck & Versand",
@@ -2196,7 +2243,8 @@ const de: Partial<Dictionary> = {
   "faq.q2": "Kann ich Haldi, Sangeet und Empfang separat hinzuf\u00fcgen?",
   "faq.a2":
     "Ja \u2014 f\u00fcgen Sie so viele Feiern hinzu, wie Sie m\u00f6chten, jede mit eigenem Datum, Uhrzeit, Ort und Kleiderordnung, alles in einem einzigen Einladungslink.",
-  "faq.q3": "Funktioniert das f\u00fcr G\u00e4ste, die nicht bei WhatsApp sind?",
+  "faq.q3":
+    "Funktioniert das f\u00fcr G\u00e4ste, die nicht bei WhatsApp sind?",
   "faq.a3":
     "Der Link ist eine normale Webseite, sodass er \u00fcber SMS, Instagram, E-Mail oder jede andere App genauso ge\u00f6ffnet wird \u2014 WhatsApp ist nur der einfachste Weg, ihn zu senden.",
   "faq.q4": "Kann ich Details \u00e4ndern, nachdem ich den Link geteilt habe?",
@@ -2285,6 +2333,8 @@ const es: Partial<Dictionary> = {
   "editor.attribution": "Atribución",
   "editor.theDay": "El día",
   "editor.occasion": "Ocasión",
+  "editor.occasionPicker": "Opciones comunes",
+  "editor.examplePicker": "Insertar un ejemplo",
   "editor.dateAndTime": "Fecha y hora",
   "editor.venue": "Lugar",
   "editor.venueAddress": "Dirección del lugar",
@@ -2348,7 +2398,8 @@ const es: Partial<Dictionary> = {
     "\u20b9150\u2013\u20b9500+ por tarjeta, m\u00e1s impresi\u00f3n",
   "compare.row.cost.digital": "\u20b9599 pago \u00fanico",
   "compare.row.delivery.feature": "Tiempo de entrega",
-  "compare.row.delivery.paper": "1\u20132 semanas de impresi\u00f3n y env\u00edo",
+  "compare.row.delivery.paper":
+    "1\u20132 semanas de impresi\u00f3n y env\u00edo",
   "compare.row.delivery.digital": "Instant\u00e1neo",
   "compare.row.animation.feature": "Animaci\u00f3n de apertura",
   "compare.row.music.feature": "M\u00fasica de fondo",
@@ -2372,7 +2423,8 @@ const es: Partial<Dictionary> = {
   "included.2": "Galer\u00eda de fotos, m\u00fasica y cuenta regresiva en vivo",
   "included.3": "Indicaciones de Google Maps para cada lugar",
   "included.4": "Invitados ilimitados, comparticiones ilimitadas",
-  "included.5": "Edita los detalles en cualquier momento despu\u00e9s de publicar",
+  "included.5":
+    "Edita los detalles en cualquier momento despu\u00e9s de publicar",
   "faq.eyebrow": "Preguntas",
   "faq.heading": "Antes de",
   "faq.headingEm": "empezar",
@@ -2389,7 +2441,8 @@ const es: Partial<Dictionary> = {
   "faq.q3": "\u00bfFuncionar\u00e1 para invitados que no tienen WhatsApp?",
   "faq.a3":
     "El enlace es una p\u00e1gina web normal, as\u00ed que se abre igual por SMS, Instagram, correo electr\u00f3nico o cualquier otra aplicaci\u00f3n \u2014 WhatsApp es solo la forma m\u00e1s f\u00e1cil de enviarlo.",
-  "faq.q4": "\u00bfPuedo cambiar los detalles despu\u00e9s de compartir el enlace?",
+  "faq.q4":
+    "\u00bfPuedo cambiar los detalles despu\u00e9s de compartir el enlace?",
   "faq.a4":
     "S\u00ed. Edita nombres, fechas, lugares o fotos en cualquier momento antes de tu evento \u2014 el enlace sigue siendo el mismo, as\u00ed que los invitados siempre ven la versi\u00f3n m\u00e1s reciente.",
   "faq.q5": "\u00bfPor qu\u00e9 \u20b9599?",
@@ -2475,6 +2528,8 @@ const pt: Partial<Dictionary> = {
   "editor.attribution": "Atribuição",
   "editor.theDay": "O dia",
   "editor.occasion": "Ocasião",
+  "editor.occasionPicker": "Opções comuns",
+  "editor.examplePicker": "Inserir um exemplo",
   "editor.dateAndTime": "Data e hora",
   "editor.venue": "Local",
   "editor.venueAddress": "Endereço do local",
@@ -2562,7 +2617,8 @@ const pt: Partial<Dictionary> = {
   "included.2": "Galeria de fotos, m\u00fasica e contagem regressiva ao vivo",
   "included.3": "Dire\u00e7\u00f5es do Google Maps para cada local",
   "included.4": "Convidados ilimitados, compartilhamentos ilimitados",
-  "included.5": "Edite os detalhes a qualquer momento ap\u00f3s a publica\u00e7\u00e3o",
+  "included.5":
+    "Edite os detalhes a qualquer momento ap\u00f3s a publica\u00e7\u00e3o",
   "faq.eyebrow": "Perguntas",
   "faq.heading": "Antes de",
   "faq.headingEm": "come\u00e7ar",
@@ -2572,7 +2628,8 @@ const pt: Partial<Dictionary> = {
   "faq.q1": "Para que servem realmente os \u20b9599?",
   "faq.a1":
     "Um convite, publicado uma vez, com seu pr\u00f3prio link compartilh\u00e1vel \u2014 sem marca d'\u00e1gua, sem assinatura, sem cobran\u00e7a por convidado. Voc\u00ea pode continuar editando depois de publicar, at\u00e9 o casamento.",
-  "faq.q2": "Posso adicionar haldi, sangeet e recep\u00e7\u00e3o separadamente?",
+  "faq.q2":
+    "Posso adicionar haldi, sangeet e recep\u00e7\u00e3o separadamente?",
   "faq.a2":
     "Sim \u2014 adicione quantos eventos quiser, cada um com sua pr\u00f3pria data, hor\u00e1rio, local e c\u00f3digo de vestimenta, tudo dentro de um \u00fanico link de convite.",
   "faq.q3": "Vai funcionar para convidados que n\u00e3o t\u00eam WhatsApp?",
@@ -2587,7 +2644,8 @@ const pt: Partial<Dictionary> = {
   "faq.q6": "Posso usar minhas pr\u00f3prias fotos e m\u00fasicas?",
   "faq.a6":
     "Sim. Envie suas pr\u00f3prias fotografias para a galeria, e escolha uma faixa da nossa biblioteca ou envie sua pr\u00f3pria m\u00fasica \u2014 os envios s\u00e3o salvos na sua conta, ent\u00e3o est\u00e3o l\u00e1 quando voc\u00ea publicar. Um design, Dubai Silk, j\u00e1 vem com sua pr\u00f3pria trilha tem\u00e1tica; os demais designs ficam em sil\u00eancio at\u00e9 voc\u00ea escolher uma m\u00fasica.",
-  "faq.q7": "H\u00e1 um limite de convidados ou de quantas vezes o link \u00e9 aberto?",
+  "faq.q7":
+    "H\u00e1 um limite de convidados ou de quantas vezes o link \u00e9 aberto?",
   "faq.a7":
     "N\u00e3o. Compartilhe seu link com quantos convidados quiser, em qualquer n\u00famero de grupos \u2014 n\u00e3o h\u00e1 limite de convidados nem limite de visualiza\u00e7\u00f5es.",
   "faq.q8": "Os convidados precisam instalar algo ou se cadastrar?",
@@ -2662,6 +2720,8 @@ const ru: Partial<Dictionary> = {
   "editor.attribution": "Автор",
   "editor.theDay": "День",
   "editor.occasion": "Повод",
+  "editor.occasionPicker": "Частые варианты",
+  "editor.examplePicker": "Вставить пример",
   "editor.dateAndTime": "Дата и время",
   "editor.venue": "Место проведения",
   "editor.venueAddress":
@@ -2704,7 +2764,8 @@ const ru: Partial<Dictionary> = {
   "editor.replayOpening": "Посмотреть открытие снова",
   "editor.previewNote":
     "Это живой предпросмотр — каждое изменение слева мгновенно отображается здесь. Оставьте поле пустым, и оно просто не попадёт в приглашение; пустые строки или текст-заполнитель никогда не отображаются. Образцы фотографий могут появляться в пустых местах для фото только в этом предпросмотре — гости видят эти места пустыми, пока вы не добавите свои фотографии.",
-  "collection.eyebrow": "\u041a\u043e\u043b\u043b\u0435\u043a\u0446\u0438\u044f",
+  "collection.eyebrow":
+    "\u041a\u043e\u043b\u043b\u0435\u043a\u0446\u0438\u044f",
   "collection.heading":
     "{count} \u0441\u043f\u043e\u0441\u043e\u0431\u043e\u0432 \u0441\u043a\u0430\u0437\u0430\u0442\u044c",
   "collection.headingEm":
@@ -2739,7 +2800,8 @@ const ru: Partial<Dictionary> = {
     "\u041e\u0441\u043e\u0431\u0435\u043d\u043d\u043e\u0441\u0442\u044c",
   "compare.colPaper": "\u0411\u0443\u043c\u0430\u0433\u0430",
   "compare.colDigital": "\u0426\u0438\u0444\u0440\u0430",
-  "compare.row.cost.feature": "\u0421\u0442\u043e\u0438\u043c\u043e\u0441\u0442\u044c",
+  "compare.row.cost.feature":
+    "\u0421\u0442\u043e\u0438\u043c\u043e\u0441\u0442\u044c",
   "compare.row.cost.paper":
     "\u20b9150\u2013\u20b9500+ \u0437\u0430 \u043e\u0442\u043a\u0440\u044b\u0442\u043a\u0443, \u043f\u043b\u044e\u0441 \u043f\u0435\u0447\u0430\u0442\u044c",
   "compare.row.cost.digital":
@@ -2765,15 +2827,18 @@ const ru: Partial<Dictionary> = {
   "compare.row.whatsapp.feature":
     "\u041c\u043e\u0436\u043d\u043e \u043f\u043e\u0434\u0435\u043b\u0438\u0442\u044c\u0441\u044f \u0432 WhatsApp",
   "pricing.eyebrow": "\u0426\u0435\u043d\u0430",
-  "pricing.heading1": "\u0415\u0434\u0438\u043d\u0430\u044f \u0446\u0435\u043d\u0430.",
+  "pricing.heading1":
+    "\u0415\u0434\u0438\u043d\u0430\u044f \u0446\u0435\u043d\u0430.",
   "pricing.heading2":
     "\u0411\u0435\u0437 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438.",
   "pricing.body":
     "\u0421\u043e\u0437\u0434\u0430\u0432\u0430\u0439\u0442\u0435 \u0438 \u043f\u0440\u043e\u0441\u043c\u0430\u0442\u0440\u0438\u0432\u0430\u0439\u0442\u0435 \u0441\u043a\u043e\u043b\u044c\u043a\u043e \u0443\u0433\u043e\u0434\u043d\u043e \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e. \u041f\u043b\u0430\u0442\u0438\u0442\u0435 \u0442\u043e\u043b\u044c\u043a\u043e \u0442\u043e\u0433\u0434\u0430, \u043a\u043e\u0433\u0434\u0430 \u0431\u0443\u0434\u0435\u0442\u0435 \u0433\u043e\u0442\u043e\u0432\u044b \u043f\u043e\u0434\u0435\u043b\u0438\u0442\u044c\u0441\u044f \u0438\u043c \u0441 \u043c\u0438\u0440\u043e\u043c.",
   "pricing.theInvitation":
     "\u041f\u0440\u0438\u0433\u043b\u0430\u0448\u0435\u043d\u0438\u0435",
-  "pricing.oneTime": "\u0435\u0434\u0438\u043d\u043e\u0440\u0430\u0437\u043e\u0432\u043e",
-  "pricing.limitedOffer": "\u041f\u0440\u0435\u0434\u043b\u043e\u0436\u0435\u043d\u0438\u0435 \u043e\u0433\u0440\u0430\u043d\u0438\u0447\u0435\u043d\u043e \u043f\u043e \u0432\u0440\u0435\u043c\u0435\u043d\u0438",
+  "pricing.oneTime":
+    "\u0435\u0434\u0438\u043d\u043e\u0440\u0430\u0437\u043e\u0432\u043e",
+  "pricing.limitedOffer":
+    "\u041f\u0440\u0435\u0434\u043b\u043e\u0436\u0435\u043d\u0438\u0435 \u043e\u0433\u0440\u0430\u043d\u0438\u0447\u0435\u043d\u043e \u043f\u043e \u0432\u0440\u0435\u043c\u0435\u043d\u0438",
   "pricing.discountOff": "\u0421\u043a\u0438\u0434\u043a\u0430 {percent}%",
   "pricing.startCustomising":
     "\u041d\u0430\u0447\u0430\u0442\u044c \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0443 \u2014 \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u043e",
@@ -2835,7 +2900,8 @@ const ru: Partial<Dictionary> = {
     "\u041c\u043e\u0433\u0443 \u043b\u0438 \u044f \u043f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u043f\u043e\u043c\u043e\u0449\u044c, \u0435\u0441\u043b\u0438 \u0437\u0430\u0441\u0442\u0440\u044f\u043d\u0443?",
   "faq.a10":
     "\u0414\u0430 \u2014 \u0441\u0432\u044f\u0436\u0438\u0442\u0435\u0441\u044c \u0441 \u043d\u0430\u043c\u0438 \u0432 \u043b\u044e\u0431\u043e\u0435 \u0432\u0440\u0435\u043c\u044f \u0447\u0435\u0440\u0435\u0437 \u043d\u0430\u0448\u0443 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0443 \u043a\u043e\u043d\u0442\u0430\u043a\u0442\u043e\u0432, \u0438 \u043c\u044b \u043f\u043e\u043c\u043e\u0436\u0435\u043c \u0432\u0430\u043c \u043f\u043e\u0434\u0433\u043e\u0442\u043e\u0432\u0438\u0442\u044c \u043f\u0440\u0438\u0433\u043b\u0430\u0448\u0435\u043d\u0438\u0435.",
-  "closing.shubhVivah": "\u0428\u0443\u0431\u0445 \u0412\u0438\u0432\u0430\u0430\u0445",
+  "closing.shubhVivah":
+    "\u0428\u0443\u0431\u0445 \u0412\u0438\u0432\u0430\u0430\u0445",
   "closing.heading": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u0441",
   "closing.headingEm": "\u043a\u0440\u0430\u0441\u0438\u0432\u043e\u0433\u043e",
   "closing.headingSuffix":
