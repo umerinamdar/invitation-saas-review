@@ -12,6 +12,22 @@ import {
   type AdminOrderRow,
   type AdminOverview,
 } from "@/lib/admin-api";
+import { checkPageStatuses, type PageStatus } from "@/lib/site-health";
+
+type ConfigFlags = Record<string, boolean>;
+
+/** `/api/health`'s response shape — booleans only, never secret values. */
+type HealthResponse = { status: string; config: ConfigFlags };
+
+const CONFIG_LABELS: Record<string, string> = {
+  supabaseUrl: "Supabase URL",
+  serviceRole: "Supabase service role key",
+  razorpayKeyId: "Razorpay key",
+  razorpayKeySecret: "Razorpay secret",
+  razorpayWebhook: "Razorpay webhook secret",
+  siteUrl: "Canonical site URL",
+  emailConfigured: "Email (Resend)",
+};
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -59,6 +75,8 @@ function Admin() {
   const [orders, setOrders] = useState<AdminOrderRow[] | null>(null);
   const [invites, setInvites] = useState<AdminInviteRow[] | null>(null);
   const [error, setError] = useState("");
+  const [config, setConfig] = useState<ConfigFlags | null>(null);
+  const [pageStatuses, setPageStatuses] = useState<PageStatus[] | null>(null);
 
   // Same signed-out gate as the dashboard.
   useEffect(() => {
@@ -104,6 +122,30 @@ function Admin() {
     };
   }, [session, navigate]);
 
+  // System health: independent of the overview/orders/invites fetch
+  // above, and never lets a failure there block this panel (or vice
+  // versa) — a config check and a handful of page fetches, nothing
+  // that touches Supabase directly beyond what the overview already
+  // does.
+  useEffect(() => {
+    if (!isAdmin) return;
+    let active = true;
+    void fetch("/api/health", { cache: "no-store" })
+      .then((res) => res.json() as Promise<HealthResponse>)
+      .then((data) => {
+        if (active) setConfig(data.config);
+      })
+      .catch(() => {
+        if (active) setConfig(null);
+      });
+    void checkPageStatuses().then((result) => {
+      if (active) setPageStatuses(result);
+    });
+    return () => {
+      active = false;
+    };
+  }, [isAdmin]);
+
   if (loading || !session || !isAdmin) {
     return (
       <div className="site">
@@ -138,6 +180,93 @@ function Admin() {
         </section>
 
         <section className="dash">
+          <section>
+            <h2>System health</h2>
+            <ul className="dash-list">
+              <li>
+                <div>
+                  <h3>{overview ? "✅" : error ? "❌" : "…"}</h3>
+                  <p>
+                    Database (Supabase) —{" "}
+                    {overview
+                      ? "reachable, read just now"
+                      : error
+                        ? `unreachable: ${error}`
+                        : "checking…"}
+                  </p>
+                </div>
+              </li>
+              <li>
+                <div>
+                  <h3>
+                    {config
+                      ? Object.values(config).every(Boolean)
+                        ? "✅"
+                        : "⚠️"
+                      : "…"}
+                  </h3>
+                  <p>
+                    Configuration —{" "}
+                    {config
+                      ? Object.entries(config)
+                          .filter(([, present]) => !present)
+                          .map(([key]) => CONFIG_LABELS[key] ?? key)
+                          .join(", ") || "all present"
+                      : "checking…"}
+                  </p>
+                </div>
+              </li>
+              <li>
+                <div>
+                  <h3>
+                    {pageStatuses
+                      ? pageStatuses.every((p) => p.ok)
+                        ? "✅"
+                        : "⚠️"
+                      : "…"}
+                  </h3>
+                  <p>
+                    Public pages —{" "}
+                    {pageStatuses
+                      ? pageStatuses.every((p) => p.ok)
+                        ? `all ${pageStatuses.length} loading`
+                        : pageStatuses
+                            .filter((p) => !p.ok)
+                            .map((p) => `${p.path} (${p.status ?? "down"})`)
+                            .join(", ")
+                      : "checking…"}
+                  </p>
+                </div>
+              </li>
+            </ul>
+            <p className="dash-health-links">
+              For deeper diagnostics:{" "}
+              <a
+                href="https://dash.cloudflare.com"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Cloudflare
+              </a>
+              {" · "}
+              <a
+                href="https://supabase.com/dashboard"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Supabase
+              </a>
+              {" · "}
+              <a
+                href="https://search.google.com/search-console"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Search Console
+              </a>
+            </p>
+          </section>
+
           {error && (
             <p className="form-error" role="alert">
               {error}
