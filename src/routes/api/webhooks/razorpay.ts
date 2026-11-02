@@ -16,6 +16,7 @@ import {
 } from "@/lib/orders-server";
 import { supabaseServer } from "@/lib/supabase-server";
 import { clientIpFromRequest, createRateLimiter } from "@/lib/rate-limit";
+import { getUserEmail, sendPaymentConfirmationEmail } from "@/lib/email-server";
 
 // Batch 2 / Task 5: per-isolate rate-limit backstop for webhook
 // deliveries — 120 requests/minute per client IP, set generously
@@ -175,7 +176,11 @@ export async function POST(request: Request) {
     // branch below, so it is rejected uniformly as a bad request
     // rather than threading an undefined order id deeper into the
     // plan (which would surface a confusing "not_found" instead).
-    if (!entity || typeof entity.order_id !== "string" || entity.order_id.length === 0) {
+    if (
+      !entity ||
+      typeof entity.order_id !== "string" ||
+      entity.order_id.length === 0
+    ) {
       console.warn("Webhook payload missing payment.entity.order_id", {
         event: rawPayload.event,
       });
@@ -217,16 +222,20 @@ export async function POST(request: Request) {
       ...(paymentId !== undefined ? { paymentId } : {}),
     };
 
-    // Current invite status, so re-publishing stays idempotent.
+    // Current invite status, so re-publishing stays idempotent. The
+    // slug is fetched alongside it (same row, no extra round trip)
+    // purely for the best-effort confirmation email's invite link.
     let inviteStatus: string | null = null;
+    let inviteSlug: string | null = null;
     if (order?.invite_id) {
       const { data: invite, error: inviteError } = await supabaseServer
         .from("invites")
-        .select("status")
+        .select("status, slug")
         .eq("id", order.invite_id)
         .maybeSingle();
       if (inviteError) throw inviteError;
       inviteStatus = (invite?.status as string | undefined) ?? null;
+      inviteSlug = (invite?.slug as string | undefined) ?? null;
     }
 
     // For SUCCESS, corroborate the payment against Razorpay's own
@@ -296,7 +305,56 @@ export async function POST(request: Request) {
       outcome: SettleAndPublishOutcome,
     ): Promise<Response> => {
       switch (outcome) {
-        case "settled_published":
+        case "settled_published": {
+          // Best-effort only, and ONLY on this outcome — the one call
+          // that actually performed the publish transition — so a
+          // redelivery landing on settled_already_published never
+          // sends a second copy. Never allowed to affect the
+          // response: a flaky email provider must not fail closed on
+          // a payment that already settled and an invite already
+          // published.
+          if (order) {
+            try {
+              const email = await getUserEmail(order.user_id);
+              if (email) {
+                const siteUrl = process.env["VITE_SITE_URL"];
+                const inviteUrl =
+                  siteUrl && inviteSlug ? `${siteUrl}/i/${inviteSlug}` : null;
+                const result = await sendPaymentConfirmationEmail({
+                  to: email,
+                  inviteUrl,
+                  amountMinor: order.amount_minor,
+                  currency: order.currency,
+                });
+                if (!result.ok && result.reason !== "not_configured") {
+                  console.warn("Payment confirmation email not sent", {
+                    orderId: internalOrderId,
+                    reason: result.reason,
+                  });
+                }
+              }
+            } catch (emailError) {
+              console.warn("Payment confirmation email threw", {
+                orderId: internalOrderId,
+                errorClass:
+                  emailError instanceof Error
+                    ? emailError.name
+                    : typeof emailError,
+              });
+            }
+          }
+          if (deliveryId) {
+            await recordWebhookDelivery(deliveryId, rawPayload);
+          }
+          return json(
+            {
+              status: "success",
+              orderId: internalOrderId,
+              inviteId: order?.invite_id,
+            },
+            { status: 200 },
+          );
+        }
         case "settled_already_published":
         case "settled_no_invite": {
           if (deliveryId) {
@@ -340,7 +398,10 @@ export async function POST(request: Request) {
           if (deliveryId) {
             await recordWebhookDelivery(deliveryId, rawPayload);
           }
-          return json({ status: "refunded", orderId: internalOrderId }, { status: 200 });
+          return json(
+            { status: "refunded", orderId: internalOrderId },
+            { status: 200 },
+          );
         }
         default: {
           throw new Error(
@@ -409,10 +470,16 @@ export async function POST(request: Request) {
           );
         }
         if (plan.reason === "already_failed") {
-          return json({ status: "failed", orderId: internalOrderId }, { status: 200 });
+          return json(
+            { status: "failed", orderId: internalOrderId },
+            { status: 200 },
+          );
         }
         if (plan.reason === "already_refunded") {
-          return json({ status: "refunded", orderId: internalOrderId }, { status: 200 });
+          return json(
+            { status: "refunded", orderId: internalOrderId },
+            { status: 200 },
+          );
         }
         return json({ status: "unknown_event" }, { status: 200 });
       }
@@ -440,7 +507,10 @@ export async function POST(request: Request) {
             if (deliveryId) {
               await recordWebhookDelivery(deliveryId, rawPayload);
             }
-            return json({ status: "refunded", orderId: current.id }, { status: 200 });
+            return json(
+              { status: "refunded", orderId: current.id },
+              { status: 200 },
+            );
           }
           if (current?.status === "paid") {
             console.log(
@@ -451,7 +521,11 @@ export async function POST(request: Request) {
               await recordWebhookDelivery(deliveryId, rawPayload);
             }
             return json(
-              { status: "success", orderId: current.id, inviteId: current.invite_id },
+              {
+                status: "success",
+                orderId: current.id,
+                inviteId: current.invite_id,
+              },
               { status: 200 },
             );
           }
@@ -468,7 +542,10 @@ export async function POST(request: Request) {
           await recordWebhookDelivery(deliveryId, rawPayload);
         }
         console.log("Order marked failed", { orderId: internalOrderId });
-        return json({ status: "failed", orderId: internalOrderId }, { status: 200 });
+        return json(
+          { status: "failed", orderId: internalOrderId },
+          { status: 200 },
+        );
       }
 
       case "conflict": {
@@ -484,7 +561,10 @@ export async function POST(request: Request) {
         }
         const corroboratedPaymentId =
           typeof payload.paymentId === "string" ? payload.paymentId : null;
-        const outcome = await settleAndPublish(internalOrderId, corroboratedPaymentId);
+        const outcome = await settleAndPublish(
+          internalOrderId,
+          corroboratedPaymentId,
+        );
         return await respondToSettleOutcome(outcome);
       }
 
@@ -496,7 +576,9 @@ export async function POST(request: Request) {
         // settle_and_publish RPC in its never-mark mode (null payment
         // id).
         if (!internalOrderId) {
-          throw new Error("publish_only plan reached with no internal order id");
+          throw new Error(
+            "publish_only plan reached with no internal order id",
+          );
         }
         const outcome = await settleAndPublish(internalOrderId, null);
         if (outcome === "settled_published") {
@@ -515,11 +597,16 @@ export async function POST(request: Request) {
         // after the signature, amount, currency and gateway-lookup
         // checks all passed.
         if (!internalOrderId) {
-          throw new Error("mark_paid_and_publish plan reached with no internal order id");
+          throw new Error(
+            "mark_paid_and_publish plan reached with no internal order id",
+          );
         }
         const corroboratedPaymentId =
           typeof payload.paymentId === "string" ? payload.paymentId : null;
-        const outcome = await settleAndPublish(internalOrderId, corroboratedPaymentId);
+        const outcome = await settleAndPublish(
+          internalOrderId,
+          corroboratedPaymentId,
+        );
         if (outcome === "settled_published") {
           console.log("Invite published after payment", {
             orderId: internalOrderId,

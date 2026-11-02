@@ -34,6 +34,10 @@ export function GET(_request: Request) {
         razorpayKeyId: present("VITE_RAZORPAY_KEY_ID"),
         razorpayKeySecret: present("RAZORPAY_KEY_SECRET"),
         razorpayWebhook: present("RAZORPAY_WEBHOOK_SECRET"),
+        siteUrl: present("VITE_SITE_URL"),
+        // Optional: the webhook sends no confirmation email at all
+        // while this is unset — never required for fulfilment.
+        emailConfigured: present("RESEND_API_KEY"),
       },
     },
     { headers: { "Cache-Control": "no-store" } },
