@@ -376,38 +376,41 @@ function Admin() {
           {!overview && !error && <LoaderCircle className="loading-spinner" />}
 
           {overview && (
-            <ul className="dash-list">
-              <li>
-                <div>
-                  <h3>{formatRupees(overview.totalRevenuePaise)}</h3>
-                  <p>Total revenue — paid orders only</p>
-                </div>
-              </li>
-              <li>
-                <div>
-                  <h3>{totalOrders}</h3>
-                  <p>
-                    Orders —{" "}
-                    {ORDER_STATUSES.map(
-                      (status) =>
-                        `${overview.ordersByStatus[status] ?? 0} ${status}`,
-                    ).join(" · ")}
-                  </p>
-                </div>
-              </li>
-              <li>
-                <div>
-                  <h3>{overview.totalInvites}</h3>
-                  <p>Invitations created</p>
-                </div>
-              </li>
-              <li>
-                <div>
-                  <h3>{overview.totalUsers}</h3>
-                  <p>Registered customers</p>
-                </div>
-              </li>
-            </ul>
+            <section>
+              <h2>Overview</h2>
+              <ul className="dash-list">
+                <li>
+                  <div>
+                    <h3>{formatRupees(overview.totalRevenuePaise)}</h3>
+                    <p>Total revenue — paid orders only</p>
+                  </div>
+                </li>
+                <li>
+                  <div>
+                    <h3>{totalOrders}</h3>
+                    <p>
+                      Orders —{" "}
+                      {ORDER_STATUSES.map(
+                        (status) =>
+                          `${overview.ordersByStatus[status] ?? 0} ${status}`,
+                      ).join(" · ")}
+                    </p>
+                  </div>
+                </li>
+                <li>
+                  <div>
+                    <h3>{overview.totalInvites}</h3>
+                    <p>Invitations created</p>
+                  </div>
+                </li>
+                <li>
+                  <div>
+                    <h3>{overview.totalUsers}</h3>
+                    <p>Registered customers</p>
+                  </div>
+                </li>
+              </ul>
+            </section>
           )}
 
           <section>
@@ -417,39 +420,43 @@ function Admin() {
             )}
             {orders?.length === 0 && <p>No orders yet.</p>}
             {orders && orders.length > 0 && (
-              <table className="compare-table">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                    <th>Customer</th>
-                    <th>Invitation</th>
-                    <th>Paid at</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orders.map((order) => (
-                    <tr key={order.id}>
-                      <td>{formatDate(order.created_at)}</td>
-                      <td>
-                        {formatRupees(order.amount_minor)}
-                        {order.currency !== "INR" ? ` ${order.currency}` : ""}
-                      </td>
-                      <td>
-                        <span className={`status status-${order.status}`}>
-                          {order.status}
-                        </span>
-                      </td>
-                      <td>{shortId(order.user_id)}</td>
-                      <td>
-                        {order.invite_id ? shortId(order.invite_id) : "—"}
-                      </td>
-                      <td>{order.paid_at ? formatDate(order.paid_at) : "—"}</td>
+              <div className="table-scroll">
+                <table className="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Amount</th>
+                      <th>Status</th>
+                      <th>Customer</th>
+                      <th>Invitation</th>
+                      <th>Paid at</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {orders.map((order) => (
+                      <tr key={order.id}>
+                        <td>{formatDate(order.created_at)}</td>
+                        <td>
+                          {formatRupees(order.amount_minor)}
+                          {order.currency !== "INR" ? ` ${order.currency}` : ""}
+                        </td>
+                        <td>
+                          <span className={`status status-${order.status}`}>
+                            {order.status}
+                          </span>
+                        </td>
+                        <td>{shortId(order.user_id)}</td>
+                        <td>
+                          {order.invite_id ? shortId(order.invite_id) : "—"}
+                        </td>
+                        <td>
+                          {order.paid_at ? formatDate(order.paid_at) : "—"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </section>
 
@@ -460,43 +467,45 @@ function Admin() {
             )}
             {invites?.length === 0 && <p>No invitations yet.</p>}
             {invites && invites.length > 0 && (
-              <table className="compare-table">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Invitation URL</th>
-                    <th>Theme</th>
-                    <th>Status</th>
-                    <th>Customer email</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {invites.map((invite) => (
-                    <tr key={invite.id}>
-                      <td>{formatDate(invite.created_at)}</td>
-                      <td>
-                        <a
-                          href={`/i/${invite.slug}`}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          /i/{invite.slug}
-                        </a>
-                      </td>
-                      <td>{invite.theme_id}</td>
-                      <td>
-                        <span className={`status status-${invite.status}`}>
-                          {invite.status}
-                        </span>
-                      </td>
-                      <td>
-                        {customerEmails?.[invite.user_id] ??
-                          shortId(invite.user_id)}
-                      </td>
+              <div className="table-scroll">
+                <table className="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Invitation URL</th>
+                      <th>Theme</th>
+                      <th>Status</th>
+                      <th>Customer email</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {invites.map((invite) => (
+                      <tr key={invite.id}>
+                        <td>{formatDate(invite.created_at)}</td>
+                        <td>
+                          <a
+                            href={`/i/${invite.slug}`}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            /i/{invite.slug}
+                          </a>
+                        </td>
+                        <td>{invite.theme_id}</td>
+                        <td>
+                          <span className={`status status-${invite.status}`}>
+                            {invite.status}
+                          </span>
+                        </td>
+                        <td>
+                          {customerEmails?.[invite.user_id] ??
+                            shortId(invite.user_id)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </section>
         </section>
