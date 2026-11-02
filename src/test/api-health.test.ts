@@ -11,6 +11,8 @@ const ENV_KEYS = [
   "VITE_RAZORPAY_KEY_ID",
   "RAZORPAY_KEY_SECRET",
   "RAZORPAY_WEBHOOK_SECRET",
+  "VITE_SITE_URL",
+  "RESEND_API_KEY",
 ] as const;
 
 const SENTINELS: Record<(typeof ENV_KEYS)[number], string> = {
@@ -19,6 +21,8 @@ const SENTINELS: Record<(typeof ENV_KEYS)[number], string> = {
   VITE_RAZORPAY_KEY_ID: "sentinel-razorpay-key-id",
   RAZORPAY_KEY_SECRET: "sentinel-razorpay-key-secret",
   RAZORPAY_WEBHOOK_SECRET: "sentinel-webhook-secret-value",
+  VITE_SITE_URL: "https://sentinel-site-url.invalid",
+  RESEND_API_KEY: "sentinel-resend-api-key",
 };
 
 let savedEnv: Record<string, string | undefined>;
@@ -55,6 +59,8 @@ describe("GET /api/health", () => {
         razorpayKeyId: false,
         razorpayKeySecret: false,
         razorpayWebhook: false,
+        siteUrl: false,
+        emailConfigured: false,
       },
     });
   });
@@ -72,6 +78,8 @@ describe("GET /api/health", () => {
       razorpayKeyId: true,
       razorpayKeySecret: true,
       razorpayWebhook: true,
+      siteUrl: true,
+      emailConfigured: true,
     });
   });
 
@@ -87,6 +95,8 @@ describe("GET /api/health", () => {
       razorpayKeyId: false,
       razorpayKeySecret: false,
       razorpayWebhook: true,
+      siteUrl: false,
+      emailConfigured: false,
     });
   });
 
