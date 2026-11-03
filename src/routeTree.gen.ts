@@ -25,6 +25,7 @@ import { Route as OrderFailedRouteImport } from './routes/order-failed'
 import { Route as OrderSuccessRouteImport } from './routes/order-success'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PublishRouteImport } from './routes/publish'
+import { Route as ReceptionInvitationWordingRouteImport } from './routes/reception-invitation-wording'
 import { Route as RefundRouteImport } from './routes/refund'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SikhWeddingInvitationsRouteImport } from './routes/sikh-wedding-invitations'
@@ -125,6 +126,12 @@ const PublishRoute = PublishRouteImport.update({
   path: '/publish',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReceptionInvitationWordingRoute =
+  ReceptionInvitationWordingRouteImport.update({
+    id: '/reception-invitation-wording',
+    path: '/reception-invitation-wording',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const RefundRoute = RefundRouteImport.update({
   id: '/refund',
   path: '/refund',
@@ -219,6 +226,7 @@ export interface FileRoutesByFullPath {
   '/order-success': typeof OrderSuccessRoute
   '/privacy': typeof PrivacyRoute
   '/publish': typeof PublishRoute
+  '/reception-invitation-wording': typeof ReceptionInvitationWordingRoute
   '/refund': typeof RefundRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sikh-wedding-invitations': typeof SikhWeddingInvitationsRoute
@@ -252,6 +260,7 @@ export interface FileRoutesByTo {
   '/order-success': typeof OrderSuccessRoute
   '/privacy': typeof PrivacyRoute
   '/publish': typeof PublishRoute
+  '/reception-invitation-wording': typeof ReceptionInvitationWordingRoute
   '/refund': typeof RefundRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sikh-wedding-invitations': typeof SikhWeddingInvitationsRoute
@@ -286,6 +295,7 @@ export interface FileRoutesById {
   '/order-success': typeof OrderSuccessRoute
   '/privacy': typeof PrivacyRoute
   '/publish': typeof PublishRoute
+  '/reception-invitation-wording': typeof ReceptionInvitationWordingRoute
   '/refund': typeof RefundRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sikh-wedding-invitations': typeof SikhWeddingInvitationsRoute
@@ -321,6 +331,7 @@ export interface FileRouteTypes {
     | '/order-success'
     | '/privacy'
     | '/publish'
+    | '/reception-invitation-wording'
     | '/refund'
     | '/reset-password'
     | '/sikh-wedding-invitations'
@@ -354,6 +365,7 @@ export interface FileRouteTypes {
     | '/order-success'
     | '/privacy'
     | '/publish'
+    | '/reception-invitation-wording'
     | '/refund'
     | '/reset-password'
     | '/sikh-wedding-invitations'
@@ -387,6 +399,7 @@ export interface FileRouteTypes {
     | '/order-success'
     | '/privacy'
     | '/publish'
+    | '/reception-invitation-wording'
     | '/refund'
     | '/reset-password'
     | '/sikh-wedding-invitations'
@@ -421,6 +434,7 @@ export interface RootRouteChildren {
   OrderSuccessRoute: typeof OrderSuccessRoute
   PrivacyRoute: typeof PrivacyRoute
   PublishRoute: typeof PublishRoute
+  ReceptionInvitationWordingRoute: typeof ReceptionInvitationWordingRoute
   RefundRoute: typeof RefundRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SikhWeddingInvitationsRoute: typeof SikhWeddingInvitationsRoute
@@ -552,6 +566,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublishRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reception-invitation-wording': {
+      id: '/reception-invitation-wording'
+      path: '/reception-invitation-wording'
+      fullPath: '/reception-invitation-wording'
+      preLoaderRoute: typeof ReceptionInvitationWordingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/refund': {
       id: '/refund'
       path: '/refund'
@@ -677,6 +698,7 @@ const rootRouteChildren: RootRouteChildren = {
   OrderSuccessRoute: OrderSuccessRoute,
   PrivacyRoute: PrivacyRoute,
   PublishRoute: PublishRoute,
+  ReceptionInvitationWordingRoute: ReceptionInvitationWordingRoute,
   RefundRoute: RefundRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SikhWeddingInvitationsRoute: SikhWeddingInvitationsRoute,
