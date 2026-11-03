@@ -469,10 +469,14 @@ function Publish() {
               });
             }}
           />
+        ) : !user ? (
+          <Link to="/login" className="btn btn-solid">
+            Sign in to publish
+          </Link>
         ) : (
           <button
             className="btn btn-solid"
-            disabled={isCreatingInvite || !user || issues.length > 0}
+            disabled={isCreatingInvite || issues.length > 0}
             onClick={onPrimary}
           >
             {isCreatingInvite ? "Creating booking..." : `Pay ${price} to Publish`}
@@ -483,7 +487,7 @@ function Publish() {
           {issues.length > 0
             ? "Fix the items above in the editor, then come back to publish."
             : !user
-              ? "Sign in to publish your invitation."
+              ? "Your design is saved. Sign in with the same browser to publish it."
               : "Your design is saved. Payment is secured by Razorpay."}
         </p>
 
