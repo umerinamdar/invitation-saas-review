@@ -277,6 +277,17 @@ export function InviteEditor({
       {toolbar}
       <main className="editor-body">
         <form className="editor-form" onSubmit={(e) => e.preventDefault()}>
+          {!user && (
+            <div className="editor-undo-banner">
+              <span>
+                Everything here is free to design. You&apos;ll need a free
+                account to add photos or music, and to publish.
+              </span>
+              <a href="/login" className="btn btn-quiet btn-sm">
+                Sign in
+              </a>
+            </div>
+          )}
           {undo && (
             <div className="editor-undo-banner" role="status">
               <span>
