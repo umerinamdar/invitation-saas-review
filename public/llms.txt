@@ -1,0 +1,20 @@
+# EasyInviteMaker
+
+> Digital wedding invitations you can share on WhatsApp. Choose an
+> animated design, add your names, dates and photos for free, then
+> publish for a one-time ₹599 (no subscription) and share a single
+> link your guests open on their phone, no app required.
+
+For weddings, engagements, receptions, haldi and mehendi.
+
+## Pages
+
+- [Home](https://easyinvitemaker.com/): overview and the design gallery
+- [Templates](https://easyinvitemaker.com/templates): all available invitation designs
+- [Wedding invitation wording](https://easyinvitemaker.com/wedding-invitation-wording): wording examples
+- [Engagement invitation wording](https://easyinvitemaker.com/engagement-invitation-wording)
+- [Haldi invitation wording](https://easyinvitemaker.com/haldi-invitation-wording)
+- [Mehendi invitation wording](https://easyinvitemaker.com/mehendi-invitation-wording)
+- [Reception invitation wording](https://easyinvitemaker.com/reception-invitation-wording)
+- [Sharing an invitation on WhatsApp](https://easyinvitemaker.com/share-invitation-on-whatsapp)
+- [Contact](https://easyinvitemaker.com/contact)
