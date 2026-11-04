@@ -6,9 +6,18 @@ type Props = {
   theme: Theme;
   event: Invite["event"];
   onReveal: () => void;
+  /** Marketing demo only: scratches itself with a simulated finger path
+   * instead of waiting for a real guest's pointer. Never set for an
+   * actual guest's invitation. */
+  autoScratch?: boolean;
 };
 
-export function ScratchInvitation({ theme, event, onReveal }: Props) {
+export function ScratchInvitation({
+  theme,
+  event,
+  onReveal,
+  autoScratch = false,
+}: Props) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const dragging = useRef(false);
   const last = useRef<{ x: number; y: number } | null>(null);
@@ -141,31 +150,29 @@ export function ScratchInvitation({ theme, event, onReveal }: Props) {
     };
   }, [revealed, paperTexture, scratchTitle, scratchHint]);
 
-  function scratch(event: React.PointerEvent<HTMLCanvasElement>) {
-    if (!dragging.current) return;
-    const element = event.currentTarget;
+  /** Erases one stroke segment and reports the cleared fraction so far —
+   * shared by a real pointer drag and the synthetic auto-scratch path. */
+  function eraseSegment(
+    element: HTMLCanvasElement,
+    from: { x: number; y: number } | null,
+    to: { x: number; y: number },
+    sx: number,
+    width = 44,
+  ) {
     const ctx = element.getContext("2d");
-    if (!ctx) return;
+    if (!ctx) return 0;
     scratched.current = true;
-    const box = element.getBoundingClientRect();
-    const sx = element.width / box.width;
-    const sy = element.height / box.height;
-    const point = {
-      x: (event.clientX - box.left) * sx,
-      y: (event.clientY - box.top) * sy,
-    };
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.globalCompositeOperation = "destination-out";
-    ctx.lineWidth = 44 * sx;
+    ctx.lineWidth = width * sx;
     ctx.lineCap = "round";
     ctx.beginPath();
-    ctx.moveTo(last.current?.x ?? point.x, last.current?.y ?? point.y);
-    ctx.lineTo(point.x, point.y);
+    ctx.moveTo(from?.x ?? to.x, from?.y ?? to.y);
+    ctx.lineTo(to.x, to.y);
     ctx.stroke();
     ctx.beginPath();
-    ctx.arc(point.x, point.y, 22 * sx, 0, Math.PI * 2);
+    ctx.arc(to.x, to.y, (width / 2) * sx, 0, Math.PI * 2);
     ctx.fill();
-    last.current = point;
     const pixels = ctx.getImageData(0, 0, element.width, element.height).data;
     let clear = 0,
       total = 0;
@@ -173,7 +180,22 @@ export function ScratchInvitation({ theme, event, onReveal }: Props) {
       total++;
       if ((pixels[i] ?? 255) < 30) clear++;
     }
-    if (clear / total > scratchThreshold) {
+    return clear / total;
+  }
+
+  function scratch(event: React.PointerEvent<HTMLCanvasElement>) {
+    if (!dragging.current) return;
+    const element = event.currentTarget;
+    const box = element.getBoundingClientRect();
+    const sx = element.width / box.width;
+    const sy = element.height / box.height;
+    const point = {
+      x: (event.clientX - box.left) * sx,
+      y: (event.clientY - box.top) * sy,
+    };
+    const cleared = eraseSegment(element, last.current, point, sx);
+    last.current = point;
+    if (cleared > scratchThreshold) {
       dragging.current = false;
       last.current = null;
       reveal();
@@ -184,6 +206,66 @@ export function ScratchInvitation({ theme, event, onReveal }: Props) {
     dragging.current = false;
     last.current = null;
   }
+
+  /** The synthetic finger path for the marketing demo: a few zigzag
+   * sweeps across the card, stepped with rAF so the erase animates
+   * instead of appearing instantly. Falls back to a hard reveal if the
+   * sweep ever finishes without crossing the threshold, so the demo
+   * never gets stuck mid-scratch. */
+  useEffect(() => {
+    if (!autoScratch || revealed) return;
+    const element = canvas.current;
+    if (!element) return;
+    let cancelled = false;
+    let timeout: ReturnType<typeof setTimeout> | null = null;
+    timeout = setTimeout(() => {
+      if (cancelled || revealed) return;
+      const box = element.getBoundingClientRect();
+      if (box.width === 0 || box.height === 0) return;
+      const sx = element.width / box.width;
+      const sy = element.height / box.height;
+      // More, thinner bands than a real finger needs: one full-width sweep
+      // alone clears close to the reveal threshold, which made the first
+      // version flash the date open almost instantly instead of visibly
+      // scratching. Smaller bands cross the same threshold more
+      // gradually, so the motion actually reads as a scratch.
+      const rows = 9;
+      const waypoints: { x: number; y: number }[] = [];
+      for (let row = 0; row < rows; row++) {
+        const y = ((row + 0.5) / rows) * box.height * sy;
+        const leftToRight = row % 2 === 0;
+        waypoints.push({ x: leftToRight ? 0 : box.width * sx, y });
+        waypoints.push({ x: leftToRight ? box.width * sx : 0, y });
+      }
+      let i = 1;
+      let autoLast: { x: number; y: number } | null = waypoints[0] ?? null;
+      const STEP_MS = 140;
+      const tick = () => {
+        if (cancelled || revealed) return;
+        const point = waypoints[i];
+        if (!point) {
+          reveal();
+          return;
+        }
+        // Thinner than the real 44px finger brush, so the reveal threshold
+        // takes several visible passes instead of one.
+        const cleared = eraseSegment(element, autoLast, point, sx, 20);
+        autoLast = point;
+        i++;
+        if (cleared > scratchThreshold) {
+          reveal();
+          return;
+        }
+        timeout = setTimeout(tick, STEP_MS);
+      };
+      tick();
+    }, 650);
+    return () => {
+      cancelled = true;
+      if (timeout) clearTimeout(timeout);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoScratch, revealed]);
 
   return (
     <div className={`date-reveal ${revealed ? "date-revealed" : ""}`}>
