@@ -281,22 +281,98 @@
   box-shadow: inset 0 0 0 1px oklch(1 0 0 / 6%);
   z-index: 5;
 }
-/* The faint camera-sensor catch inside the island, like real hardware
- * photography — without it a plain black pill reads as a cutout sticker. */
-/* The hero's one featured phone: the real invitation engine, scaled down
- * to fill the handset screen and driven automatically (see
- * HeroLivePreview). Non-interactive and clipped to the frame — the
- * engine itself renders at a realistic mobile width/height and is
- * scaled down, not laid out small, so it looks exactly like a guest's
- * own phone. */
+/* The hero's one featured phone: a purpose-built loop of the theme's own
+ * envelope, scratch reveal, confetti and petals (see HeroLivePreview) —
+ * sized entirely off this container, never the browser viewport, so it
+ * can't show more or less than intended on a different screen.
+ * Non-interactive — pointer-events are off so it can't intercept a
+ * click meant for the real page behind it. */
 .hero-live-preview {
   position: absolute;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
 }
+/* The scaled wrapper: a fixed, realistic phone size (see VIRTUAL_WIDTH/
+ * HEIGHT in hero-live-preview.tsx) scaled down via JS-measured transform
+ * to fill whatever the handset frame actually renders at. Everything
+ * inside lays out at that real size first — scaling the finished scene
+ * as one piece keeps the scratch card's canvas-drawn text in correct
+ * proportion to its card, which shrinking each piece separately would
+ * not. */
 .hero-live-preview-stage {
   transform-origin: top left;
+  overflow: hidden;
+}
+.hero-live-preview-scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.hero-live-preview-backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hero-live-preview-envelope {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 40px 24px;
+}
+.hero-live-preview-opened {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  width: 100%;
+  height: 100%;
+  padding: 40px 24px;
+  text-align: center;
+  color: var(--paper-light, #fff);
+  text-shadow: 0 2px 10px rgb(0 0 0 / 0.55);
+}
+.hero-live-preview-label {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+.hero-live-preview-names {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.hero-live-preview-names h2 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1.1;
+}
+.hero-live-preview-names span {
+  font-size: 15px;
+  opacity: 0.8;
+}
+/* The real engine's petal shower is `position: fixed` — meant to cover a
+ * guest's whole screen. The transform on .hero-live-preview-stage above
+ * makes it a containing block for that fixed descendant, so petals are
+ * already confined to the scene; this is belt-and-braces in case that
+ * scene is ever reused somewhere without a transformed ancestor. */
+.hero-live-preview .flower-shower {
+  position: absolute;
 }
 .handset-island::after {
   content: "";
