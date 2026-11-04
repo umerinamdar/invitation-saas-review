@@ -281,26 +281,8 @@
   box-shadow: inset 0 0 0 1px oklch(1 0 0 / 6%);
   z-index: 5;
 }
-/* The hero's one featured phone: the real invitation engine, scaled down
- * to fill the handset screen and driven automatically (see
- * HeroLivePreview). Non-interactive and clipped to the frame — the
- * engine itself renders at a realistic mobile width and is scaled down,
- * not laid out small, so it looks exactly like a guest's own phone.
- * `.hero-live-preview-stage`'s own overflow:hidden is load-bearing: its
- * height is a measured, capped crop (see MAX_CROP_HEIGHT in
- * HeroLivePreview), not just whatever this outer box's shape implies —
- * without it, content taller than that cap could still render past the
- * intended crop whenever this box is measured larger than the cap. */
-.hero-live-preview {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-.hero-live-preview-stage {
-  transform-origin: top left;
-  overflow: hidden;
-}
+/* The faint camera-sensor catch inside the island, like real hardware
+ * photography — without it a plain black pill reads as a cutout sticker. */
 .handset-island::after {
   content: "";
   position: absolute;

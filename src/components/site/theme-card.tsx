@@ -5,7 +5,6 @@ import { OrnateFrame, PatternBackdrop } from "@/components/ornament";
 import { paletteVariables, type Theme } from "@/themes/types";
 import { useLocale } from "@/i18n/locale-context";
 import { getDemoInvite } from "@/invites/demo-wedding";
-import { HeroLivePreview } from "@/components/site/hero-live-preview";
 
 /**
  * The WebP sibling generated next to every theme hero image (same
@@ -116,14 +115,9 @@ export function ThemePhoneScreen({ theme }: { theme: Theme }) {
 export function ThemePhone({
   theme,
   className = "",
-  autoplay = false,
 }: {
   theme: Theme;
   className?: string;
-  /** Marketing-only: mounts the real invitation engine and drives it
-   * through opening, scratch reveal, confetti and petals on a loop. Only
-   * ever set for the hero's one featured phone — see HeroLivePreview. */
-  autoplay?: boolean;
 }) {
   const vars = paletteVariables(theme) as React.CSSProperties;
   return (
@@ -132,16 +126,12 @@ export function ThemePhone({
       <span className="handset-button" style={{ left: "-0.6%", top: "23%", height: "5.5%" }} />
       <span className="handset-button" style={{ left: "-0.6%", top: "30%", height: "5.5%" }} />
       <span className="handset-button" style={{ right: "-0.6%", top: "22%", height: "8%" }} />
-      <div className="handset-bezel">
-        <div className="handset-screen">
+      <span className="handset-bezel">
+        <span className="handset-screen">
           <span className="handset-island" />
-          {autoplay ? (
-            <HeroLivePreview theme={theme} />
-          ) : (
-            <ThemePhoneScreen theme={theme} />
-          )}
-        </div>
-      </div>
+          <ThemePhoneScreen theme={theme} />
+        </span>
+      </span>
     </span>
   );
 }

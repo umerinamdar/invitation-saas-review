@@ -143,7 +143,7 @@ function Landing() {
               <ThemePhone theme={c} className="animate-float" />
             </span>
             <span className="hero-phone hero-phone-3">
-              <ThemePhone theme={a} className="animate-float" autoplay />
+              <ThemePhone theme={a} className="animate-float" />
             </span>
           </Reveal>
         </section>
