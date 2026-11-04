@@ -41,6 +41,7 @@ import { Route as PreviewThemeIdRouteImport } from './routes/preview.$themeId'
 import { Route as ApiAdminAnalyticsRouteImport } from './routes/api/admin/analytics'
 import { Route as ApiAdminCustomersRouteImport } from './routes/api/admin/customers'
 import { Route as ApiWebhooksRazorpayRouteImport } from './routes/api/webhooks/razorpay'
+import { Route as EditorIdPreviewRouteImport } from './routes/editor.$id.preview'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -208,6 +209,11 @@ const ApiWebhooksRazorpayRoute = ApiWebhooksRazorpayRouteImport.update({
   path: '/api/webhooks/razorpay',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EditorIdPreviewRoute = EditorIdPreviewRouteImport.update({
+  id: '/preview',
+  path: '/preview',
+  getParentRoute: () => EditorIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -236,12 +242,13 @@ export interface FileRoutesByFullPath {
   '/wedding-invitation-wording': typeof WeddingInvitationWordingRoute
   '/api/health': typeof ApiHealthRoute
   '/api/orders': typeof ApiOrdersRoute
-  '/editor/$id': typeof EditorIdRoute
+  '/editor/$id': typeof EditorIdRouteWithChildren
   '/i/$slug': typeof ISlugRoute
   '/preview/$themeId': typeof PreviewThemeIdRoute
   '/api/admin/analytics': typeof ApiAdminAnalyticsRoute
   '/api/admin/customers': typeof ApiAdminCustomersRoute
   '/api/webhooks/razorpay': typeof ApiWebhooksRazorpayRoute
+  '/editor/$id/preview': typeof EditorIdPreviewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -270,12 +277,13 @@ export interface FileRoutesByTo {
   '/wedding-invitation-wording': typeof WeddingInvitationWordingRoute
   '/api/health': typeof ApiHealthRoute
   '/api/orders': typeof ApiOrdersRoute
-  '/editor/$id': typeof EditorIdRoute
+  '/editor/$id': typeof EditorIdRouteWithChildren
   '/i/$slug': typeof ISlugRoute
   '/preview/$themeId': typeof PreviewThemeIdRoute
   '/api/admin/analytics': typeof ApiAdminAnalyticsRoute
   '/api/admin/customers': typeof ApiAdminCustomersRoute
   '/api/webhooks/razorpay': typeof ApiWebhooksRazorpayRoute
+  '/editor/$id/preview': typeof EditorIdPreviewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -305,12 +313,13 @@ export interface FileRoutesById {
   '/wedding-invitation-wording': typeof WeddingInvitationWordingRoute
   '/api/health': typeof ApiHealthRoute
   '/api/orders': typeof ApiOrdersRoute
-  '/editor/$id': typeof EditorIdRoute
+  '/editor/$id': typeof EditorIdRouteWithChildren
   '/i/$slug': typeof ISlugRoute
   '/preview/$themeId': typeof PreviewThemeIdRoute
   '/api/admin/analytics': typeof ApiAdminAnalyticsRoute
   '/api/admin/customers': typeof ApiAdminCustomersRoute
   '/api/webhooks/razorpay': typeof ApiWebhooksRazorpayRoute
+  '/editor/$id/preview': typeof EditorIdPreviewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -347,6 +356,7 @@ export interface FileRouteTypes {
     | '/api/admin/analytics'
     | '/api/admin/customers'
     | '/api/webhooks/razorpay'
+    | '/editor/$id/preview'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -381,6 +391,7 @@ export interface FileRouteTypes {
     | '/api/admin/analytics'
     | '/api/admin/customers'
     | '/api/webhooks/razorpay'
+    | '/editor/$id/preview'
   id:
     | '__root__'
     | '/'
@@ -415,6 +426,7 @@ export interface FileRouteTypes {
     | '/api/admin/analytics'
     | '/api/admin/customers'
     | '/api/webhooks/razorpay'
+    | '/editor/$id/preview'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -444,7 +456,7 @@ export interface RootRouteChildren {
   WeddingInvitationWordingRoute: typeof WeddingInvitationWordingRoute
   ApiHealthRoute: typeof ApiHealthRoute
   ApiOrdersRoute: typeof ApiOrdersRoute
-  EditorIdRoute: typeof EditorIdRoute
+  EditorIdRoute: typeof EditorIdRouteWithChildren
   ISlugRoute: typeof ISlugRoute
   PreviewThemeIdRoute: typeof PreviewThemeIdRoute
   ApiAdminAnalyticsRoute: typeof ApiAdminAnalyticsRoute
@@ -678,8 +690,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiWebhooksRazorpayRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/editor/$id/preview': {
+      id: '/editor/$id/preview'
+      path: '/preview'
+      fullPath: '/editor/$id/preview'
+      preLoaderRoute: typeof EditorIdPreviewRouteImport
+      parentRoute: typeof EditorIdRoute
+    }
   }
 }
+
+interface EditorIdRouteChildren {
+  EditorIdPreviewRoute: typeof EditorIdPreviewRoute
+}
+
+const EditorIdRouteChildren: EditorIdRouteChildren = {
+  EditorIdPreviewRoute: EditorIdPreviewRoute,
+}
+
+const EditorIdRouteWithChildren = EditorIdRoute._addFileChildren(
+  EditorIdRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -708,7 +739,7 @@ const rootRouteChildren: RootRouteChildren = {
   WeddingInvitationWordingRoute: WeddingInvitationWordingRoute,
   ApiHealthRoute: ApiHealthRoute,
   ApiOrdersRoute: ApiOrdersRoute,
-  EditorIdRoute: EditorIdRoute,
+  EditorIdRoute: EditorIdRouteWithChildren,
   ISlugRoute: ISlugRoute,
   PreviewThemeIdRoute: PreviewThemeIdRoute,
   ApiAdminAnalyticsRoute: ApiAdminAnalyticsRoute,

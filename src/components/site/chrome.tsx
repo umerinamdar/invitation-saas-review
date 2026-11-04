@@ -30,10 +30,11 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   // Email verification is optional, never blocking — a signed-in user
-  // with an unconfirmed address can already use the whole site. This
-  // link just makes verifying easy to find, and resending easy to
-  // retry once per click.
-  const [verifySent, setVerifySent] = useState(false);
+  // with an unconfirmed address can already use the whole site.
+  // `signUp` itself already sent the first confirmation email, so the
+  // resting label says that rather than prompting an action; "resent"
+  // only tracks this click, it doesn't claim no email went out before.
+  const [resent, setResent] = useState(false);
   const { t } = useLocale();
   const NAV_LINKS = useNavLinks();
   // Release Fix 1 (D1): the header is the only chrome every page
@@ -51,7 +52,7 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
   }
 
   async function handleResendVerification(email: string) {
-    setVerifySent(true);
+    setResent(true);
     // Best-effort, same "never reveal account existence" posture as
     // the password-reset flow in login.tsx — a failure here isn't
     // shown differently, since this is optional and the user can just
@@ -77,9 +78,28 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
   }, []);
 
   return (
-    <header
-      className={`site-header ${overlay ? "is-overlay" : ""} ${scrolled ? "is-scrolled" : ""}`}
-    >
+    <>
+      {!authLoading && session && !session.user.email_confirmed_at && (
+        <div className="verify-email-banner" role="status">
+          <span>
+            {resent
+              ? "Verification email sent again — check your inbox."
+              : "We've sent a verification link to your email. You can keep using your account — verify whenever you like."}
+          </span>
+          <button
+            type="button"
+            disabled={resent}
+            onClick={() =>
+              void handleResendVerification(session.user.email!)
+            }
+          >
+            Resend email
+          </button>
+        </div>
+      )}
+      <header
+        className={`site-header ${overlay ? "is-overlay" : ""} ${scrolled ? "is-scrolled" : ""}`}
+      >
       <Link to="/" className="brand">
         <Logo tone={overlay ? "dark" : "light"} />
       </Link>
@@ -100,18 +120,6 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
       {!authLoading &&
         (session ? (
           <span className="nav-auth">
-            {!session.user.email_confirmed_at && session.user.email && (
-              <button
-                type="button"
-                className="nav-verify-email"
-                disabled={verifySent}
-                onClick={() =>
-                  void handleResendVerification(session.user.email!)
-                }
-              >
-                {verifySent ? "Check your inbox" : "Verify your email"}
-              </button>
-            )}
             <Link to="/dashboard">{t("nav.dashboard")}</Link>
             <button type="button" onClick={() => void handleSignOut()}>
               {t("nav.signOut")}
@@ -183,7 +191,8 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
           </Link>
         </div>
       )}
-    </header>
+      </header>
+    </>
   );
 }
 
