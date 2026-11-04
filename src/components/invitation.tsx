@@ -183,6 +183,7 @@ export function Invitation({
   mediaUrlMap,
   watermark,
   editing,
+  autoplayDemo = false,
 }: {
   theme: Theme;
   invite: Invite;
@@ -200,6 +201,13 @@ export function Invitation({
    * a paying customer's own invitation renders clean.
    */
   watermark?: boolean;
+  /**
+   * Marketing demo only (the homepage hero's featured phone): opens
+   * itself and auto-scratches the date card instead of waiting for a
+   * tap/drag. Never set for a guest's own invitation or the real
+   * tap-to-open preview at /preview/$themeId.
+   */
+  autoplayDemo?: boolean;
   /**
    * Supplied only by InviteEditor's own preview pane — turns the fields
    * listed in InviteEditor's `EDITABLE_FIELD_IDS` into real inputs edited
@@ -388,7 +396,14 @@ export function Invitation({
     }
   }
 
-  function openEnvelope() {
+  useEffect(() => {
+    if (!autoplayDemo) return;
+    const id = setTimeout(() => openEnvelope(true), 400);
+    return () => clearTimeout(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoplayDemo]);
+
+  function openEnvelope(auto = false) {
     if (opening || open) return;
     // Two rAFs, not one state set: this guarantees the browser has actually
     // painted the mechanic's closed frame before the "is-opening" class
@@ -401,15 +416,19 @@ export function Invitation({
     requestAnimationFrame(() => {
       requestAnimationFrame(() => setOpening(true));
     });
-    // A separate, short tactile accent never interrupts the silently primed song.
-    const click = sealAudio.current;
-    if (click) {
-      click.volume = 0.4;
-      void click.play().catch(() => {});
+    // A separate, short tactile accent never interrupts the silently primed
+    // song — skipped entirely for the auto-playing demo, which has no real
+    // gesture to attach a sound to.
+    if (!auto) {
+      const click = sealAudio.current;
+      if (click) {
+        click.volume = 0.4;
+        void click.play().catch(() => {});
+      }
     }
     // Prime silently during the guest's gesture; no music is audible until the flap opens.
     const player = audio.current;
-    if (player) {
+    if (player && !auto) {
       player.muted = true;
       player.volume = 0;
       primedPlayback.current = player.play();
@@ -612,6 +631,11 @@ export function Invitation({
                   theme={theme}
                   event={event}
                   onReveal={() => setPopped(true)}
+                  // The scratch card stays invisible (opacity 0) until the
+                  // cinematic intro finishes — starting the synthetic
+                  // scratch any earlier would erase it off-screen before a
+                  // viewer ever sees the card, let alone the scratching.
+                  autoScratch={autoplayDemo && introDone}
                 />
               </div>
             )}

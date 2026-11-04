@@ -1,65 +1,79 @@
 import { useEffect, useRef, useState } from "react";
-import { ConfettiBurst } from "@/components/confetti-burst";
-import { OrnateFrame, PatternBackdrop } from "@/components/ornament";
-import { RevealStage } from "@/components/reveals";
-import { ScratchInvitation } from "@/components/scratch-invitation";
+import { Invitation } from "@/components/invitation";
 import { getDemoInvite } from "@/invites/demo-wedding";
-import { hostNames } from "@/invites/types";
-import { paletteVariables, type Theme } from "@/themes/types";
-
-/** A realistic phone width/height to lay the scene out at — the scratch
- * card and its canvas-drawn text are sized in real pixels (150px tall,
- * 27px/20px/11px text) designed for a phone this size, not for the tiny
- * handset mockup. Rendering at this size first, then scaling the whole
- * scene down as one piece, keeps every proportion correct; shrinking
- * the pieces individually would leave the canvas's own drawn text
- * looking oversized relative to its shrunk card. */
-const VIRTUAL_WIDTH = 390;
-const VIRTUAL_HEIGHT = 845;
+import type { Theme } from "@/themes/types";
 
 /**
- * Timings deliberately slower than the real engine's own defaults — this
- * plays unattended, on a loop, so each beat needs a moment to actually
- * read before the next one starts.
+ * The width to lay the real engine out at, then scale down to fit the
+ * handset frame. Wider than an actual phone (390-430px) on purpose:
+ * this theme's names + family-lineage text push the scratch card and
+ * confetti to roughly 1000-1080px down, and the measured visible crop
+ * height scales with this width (~2.2x it, from this container's own
+ * shape) — a true 390px width only clears about 870px, cropping the
+ * reveal before it ever shows. 520 clears enough headroom for the
+ * whole sequence; MAX_CROP_HEIGHT below is what actually prevents
+ * showing too much, not this number.
  */
-const SEALED_HOLD_MS = 1600;
-const OPENING_MS = 1600;
-const NAMES_HOLD_MS = 1300;
-const PETALS_HOLD_MS = 4000;
-
-type Stage = "sealed" | "opening" | "opened";
+const VIRTUAL_WIDTH = 520;
 
 /**
- * The homepage hero's one featured phone: a purpose-built loop of the
- * theme's own envelope-opening mechanic, scratch reveal, confetti and
- * petals — reusing the same self-contained pieces the real invitation
- * engine uses (RevealStage, ScratchInvitation, ConfettiBurst), but NOT
- * the real engine's own page (<Invitation>).
- *
- * An earlier version scaled the whole guest-facing page down to fit the
- * phone frame, and that page sizes itself off the browser's actual
- * viewport height (100svh/94svh, meant for a guest's own full screen).
- * What ended up visible inside the tiny scaled frame depended on the
- * HOST's screen, not on anything controlled here — on one screen it
- * cropped right after the scratch card, on another it exposed the
- * countdown and function cards hundreds of pixels further down the
- * real page. This scene has none of that: no viewport units anywhere
- * in what it renders, and nothing below the scratch card exists to
- * accidentally show.
+ * Hard ceiling on how much of the page this ever shows, in the same
+ * virtual pixels as VIRTUAL_WIDTH — independent of the handset frame's
+ * own shape. The names + family-lineage text push the scratch card and
+ * confetti to roughly 950-1000px down, and the venue section (first
+ * line "The Grand Pavilion") starts right at ~1080 — measured by
+ * raising this cap until that heading became visible, then backing
+ * off. This is what actually prevents the bug an aspect-ratio-only
+ * crop had: on some screens the handset frame's own visible height,
+ * converted to virtual pixels, was larger than expected and exposed
+ * the countdown and function cards further down the real page. Capping
+ * the crop box itself — not just trusting the frame's shape — means
+ * that can't happen regardless of screen size.
+ */
+const MAX_CROP_HEIGHT = 1040;
+
+/** One open -> scratch -> confetti -> petals sequence plus a hold on the
+ * finished state, before the demo remounts and starts over. Paced about
+ * 1.25x faster than the engine's own hands-off defaults, on top of the
+ * (unchanged) theme timings a real guest also sees. */
+const CYCLE_MS = 13600;
+
+/**
+ * The homepage hero's one featured phone: mounts the real invitation
+ * engine (not a mockup) and drives it through its own opening, scratch
+ * reveal, confetti and petals automatically, on a loop — exactly what a
+ * guest sees, minus the tap and the sound. Purely decorative: its
+ * ancestor is aria-hidden and this never receives pointer events, so it
+ * can't intercept a click meant for the real page.
  */
 export function HeroLivePreview({ theme }: { theme: Theme }) {
   const container = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
+  const [cropHeight, setCropHeight] = useState(MAX_CROP_HEIGHT);
   const [cycle, setCycle] = useState(0);
 
   useEffect(() => {
     const el = container.current;
     if (!el) return;
-    const measure = () => setScale(el.clientWidth / VIRTUAL_WIDTH);
+    const measure = () => {
+      const nextScale = el.clientWidth / VIRTUAL_WIDTH;
+      setScale(nextScale);
+      // Exactly how much virtual height this container actually shows,
+      // not an estimate from the handset frame's declared aspect ratio —
+      // then capped, so neither a measurement surprise nor an unusually
+      // tall frame can ever reveal more of the real page than intended.
+      const visible = nextScale > 0 ? el.clientHeight / nextScale : 0;
+      setCropHeight(Math.min(visible || MAX_CROP_HEIGHT, MAX_CROP_HEIGHT));
+    };
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(el);
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const id = setInterval(() => setCycle((c) => c + 1), CYCLE_MS);
+    return () => clearInterval(id);
   }, []);
 
   return (
@@ -68,131 +82,17 @@ export function HeroLivePreview({ theme }: { theme: Theme }) {
         className="hero-live-preview-stage"
         style={{
           width: VIRTUAL_WIDTH,
-          height: VIRTUAL_HEIGHT,
+          height: cropHeight,
           transform: `scale(${scale})`,
         }}
       >
-        <HeroLivePreviewScene
+        <Invitation
           key={cycle}
           theme={theme}
-          onDone={() => setCycle((c) => c + 1)}
+          invite={getDemoInvite(theme.id)}
+          autoplayDemo
         />
       </div>
-    </div>
-  );
-}
-
-function HeroLivePreviewScene({
-  theme,
-  onDone,
-}: {
-  theme: Theme;
-  onDone: () => void;
-}) {
-  const [stage, setStage] = useState<Stage>("sealed");
-  const [startScratch, setStartScratch] = useState(false);
-  const [popped, setPopped] = useState(false);
-  const [flowers, setFlowers] = useState(false);
-  const done = useRef(onDone);
-  done.current = onDone;
-
-  const invite = getDemoInvite(theme.id);
-  const names = hostNames(invite);
-  const { sealedBackdrop, revealedBackdrop } = theme.assets;
-  const { ornamentation } = theme;
-  const { reveal, petals } = theme.motion;
-  const open = stage === "opened";
-  const vars = paletteVariables(theme) as React.CSSProperties;
-
-  useEffect(() => {
-    const t = setTimeout(() => setStage("opening"), SEALED_HOLD_MS);
-    return () => clearTimeout(t);
-  }, []);
-
-  useEffect(() => {
-    if (stage !== "opening") return;
-    const t = setTimeout(() => setStage("opened"), OPENING_MS);
-    return () => clearTimeout(t);
-  }, [stage]);
-
-  useEffect(() => {
-    if (stage !== "opened") return;
-    const t = setTimeout(() => setStartScratch(true), NAMES_HOLD_MS);
-    return () => clearTimeout(t);
-  }, [stage]);
-
-  useEffect(() => {
-    if (!flowers) return;
-    const t = setTimeout(() => done.current(), PETALS_HOLD_MS);
-    return () => clearTimeout(t);
-  }, [flowers]);
-
-  return (
-    <div className="hero-live-preview-scene" style={vars}>
-      {open ? (
-        revealedBackdrop && (
-          <img
-            className="hero-live-preview-backdrop"
-            src={revealedBackdrop}
-            alt=""
-          />
-        )
-      ) : sealedBackdrop ? (
-        <img
-          className="hero-live-preview-backdrop"
-          src={sealedBackdrop}
-          alt=""
-        />
-      ) : (
-        <PatternBackdrop kind={ornamentation} />
-      )}
-      <OrnateFrame kind={ornamentation} />
-      {!open ? (
-        <div className="hero-live-preview-envelope">
-          <RevealStage
-            reveal={reveal}
-            label={invite.event.typeLabel}
-            hosts={names}
-            opening={stage === "opening"}
-            onOpen={() => {}}
-            {...(sealedBackdrop ? { backdrop: sealedBackdrop } : {})}
-          />
-        </div>
-      ) : (
-        <div className="hero-live-preview-opened">
-          <p className="hero-live-preview-label">{invite.event.typeLabel}</p>
-          <div className="hero-live-preview-names">
-            <h2>{invite.hosts.person1}</h2>
-            {invite.hosts.person2 && (
-              <>
-                <span aria-hidden="true">&amp;</span>
-                <h2>{invite.hosts.person2}</h2>
-              </>
-            )}
-          </div>
-          {popped && !flowers && (
-            <ConfettiBurst onSettled={() => setFlowers(true)} />
-          )}
-          <div className="invitation-date">
-            <ScratchInvitation
-              theme={theme}
-              event={invite.event}
-              onReveal={() => setPopped(true)}
-              autoScratch={startScratch}
-            />
-          </div>
-          {flowers && petals !== "none" && (
-            <div
-              className={`flower-shower petals petals-${petals}`}
-              aria-hidden="true"
-            >
-              {Array.from({ length: 14 }, (_, i) => (
-                <i key={i} />
-              ))}
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 }

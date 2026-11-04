@@ -239,7 +239,7 @@ export function ScratchInvitation({
       }
       let i = 1;
       let autoLast: { x: number; y: number } | null = waypoints[0] ?? null;
-      const STEP_MS = 140;
+      const STEP_MS = 110;
       const tick = () => {
         if (cancelled || revealed) return;
         const point = waypoints[i];
@@ -259,7 +259,7 @@ export function ScratchInvitation({
         timeout = setTimeout(tick, STEP_MS);
       };
       tick();
-    }, 650);
+    }, 520);
     return () => {
       cancelled = true;
       if (timeout) clearTimeout(timeout);
