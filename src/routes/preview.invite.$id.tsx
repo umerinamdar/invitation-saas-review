@@ -9,7 +9,7 @@ import { collectInviteMediaPaths, signInviteMediaPaths, type MediaUrlMap } from 
 import { getTheme } from "@/themes";
 import type { InviteRow } from "@/lib/supabase";
 
-export const Route = createFileRoute("/editor/$id/preview")({
+export const Route = createFileRoute("/preview/invite/$id")({
   head: () => ({
     meta: [
       { title: "Preview your invitation" },

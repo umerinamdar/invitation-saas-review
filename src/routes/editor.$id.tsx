@@ -459,7 +459,7 @@ function Editor() {
           )}
           {row && (
             <Link
-              to="/editor/$id/preview"
+              to="/preview/invite/$id"
               params={{ id: row.id }}
               className="btn btn-quiet btn-sm"
               target="_blank"

@@ -75,7 +75,7 @@ function Login() {
   const [notice, setNotice] = useState("");
 
   useEffect(() => {
-    if (!loading && session) void navigate({ to: "/dashboard" });
+    if (!loading && session) void navigate({ to: "/" });
   }, [loading, session, navigate]);
 
   // Release Fix 2 (D2): password reset previously did not exist at
@@ -125,7 +125,7 @@ function Login() {
     setBusy(true);
     const { error: oauthError } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/dashboard` },
+      options: { redirectTo: `${window.location.origin}/` },
     });
     if (oauthError) {
       setError("We couldn't start Google sign-in just now. Please try again.");
