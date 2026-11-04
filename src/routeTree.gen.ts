@@ -28,6 +28,7 @@ import { Route as PublishRouteImport } from './routes/publish'
 import { Route as ReceptionInvitationWordingRouteImport } from './routes/reception-invitation-wording'
 import { Route as RefundRouteImport } from './routes/refund'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as ShareInvitationOnWhatsappRouteImport } from './routes/share-invitation-on-whatsapp'
 import { Route as SikhWeddingInvitationsRouteImport } from './routes/sikh-wedding-invitations'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TemplatesRouteImport } from './routes/templates'
@@ -142,6 +143,12 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ShareInvitationOnWhatsappRoute =
+  ShareInvitationOnWhatsappRouteImport.update({
+    id: '/share-invitation-on-whatsapp',
+    path: '/share-invitation-on-whatsapp',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const SikhWeddingInvitationsRoute = SikhWeddingInvitationsRouteImport.update({
   id: '/sikh-wedding-invitations',
   path: '/sikh-wedding-invitations',
@@ -229,6 +236,7 @@ export interface FileRoutesByFullPath {
   '/reception-invitation-wording': typeof ReceptionInvitationWordingRoute
   '/refund': typeof RefundRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/share-invitation-on-whatsapp': typeof ShareInvitationOnWhatsappRoute
   '/sikh-wedding-invitations': typeof SikhWeddingInvitationsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/templates': typeof TemplatesRoute
@@ -263,6 +271,7 @@ export interface FileRoutesByTo {
   '/reception-invitation-wording': typeof ReceptionInvitationWordingRoute
   '/refund': typeof RefundRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/share-invitation-on-whatsapp': typeof ShareInvitationOnWhatsappRoute
   '/sikh-wedding-invitations': typeof SikhWeddingInvitationsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/templates': typeof TemplatesRoute
@@ -298,6 +307,7 @@ export interface FileRoutesById {
   '/reception-invitation-wording': typeof ReceptionInvitationWordingRoute
   '/refund': typeof RefundRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/share-invitation-on-whatsapp': typeof ShareInvitationOnWhatsappRoute
   '/sikh-wedding-invitations': typeof SikhWeddingInvitationsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/templates': typeof TemplatesRoute
@@ -334,6 +344,7 @@ export interface FileRouteTypes {
     | '/reception-invitation-wording'
     | '/refund'
     | '/reset-password'
+    | '/share-invitation-on-whatsapp'
     | '/sikh-wedding-invitations'
     | '/sitemap.xml'
     | '/templates'
@@ -368,6 +379,7 @@ export interface FileRouteTypes {
     | '/reception-invitation-wording'
     | '/refund'
     | '/reset-password'
+    | '/share-invitation-on-whatsapp'
     | '/sikh-wedding-invitations'
     | '/sitemap.xml'
     | '/templates'
@@ -402,6 +414,7 @@ export interface FileRouteTypes {
     | '/reception-invitation-wording'
     | '/refund'
     | '/reset-password'
+    | '/share-invitation-on-whatsapp'
     | '/sikh-wedding-invitations'
     | '/sitemap.xml'
     | '/templates'
@@ -437,6 +450,7 @@ export interface RootRouteChildren {
   ReceptionInvitationWordingRoute: typeof ReceptionInvitationWordingRoute
   RefundRoute: typeof RefundRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ShareInvitationOnWhatsappRoute: typeof ShareInvitationOnWhatsappRoute
   SikhWeddingInvitationsRoute: typeof SikhWeddingInvitationsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TemplatesRoute: typeof TemplatesRoute
@@ -587,6 +601,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/share-invitation-on-whatsapp': {
+      id: '/share-invitation-on-whatsapp'
+      path: '/share-invitation-on-whatsapp'
+      fullPath: '/share-invitation-on-whatsapp'
+      preLoaderRoute: typeof ShareInvitationOnWhatsappRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sikh-wedding-invitations': {
       id: '/sikh-wedding-invitations'
       path: '/sikh-wedding-invitations'
@@ -701,6 +722,7 @@ const rootRouteChildren: RootRouteChildren = {
   ReceptionInvitationWordingRoute: ReceptionInvitationWordingRoute,
   RefundRoute: RefundRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  ShareInvitationOnWhatsappRoute: ShareInvitationOnWhatsappRoute,
   SikhWeddingInvitationsRoute: SikhWeddingInvitationsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TemplatesRoute: TemplatesRoute,

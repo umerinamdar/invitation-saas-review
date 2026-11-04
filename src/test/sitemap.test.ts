@@ -17,6 +17,7 @@ describe("sitemap", () => {
       "/haldi-invitation-wording",
       "/mehendi-invitation-wording",
       "/reception-invitation-wording",
+      "/share-invitation-on-whatsapp",
       "/contact",
       "/privacy",
       "/terms",
