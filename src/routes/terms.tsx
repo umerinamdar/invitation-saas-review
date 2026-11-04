@@ -7,7 +7,13 @@ const OG_URL = absoluteUrl("/terms");
 
 export const Route = createFileRoute("/terms")({
   head: () => ({
-    meta: [{ title: `Terms of service — ${BRAND}` }],
+    meta: [
+      { title: `Terms of service — ${BRAND}` },
+      {
+        name: "description",
+        content: `The terms for using ${BRAND}: what the service is, your account and content, publishing, and payment for the ${PUBLISH_PRICE_LABEL} one-time fee.`,
+      },
+    ],
     links: [
       // Canonical — only once VITE_SITE_URL is configured, never a
       // guessed or localhost URL (same guard as the public routes).
