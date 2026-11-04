@@ -22,6 +22,7 @@ export const SECURITY_HEADERS: Record<string, string> = {
   "referrer-policy": "strict-origin-when-cross-origin",
   "x-frame-options": "SAMEORIGIN",
   "permissions-policy": "camera=(), microphone=(), geolocation=()",
+  "strict-transport-security": "max-age=31536000; includeSubDomains",
   "content-security-policy-report-only":
     "default-src 'self'; script-src 'self' 'unsafe-inline' https:; " +
     "style-src 'self' 'unsafe-inline' https:; " +

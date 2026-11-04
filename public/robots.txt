@@ -15,3 +15,5 @@ Disallow: /order-failed
 Disallow: /order-success
 Disallow: /preview/
 Disallow: /publish
+
+Sitemap: https://easyinvitemaker.com/sitemap.xml

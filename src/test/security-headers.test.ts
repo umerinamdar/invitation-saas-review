@@ -15,6 +15,9 @@ describe("security headers", () => {
     expect(SECURITY_HEADERS["permissions-policy"]).toContain("camera=()");
     expect(SECURITY_HEADERS["permissions-policy"]).toContain("microphone=()");
     expect(SECURITY_HEADERS["permissions-policy"]).toContain("geolocation=()");
+    expect(SECURITY_HEADERS["strict-transport-security"]).toContain(
+      "max-age=31536000",
+    );
   });
 
   it("ships CSP as report-only, never enforcing", () => {

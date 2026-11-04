@@ -7,7 +7,13 @@ const OG_URL = absoluteUrl("/refund");
 
 export const Route = createFileRoute("/refund")({
   head: () => ({
-    meta: [{ title: `Refund policy — ${BRAND}` }],
+    meta: [
+      { title: `Refund policy — ${BRAND}` },
+      {
+        name: "description",
+        content: `Preview your design free before paying. What happens if you need a refund after publishing your ${BRAND} invitation.`,
+      },
+    ],
     links: [
       // Canonical — only once VITE_SITE_URL is configured, never a
       // guessed or localhost URL (same guard as the public routes).

@@ -7,7 +7,13 @@ const OG_URL = absoluteUrl("/privacy");
 
 export const Route = createFileRoute("/privacy")({
   head: () => ({
-    meta: [{ title: `Privacy policy — ${BRAND}` }],
+    meta: [
+      { title: `Privacy policy — ${BRAND}` },
+      {
+        name: "description",
+        content: `What ${BRAND} collects when you create and publish an invitation, how guests' data is handled, and how your photos and music are stored.`,
+      },
+    ],
     links: [
       // Canonical — only once VITE_SITE_URL is configured, never a
       // guessed or localhost URL (same guard as the public routes).
