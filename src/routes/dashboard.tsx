@@ -184,6 +184,14 @@ function Dashboard() {
                       >
                         Edit
                       </Link>
+                      <Link
+                        to="/editor/$id/preview"
+                        params={{ id: row.id }}
+                        className="btn btn-quiet btn-sm"
+                        target="_blank"
+                      >
+                        Preview
+                      </Link>
                       {row.status === "published" && (
                         <>
                           <a

@@ -222,7 +222,7 @@ a {
   justify-content: space-around;
   gap: 48px;
   transform: rotate(-28deg) scale(1.4);
-  opacity: 0.07;
+  opacity: 0.13;
 }
 .preview-watermark span {
   font-family: "Cormorant Garamond", Georgia, serif;
@@ -2068,6 +2068,35 @@ a {
 [data-theme-id="noor-invitation"] .date-revealed .revealed-date span {
   color: color-mix(in oklch, var(--paper-light) 80%, transparent);
 }
+/* Ram Mandir and Golden Temple: same bug as Noor above — the hero is a
+ * warm but busy temple photo, and the shared pale ink-light glass with
+ * dark scratch-ink text (built for a light, plain backdrop) reads as a
+ * muddy, low-contrast smear over it (owner report, 2026-11-04,
+ * screenshot of the revealed date). Each theme's own deep --background
+ * tone as the glass, with its --gold-light as text, the same fix Noor
+ * already had. */
+[data-theme-id="ram-mandir"] .family-block p,
+[data-theme-id="golden-temple"] .family-block p {
+  color: var(--gold-light);
+  text-shadow: 0 2px 10px rgb(0 0 0 / 0.65);
+}
+[data-theme-id="ram-mandir"] .date-revealed .revealed-date,
+[data-theme-id="golden-temple"] .date-revealed .revealed-date {
+  background: color-mix(in oklch, var(--background) 65%, transparent);
+  box-shadow: 0 16px 32px -20px rgb(0 0 0 / 0.55);
+}
+[data-theme-id="ram-mandir"] .date-revealed .revealed-date h2,
+[data-theme-id="ram-mandir"] .date-revealed .revealed-date h3,
+[data-theme-id="golden-temple"] .date-revealed .revealed-date h2,
+[data-theme-id="golden-temple"] .date-revealed .revealed-date h3 {
+  color: var(--gold-light);
+}
+[data-theme-id="ram-mandir"] .date-revealed .revealed-date p,
+[data-theme-id="ram-mandir"] .date-revealed .revealed-date span,
+[data-theme-id="golden-temple"] .date-revealed .revealed-date p,
+[data-theme-id="golden-temple"] .date-revealed .revealed-date span {
+  color: color-mix(in oklch, var(--paper-light) 80%, transparent);
+}
 /* Noor's hero must read Islamic at a glance, not just as a night photo:
  * a moorish-arch gold frame around the hero, sitting above the photo veil
  * and below the text (the invitation's own stacking is backdrop -3,
@@ -2325,7 +2354,9 @@ a {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 46px 20px 34px;
+  /* Clear the notch / Dynamic Island on devices that have one; env() is
+   * 0 elsewhere, so spacing is unchanged there. */
+  padding: max(46px, calc(env(safe-area-inset-top) + 46px)) 20px 34px;
 }
 .skyline-backdrop {
   position: absolute;
@@ -2785,14 +2816,16 @@ a {
 .music-dock button:hover {
   background: color-mix(in oklch, var(--gold) 22%, transparent);
 }
-/* Ram Mandir only, 2026-10-26: --foreground/--background are NOT an
- * AA-contrast pair on this theme the way the comment above assumes —
- * --foreground here is the on-paper body-text colour (dark, for the
+/* Ram Mandir, Golden Temple, Noor Invitation: --foreground/--background
+ * are NOT an AA-contrast pair on these themes the way the comment above
+ * assumes — --foreground is the on-paper body-text colour (dark, for the
  * cream/paper sections elsewhere in the invitation), while --background
- * is a separate, also-dark page-chrome colour the dock tracks. Dark
- * icon on a dark dock was invisible; --paper-light actually contrasts
- * with this theme's --background. */
-[data-theme-id="ram-mandir"] .music-dock button {
+ * is a separate, also-dark page-chrome colour the dock tracks. Dark icon
+ * on a dark dock was invisible; --paper-light actually contrasts with
+ * each of these themes' --background. */
+[data-theme-id="ram-mandir"] .music-dock button,
+[data-theme-id="golden-temple"] .music-dock button,
+[data-theme-id="noor-invitation"] .music-dock button {
   color: var(--paper-light);
 }
 .music-dock svg {

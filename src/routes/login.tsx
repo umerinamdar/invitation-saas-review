@@ -147,11 +147,21 @@ function Login() {
         }
         const { data, error } = await supabase.auth.signUp({ email, password });
         if (error) throw error;
-        // With email confirmation on, there is no session until they confirm.
+        // With email confirmation required, signUp alone returns no
+        // session — but confirmation here is informational, not a
+        // gate (see the verify-email banner in chrome.tsx), so sign
+        // the new account in immediately rather than making them wait
+        // on the email. Falls back to the old notice only if Supabase
+        // still refuses an unconfirmed sign-in outright.
         if (!data.session) {
-          setNotice("Check your email to confirm your address, then sign in.");
-          setMode("signin");
-          return;
+          const { error: signInError } = await supabase.auth.signInWithPassword(
+            { email, password },
+          );
+          if (signInError) {
+            setNotice("Check your email to confirm your address, then sign in.");
+            setMode("signin");
+            return;
+          }
         }
       } else {
         const { error } = await supabase.auth.signInWithPassword({
@@ -160,7 +170,7 @@ function Login() {
         });
         if (error) throw error;
       }
-      await navigate({ to: "/dashboard" });
+      await navigate({ to: "/" });
     } catch {
       setError(submitErrorMessage(mode));
     } finally {

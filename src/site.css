@@ -299,6 +299,34 @@
   );
 }
 
+/* Verify-email banner -------------------------------------------------- */
+.verify-email-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 10px clamp(18px, 5vw, 64px);
+  background: var(--sheet-warm);
+  color: var(--ink);
+  font-size: 13px;
+  text-align: center;
+}
+.verify-email-banner button {
+  flex: none;
+  border: 1px solid color-mix(in oklch, var(--ink) 30%, transparent);
+  background: transparent;
+  color: inherit;
+  border-radius: 999px;
+  padding: 4px 14px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.verify-email-banner button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
 /* Header ------------------------------------------------------------- */
 .site-header {
   display: flex;

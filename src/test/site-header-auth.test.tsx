@@ -109,15 +109,15 @@ describe("SiteHeader auth controls (Fix 1 / D1)", () => {
     expect(screen.queryByRole("button", { name: "Sign out" })).toBeNull();
   });
 
-  it("signed-in with an unconfirmed email: offers a Verify your email link", () => {
+  it("signed-in with an unconfirmed email: shows the verify-email banner", () => {
     hoisted.session = { user: { id: "user-1", email: "a@example.com" } };
     renderHeader();
     expect(
-      screen.getByRole("button", { name: "Verify your email" }),
+      screen.getByRole("button", { name: "Resend email" }),
     ).toBeTruthy();
   });
 
-  it("signed-in with a confirmed email: shows no verify link", () => {
+  it("signed-in with a confirmed email: shows no verify banner", () => {
     hoisted.session = {
       user: {
         id: "user-1",
@@ -127,14 +127,14 @@ describe("SiteHeader auth controls (Fix 1 / D1)", () => {
     };
     renderHeader();
     expect(
-      screen.queryByRole("button", { name: "Verify your email" }),
+      screen.queryByRole("button", { name: "Resend email" }),
     ).toBeNull();
   });
 
-  it("clicking Verify your email resends the confirmation and updates the label", async () => {
+  it("clicking Resend email resends the confirmation and updates the label", async () => {
     hoisted.session = { user: { id: "user-1", email: "a@example.com" } };
     renderHeader();
-    fireEvent.click(screen.getByRole("button", { name: "Verify your email" }));
+    fireEvent.click(screen.getByRole("button", { name: "Resend email" }));
     await waitFor(() =>
       expect(hoisted.resend).toHaveBeenCalledWith({
         type: "signup",
@@ -142,7 +142,7 @@ describe("SiteHeader auth controls (Fix 1 / D1)", () => {
       }),
     );
     expect(
-      screen.getByRole("button", { name: "Check your inbox" }),
-    ).toBeTruthy();
+      screen.getByRole("button", { name: "Resend email" }),
+    ).toBeDisabled();
   });
 });

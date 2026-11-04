@@ -47,7 +47,13 @@ export const ivorySilkPearls: Theme = {
     paperDark: "oklch(0.86 0.03 80)",
     highlight: "oklch(0.99 0.005 85)",
     surface: "oklch(0.965 0.012 85)",
-    scratchFoil: "oklch(0.93 0.02 82)",
+    // Was oklch(0.93 0.02 82) — within a hair of paperLight/paperDark's
+    // own lightness band, so the scratch gradient read as a flat,
+    // washed-out grey instead of a visible pearl-gold card (owner
+    // report, 2026-11-04: "scratch box... grayed and blurred"). Pulled
+    // darker and more saturated, toward the theme's own `accent`
+    // (oklch(0.68 0.08 80)), so the card's midtone actually shows.
+    scratchFoil: "oklch(0.8 0.05 82)",
     scratchInk: "oklch(0.32 0.02 70)",
     background: "oklch(0.985 0.008 85)",
     foreground: "oklch(0.32 0.02 70)",

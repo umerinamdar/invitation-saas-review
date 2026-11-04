@@ -457,6 +457,16 @@ function Editor() {
               View live
             </a>
           )}
+          {row && (
+            <Link
+              to="/editor/$id/preview"
+              params={{ id: row.id }}
+              className="btn btn-quiet btn-sm"
+              target="_blank"
+            >
+              Preview
+            </Link>
+          )}
           <Link to="/dashboard" className="btn btn-quiet btn-sm">
             Done
           </Link>
