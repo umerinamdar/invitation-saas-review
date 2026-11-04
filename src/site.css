@@ -283,6 +283,42 @@
 }
 /* The faint camera-sensor catch inside the island, like real hardware
  * photography — without it a plain black pill reads as a cutout sticker. */
+/* Marketing-only auto-loop for the hero's one featured phone: a foil
+ * cover slides up to reveal the screen, holds, then returns — no audio,
+ * no gesture, purely decorative. Keeps the real tap-to-open preview
+ * (ThemeCard -> /preview/$themeId) as the only place that plays the
+ * actual invitation experience. */
+.theme-phone-cover {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: linear-gradient(
+    155deg,
+    var(--gold, oklch(0.78 0.1 85)),
+    var(--background, oklch(0.2 0.02 85))
+  );
+  animation: theme-phone-cover-loop 9s ease-in-out infinite;
+}
+@keyframes theme-phone-cover-loop {
+  0%,
+  12% {
+    transform: translateY(0%);
+  }
+  30%,
+  78% {
+    transform: translateY(-105%);
+  }
+  96%,
+  100% {
+    transform: translateY(0%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .theme-phone-cover {
+    animation: none;
+    transform: translateY(-105%);
+  }
+}
 .handset-island::after {
   content: "";
   position: absolute;

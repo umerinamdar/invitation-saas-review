@@ -115,9 +115,14 @@ export function ThemePhoneScreen({ theme }: { theme: Theme }) {
 export function ThemePhone({
   theme,
   className = "",
+  autoplay = false,
 }: {
   theme: Theme;
   className?: string;
+  /** Marketing-only loop: a cover in the theme's own colour slides away to
+   * reveal the screen, holds, then returns — no audio, no gesture, just
+   * the hero's one featured phone. Not the real tap-to-open experience. */
+  autoplay?: boolean;
 }) {
   const vars = paletteVariables(theme) as React.CSSProperties;
   return (
@@ -127,9 +132,10 @@ export function ThemePhone({
       <span className="handset-button" style={{ left: "-0.6%", top: "30%", height: "5.5%" }} />
       <span className="handset-button" style={{ right: "-0.6%", top: "22%", height: "8%" }} />
       <span className="handset-bezel">
-        <span className="handset-screen">
+        <span className={`handset-screen${autoplay ? " is-autoplay" : ""}`}>
           <span className="handset-island" />
           <ThemePhoneScreen theme={theme} />
+          {autoplay && <span className="theme-phone-cover" aria-hidden="true" />}
         </span>
       </span>
     </span>
