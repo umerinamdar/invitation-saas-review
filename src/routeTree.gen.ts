@@ -34,6 +34,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TemplatesRouteImport } from './routes/templates'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as WeddingInvitationWordingRouteImport } from './routes/wedding-invitation-wording'
+import { Route as WhatToIncludeInADigitalWeddingInvitationRouteImport } from './routes/what-to-include-in-a-digital-wedding-invitation'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as ApiOrdersRouteImport } from './routes/api/orders'
 import { Route as EditorIdRouteImport } from './routes/editor.$id'
@@ -176,6 +177,12 @@ const WeddingInvitationWordingRoute =
     path: '/wedding-invitation-wording',
     getParentRoute: () => rootRouteImport,
   } as any)
+const WhatToIncludeInADigitalWeddingInvitationRoute =
+  WhatToIncludeInADigitalWeddingInvitationRouteImport.update({
+    id: '/what-to-include-in-a-digital-wedding-invitation',
+    path: '/what-to-include-in-a-digital-wedding-invitation',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiHealthRoute = ApiHealthRouteImport.update({
   id: '/api/health',
   path: '/api/health',
@@ -248,6 +255,7 @@ export interface FileRoutesByFullPath {
   '/templates': typeof TemplatesRoute
   '/terms': typeof TermsRoute
   '/wedding-invitation-wording': typeof WeddingInvitationWordingRoute
+  '/what-to-include-in-a-digital-wedding-invitation': typeof WhatToIncludeInADigitalWeddingInvitationRoute
   '/api/health': typeof ApiHealthRoute
   '/api/orders': typeof ApiOrdersRoute
   '/editor/$id': typeof EditorIdRoute
@@ -284,6 +292,7 @@ export interface FileRoutesByTo {
   '/templates': typeof TemplatesRoute
   '/terms': typeof TermsRoute
   '/wedding-invitation-wording': typeof WeddingInvitationWordingRoute
+  '/what-to-include-in-a-digital-wedding-invitation': typeof WhatToIncludeInADigitalWeddingInvitationRoute
   '/api/health': typeof ApiHealthRoute
   '/api/orders': typeof ApiOrdersRoute
   '/editor/$id': typeof EditorIdRoute
@@ -321,6 +330,7 @@ export interface FileRoutesById {
   '/templates': typeof TemplatesRoute
   '/terms': typeof TermsRoute
   '/wedding-invitation-wording': typeof WeddingInvitationWordingRoute
+  '/what-to-include-in-a-digital-wedding-invitation': typeof WhatToIncludeInADigitalWeddingInvitationRoute
   '/api/health': typeof ApiHealthRoute
   '/api/orders': typeof ApiOrdersRoute
   '/editor/$id': typeof EditorIdRoute
@@ -359,6 +369,7 @@ export interface FileRouteTypes {
     | '/templates'
     | '/terms'
     | '/wedding-invitation-wording'
+    | '/what-to-include-in-a-digital-wedding-invitation'
     | '/api/health'
     | '/api/orders'
     | '/editor/$id'
@@ -395,6 +406,7 @@ export interface FileRouteTypes {
     | '/templates'
     | '/terms'
     | '/wedding-invitation-wording'
+    | '/what-to-include-in-a-digital-wedding-invitation'
     | '/api/health'
     | '/api/orders'
     | '/editor/$id'
@@ -431,6 +443,7 @@ export interface FileRouteTypes {
     | '/templates'
     | '/terms'
     | '/wedding-invitation-wording'
+    | '/what-to-include-in-a-digital-wedding-invitation'
     | '/api/health'
     | '/api/orders'
     | '/editor/$id'
@@ -468,6 +481,7 @@ export interface RootRouteChildren {
   TemplatesRoute: typeof TemplatesRoute
   TermsRoute: typeof TermsRoute
   WeddingInvitationWordingRoute: typeof WeddingInvitationWordingRoute
+  WhatToIncludeInADigitalWeddingInvitationRoute: typeof WhatToIncludeInADigitalWeddingInvitationRoute
   ApiHealthRoute: typeof ApiHealthRoute
   ApiOrdersRoute: typeof ApiOrdersRoute
   EditorIdRoute: typeof EditorIdRoute
@@ -656,6 +670,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WeddingInvitationWordingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/what-to-include-in-a-digital-wedding-invitation': {
+      id: '/what-to-include-in-a-digital-wedding-invitation'
+      path: '/what-to-include-in-a-digital-wedding-invitation'
+      fullPath: '/what-to-include-in-a-digital-wedding-invitation'
+      preLoaderRoute: typeof WhatToIncludeInADigitalWeddingInvitationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/health': {
       id: '/api/health'
       path: '/api/health'
@@ -748,6 +769,8 @@ const rootRouteChildren: RootRouteChildren = {
   TemplatesRoute: TemplatesRoute,
   TermsRoute: TermsRoute,
   WeddingInvitationWordingRoute: WeddingInvitationWordingRoute,
+  WhatToIncludeInADigitalWeddingInvitationRoute:
+    WhatToIncludeInADigitalWeddingInvitationRoute,
   ApiHealthRoute: ApiHealthRoute,
   ApiOrdersRoute: ApiOrdersRoute,
   EditorIdRoute: EditorIdRoute,
