@@ -40,6 +40,7 @@ export type TranslationKey =
   | "hero.titleOpen"
   | "hero.titleLine3"
   | "hero.lede"
+  | "hero.eventTypes"
   | "hero.browseDesigns"
   | "hero.noteStrong"
   | "hero.noteRest"
@@ -209,6 +210,8 @@ const en: Dictionary = {
   "hero.titleLine3": "twice.",
   "hero.lede":
     "Envelopes that unseal, palace doors that part, a date revealed under gold foil. Your own personalised webpage for your big day — shared in one WhatsApp link.",
+  "hero.eventTypes":
+    "For weddings, engagements, receptions, haldi and mehendi.",
   "hero.browseDesigns": "Browse {count} designs",
   "hero.noteStrong": "Unlimited customisation",
   "hero.noteRest": "always free",
@@ -397,6 +400,8 @@ const hi: Dictionary = {
   "hero.titleLine3": "",
   "hero.lede":
     "लिफ़ाफ़े जो खुलते हैं, महल के दरवाज़े जो अलग होते हैं, सोने की पन्नी के नीचे छुपी तारीख़। आपके ख़ास दिन के लिए आपका अपना निजी वेबपेज — एक व्हाट्सएप लिंक में साझा करें।",
+  "hero.eventTypes":
+    "शादी, सगाई, रिसेप्शन, हल्दी और मेहंदी — सभी के लिए।",
   "hero.browseDesigns": "{count} डिज़ाइन देखें",
   "hero.noteStrong": "असीमित कस्टमाइज़ेशन",
   "hero.noteRest": "हमेशा मुफ़्त",
@@ -585,6 +590,8 @@ const ar: Dictionary = {
   "hero.titleLine3": "مرتين.",
   "hero.lede":
     "أظرف تُفتح، وأبواب قصر تنفرج، وتاريخ يُكشف تحت رقاقة ذهبية. صفحتك الخاصة والمخصصة ليومك الكبير — تُشارَك برابط واحد على واتساب.",
+  "hero.eventTypes":
+    "لحفلات الزفاف، الخطوبة، الاستقبال، الهالدي والمهندي.",
   "hero.browseDesigns": "تصفّح {count} تصميمًا",
   "hero.noteStrong": "تخصيص غير محدود",
   "hero.noteRest": "مجانًا دائمًا",
@@ -773,6 +780,8 @@ const mr: Partial<Dictionary> = {
   "hero.titleLine3": "",
   "hero.lede":
     "उघडणारी पाकिटे, वेगळी होणारी राजवाड्याची दारे, सोनेरी फॉइलखाली उलगडणारी तारीख. तुमच्या खास दिवसासाठी तुमचे स्वतःचे वैयक्तिक वेबपेज — एका व्हॉट्सअ‍ॅप लिंकमध्ये शेअर करा.",
+  "hero.eventTypes":
+    "लग्न, साखरपुडा, रिसेप्शन, हळद आणि मेहंदीसाठी.",
   "hero.browseDesigns": "{count} डिझाइन्स पहा",
   "hero.noteStrong": "अमर्यादित कस्टमायझेशन",
   "hero.noteRest": "कायम मोफत",
@@ -1003,6 +1012,8 @@ const gu: Partial<Dictionary> = {
   "hero.titleLine3": "",
   "hero.lede":
     "પરબિડીયાઓ જે ખુલે છે, મહેલના દરવાજા જે અલગ થાય છે, ગોલ્ડ ફોઇલ હેઠળ જાહેર થતી તારીખ. તમારા ખાસ દિવસ માટે તમારું પોતાનું વ્યક્તિગત વેબપેજ — એક વોટ્સએપ લિંકમાં શેર કરો.",
+  "hero.eventTypes":
+    "લગ્ન, સગાઈ, રિસેપ્શન, હળદી અને મહેંદી માટે.",
   "hero.browseDesigns": "{count} ડિઝાઇન જુઓ",
   "hero.noteStrong": "અમર્યાદિત કસ્ટમાઇઝેશન",
   "hero.noteRest": "હંમેશા મફત",
@@ -1229,6 +1240,8 @@ const bn: Partial<Dictionary> = {
   "hero.titleLine3": "",
   "hero.lede":
     "খাম যা খোলে, প্রাসাদের দরজা যা আলাদা হয়, সোনালী ফয়েলের নিচে প্রকাশিত তারিখ। আপনার বিশেষ দিনের জন্য আপনার নিজস্ব ব্যক্তিগত ওয়েবপেজ — একটি হোয়াটসঅ্যাপ লিঙ্কে শেয়ার করুন।",
+  "hero.eventTypes":
+    "বিয়ে, এনগেজমেন্ট, রিসেপশন, হলুদ এবং মেহেন্দির জন্য।",
   "hero.browseDesigns": "{count}টি ডিজাইন দেখুন",
   "hero.noteStrong": "আনলিমিটেড কাস্টমাইজেশন",
   "hero.noteRest": "সবসময় বিনামূল্যে",
@@ -1461,6 +1474,8 @@ const pa: Partial<Dictionary> = {
   "hero.titleLine3": "",
   "hero.lede":
     "ਲਿਫ਼ਾਫ਼ੇ ਜੋ ਖੁੱਲ੍ਹਦੇ ਹਨ, ਮਹਿਲ ਦੇ ਦਰਵਾਜ਼ੇ ਜੋ ਵੱਖ ਹੁੰਦੇ ਹਨ, ਸੋਨੇ ਦੀ ਫੁਆਇਲ ਹੇਠਾਂ ਦੱਸੀ ਜਾਂਦੀ ਤਾਰੀਖ। ਤੁਹਾਡੇ ਖਾਸ ਦਿਨ ਲਈ ਤੁਹਾਡਾ ਆਪਣਾ ਨਿੱਜੀ ਵੈੱਬਪੇਜ — ਇੱਕ ਵਟਸਐਪ ਲਿੰਕ ਵਿੱਚ ਸਾਂਝਾ ਕਰੋ।",
+  "hero.eventTypes":
+    "ਵਿਆਹ, ਮੰਗਣੀ, ਰਿਸੈਪਸ਼ਨ, ਹਲਦੀ ਅਤੇ ਮਹਿੰਦੀ ਲਈ।",
   "hero.browseDesigns": "{count} ਡਿਜ਼ਾਈਨ ਵੇਖੋ",
   "hero.noteStrong": "ਅਸੀਮਤ ਕਸਟਮਾਈਜ਼ੇਸ਼ਨ",
   "hero.noteRest": "ਹਮੇਸ਼ਾ ਮੁਫ਼ਤ",
@@ -1689,6 +1704,8 @@ const ur: Partial<Dictionary> = {
   "hero.titleLine3": "",
   "hero.lede":
     "لفافے جو کھلتے ہیں، محل کے دروازے جو الگ ہوتے ہیں، سنہری ورق کے نیچے ظاہر ہوتی تاریخ۔ آپ کے خاص دن کے لیے آپ کا اپنا ذاتی ویب پیج — ایک واٹس ایپ لنک میں شیئر کریں۔",
+  "hero.eventTypes":
+    "شادی، منگنی، ریسیپشن، ہلدی اور مہندی کے لیے۔",
   "hero.browseDesigns": "{count} ڈیزائنز دیکھیں",
   "hero.noteStrong": "لامحدود حسب ضرورت تبدیلی",
   "hero.noteRest": "ہمیشہ مفت",
@@ -1915,6 +1932,8 @@ const fr: Partial<Dictionary> = {
   "hero.titleLine3": "deux fois.",
   "hero.lede":
     "Des enveloppes qui se décachettent, des portes de palais qui s'écartent, une date révélée sous une feuille d'or. Votre propre page personnalisée pour votre grand jour — partagée en un lien WhatsApp.",
+  "hero.eventTypes":
+    "Pour mariages, fiançailles, réceptions, haldi et mehendi.",
   "hero.browseDesigns": "Parcourir {count} modèles",
   "hero.noteStrong": "Personnalisation illimitée",
   "hero.noteRest": "toujours gratuit",
@@ -2113,6 +2132,8 @@ const de: Partial<Dictionary> = {
   "hero.titleLine3": "",
   "hero.lede":
     "Umschläge, die sich öffnen, Palasttüren, die sich teilen, ein Datum, das unter Goldfolie enthüllt wird. Deine eigene persönliche Webseite für deinen großen Tag — geteilt in einem WhatsApp-Link.",
+  "hero.eventTypes":
+    "Für Hochzeiten, Verlobungen, Empfänge, Haldi und Mehendi.",
   "hero.browseDesigns": "{count} Designs ansehen",
   "hero.noteStrong": "Unbegrenzte Anpassung",
   "hero.noteRest": "immer kostenlos",
@@ -2305,6 +2326,8 @@ const es: Partial<Dictionary> = {
   "hero.titleLine3": "",
   "hero.lede":
     "Sobres que se abren, puertas de palacio que se separan, una fecha revelada bajo papel dorado. Tu propia página personalizada para tu gran día — compartida en un enlace de WhatsApp.",
+  "hero.eventTypes":
+    "Para bodas, compromisos, recepciones, haldi y mehendi.",
   "hero.browseDesigns": "Explorar {count} diseños",
   "hero.noteStrong": "Personalización ilimitada",
   "hero.noteRest": "siempre gratis",
@@ -2500,6 +2523,8 @@ const pt: Partial<Dictionary> = {
   "hero.titleLine3": "",
   "hero.lede":
     "Envelopes que se abrem, portas de palácio que se separam, uma data revelada sob papel dourado. Sua própria página personalizada para o seu grande dia — compartilhada em um link do WhatsApp.",
+  "hero.eventTypes":
+    "Para casamentos, noivados, recepções, haldi e mehendi.",
   "hero.browseDesigns": "Ver {count} modelos",
   "hero.noteStrong": "Personalização ilimitada",
   "hero.noteRest": "sempre grátis",
@@ -2692,6 +2717,8 @@ const ru: Partial<Dictionary> = {
   "hero.titleLine3": "",
   "hero.lede":
     "Конверты, которые распечатываются, дворцовые двери, которые раскрываются, дата, скрытая под золотой фольгой. Ваша собственная персональная веб-страница для важного дня — делитесь одной ссылкой в WhatsApp.",
+  "hero.eventTypes":
+    "Для свадеб, помолвок, приёмов, халди и мехенди.",
   "hero.browseDesigns": "Посмотреть {count} дизайнов",
   "hero.noteStrong": "Неограниченная настройка",
   "hero.noteRest": "всегда бесплатно",

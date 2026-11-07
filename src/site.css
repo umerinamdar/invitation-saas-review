@@ -511,6 +511,13 @@
   font-size: 1.08rem;
   line-height: 1.6;
 }
+.hero-event-types {
+  margin: 14px 0 0;
+  max-width: 480px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+}
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
@@ -587,6 +594,10 @@
   color: var(--ink-soft);
   max-width: 540px;
   margin: 22px auto 0;
+}
+.lede-strong {
+  color: var(--ink);
+  font-weight: 600;
 }
 .section-head {
   text-align: center;

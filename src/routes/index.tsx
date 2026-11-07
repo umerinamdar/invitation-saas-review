@@ -119,6 +119,7 @@ function Landing() {
               )}
             </h1>
             <p className="lede">{t("hero.lede")}</p>
+            <p className="hero-event-types">{t("hero.eventTypes")}</p>
             <div className="hero-actions">
               <Link to="/templates" className="btn btn-solid">
                 {t("hero.browseDesigns", { count: themes.length })}{" "}
