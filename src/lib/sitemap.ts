@@ -20,6 +20,7 @@ export const SITEMAP_PATHS = [
   "/mehendi-invitation-wording",
   "/reception-invitation-wording",
   "/hindu-wedding-invitation-wording",
+  "/muslim-wedding-invitation-wording",
   "/share-invitation-on-whatsapp",
   "/what-to-include-in-a-digital-wedding-invitation",
   "/contact",
