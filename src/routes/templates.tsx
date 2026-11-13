@@ -76,7 +76,7 @@ function Templates() {
             Each one opens differently. Tap any design to open the real thing
             — these are live invitations, not pictures of them.
           </p>
-          <p className="lede">
+          <p className="lede lede-strong">
             For weddings, engagements, receptions, haldi and mehendi — every
             design is {PUBLISH_PRICE_LABEL} one-time, no subscription.
           </p>
