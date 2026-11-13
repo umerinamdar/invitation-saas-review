@@ -23,6 +23,7 @@ export const SITEMAP_PATHS = [
   "/muslim-wedding-invitation-wording",
   "/share-invitation-on-whatsapp",
   "/what-to-include-in-a-digital-wedding-invitation",
+  "/choosing-a-digital-wedding-invitation-design",
   "/contact",
   "/privacy",
   "/terms",
