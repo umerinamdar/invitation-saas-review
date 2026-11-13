@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as ChoosingADigitalWeddingInvitationDesignRouteImport } from './routes/choosing-a-digital-wedding-invitation-design'
 import { Route as ChristianWeddingInvitationsRouteImport } from './routes/christian-wedding-invitations'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CreateRouteImport } from './routes/create'
@@ -57,6 +58,12 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChoosingADigitalWeddingInvitationDesignRoute =
+  ChoosingADigitalWeddingInvitationDesignRouteImport.update({
+    id: '/choosing-a-digital-wedding-invitation-design',
+    path: '/choosing-a-digital-wedding-invitation-design',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ChristianWeddingInvitationsRoute =
   ChristianWeddingInvitationsRouteImport.update({
     id: '/christian-wedding-invitations',
@@ -246,6 +253,7 @@ const PreviewInviteIdRoute = PreviewInviteIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/choosing-a-digital-wedding-invitation-design': typeof ChoosingADigitalWeddingInvitationDesignRoute
   '/christian-wedding-invitations': typeof ChristianWeddingInvitationsRoute
   '/contact': typeof ContactRoute
   '/create': typeof CreateRoute
@@ -285,6 +293,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/choosing-a-digital-wedding-invitation-design': typeof ChoosingADigitalWeddingInvitationDesignRoute
   '/christian-wedding-invitations': typeof ChristianWeddingInvitationsRoute
   '/contact': typeof ContactRoute
   '/create': typeof CreateRoute
@@ -325,6 +334,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/choosing-a-digital-wedding-invitation-design': typeof ChoosingADigitalWeddingInvitationDesignRoute
   '/christian-wedding-invitations': typeof ChristianWeddingInvitationsRoute
   '/contact': typeof ContactRoute
   '/create': typeof CreateRoute
@@ -366,6 +376,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/choosing-a-digital-wedding-invitation-design'
     | '/christian-wedding-invitations'
     | '/contact'
     | '/create'
@@ -405,6 +416,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
+    | '/choosing-a-digital-wedding-invitation-design'
     | '/christian-wedding-invitations'
     | '/contact'
     | '/create'
@@ -444,6 +456,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/choosing-a-digital-wedding-invitation-design'
     | '/christian-wedding-invitations'
     | '/contact'
     | '/create'
@@ -484,6 +497,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
+  ChoosingADigitalWeddingInvitationDesignRoute: typeof ChoosingADigitalWeddingInvitationDesignRoute
   ChristianWeddingInvitationsRoute: typeof ChristianWeddingInvitationsRoute
   ContactRoute: typeof ContactRoute
   CreateRoute: typeof CreateRoute
@@ -535,6 +549,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/choosing-a-digital-wedding-invitation-design': {
+      id: '/choosing-a-digital-wedding-invitation-design'
+      path: '/choosing-a-digital-wedding-invitation-design'
+      fullPath: '/choosing-a-digital-wedding-invitation-design'
+      preLoaderRoute: typeof ChoosingADigitalWeddingInvitationDesignRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/christian-wedding-invitations': {
@@ -788,6 +809,8 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
+  ChoosingADigitalWeddingInvitationDesignRoute:
+    ChoosingADigitalWeddingInvitationDesignRoute,
   ChristianWeddingInvitationsRoute: ChristianWeddingInvitationsRoute,
   ContactRoute: ContactRoute,
   CreateRoute: CreateRoute,
